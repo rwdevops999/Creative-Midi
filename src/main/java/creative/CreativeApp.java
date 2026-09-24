@@ -19,7 +19,7 @@ public class CreativeApp extends Application {
     private double yOffset = 0;
 
     public static void startup(String[] args) {
-        logger.debug("[CM_CREATIVE_APP] ENTRY: Launch JavaFX Application");
+        logger.debug("[CM_CREATIVE_APP] ENTRY: Launching Creative Midi Application");
         launch(args);
     }
 

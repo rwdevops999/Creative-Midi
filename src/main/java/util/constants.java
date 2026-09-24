@@ -7,6 +7,7 @@ public class constants {
     public static final String HELP = "-h";
     public static final String LOGGING = "-l";
     public static final String TEST = "-t";
+    public static final String DEBUG = "-d";
 
     public static final int APP_WIDTH = 800;
     public static final int APP_HEIGHT = 600;

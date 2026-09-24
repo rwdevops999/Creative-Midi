@@ -2,6 +2,7 @@ import creative.CreativeApp;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.fusesource.jansi.AnsiConsole;
+import util.ApplicationInfo;
 
 import java.net.URL;
 import java.util.Locale;
@@ -47,6 +48,10 @@ public class Startup {
 
             if (TEST.equals(arg.toLowerCase(Locale.ROOT))) {
                 System.out.println("Activated TEST mode");
+            }
+
+            if (DEBUG.equals(arg.toLowerCase(Locale.ROOT))) {
+                ApplicationInfo.getInstance().setDebugging(true);
             }
 
             if (LOGGING.equals(arg.toLowerCase(Locale.ROOT))) {

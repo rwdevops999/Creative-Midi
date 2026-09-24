@@ -12,7 +12,7 @@ public class RootPane extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(RootPane.class);
 
     public RootPane() {
-        setId("RootScenePane");
+        setId("RootPane");
 
         setPrefSize(APP_WIDTH, APP_HEIGHT+MONITOR_HEIGHT);
 
@@ -25,7 +25,7 @@ public class RootPane extends BorderPane {
         setCenter(new MainPane(this));
 //        setBottom(new MonitorPane(rootScenePane));
 
-        logger.debug("[] built Pane {}", getId());
+        logger.debug("[CM_ROOT_PANE] built Pane {}", getId());
     }
 
     // ACCESSORS
