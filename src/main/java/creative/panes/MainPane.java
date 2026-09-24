@@ -26,6 +26,12 @@ public class MainPane extends BorderPane {
     private void createPane() {
         logger.debug("[CM_MAIN_PANE] building Pane {}", getId());
 
+
         logger.debug("[CM_MAIN_PANE] built Pane {}", getId());
+    }
+
+    // ACCESSORS
+    public RootPane getRootPane() {
+        return parent;
     }
 }

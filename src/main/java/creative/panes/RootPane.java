@@ -27,4 +27,9 @@ public class RootPane extends BorderPane {
 
         logger.debug("[] built Pane {}", getId());
     }
+
+    // ACCESSORS
+    public MainPane getMainPane() {
+        return (MainPane)getCenter();
+    }
 }
