@@ -20,16 +20,15 @@ public class TitlePane extends HBox {
     private static final Logger logger = LoggerFactory.getLogger(TitlePane.class);
 
     private static final int PANE_WIDTH = 400;
-    private static final int PANE_HEIGHT = 60;
 
-    private static final int ICON_SIZE = 64;
+    private static final int ICON_SIZE = HeaderPane.PANE_HEIGHT + 4;
 
     public TitlePane() {
         super();
 
         setId("TitlePane");
 
-        setPrefSize(PANE_WIDTH, PANE_HEIGHT);
+        setPrefSize(PANE_WIDTH, HeaderPane.PANE_HEIGHT);
         setSpacing(25);
 
         buildPane();

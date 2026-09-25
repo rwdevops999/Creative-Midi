@@ -14,13 +14,12 @@ import static util.constants.APP_WIDTH;
 public class HeaderPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(HeaderPane.class);
 
-    public static final int PANE_HEIGHT = 60;
+    public static final int PANE_HEIGHT = 40;
 
     public HeaderPane() {
         super();
 
-        setId("headerPane");
-        setHgap(10);
+        setId("HeaderPane");
         setVgap(10);
         setPrefSize(APP_WIDTH, PANE_HEIGHT);
 
@@ -33,6 +32,8 @@ public class HeaderPane extends GridPane {
         DummyUtil.showPaneBorder(this, getColor("test", "red"));
 
         add(new TitlePane(), 0, 0, 10, 1);
+        add(new SelectorsPane(), 10, 0, 10, 1);
+        add(new ControlsPane(), 20, 0, 2, 1);
 
         logger.debug("[CM_HEADER_PANE] Built {}", getId());
     }

@@ -18,6 +18,7 @@ public class ColorScheme {
         colors.put(new ColorKey("test", "red", null), Color.RED);
         colors.put(new ColorKey("test", "green", null), Color.GREEN);
         colors.put(new ColorKey("test", "blue", null), Color.BLUE);
+        colors.put(new ColorKey("test", "orange", null), Color.ORANGE);
     }
 
     public static Color getColor(ColorKey key) {
