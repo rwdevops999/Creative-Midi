@@ -1,9 +1,12 @@
 package util;
 
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class ApplicationInfo {
     private static final ApplicationInfo INSTANCE = new ApplicationInfo();
 
@@ -16,16 +19,12 @@ public class ApplicationInfo {
     // Debugging
     private boolean debugging = false;
 
-    public boolean isDebugging() {
-        return debugging;
-    }
-
-    public void setDebugging(boolean debugging) {
-        this.debugging = debugging;
-    }
-
     // Root Scene
-    @Getter
-    @Setter
     private Scene rootScene;
+
+    /**
+     * This is the SPA pane. It is also the rootPane for all spa content
+     */
+    private Pane spa;
+
 }
