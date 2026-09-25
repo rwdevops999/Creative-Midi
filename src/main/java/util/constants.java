@@ -12,4 +12,6 @@ public class constants {
     public static final int APP_WIDTH = 800;
     public static final int APP_HEIGHT = 600;
     public final static int MONITOR_HEIGHT=200;
+
+    public final static String SPA="SPA";
 }

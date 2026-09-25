@@ -25,6 +25,11 @@ public class ApplicationInfo {
     /**
      * This is the SPA pane. It is also the rootPane for all spa content
      */
+    private Pane spaOwner;
+
+    /**
+     * This is the SPA pane. It is also the rootPane for all spa content
+     */
     private Pane spa;
 
 }

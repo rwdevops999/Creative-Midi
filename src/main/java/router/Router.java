@@ -18,12 +18,11 @@ public class Router implements IRouter {
     @Override
     public void routeTo(IScene callingScene, IScene calledScene, boolean cleanup) {
         logger.debug("[CM_ROUTER] Route To {}", calledScene.getClass().getName());
-
-        Pane spa = ApplicationInfo.getInstance().getSpa();
-        Pane spaOwner = (Pane)spa.getParent();
+        Pane spaOwner = ApplicationInfo.getInstance().getSpaOwner();
 
         if (cleanup)
         {
+            Pane spa = ApplicationInfo.getInstance().getSpa();
             if (spa != null) {
                 spaOwner.getChildren().remove(spa);
             }

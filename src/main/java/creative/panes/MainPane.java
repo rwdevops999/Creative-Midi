@@ -3,6 +3,7 @@ package creative.panes;
 import creative.CreativeApp;
 import creative.panes.footer.FooterPane;
 import creative.panes.header.HeaderPane;
+import creative.scenes.main.MainScene;
 import custom.dialog.AboutDialog;
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -10,6 +11,8 @@ import javafx.scene.layout.*;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import router.Router;
+import util.ApplicationInfo;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
@@ -87,9 +90,14 @@ public class MainPane extends BorderPane {
         setTop(new HeaderPane());
 
         // Set SPA
+        ApplicationInfo.getInstance().setSpaOwner(this);
 
         // Set Footer
         setBottom(new FooterPane());
+
+        // Route to main page
+        Router router = new Router();
+        router.routeTo(null, new MainScene(), true);
     }
 
 
