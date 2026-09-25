@@ -9,6 +9,8 @@ import util.properties.PropertyContainer;
 import util.properties.PropertyLoader;
 import util.properties.PropertyType;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class Initializer {
@@ -24,11 +26,17 @@ public class Initializer {
         // 1. Load system properties
         Properties props = propertyLoader.loadPropertiesFromResource("creative.properties");
         logger.debug("[CM_INITIALIZER] System Properties loaded");
-        PropertyContainer.setSystemProperties(props);
+        PropertyContainer.setProperties(PropertyType.System, props);
 
         // 2. Set Theme
         ThemeType theme = ThemeType.valueOf(PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.THEME, "DARK"));
         Theme.setThemeType(theme);
         Theme.switchTheme(ApplicationInfo.getInstance().getRootScene());
+
+        // 3. load paths
+        String propertiesDirectory = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.PROPERTIES_PATH, "./properties");
+        Path path = Paths.get(propertiesDirectory, "paths.properties"); // Use your actual path
+        Properties pathProperties = propertyLoader.loadPropertiesFromPath(path);
+        PropertyContainer.setProperties(PropertyType.Path, pathProperties);
     }
 }

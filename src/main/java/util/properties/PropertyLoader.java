@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public class PropertyLoader {
@@ -32,6 +34,19 @@ public class PropertyLoader {
             return properties;
         } catch (IOException ioe) {
             logger.error("[CM_PROPERTY_LOADER] EXCEPTION. Cause {}", ioe.getMessage());
+        }
+
+        return null;
+    }
+
+    public Properties loadPropertiesFromPath(Path path) {
+        Properties properties = new Properties();
+
+        try (InputStream input = new FileInputStream(path.toFile().getPath())) {
+            properties.load(input);
+            return properties;
+        } catch (IOException ioe) {
+            logger.error("[CM_PROPERTY_READER] EXCEPTION: Reading properties from {}. CAUSE: {}", path.getFileName().toString(), ioe.getMessage());
         }
 
         return null;

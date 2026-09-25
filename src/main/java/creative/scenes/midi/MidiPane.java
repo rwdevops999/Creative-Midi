@@ -1,6 +1,7 @@
 package creative.scenes.midi;
 
 import communication.CommunicationModel;
+import creative.scenes.midi.provider.MidiProvider;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -21,6 +22,8 @@ public class MidiPane extends BorderPane {
 
     private void buildPane() {
         logger.debug("[CM_MIDI_PANE] Building {}", getId());
+
+        MidiProvider midiProvider = new MidiProvider();
 
         Label title = new Label("MIDI");
         title.setTextFill(Color.RED);
