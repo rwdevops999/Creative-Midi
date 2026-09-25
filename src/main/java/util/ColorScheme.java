@@ -14,6 +14,10 @@ public class ColorScheme {
         // default color
         colors.put(new ColorKey(null, null, null), Color.DARKGRAY);
 
+        // test colors
+        colors.put(new ColorKey("test", "red", null), Color.RED);
+        colors.put(new ColorKey("test", "green", null), Color.GREEN);
+        colors.put(new ColorKey("test", "blue", null), Color.BLUE);
     }
 
     public static Color getColor(ColorKey key) {
@@ -32,5 +36,10 @@ public class ColorScheme {
         }
 
         return colors.get(new ColorKey(null, null, null));
+    }
+
+    public static Color getColor(String arg1, String arg2) {
+        ColorKey key = new ColorKey(arg1, arg2, null);
+        return getColor(key);
     }
 }
