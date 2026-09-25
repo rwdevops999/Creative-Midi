@@ -21,7 +21,7 @@ public class ClockPane extends HBox {
 
         setPrefSize(PANE_WIDTH, FooterPane.PANE_HEIGHT);
         setAlignment(Pos.CENTER_LEFT);
-        setPadding(new Insets(0, 0, 3, 0));
+        setPadding(new Insets(3, 0, 3, 0));
 
         buildPane();
     }

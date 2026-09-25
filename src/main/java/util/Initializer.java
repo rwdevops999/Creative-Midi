@@ -4,8 +4,10 @@ import communication.CommunicationModel;
 import creative.panes.MainPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.enums.ThemeType;
 import util.properties.PropertyContainer;
 import util.properties.PropertyLoader;
+import util.properties.PropertyType;
 
 import java.util.Properties;
 
@@ -23,5 +25,10 @@ public class Initializer {
         Properties props = propertyLoader.loadPropertiesFromResource("creative.properties");
         logger.debug("[CM_INITIALIZER] System Properties loaded");
         PropertyContainer.setSystemProperties(props);
+
+        // 2. Set Theme
+        ThemeType theme = ThemeType.valueOf(PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.THEME, "DARK"));
+        Theme.setThemeType(theme);
+        Theme.switchTheme(ApplicationInfo.getInstance().getRootScene());
     }
 }

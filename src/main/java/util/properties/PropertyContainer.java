@@ -6,6 +6,7 @@ public class PropertyContainer {
     public static String SHOW_ABOUT_DIALOG = "show.about";
     public static String ABOUT_TIMING= "about.seconds";
     public static String APP_VERSION = "version";
+    public static String THEME = "theme";
 
     private static Properties systemProperties = new Properties();
     public static void setSystemProperties(Properties props) {

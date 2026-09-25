@@ -7,11 +7,9 @@ import custom.dialog.AboutDialog;
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.DummyUtil;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 

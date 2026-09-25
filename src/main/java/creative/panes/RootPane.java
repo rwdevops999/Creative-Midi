@@ -1,8 +1,10 @@
 package creative.panes;
 
+import creative.panes.monitor.MonitorPane;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 import javax.swing.border.Border;
 
@@ -23,7 +25,7 @@ public class RootPane extends BorderPane {
         logger.debug("[CM_ROOT_PANE] building Pane {}", getId());
 
         setCenter(new MainPane(this));
-//        setBottom(new MonitorPane(rootScenePane));
+        setBottom(new MonitorPane(this));
 
         logger.debug("[CM_ROOT_PANE] built Pane {}", getId());
     }
