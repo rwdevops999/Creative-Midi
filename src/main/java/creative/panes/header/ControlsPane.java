@@ -8,6 +8,12 @@ import javafx.scene.layout.HBox;
 import org.fusesource.jansi.AnsiConsole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
+import util.Theme;
+import util.Util;
+
+import static util.Theme.switchTheme;
+import static util.Util.setButtonIcon;
 
 public class ControlsPane extends HBox {
     private static final Logger logger = LoggerFactory.getLogger(ControlsPane.class);
@@ -36,7 +42,13 @@ public class ControlsPane extends HBox {
 
         // Light/dark Button
         ToggleButton toggleButton = new ToggleButton();
+        toggleButton.setSelected(!Theme.isModeLight());
+        setButtonIcon(toggleButton, Theme.getThemeIcon());
         toggleButton.setOnAction(e -> {
+            Theme.switchMode(!toggleButton.isSelected());
+            Util.setButtonIcon(toggleButton, Theme.getThemeIcon());
+            switchTheme(ApplicationInfo.getInstance().getRootScene());
+
         });
         getChildren().add(toggleButton);
 

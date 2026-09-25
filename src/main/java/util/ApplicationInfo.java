@@ -1,5 +1,9 @@
 package util;
 
+import javafx.scene.Scene;
+import lombok.Getter;
+import lombok.Setter;
+
 public class ApplicationInfo {
     private static final ApplicationInfo INSTANCE = new ApplicationInfo();
 
@@ -19,4 +23,9 @@ public class ApplicationInfo {
     public void setDebugging(boolean debugging) {
         this.debugging = debugging;
     }
+
+    // Root Scene
+    @Getter
+    @Setter
+    private Scene rootScene;
 }

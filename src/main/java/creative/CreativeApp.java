@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 import util.Initializer;
+import util.Theme;
 
 import java.util.Objects;
 
@@ -38,6 +40,9 @@ public class CreativeApp extends Application {
         Scene rootScene = new Scene(rootPane);
         String css = Objects.requireNonNull(CreativeApp.class.getResource("/styles/style.css")).toExternalForm();
         rootScene.getStylesheets().add(css);
+
+        Theme.switchTheme(rootScene);
+        ApplicationInfo.getInstance().setRootScene(rootScene);
 
         primaryStage.setScene(rootScene);
         primaryStage.show();
