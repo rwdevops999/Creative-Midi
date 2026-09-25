@@ -12,4 +12,7 @@ public class CommunicationModel {
     public static void setStatus(String status) {
         statusProperty.setValue(status);
     }
+    public static void clearStatus() {
+        statusProperty.setValue("");
+    }
 }

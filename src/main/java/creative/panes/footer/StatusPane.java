@@ -23,7 +23,7 @@ public class StatusPane extends HBox {
         setId("StatusPane");
 
         setPrefSize(PANE_WIDTH, FooterPane.PANE_HEIGHT);
-        setAlignment(Pos.CENTER);
+        setAlignment(Pos.CENTER_LEFT);
 
         buildPane();
     }

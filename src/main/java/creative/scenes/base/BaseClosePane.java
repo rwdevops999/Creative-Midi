@@ -1,5 +1,6 @@
 package creative.scenes.base;
 
+import communication.CommunicationModel;
 import creative.scenes.IScene;
 import router.Router;
 import util.ColorScheme;
@@ -49,6 +50,8 @@ public class BaseClosePane extends HBox {
             if (closeHandler != null) {
                 closeHandler.handle(null);
             }
+
+            CommunicationModel.clearStatus();
 
             Router router = new Router();
             router.routeTo(null, callingScene, true);
