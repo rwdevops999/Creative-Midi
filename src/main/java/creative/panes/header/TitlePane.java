@@ -9,12 +9,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.DummyUtil;
 
 import java.io.InputStream;
 import java.util.Objects;
-
-import static util.ColorScheme.getColor;
 
 public class TitlePane extends HBox {
     private static final Logger logger = LoggerFactory.getLogger(TitlePane.class);
@@ -36,8 +33,6 @@ public class TitlePane extends HBox {
 
     private void buildPane() {
         logger.debug("[CM_TITLE_PANE] Building {}", getId());
-
-        DummyUtil.showPaneBorder(this, getColor("test", "green"));
 
         Image icon = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("icons/appicon.png")));
         ImageView imageView = new ImageView(icon);

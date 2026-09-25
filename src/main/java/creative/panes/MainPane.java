@@ -1,18 +1,23 @@
 package creative.panes;
 
 import creative.CreativeApp;
+import creative.panes.footer.FooterPane;
 import creative.panes.header.HeaderPane;
 import custom.dialog.AboutDialog;
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.DummyUtil;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
 import java.util.Objects;
+
+import static util.ColorScheme.getColor;
 
 public class MainPane extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(MainPane.class);
@@ -35,23 +40,25 @@ public class MainPane extends BorderPane {
     private void createPane() {
         logger.debug("[CM_MAIN_PANE] building Pane {}", getId());
 
+        BackgroundFill backgroundColor = new BackgroundFill(getColor(), CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY);
+
         Image image = new Image(Objects.requireNonNull(CreativeApp.class.getClassLoader().getResourceAsStream("backgrounds/background.png")));
+
         BackgroundImage backgroundImage = new BackgroundImage(
                 image,
-                BackgroundRepeat.NO_REPEAT,  // Repeat X
-                BackgroundRepeat.NO_REPEAT,  // Repeat Y
-                BackgroundPosition.CENTER,   // Position
-                new BackgroundSize(          // Size
+                BackgroundRepeat.NO_REPEAT,   // Niet herhalen
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,    // Centreren
+                new BackgroundSize(
                         BackgroundSize.AUTO,
                         BackgroundSize.AUTO,
                         false,
                         false,
-                        true,                    // Contain (preserve aspect ratio)
-                        false                    // Cover (fill the entire pane)
+                        true,
+                        false
                 )
         );
-        setBackground(new Background(backgroundImage));
-
+        setBackground(new Background(new BackgroundFill[]{backgroundColor}, new BackgroundImage[]{backgroundImage}));
 
         if (PropertyContainer.getPropertyAsBoolean(PropertyType.System, PropertyContainer.SHOW_ABOUT_DIALOG, false)) {
             AboutDialog aboutDialog = new AboutDialog(PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.APP_VERSION, "0.0"));
@@ -84,7 +91,7 @@ public class MainPane extends BorderPane {
         // Set SPA
 
         // Set Footer
-
+        setBottom(new FooterPane());
     }
 
 
@@ -95,5 +102,8 @@ public class MainPane extends BorderPane {
 
     public HeaderPane getHeaderPane() {
         return (HeaderPane)getTop();
+    }
+    public FooterPane getFooterPane() {
+        return (FooterPane)getBottom();
     }
 }

@@ -3,12 +3,7 @@ package creative.panes.header;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ColorScheme;
-import util.DummyUtil;
 
-import java.awt.Color;
-
-import static util.ColorScheme.getColor;
 import static util.constants.APP_WIDTH;
 
 public class HeaderPane extends GridPane {
@@ -28,8 +23,6 @@ public class HeaderPane extends GridPane {
 
     private void buildPane() {
         logger.debug("[CM_HEADER_PANE] Building {}", getId());
-
-        DummyUtil.showPaneBorder(this, getColor("test", "red"));
 
         add(new TitlePane(), 0, 0, 10, 1);
         add(new SelectorsPane(), 10, 0, 10, 1);

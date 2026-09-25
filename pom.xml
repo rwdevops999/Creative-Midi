@@ -40,6 +40,22 @@
             <version>2.4.1</version>
         </dependency>
 
+        <!-- removal of boilerplate code -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.46</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- to display the clock -->
+        <dependency>
+            <groupId>eu.hansolo</groupId>
+            <artifactId>Medusa</artifactId>
+            <version>16.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

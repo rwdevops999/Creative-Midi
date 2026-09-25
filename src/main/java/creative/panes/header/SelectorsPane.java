@@ -6,12 +6,8 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.DummyUtil;
 
 import java.util.ArrayList;
-
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 
 public class SelectorsPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(SelectorsPane.class);
@@ -32,8 +28,6 @@ public class SelectorsPane extends VBox {
 
     private void buildPane() {
         logger.debug("[CM_SELECTORS_PANE] Building {}", getId());
-
-        showPaneBorder(this, getColor("test", "blue"));
 
         SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", new ArrayList<>(), new KeyboardHandler<>(), "");
         SelectorPane deviceSelectorPane = new SelectorPane("Device", "Select a device", new ArrayList<>(), null, "");

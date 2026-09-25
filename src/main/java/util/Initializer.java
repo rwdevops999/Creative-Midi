@@ -1,5 +1,6 @@
 package util;
 
+import communication.CommunicationModel;
 import creative.panes.MainPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,9 @@ public class Initializer {
 
     public void initApp() {
         logger.debug("[CM_INITIALIZER] Initializing Application");
+
+        CommunicationModel.setStatus("Initializing Creative Midi");
+
         PropertyLoader propertyLoader = new PropertyLoader();
 
         // 1. Load system properties

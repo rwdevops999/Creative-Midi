@@ -9,9 +9,6 @@ import org.fusesource.jansi.AnsiConsole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
-
 public class ControlsPane extends HBox {
     private static final Logger logger = LoggerFactory.getLogger(ControlsPane.class);
 
@@ -32,8 +29,6 @@ public class ControlsPane extends HBox {
 
     private void buildPane() {
         logger.debug("[CM_CONTROLS_PANE] Building {}", getId());
-
-        showPaneBorder(this, getColor("test", "orange"));
 
         // Midi Off Button
         getChildren().add(new IconButton("midioff", "midi off", "icons/midi.png", e -> {
