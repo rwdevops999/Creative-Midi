@@ -4,6 +4,8 @@ import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static util.Util.setPaneBackground;
+
 public class MidiDetailPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(MidiDetailPane.class);
 
@@ -22,6 +24,8 @@ public class MidiDetailPane extends GridPane {
 
     private void buildPane() {
         logger.debug("[CM_MIDI_DETAIL_PANE] Building {}", getId());
+
+        setPaneBackground(this);
 
         logger.debug("[CM_MIDI_DETAIL_PANE] Built {}", getId());
     }

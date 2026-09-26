@@ -29,7 +29,7 @@ public class MidiProvider {
     private String midiFileName = new String("");
 
     @Getter
-    private static List<Midi> midis = new ArrayList<>();
+    private List<Midi> midis = new ArrayList<>();
 
     public MidiProvider(String filename) {
         super();

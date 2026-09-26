@@ -1,5 +1,6 @@
 package util;
 
+import creative.scenes.midi.provider.MidiProvider;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
@@ -36,4 +37,9 @@ public class ApplicationInfo {
      * Test Mode On/Off switch
      */
     private boolean testMode = false;
+
+    /**
+     * MIDI Provider with loaded midis from file
+     */
+    private MidiProvider midiProvider;
 }

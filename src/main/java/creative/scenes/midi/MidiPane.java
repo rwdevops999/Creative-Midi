@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 public class MidiPane extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(MidiPane.class);
@@ -24,6 +25,7 @@ public class MidiPane extends BorderPane {
         logger.debug("[CM_MIDI_PANE] Building {}", getId());
 
         MidiProvider midiProvider = new MidiProvider("midievents.json");
+        ApplicationInfo.getInstance().setMidiProvider(midiProvider);
 
         CommunicationModel.setStatus("Setup MIDI");
 
