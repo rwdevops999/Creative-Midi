@@ -40,10 +40,12 @@ public class MidiEntrySelect extends GridPane {
     public MidiEntrySelect() {
         super();
 
-        int[] columnSizes = {5,5,5,5,5,5,5,5,5,5,5,5};
-        for (int size: columnSizes) {
+        int totalColumns = 12;
+        double percentagePerColumn = 100.0 / totalColumns; // Dit is ~8.3333%
+
+        for (int i = 0; i < totalColumns; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setPercentWidth(size);
+            col.setPercentWidth(percentagePerColumn);
             col.setHalignment(HPos.LEFT);
             getColumnConstraints().add(col);
         }

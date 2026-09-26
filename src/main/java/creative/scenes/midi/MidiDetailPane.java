@@ -16,7 +16,6 @@ import javafx.scene.layout.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
-import util.ColorScheme;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,10 +33,12 @@ public class MidiDetailPane extends GridPane {
 
         setId("MidiDetailPane");
 
-        int[] columnSizes = {10,10,10,10,10,10,10,10,10,10,10,10};
-        for (int size: columnSizes) {
+        int totalColumns = 10;
+        double percentagePerColumn = 100.0 / totalColumns; // Dit is ~8.3333%
+
+        for (int i = 0; i < totalColumns; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setPercentWidth(size);
+            col.setPercentWidth(percentagePerColumn);
             col.setHalignment(HPos.LEFT);
             getColumnConstraints().add(col);
         }
@@ -71,6 +72,7 @@ public class MidiDetailPane extends GridPane {
             AtomicInteger row = new AtomicInteger(0);
 
             // ROW0
+            System.out.println("ROW1 " + row.get());
             Label midiName = new Label("Name:");
             add(midiName, 0, row.get());
 
@@ -84,6 +86,7 @@ public class MidiDetailPane extends GridPane {
 
             // ROW1
             row.getAndIncrement();
+            System.out.println("ROW2 " + row.get());
             Label statusLabel = new Label("Status:");
             add(statusLabel, 0, row.get());
 
@@ -99,6 +102,7 @@ public class MidiDetailPane extends GridPane {
 
             // ROW2
             row.getAndIncrement();
+            System.out.println("ROW3 " + row.get());
             RadioButton systemRadio = new RadioButton("System Message");
             systemRadio.setToggleGroup(group);
             systemRadio.setSelected(true);
@@ -106,11 +110,19 @@ public class MidiDetailPane extends GridPane {
 
             // ROW3
             row.getAndIncrement();
+            System.out.println("ROW4 " + row.get());
             RadioButton channelRadio = new RadioButton("Channel Message");
             channelRadio.setToggleGroup(group);
             channelRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                row.set(3);
                 if (newValue) {
                     handleChannelMessageSelected(row.get(), currentMidi);
+
+                    if (currentMidi.getByte2() != null) {
+                        row.getAndAdd(7);
+                        renderByteEntry(2, currentMidi, row.get());
+                    }
+
                 } else {
                     removeDeletables();
                 }
@@ -137,11 +149,6 @@ public class MidiDetailPane extends GridPane {
                         .findFirst()
                         .ifPresent(group::selectToggle);
             });
-/*
-            if (currentMidi.getByte2() != null) {
-                row.getAndAdd(7);
-                renderByteEntry(2, currentMidi, row.get());
-            } */
         }
 
         logger.debug("[CM_MIDI_DETAIL_PANE] Built {}", getId());
@@ -149,13 +156,15 @@ public class MidiDetailPane extends GridPane {
 
     private void handleChannelMessageSelected(int currentRow, Midi currentMidi) {
         currentRow++;
+        System.out.println("ROW5 " + currentRow);
         renderChannelSelection(currentRow, currentMidi);
-//        currentRow++;
-//        renderByteEntry(1, currentMidi, currentRow);
+        currentRow++;
+        System.out.println("ROW6 " + currentRow);
+        renderByteEntry(1, currentMidi, currentRow);
     }
 
     private void renderChannelSelection(int onRow, Midi currentMidi) {
-        Label channelLabel = new Label("Channel:");
+        Label channelLabel = new Label("Chnl:");
         channelLabel.setId("Deletable");
         add(channelLabel, 0, onRow, 2, 1);
 
