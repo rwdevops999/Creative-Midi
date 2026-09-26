@@ -38,10 +38,15 @@ public class Util {
         for (int i = 0; i < 128; i++) {
             int noteIndex = i % 12;
             int octave = -2 + baseOctave + (i / 12);
-            NoteEntity entity = new NoteEntity(i, String.format("%s%d", BASE_NOTES[noteIndex], octave));
-            result.add(entity);
+            result.add(new NoteEntity(i, String.format("%s%d", BASE_NOTES[noteIndex], octave)));
         }
 
         return result;
+    }
+
+    public static NoteEntity calcNote (int notevalue, int baseOctave) {
+        int noteIndex = notevalue % 12;
+        int octave = -2 + baseOctave + (notevalue / 12);
+        return new NoteEntity(notevalue, String.format("%s%d", BASE_NOTES[noteIndex], octave));
     }
 }

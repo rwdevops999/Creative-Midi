@@ -240,7 +240,7 @@ public class Test1Pane extends GridPane {
 
             @Override
             public NoteEntity fromString(String string) {
-                // You can leave this null if your ComboBox is read-only
+                // Leave this null because the ComboBox is read-only
                 return null;
             }
         });
