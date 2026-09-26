@@ -26,13 +26,18 @@ public class MidiProvider {
             .build();
 
     @Getter
+    private String midiFileName = new String("");
+
+    @Getter
     private static List<Midi> midis = new ArrayList<>();
 
-    public MidiProvider() {
+    public MidiProvider(String filename) {
         super();
 
+        midiFileName = filename;
+
         String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi");
-        String midiEventsFile = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_EVENTS_FILE, "midievents.json");
+        String midiEventsFile = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_EVENTS_FILE, midiFileName);
 
         String midiEventsFilePath = midiPath + "/" + midiEventsFile;
 

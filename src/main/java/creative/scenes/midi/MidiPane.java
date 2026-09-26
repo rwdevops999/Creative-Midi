@@ -23,7 +23,7 @@ public class MidiPane extends BorderPane {
     private void buildPane() {
         logger.debug("[CM_MIDI_PANE] Building {}", getId());
 
-        MidiProvider midiProvider = new MidiProvider();
+        MidiProvider midiProvider = new MidiProvider("midievents.json");
 
         Label title = new Label("MIDI");
         title.setTextFill(Color.RED);
