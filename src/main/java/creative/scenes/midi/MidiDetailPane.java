@@ -73,7 +73,6 @@ public class MidiDetailPane extends GridPane {
 
             // ROW0
             Label midiName = new Label("Name:");
-            System.out.println("ADD 1 = " + row.get());
             add(midiName, 0, row.get());
 
             TextField midiNameInputField = new TextField();
@@ -82,13 +81,11 @@ public class MidiDetailPane extends GridPane {
             midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> {
                changedHandler.handle(new ActionEvent());
             });
-            System.out.println("ADD 2 = " + row.get());
             add(midiNameInputField, 1, row.get(), 5, 1);
 
             // ROW1
             row.getAndIncrement();
             Label statusLabel = new Label("Status:");
-            System.out.println("ADD 3 = " + row.get());
             add(statusLabel, 0, row.get());
 
             HexTextField hexInput = new HexTextField();
@@ -97,7 +94,6 @@ public class MidiDetailPane extends GridPane {
             hexInput.textProperty().addListener((observable, oldValue, newValue) -> {
                 changedHandler.handle(new ActionEvent());
             });
-            System.out.println("ADD 4 = " + row.get());
             add(hexInput, 1, row.get(), 2, 1);
 
             ToggleGroup group = new ToggleGroup();
@@ -107,7 +103,6 @@ public class MidiDetailPane extends GridPane {
             RadioButton systemRadio = new RadioButton("System Message");
             systemRadio.setToggleGroup(group);
             systemRadio.setSelected(true);
-            System.out.println("ADD 5 = " + row.get());
             add(systemRadio, 1, row.get(), 3, 1);
 
             // ROW3
@@ -128,7 +123,6 @@ public class MidiDetailPane extends GridPane {
                     removeDeletables();
                 }
             });
-            System.out.println("ADD 6 = " + row.get());
             add(channelRadio, 1, row.get(), 3, 1);
 
             if (currentMidi.getMessageType() != null) {
@@ -166,7 +160,6 @@ public class MidiDetailPane extends GridPane {
     private void renderChannelSelection(int onRow, Midi currentMidi) {
         Label channelLabel = new Label("Chnl:");
         channelLabel.setId("Deletable");
-        System.out.println("ADD 7 = " + onRow);
         add(channelLabel, 0, onRow, 2, 1);
 
         ComboBox<Integer> channelSelect = new ComboBox<>();
@@ -176,7 +169,6 @@ public class MidiDetailPane extends GridPane {
         }
 
         channelSelect.valueProperty().bindBidirectional(currentMidi.getChannelProperty());
-        System.out.println("ADD 8 = " + onRow);
         add(channelSelect, 1, onRow, 2, 1);
     }
 
@@ -188,7 +180,6 @@ public class MidiDetailPane extends GridPane {
             byteSelect.showRemoveButton(false);
             byteSelect.setAddHandler(e -> {
                 if (currentMidi.getByte2() == null) {
-                    System.out.println("XXX = " + onRow);
                     currentMidi.setByte2(0);
                     renderByteEntry(byteId + 1, currentMidi, onRow + 5);
                 }
@@ -205,7 +196,6 @@ public class MidiDetailPane extends GridPane {
             });
         }
         byteSelect.setId("Deletable");
-        System.out.println("ADD 9 = " + onRow);
         add(byteSelect, 0, onRow, 12, onRow);
     }
 
