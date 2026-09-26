@@ -107,10 +107,10 @@ public class MidiEntrySelect extends GridPane {
                         "-fx-font-weight: bold; " +          // Bold text
                         "-fx-cursor: hand;";
 
-        AtomicInteger row = new AtomicInteger(-1);
+        AtomicInteger row = new AtomicInteger(0);
 
         // ROW0
-        row.getAndIncrement();
+//        row.getAndIncrement();
 
         addButton = new Button("+");
         addButton.setStyle(flatButtonStyle);
