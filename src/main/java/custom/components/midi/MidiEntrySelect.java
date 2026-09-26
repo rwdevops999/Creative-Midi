@@ -32,7 +32,7 @@ import static util.ColorScheme.getColor;
 import static util.Util.calcNote;
 
 public class MidiEntrySelect extends GridPane {
-    private ObjectProperty<Integer> byte1Value = new SimpleObjectProperty<>(0);
+    public ObjectProperty<Integer> byte1Value = new SimpleObjectProperty<>(0);
 
     public MidiEntrySelect() {
         super();

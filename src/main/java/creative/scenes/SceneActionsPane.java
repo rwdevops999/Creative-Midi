@@ -1,5 +1,6 @@
 package creative.scenes;
 
+import creative.scenes.midi.MidiPane;
 import entity.AEntity;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -33,8 +34,12 @@ public class SceneActionsPane extends VBox {
         }
     }
 
-    public SceneActionsPane(Pane owner, String actionName, BiConsumer<AEntity, Pane>[] consumers, Supplier<AEntity> supplier) {
+    private MidiPane parent;
+
+    public SceneActionsPane(MidiPane owner, String actionName, BiConsumer<AEntity, Pane>[] consumers, Supplier<AEntity> supplier) {
         this();
+
+        this.parent = owner;
 
         setAlignment(Pos.TOP_CENTER);
         setPadding(new Insets(5, 0, 0, 0));
@@ -67,4 +72,8 @@ public class SceneActionsPane extends VBox {
         logger.debug("[CM_SCENE_ACTIONS_PANE] Built {}", getId());
     }
 
+    // ACCESSOR
+    public MidiPane getMidiPane() {
+        return parent;
+    }
 }

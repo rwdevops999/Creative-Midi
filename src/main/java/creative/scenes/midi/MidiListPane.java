@@ -5,10 +5,12 @@ import entity.midi.Midi;
 import entity.midi.NoteEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
@@ -47,6 +49,20 @@ public class MidiListPane extends VBox {
         }
 
         midiListView.setItems(FXCollections.observableList(midis));
+        midiListView.setCellFactory(param -> new ListCell<Midi>() {
+            @Override
+            protected void updateItem(Midi midi, boolean empty) {
+                super.updateItem(midi, empty);
+
+                if (empty || midi == null) {
+                    setText(null);
+                } else {
+                    // Hier kies je welke variabele je wilt tonen
+                    setText(midi.getName());
+                }
+            }
+        });
+
         midiListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
         });
 

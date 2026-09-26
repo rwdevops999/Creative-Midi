@@ -1,6 +1,8 @@
 package util;
 
+import creative.scenes.midi.MidiListPane;
 import creative.scenes.midi.provider.MidiProvider;
+import entity.midi.Midi;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
@@ -42,4 +44,9 @@ public class ApplicationInfo {
      * MIDI Provider with loaded midis from file
      */
     private MidiProvider midiProvider;
+
+    /**
+     * Current MIDI
+     */
+    private Midi currentMidi;
 }
