@@ -259,6 +259,9 @@ public class MidiEntrySelect extends GridPane {
     private void renderSpinner(int currentRow, int min, int max) {
         Spinner<Integer> spinner = new Spinner<>(min, max, 0);
         spinner.setId("Deletable");
+        if (byteValue.get() == null) {
+            byteValue.set(0);
+        }
         spinner.getValueFactory().valueProperty().bindBidirectional(byteValue);
         add(spinner, 3, currentRow, 2, 1);
     }

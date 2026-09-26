@@ -36,7 +36,7 @@ public class Midi extends AEntity {
     ByteType byte2Type;
 
     private ObjectProperty<Integer> byte2Property = new SimpleObjectProperty<>();
-    int byte2;
+    Integer byte2;
 
     public Midi() {
         this.name = "";
@@ -105,7 +105,7 @@ public class Midi extends AEntity {
         return byte2TypeProperty.get();
     }
 
-    public void setByte2(int byte2) {
+    public void setByte2(Integer byte2) {
         byte2Property.set(byte2);
         this.byte2 = byte2;
     }

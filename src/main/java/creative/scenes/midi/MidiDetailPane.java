@@ -72,7 +72,6 @@ public class MidiDetailPane extends GridPane {
             AtomicInteger row = new AtomicInteger(0);
 
             // ROW0
-            System.out.println("ROW1 " + row.get());
             Label midiName = new Label("Name:");
             add(midiName, 0, row.get());
 
@@ -86,7 +85,6 @@ public class MidiDetailPane extends GridPane {
 
             // ROW1
             row.getAndIncrement();
-            System.out.println("ROW2 " + row.get());
             Label statusLabel = new Label("Status:");
             add(statusLabel, 0, row.get());
 
@@ -102,7 +100,6 @@ public class MidiDetailPane extends GridPane {
 
             // ROW2
             row.getAndIncrement();
-            System.out.println("ROW3 " + row.get());
             RadioButton systemRadio = new RadioButton("System Message");
             systemRadio.setToggleGroup(group);
             systemRadio.setSelected(true);
@@ -110,12 +107,11 @@ public class MidiDetailPane extends GridPane {
 
             // ROW3
             row.getAndIncrement();
-            System.out.println("ROW4 " + row.get());
             RadioButton channelRadio = new RadioButton("Channel Message");
             channelRadio.setToggleGroup(group);
             channelRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                row.set(3);
                 if (newValue) {
+                    row.set(3);
                     handleChannelMessageSelected(row.get(), currentMidi);
 
                     if (currentMidi.getByte2() != null) {
@@ -156,10 +152,8 @@ public class MidiDetailPane extends GridPane {
 
     private void handleChannelMessageSelected(int currentRow, Midi currentMidi) {
         currentRow++;
-        System.out.println("ROW5 " + currentRow);
         renderChannelSelection(currentRow, currentMidi);
         currentRow++;
-        System.out.println("ROW6 " + currentRow);
         renderByteEntry(1, currentMidi, currentRow);
     }
 
@@ -185,7 +179,11 @@ public class MidiDetailPane extends GridPane {
             byteSelect.byteValue.bindBidirectional(currentMidi.getByte1Property());
             byteSelect.showRemoveButton(false);
             byteSelect.setAddHandler(e -> {
-                renderByteEntry(byteId + 1, currentMidi, onRow + 5);
+                if (currentMidi.getByte2() == null) {
+                    System.out.println("XXX = " + onRow);
+                    currentMidi.setByte2(0);
+                    renderByteEntry(byteId + 1, currentMidi, onRow + 5);
+                }
             });
         } else if (byteId == 2) {
             byteSelect.showAddButton(false);
@@ -195,6 +193,7 @@ public class MidiDetailPane extends GridPane {
                 Button btn = (Button)e.getSource();
                 MidiEntrySelect src = (MidiEntrySelect)btn.getParent();
                 getChildren().remove(src);
+                currentMidi.setByte2(null);
             });
         }
         byteSelect.setId("Deletable");
