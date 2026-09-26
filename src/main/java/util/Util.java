@@ -1,6 +1,11 @@
 package util;
 
+import entity.AEntity;
 import entity.midi.NoteEntity;
+import javafx.beans.property.BooleanProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,6 +16,8 @@ import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import static util.constants.*;
 
@@ -27,6 +34,10 @@ public class Util {
     public static void setPaneBackground(Pane pane) {
         Background background = new Background(new BackgroundFill(ColorScheme.getColor(), null, null));
         pane.setBackground(background);
+    }
+
+    public static void setPaneWidthAsPercentage(Pane originator, Pane parent, int size) {
+        originator.prefWidthProperty().bind(parent.widthProperty().multiply(size / 100.0));
     }
 
     public static void setPaneHeightAsPercentage(Pane originator, Pane parent, int size) {
@@ -48,5 +59,22 @@ public class Util {
         int noteIndex = notevalue % 12;
         int octave = -2 + baseOctave + (notevalue / 12);
         return new NoteEntity(notevalue, String.format("%s%d", BASE_NOTES[noteIndex], octave));
+    }
+
+    public static Button createButton (Pane owner, String id, String caption, int percentage, BiConsumer<AEntity, Pane> consumer, BooleanProperty disableProperty, Supplier<AEntity> supplier) {
+        float perc = percentage / 100.0f;
+        Button button = new Button(caption);
+        button.prefWidthProperty().bind(owner.widthProperty().multiply(perc));
+        button.setId(id);
+        button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                consumer.accept(supplier.get(), owner);
+            }
+        });
+//        button.visibleProperty().bindBidirectional(visiblePropery);
+        button.disableProperty().bindBidirectional(disableProperty);
+
+        return button;
     }
 }

@@ -2,12 +2,13 @@ package entity.midi;
 
 import creative.scenes.midi.data.ByteType;
 import creative.scenes.midi.data.MessageType;
+import entity.AEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Midi {
+public class Midi extends AEntity {
     private String name;
     int statusByte;
     MessageType messageType;
