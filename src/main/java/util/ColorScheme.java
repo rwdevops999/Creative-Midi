@@ -1,6 +1,7 @@
 package util;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,16 @@ public class ColorScheme {
 
         // status color
         colors.put(new ColorKey("status", null, null), Color.BLUE);
+
+        // OnOffSwitch component
+        colors.put(new ColorKey("component", "OnOffSwitch","fill"), Color.LIGHTGRAY);
+        colors.put(new ColorKey("component", "OnOffSwitch","stroke"), Color.GRAY);
+        colors.put(new ColorKey("component", "OnOffSwitch","trigger"), Color.WHITE);
+        colors.put(new ColorKey("component", "OnOffSwitch","on"), Color.valueOf("#4CAF50"));
+        colors.put(new ColorKey("component", "OnOffSwitch","off"), Color.LIGHTGRAY);
+
+        Circle trigger = new Circle(10);
+        trigger.setFill(ColorScheme.getColor("Component", "OnOffSwitch", "TriggerFill"));
 
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);

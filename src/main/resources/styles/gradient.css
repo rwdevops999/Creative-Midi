@@ -1,0 +1,3 @@
+.slider .track {
+    -fx-background-color: linear-gradient(to right, #F44336 50%, #4CAF50 50%);
+}

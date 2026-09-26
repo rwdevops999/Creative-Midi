@@ -14,4 +14,6 @@ public class constants {
     public final static int MONITOR_HEIGHT=200;
 
     public final static String SPA="SPA";
+
+    public final static String[] BASE_NOTES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 }
