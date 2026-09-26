@@ -3,7 +3,9 @@ package custom.components.midi;
 import creative.scenes.midi.convertor.MinPlusConvertor;
 import creative.scenes.midi.convertor.PanningConvertor;
 import creative.scenes.midi.convertor.SplitConvertor;
+import creative.scenes.midi.data.Byte1Type;
 import creative.scenes.midi.data.ByteType;
+import custom.components.HexTextField;
 import custom.components.OnOffSwitch;
 import entity.midi.NoteEntity;
 import javafx.beans.property.*;
@@ -28,11 +30,12 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static util.ColorScheme.getColor;
 import static util.Util.calcNote;
 
 public class MidiEntrySelect extends GridPane {
-    public ObjectProperty<Integer> byte1Value = new SimpleObjectProperty<>(0);
+    public ObjectProperty<Integer> byteValue = new SimpleObjectProperty<>(0);
+    public ObjectProperty<String> byteAsStringValue = new SimpleObjectProperty<>("");
+    public ObjectProperty<ByteType> byteTypeValue = new SimpleObjectProperty<>();
 
     public MidiEntrySelect() {
         super();
@@ -48,6 +51,8 @@ public class MidiEntrySelect extends GridPane {
         RowConstraints rowConstraints = new RowConstraints();
         rowConstraints.setValignment(VPos.CENTER);
         getRowConstraints().add(rowConstraints);
+
+        setVgap(5);
     }
 
     private Button addButton;
@@ -116,12 +121,26 @@ public class MidiEntrySelect extends GridPane {
         Label byteLabel = new Label("Type:");
         add(byteLabel, 1, row.get());
 
-        ComboBox<String> byteTypeBox = new ComboBox<>();
+        ComboBox<ByteType> byteTypeBox = new ComboBox<>();
+        byteTypeBox.setConverter(new StringConverter<ByteType>() {
+            @Override
+            public String toString(ByteType type) {
+                // Return the name property if the item isn't null
+                return (type != null) ? type.name().replaceAll("(?<!^)(?=[A-Z])", " ") : "";
+            }
+
+            @Override
+            public ByteType fromString(String string) {
+                // Leave this null because the ComboBox is read-only
+                return null;
+            }
+        });
+        byteTypeBox.valueProperty().bindBidirectional(byteTypeValue);
         byteTypeBox.setMaxWidth(Double.MAX_VALUE);
-        Arrays.stream(ByteType.values()).forEach(type -> byteTypeBox.getItems().add(type.name().replaceAll("(?<!^)(?=[A-Z])", " ")));
+        byteTypeBox.setItems(FXCollections.observableArrayList(ByteType.fromValue(buttonId)));
         byteTypeBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             removeDeletables();
-            handleTypeChange(buttonId, row.get(), newValue);
+            handleTypeChange(buttonId, row.get(), newValue.name());
         });
         add(byteTypeBox, 3, row.get(), 5, 1);
 
@@ -150,6 +169,7 @@ public class MidiEntrySelect extends GridPane {
             case ContinuousMinusPlus -> handleMinPlus(currentRow, -64, 63, buttonId, null);
             case ContinuousOnOff -> handleContinousOnOff(currentRow, 0, 127, buttonId, null);
             case Key -> handleKey(currentRow, buttonId, "Note");
+            case FreeValue -> handleFreeValue(currentRow, buttonId, null);
         };
     }
 
@@ -178,7 +198,7 @@ public class MidiEntrySelect extends GridPane {
         onoffSwitch.setId("Deletable");
         bindBidirectional(
                 onoffSwitch.switchedOnProperty().asObject(), // Property<Boolean>
-                byte1Value,                    // Property<Integer>
+                byteValue,                    // Property<Integer>
                 boolVal -> boolVal ? 127 : 0,   // Boolean -> Integer
                 intVal -> intVal == null ? false : (intVal.equals(0) ? false : true)        // Integer -> Boolean
         );
@@ -217,6 +237,13 @@ public class MidiEntrySelect extends GridPane {
         renderNotesCombo(currentRow);
     }
 
+    private void handleFreeValue(int currentRow, int buttonId, String label) {
+        currentRow++;
+
+        renderByteLabel(currentRow, buttonId, label);
+        renderTextField(currentRow);
+    }
+
     private void renderByteLabel(int currentRow, int buttonId, String label) {
         if (label == null)  {
             label = "Byte" + buttonId + ":";
@@ -230,8 +257,51 @@ public class MidiEntrySelect extends GridPane {
     private void renderSpinner(int currentRow, int min, int max) {
         Spinner<Integer> spinner = new Spinner<>(min, max, 0);
         spinner.setId("Deletable");
-        spinner.getValueFactory().valueProperty().bindBidirectional(byte1Value);
+        spinner.getValueFactory().valueProperty().bindBidirectional(byteValue);
         add(spinner, 3, currentRow, 2, 1);
+    }
+
+    private void renderTextField(int currentRow) {
+        HexTextField textField = new HexTextField();
+        textField.setId("Deletable");
+        bindBidirectional(
+                textField.textProperty(),
+                byteValue,
+
+                // 1. String -> Integer (Parses whatever the user is typing)
+                sVal -> {
+                    if (sVal == null || sVal.trim().isEmpty()) return 0;
+                    try {
+                        return Integer.parseInt(sVal.trim(), 16);
+                    } catch (NumberFormatException e) {
+                        return byteValue.getValue();
+                    }
+                },
+
+                // 2. Integer -> String (SMART FORMATTING)
+                intVal -> {
+                    if (intVal == null) return "00";
+
+                    // Get what is currently in the text field right now
+                    String currentText = textField.getText();
+
+                    // IF the user is currently typing a single valid hex char (like "1" or "A"),
+                    // do NOT auto-pad it to "01" or "0A". Let it stay as "1" or "A".
+                    if (currentText != null && currentText.matches("^[0-9a-fA-F]$")) {
+                        try {
+                            // Check if the current single char matches the numeric value
+                            if (Integer.parseInt(currentText, 16) == intVal.intValue()) {
+                                return currentText.toUpperCase(); // Keep it as "1"
+                            }
+                        } catch (NumberFormatException ignored) {}
+                    }
+
+                    // Default formatting (for startup values like 123 -> "7B", or complete inputs)
+                    return String.format("%02X", intVal.intValue() & 0xFF);
+                }
+        );
+        textField.textProperty().bindBidirectional(byteAsStringValue);
+        add(textField, 3, currentRow, 2, 1);
     }
 
     private void renderSlider(int currentRow, int min, int max, String subtype) {
@@ -244,7 +314,7 @@ public class MidiEntrySelect extends GridPane {
 
         bindBidirectional(
                 slider.valueProperty().asObject(), // Property<Double>
-                byte1Value,                    // Property<Integer>
+                byteValue,                    // Property<Integer>
                 doubleVal -> doubleVal == null ? 0 : doubleVal.intValue(),   // Double -> Integer
                 intVal -> intVal == null ? 0.0 : intVal.doubleValue()        // Integer -> Double
         );
@@ -286,10 +356,10 @@ public class MidiEntrySelect extends GridPane {
         });
 
         noteSelect.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            byte1Value.set(newValue.getId());
+            byteValue.set(newValue.getId());
         });
 
-        noteSelect.getSelectionModel().select(calcNote(byte1Value.get(), baseOctave));
+        noteSelect.getSelectionModel().select(calcNote(byteValue.get(), baseOctave));
 
         add(noteSelect, 3, currentRow, 3, 1);
     }

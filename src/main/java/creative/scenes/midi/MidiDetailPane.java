@@ -126,6 +126,11 @@ public class MidiDetailPane extends GridPane {
                         .findFirst()
                         .ifPresent(group::selectToggle);
             });
+
+            if (currentMidi.getByte2() != null) {
+                row.getAndAdd(7);
+                renderByteEntry(2, currentMidi, row.get());
+            }
         }
 
         logger.debug("[CM_MIDI_DETAIL_PANE] Built {}", getId());
@@ -150,20 +155,22 @@ public class MidiDetailPane extends GridPane {
         }
 
         channelSelect.valueProperty().bindBidirectional(currentMidi.getChannelProperty());
-        add(channelSelect, 2, onRow, 2, 1);
+        add(channelSelect, 1, onRow, 2, 1);
     }
 
     private void renderByteEntry(int byteId, Midi currentMidi, int onRow) {
         MidiEntrySelect byteSelect = new MidiEntrySelect(byteId);
-        byteSelect.byte1Value.bindBidirectional(currentMidi.getByte1Property());
         if (byteId == 1) {
+            byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte1TypeProperty());
+            byteSelect.byteValue.bindBidirectional(currentMidi.getByte1Property());
             byteSelect.showRemoveButton(false);
             byteSelect.setAddHandler(e -> {
                 renderByteEntry(byteId + 1, currentMidi, onRow + 5);
             });
         } else if (byteId == 2) {
             byteSelect.showAddButton(false);
-//            byteSelect.byte1Value.bindBidirectional(currentMidi.getByte2Property());
+            byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte2TypeProperty());
+            byteSelect.byteValue.bindBidirectional(currentMidi.getByte2Property());
             byteSelect.setRemoveHandler(e -> {
                 Button btn = (Button)e.getSource();
                 MidiEntrySelect src = (MidiEntrySelect)btn.getParent();

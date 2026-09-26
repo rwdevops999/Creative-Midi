@@ -1,5 +1,6 @@
 package entity.midi;
 
+import creative.scenes.midi.data.Byte1Type;
 import creative.scenes.midi.data.ByteType;
 import creative.scenes.midi.data.MessageType;
 import entity.AEntity;
@@ -25,11 +26,16 @@ public class Midi extends AEntity {
     private ObjectProperty<Integer> channelProperty = new SimpleObjectProperty<>();
     int channel;
 
+    private ObjectProperty<ByteType> byte1TypeProperty = new SimpleObjectProperty<>();
     ByteType byte1Type;
+
     private ObjectProperty<Integer> byte1Property = new SimpleObjectProperty<>();
     int byte1;
 
+    private ObjectProperty<ByteType> byte2TypeProperty = new SimpleObjectProperty<>();
     ByteType byte2Type;
+
+    private ObjectProperty<Integer> byte2Property = new SimpleObjectProperty<>();
     int byte2;
 
     public Midi() {
@@ -72,12 +78,39 @@ public class Midi extends AEntity {
         return channelProperty.get();
     }
 
+    public void setByte1Type(ByteType type) {
+        byte1TypeProperty.set(type);
+        this.byte1Type = type;
+    }
+
+    public ByteType getByte1Type() {
+        return byte1TypeProperty.get();
+    }
+
     public void setByte1(int byte1) {
         byte1Property.set(byte1);
         this.byte1 = byte1;
     }
 
-    public int getByte1() {
+    public Integer getByte1() {
         return byte1Property.get();
+    }
+
+    public void setByte2Type(ByteType type) {
+        byte2TypeProperty.set(type);
+        this.byte2Type = type;
+    }
+
+    public ByteType getByte2Type() {
+        return byte2TypeProperty.get();
+    }
+
+    public void setByte2(int byte2) {
+        byte2Property.set(byte2);
+        this.byte2 = byte2;
+    }
+
+    public Integer getByte2() {
+        return byte2Property.get();
     }
 }

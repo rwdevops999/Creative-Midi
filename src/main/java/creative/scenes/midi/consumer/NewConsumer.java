@@ -4,6 +4,7 @@ import creative.scenes.SceneActionsPane;
 import creative.scenes.midi.MidiDetailPane;
 import creative.scenes.midi.MidiListPane;
 import creative.scenes.midi.MidiPane;
+import creative.scenes.midi.data.ByteType;
 import entity.AEntity;
 import entity.midi.Midi;
 import javafx.scene.layout.Pane;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
+import java.io.ByteArrayOutputStream;
 import java.util.function.BiConsumer;
 
 public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsumer<T, P> {
@@ -29,7 +31,10 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
         midi.setStatus("F8");
         midi.setMessageType("channel");
         midi.setChannel(5);
+        midi.setByte1Type(ByteType.FreeValue);
         midi.setByte1(123);
+        midi.setByte2Type(ByteType.Continuous);
+        midi.setByte2(100);
 
         ApplicationInfo.getInstance().setCurrentMidi(midi);
 
