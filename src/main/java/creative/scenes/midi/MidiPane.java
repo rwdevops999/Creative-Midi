@@ -25,13 +25,22 @@ public class MidiPane extends BorderPane {
 
         MidiProvider midiProvider = new MidiProvider("midievents.json");
 
-        Label title = new Label("MIDI");
-        title.setTextFill(Color.RED);
-
         CommunicationModel.setStatus("Setup MIDI");
 
-        setCenter(new HBox(title));
+        setLeft(new MidiListPane(this));
+        setCenter(new MidiDetailPane(this));
+
+        CommunicationModel.setStatus("Handling MIDI");
 
         logger.debug("[CM_MIDI_PANE] Built {}", getId());
+    }
+
+    // ACCESSORS
+    public MidiListPane getMidiListPane() {
+        return (MidiListPane)getLeft();
+    }
+
+    public MidiDetailPane getMidiDetailPane() {
+        return (MidiDetailPane) getCenter();
     }
 }
