@@ -12,7 +12,10 @@ import util.ApplicationInfo;
 import util.Initializer;
 import util.Theme;
 
+import java.util.Locale;
 import java.util.Objects;
+
+import static util.constants.TEST;
 
 public class CreativeApp extends Application {
     private static final Logger logger = LoggerFactory.getLogger(CreativeApp.class);
@@ -22,6 +25,14 @@ public class CreativeApp extends Application {
 
     public static void startup(String[] args) {
         logger.debug("[CM_CREATIVE_APP] ENTRY: Launching Creative Midi Application");
+
+        for (String arg : args) {
+            if (TEST.equals(arg.toLowerCase(Locale.ROOT))) {
+                System.out.println("Activated TEST mode");
+                ApplicationInfo.getInstance().setTestMode(true);
+            }
+        }
+
         launch(args);
     }
 

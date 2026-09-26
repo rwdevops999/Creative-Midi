@@ -2,6 +2,10 @@ package creative.scenes.main;
 
 import creative.scenes.IScene;
 import creative.scenes.midi.MidiScene;
+import creative.scenes.test.test1.Test1Pane;
+import creative.scenes.test.test2.Test2Pane;
+import creative.scenes.test.test3.Test3Pane;
+import creative.scenes.test.test4.Test4Pane;
 import custom.components.ActionButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -9,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 public class MainActionsPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(MainActionsPane.class);
@@ -38,14 +43,14 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, "setupButton", "handle setup", "setup", new SetupScene()), 6, 0);
 
         add(new ActionButton(ownerScene, "eventlistButton", "midi event list", "event-list", new EventListScene()), 0, 1);
-
-        if (Globals.isTestMode()) {
-            add(new ActionButton(ownerScene, "test1Button", "test 1", "test1", new Test1()), 3, 1);
-            add(new ActionButton(ownerScene, "test2Button", "test 2", "test2", new Test2()), 4, 1);
-            add(new ActionButton(ownerScene, "test3Button", "test 3", "test3", new Test3()), 5, 1);
-            add(new ActionButton(ownerScene, "test4Button", "test 4", "test4", new Test4()), 6, 1);
-        }
 */
+        if (ApplicationInfo.getInstance().isTestMode()) {
+            add(new ActionButton(ownerScene, "test1Button", "test 1", "test1", "Test1"), 3, 1);
+            add(new ActionButton(ownerScene, "test2Button", "test 2", "test2", "Test2"), 4, 1);
+            add(new ActionButton(ownerScene, "test3Button", "test 3", "test3", "Test3"), 5, 1);
+            add(new ActionButton(ownerScene, "test4Button", "test 4", "test4", "Test4"), 6, 1);
+        }
+
         logger.debug("[CM_ACTIONS_PANE] Built {}", getId());
     }
 }

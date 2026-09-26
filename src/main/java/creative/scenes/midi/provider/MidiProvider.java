@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class MidiProvider {
         String midiEventsFilePath = midiPath + "/" + midiEventsFile;
 
         try (InputStream in = Files.newInputStream(Path.of(midiEventsFilePath))) {
-            midis = mapper.readValue(in, new TypeReference<List<Midi>>() {});
+            midis = mapper.readValue(in, new TypeReference<>() {});
         } catch (IOException ioe) {
             logger.error("[CM_MIDI_PROVIDER] Exception. CAUSE: {}", ioe.getMessage());
         }

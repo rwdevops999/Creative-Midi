@@ -32,4 +32,8 @@ public class ApplicationInfo {
      */
     private Pane spa;
 
+    /**
+     * Test Mode On/Off switch
+     */
+    private boolean testMode = false;
 }

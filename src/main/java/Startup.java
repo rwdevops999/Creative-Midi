@@ -46,10 +46,6 @@ public class Startup {
                 System.exit(0);
             }
 
-            if (TEST.equals(arg.toLowerCase(Locale.ROOT))) {
-                System.out.println("Activated TEST mode");
-            }
-
             if (DEBUG.equals(arg.toLowerCase(Locale.ROOT))) {
                 ApplicationInfo.getInstance().setDebugging(true);
             }
