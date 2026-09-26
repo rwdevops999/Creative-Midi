@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static util.ColorScheme.getColor;
+import static util.Util.calcNote;
 
 public class MidiEntrySelect extends GridPane {
     private ObjectProperty<Integer> byte1Value = new SimpleObjectProperty<>(0);
@@ -113,7 +114,6 @@ public class MidiEntrySelect extends GridPane {
         }
 
         Label byteLabel = new Label("Type:");
-        byteLabel.setTextFill(getColor("test", "red"));
         add(byteLabel, 1, row.get());
 
         ComboBox<String> byteTypeBox = new ComboBox<>();
@@ -123,7 +123,7 @@ public class MidiEntrySelect extends GridPane {
             removeDeletables();
             handleTypeChange(buttonId, row.get(), newValue);
         });
-        add(byteTypeBox, 2, row.get(), 5, 1);
+        add(byteTypeBox, 3, row.get(), 5, 1);
 
         removeButton = new Button("-");
         removeButton.setStyle(flatButtonStyle);
@@ -175,6 +175,7 @@ public class MidiEntrySelect extends GridPane {
         renderByteLabel(currentRow, buttonId, label);
 
         OnOffSwitch onoffSwitch = new OnOffSwitch();
+        onoffSwitch.setId("Deletable");
         bindBidirectional(
                 onoffSwitch.switchedOnProperty().asObject(), // Property<Boolean>
                 byte1Value,                    // Property<Integer>
@@ -182,7 +183,7 @@ public class MidiEntrySelect extends GridPane {
                 intVal -> intVal == null ? false : (intVal.equals(0) ? false : true)        // Integer -> Boolean
         );
 
-        add(onoffSwitch, 2, currentRow);
+        add(onoffSwitch, 3, currentRow);
     }
 
     private void handlePanning(int currentRow, int min, int max, int buttonId, String label) {
@@ -222,22 +223,21 @@ public class MidiEntrySelect extends GridPane {
         }
 
         Label byte1Label = new Label(label);
-        byte1Label.setId("deletable");
-        byte1Label.setTextFill(getColor("test", "red"));
-        add(byte1Label, 1, currentRow);
+        byte1Label.setId("Deletable");
+        add(byte1Label, 1, currentRow, 2, 1);
     }
 
     private void renderSpinner(int currentRow, int min, int max) {
         Spinner<Integer> spinner = new Spinner<>(min, max, 0);
         spinner.setId("Deletable");
         spinner.getValueFactory().valueProperty().bindBidirectional(byte1Value);
-        add(spinner, 2, currentRow, 2, 1);
+        add(spinner, 3, currentRow, 2, 1);
     }
 
     private void renderSlider(int currentRow, int min, int max, String subtype) {
+        currentRow++;
         Slider slider = new Slider(min, max, 0);
         slider.setId("Deletable");
-        slider.setStyle("-fx-tick-label-fill: red;");
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(63);
@@ -289,7 +289,9 @@ public class MidiEntrySelect extends GridPane {
             byte1Value.set(newValue.getId());
         });
 
-        add(noteSelect, 2, currentRow, 2, 1);
+        noteSelect.getSelectionModel().select(calcNote(byte1Value.get(), baseOctave));
+
+        add(noteSelect, 3, currentRow, 3, 1);
     }
 
     private <A, B> void bindBidirectional(Property<A> propertyA, Property<B> propertyB, java.util.function.Function<A, B> toB, java.util.function.Function<B, A> toA) {
