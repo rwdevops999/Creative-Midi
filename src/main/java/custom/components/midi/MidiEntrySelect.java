@@ -41,7 +41,6 @@ public class MidiEntrySelect extends GridPane {
     public ObjectProperty<String> byteAsStringValue = new SimpleObjectProperty<>("");
     public ObjectProperty<ByteType> byteTypeValue = new SimpleObjectProperty<>();
 
-    private ChangedHandler<Midi> changedHandler = null;
     private boolean mute = false;
 
     public MidiEntrySelect() {
@@ -432,9 +431,5 @@ public class MidiEntrySelect extends GridPane {
 
         propertyA.addListener(listenerA);
         propertyB.addListener(listenerB);
-    }
-
-    public void setGlobalChangeHandler(ChangedHandler<Midi> changedHandler) {
-        this.changedHandler = changedHandler;
     }
 }

@@ -4,11 +4,9 @@ import creative.scenes.midi.data.MessageType;
 import creative.scenes.midi.handler.ChangedHandler;
 import custom.components.HexTextField;
 import custom.components.midi.MidiEntrySelect;
-import entity.AEntity;
 import entity.midi.Midi;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -85,7 +83,7 @@ public class MidiDetailPane extends GridPane {
         midiNameInputField.textProperty().bindBidirectional(currentMidi.getNameProperty());
         midiNameInputField.setPromptText("name...");
         midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> {
-           changedHandler.accept(currentMidi);
+           changedHandler.accept(currentMidi, this);
         });
         add(midiNameInputField, 1, row.get(), 5, 1);
 
@@ -98,7 +96,7 @@ public class MidiDetailPane extends GridPane {
         hexInput.setPromptText("status");
         hexInput.textProperty().bindBidirectional(currentMidi.getStatusProperty());
         hexInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            changedHandler.accept(currentMidi);
+            changedHandler.accept(currentMidi, this);
         });
         add(hexInput, 1, row.get(), 2, 1);
 
@@ -143,7 +141,7 @@ public class MidiDetailPane extends GridPane {
         group.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 currentMidi.getMessageTypeProperty().set((MessageType)newToggle.getUserData());
-                changedHandler.accept(currentMidi);
+                changedHandler.accept(currentMidi, this);
             }
         });
 
@@ -176,7 +174,7 @@ public class MidiDetailPane extends GridPane {
         }
         channelSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (changedHandler != null) {
-                changedHandler.accept(currentMidi);
+                changedHandler.accept(currentMidi, this);
             }
         });
 
@@ -186,13 +184,12 @@ public class MidiDetailPane extends GridPane {
 
     private void renderByteEntry(int byteId, int onRow) {
         MidiEntrySelect byteSelect = new MidiEntrySelect(byteId);
-        byteSelect.setGlobalChangeHandler(changedHandler);
         if (byteId == 1) {
             byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte1TypeProperty());
             byteSelect.byteValue.bindBidirectional(currentMidi.getByte1Property());
             byteSelect.byteValue.addListener((observable, oldValue, newValue) -> {
                 if (changedHandler != null) {
-                    changedHandler.accept(currentMidi);
+                    changedHandler.accept(currentMidi, this);
                 }
             });
             byteSelect.showRemoveButton(false);
@@ -214,7 +211,7 @@ public class MidiDetailPane extends GridPane {
             });
             byteSelect.byteValue.addListener((observable, oldValue, newValue) -> {
                 if (changedHandler != null) {
-                    changedHandler.accept(currentMidi);
+                    changedHandler.accept(currentMidi, this);
                 }
             });
         }
@@ -228,5 +225,9 @@ public class MidiDetailPane extends GridPane {
 
     private void removeAllChildren() {
         getChildren().clear();
+    }
+
+    public MidiPane getMidiPane() {
+        return parent;
     }
 }

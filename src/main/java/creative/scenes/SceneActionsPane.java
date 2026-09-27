@@ -22,6 +22,13 @@ public class SceneActionsPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(SceneActionsPane.class);
 
     public static final int[] BUTTON = new int[] { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20 };
+    public static final int BUTTON_NEW=0;
+    public static final int BUTTON_ADD=1;
+    public static final int BUTTON_DELETE=2;
+    public static final int BUTTON_UPDATE=3;
+    public static final int BUTTON_ACTION=4;
+    public static final int BUTTON_EXPORT=5;
+
     private final BooleanProperty[] disabledProperties = new SimpleBooleanProperty[6];
 
     public SceneActionsPane() {
@@ -61,13 +68,13 @@ public class SceneActionsPane extends VBox {
 
         setPaneWidthAsPercentage(this, owner, 10);
 
-        getChildren().add(createButton(this, "newButton", "New", 80, consumers[0], disabledProperties[0], supplier));
-        getChildren().add(createButton(this, "addButton", "Add", 80, consumers[1], disabledProperties[1], supplier));
-        getChildren().add(createButton(this, "deleteButton", "Delete", 80, consumers[2], disabledProperties[2], supplier));
-        getChildren().add(createButton(this, "updateButton", "Update", 80, consumers[3], disabledProperties[3], supplier));
-        Button actionButton = createButton(this, "actionButton", actionName, 80, consumers[4], disabledProperties[4], supplier);
+        getChildren().add(createButton(this, "newButton", "New", 80, consumers[BUTTON_NEW], disabledProperties[BUTTON_NEW], supplier));
+        getChildren().add(createButton(this, "addButton", "Add", 80, consumers[BUTTON_ADD], disabledProperties[BUTTON_ADD], supplier));
+        getChildren().add(createButton(this, "deleteButton", "Delete", 80, consumers[BUTTON_DELETE], disabledProperties[BUTTON_DELETE], supplier));
+        getChildren().add(createButton(this, "updateButton", "Update", 80, consumers[BUTTON_UPDATE], disabledProperties[BUTTON_UPDATE], supplier));
+        Button actionButton = createButton(this, "actionButton", actionName, 80, consumers[BUTTON_ACTION], disabledProperties[BUTTON_ACTION], supplier);
         getChildren().add(actionButton);
-        getChildren().add(createButton(this, "exportButton", "Export", 80, consumers[5], disabledProperties[5], supplier));
+        getChildren().add(createButton(this, "exportButton", "Export", 80, consumers[BUTTON_EXPORT], disabledProperties[BUTTON_EXPORT], supplier));
 
         logger.debug("[CM_SCENE_ACTIONS_PANE] Built {}", getId());
     }

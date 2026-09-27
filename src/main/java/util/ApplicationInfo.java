@@ -49,4 +49,9 @@ public class ApplicationInfo {
      * Current MIDI
      */
     private Midi currentMidi;
+
+    /**
+     * Dirty MIDI
+     */
+    private Midi dirtyMidi;
 }
