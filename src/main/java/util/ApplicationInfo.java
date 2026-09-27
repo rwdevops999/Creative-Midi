@@ -59,4 +59,9 @@ public class ApplicationInfo {
      * Global Dirty : when something is removed from list or added to list => for export
      */
     private boolean globalDirty;
+
+    /**
+     * The Selected output device
+     */
+    private String selectedDevice;
 }

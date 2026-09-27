@@ -2,6 +2,7 @@ package util;
 
 import communication.CommunicationModel;
 import creative.panes.MainPane;
+import device.DeviceScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.enums.ThemeType;
@@ -38,5 +39,21 @@ public class Initializer {
         Path path = Paths.get(propertiesDirectory, "paths.properties"); // Use your actual path
         Properties pathProperties = propertyLoader.loadPropertiesFromPath(path);
         PropertyContainer.setProperties(PropertyType.Path, pathProperties);
+
+        // 4. Scan for devices
+        boolean autoSelectDevice = PropertyContainer.getPropertyAsBoolean(PropertyType.System, PropertyContainer.AUTO_SELECT_DEVICE, false);
+//        String defaultDeviceName = PropertyContainer.getPropertyAsString("default.device.name", "");
+        // TODO Replace this from keyboard properties file
+        String defaultDeviceName = "Digital Keyboard-1";
+
+        DeviceScanner task = new DeviceScanner(autoSelectDevice, defaultDeviceName, data -> {
+            Registry.publish("DeviceSelector", data);
+        });
+
+        task.setOnSucceeded(e -> {
+            logger.info("[CM_INIT] Device Scanning Task Completed");
+        });
+        new Thread(task).start();
+
     }
 }

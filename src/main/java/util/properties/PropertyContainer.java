@@ -8,6 +8,7 @@ public class PropertyContainer {
     public static String APP_VERSION = "version";
     public static String THEME = "theme";
     public static String PROPERTIES_PATH = "properties.path";
+    public static String AUTO_SELECT_DEVICE = "auto.select.device";
 
     // PATHS CONSTANTS
     public static String MIDI_PATH = "midi.path";

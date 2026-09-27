@@ -1,11 +1,13 @@
 package creative.panes.header;
 
 import custom.components.SelectorPane;
+import entity.device.DeviceInfo;
 import eventhandlers.KeyboardHandler;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.Registry;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,14 @@ public class SelectorsPane extends VBox {
 //        SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", VoiceContainer.getVoiceFilenames(), new KeyboardHandler<>(), voices);
 //        SelectorPane deviceSelectorPane = new SelectorPane("Device", "Select a device", new ArrayList<>(), null, Globals.getSelectedDevice());
         getChildren().addAll(keyboardSelectorPane, deviceSelectorPane);
+
+        Registry.register("DeviceSelector", deviceSelectorPane, (node, data) -> {
+            SelectorPane selectorPane = (SelectorPane)node;
+            DeviceInfo di = (DeviceInfo) data;
+
+//            System.out.println("Data received");
+            selectorPane.updateComboData(di);
+        });
 
         logger.debug("[CM_SELECTORS_PANE] Built {}", getId());
     }

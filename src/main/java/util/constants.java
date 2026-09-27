@@ -16,4 +16,7 @@ public class constants {
     public final static String SPA="SPA";
 
     public final static String[] BASE_NOTES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+
+    public final static int OS_MAC=1;
+    public final static int OS_WINDOWS=2;
 }
