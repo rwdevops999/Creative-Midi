@@ -101,6 +101,7 @@ public class MidiDetailPane extends GridPane {
             // ROW2
             row.getAndIncrement();
             RadioButton systemRadio = new RadioButton("System Message");
+            systemRadio.setUserData(MessageType.system);
             systemRadio.setToggleGroup(group);
             systemRadio.setSelected(true);
             add(systemRadio, 1, row.get(), 3, 1);
@@ -108,6 +109,7 @@ public class MidiDetailPane extends GridPane {
             // ROW3
             row.getAndIncrement();
             RadioButton channelRadio = new RadioButton("Channel Message");
+            channelRadio.setUserData(MessageType.channel);
             channelRadio.setToggleGroup(group);
             channelRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {

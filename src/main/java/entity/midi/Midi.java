@@ -113,4 +113,25 @@ public class Midi extends AEntity {
     public Integer getByte2() {
         return byte2Property.get();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        int status = Integer.parseInt(getStatus(), 16);
+        if (getMessageType().equals(MessageType.channel)) {
+            status += channel;
+            sb.append(Integer.toHexString(status).toUpperCase());
+            if (getByte1() != null) {
+                sb.append(" ").append(Integer.toHexString(getByte1()).toUpperCase());
+                if (getByte2() != null) {
+                    sb.append(" ").append(Integer.toHexString(getByte2()).toUpperCase());
+                }
+            }
+        } else {
+            sb.append(Integer.toHexString(status).toUpperCase());
+        }
+
+        return sb.toString();
+    }
 }
