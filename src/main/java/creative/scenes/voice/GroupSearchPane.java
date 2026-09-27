@@ -35,6 +35,9 @@ public class GroupSearchPane extends VBox {
         logger.debug("[CM_GROUP_SEARCH_PANE] Built {}", getId());
     }
 
+    public void handleSearch() {
+    }
+
     // ACCESSORS
     public VoiceSearchPane getVoiceSearchPane() {
         return parent;

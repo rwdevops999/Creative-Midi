@@ -1,0 +1,90 @@
+package creative.scenes.voice.components;
+
+import creative.scenes.voice.PatchSearchPane;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
+import lombok.Getter;
+import lombok.Setter;
+
+import static util.Util.setPaneWidthAsPercentage;
+
+public class AddablePane extends GridPane {
+    @Getter
+    @Setter
+    private int buttonId = 0;
+
+    private StringProperty inputValue = new SimpleStringProperty();
+
+    public AddablePane(Pane owner, int id) {
+        super();
+
+        this.buttonId = id;
+        setPaneWidthAsPercentage(this, owner, 50);
+
+        int[] columnSizes = {12,3,50,3,12,20};
+        for (int size: columnSizes) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(size);
+            col.setHalignment(HPos.LEFT);
+            getColumnConstraints().add(col);
+        }
+
+        RowConstraints rowConstraints = new RowConstraints();
+        rowConstraints.setValignment(VPos.CENTER);
+        getRowConstraints().add(rowConstraints);
+
+        String flatButtonStyle =
+                "-fx-background-color: #a9a9a9; " + // Grijze achtergrond (of 'transparent')
+                        "-fx-background-radius: 0; " +       // Rechte hoeken (gebruik bijv. 4px voor licht afgerond)
+                        "-fx-text-fill: #333333; " +         // Tekstkleur
+                        "-fx-font-size: 14px; " +            // Lettergrootte
+                        "-fx-font-weight: bold; " +          // Dikgedrukte tekst
+                        "-fx-cursor: hand;";
+
+        int row = 0;
+        // ROW (+, input, -)
+
+        Button addButton = new Button("+");
+        addButton.setStyle(flatButtonStyle);
+        add(addButton, 0, row);
+        addButton.setOnAction(event -> {
+            Button btn = (Button) event.getSource();
+            btn.setDisable(true);
+            PatchSearchPane patchSearchPane = (PatchSearchPane) owner;
+            patchSearchPane.addPane(buttonId);
+            btn.setDisable(false);
+        });
+
+        TextField searchInputField = new TextField();
+        if (buttonId == 0) {
+            searchInputField.setPromptText("search for ...");
+        } else {
+            searchInputField.setPromptText("and ...");
+        }
+        searchInputField.textProperty().bindBidirectional(inputValue);
+        add(searchInputField, 2, row, 3, 1);
+
+        Button removeButton = new Button("-");
+        removeButton.setStyle(flatButtonStyle);
+        add(removeButton, 5, row);
+        removeButton.setOnAction(event -> {
+            Button btn = (Button) event.getSource();
+            btn.setDisable(true);
+            PatchSearchPane patchSearchPane = (PatchSearchPane) owner;
+            patchSearchPane.removePane(buttonId);
+            btn.setDisable(false);
+        });
+    }
+
+    public String getInputValue() {
+        return inputValue.get();
+    }
+}
