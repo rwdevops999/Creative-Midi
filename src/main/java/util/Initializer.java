@@ -12,7 +12,10 @@ import util.properties.PropertyType;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
+
+import static util.Util.loadVoiceFilenames;
 
 public class Initializer {
     private static final Logger logger = LoggerFactory.getLogger(Initializer.class);
@@ -54,6 +57,17 @@ public class Initializer {
             logger.info("[CM_INIT] Device Scanning Task Completed");
         });
         new Thread(task).start();
+
+        // 5. Loading the voices (keyboard files)
+        // loading the voices
+        String voicesDirectory = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.VOICES_PATH, "./voices");
+        List<String> voiceFileNames = loadVoiceFilenames(voicesDirectory);
+        ApplicationInfo.getInstance().setVoiceFilenames(voiceFileNames);
+
+        // 6. Load keyboard properties
+        Path keyboardPath = Paths.get(propertiesDirectory, "keyboard.properties"); // Use your actual path
+        Properties keyboardProperties = propertyLoader.loadPropertiesFromPath(keyboardPath);
+        PropertyContainer.setProperties(PropertyType.Keyboard, keyboardProperties);
 
     }
 }

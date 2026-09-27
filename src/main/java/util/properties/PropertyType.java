@@ -2,5 +2,6 @@ package util.properties;
 
 public enum PropertyType {
     System,
-    Path;
+    Path,
+    Keyboard;
 }

@@ -12,7 +12,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +29,8 @@ import java.util.function.Supplier;
 import static util.constants.*;
 
 public class Util {
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
+
     public static void setButtonIcon (ButtonBase button, String iconname) {
         Image icon = new Image(Objects.requireNonNull(Util.class.getClassLoader().getResourceAsStream(iconname)));
         ImageView imageView = new ImageView(icon);
@@ -77,4 +86,36 @@ public class Util {
 
         return button;
     }
+
+    public static List<String> loadVoiceFilenames(String directoryName) {
+        logger.debug("[CM_UTIL] Loading voice files from {}", directoryName);
+        Path dirPath = Paths.get(directoryName); // Use your actual path
+
+        try {
+            List<String> fileNames = Files.list(dirPath)
+                    .filter(Files::isRegularFile)
+                    .map(Path::getFileName)
+                    .map(Path::toString)
+                    .map(naam -> {
+                        String extension = FilenameUtils.getExtension(naam);
+                        String provider = "";
+
+                        if (extension.toLowerCase().equals("ins")) {
+                            provider = "Cakewalk";
+                        } else {
+                            provider = "Yamaha";
+                        }
+
+                        return FilenameUtils.removeExtension(naam) + " (" + provider + ")";
+                    })
+                    .toList();
+
+            return fileNames;
+        } catch (IOException ioe) {
+            logger.error("[CM_INIT] EXCEPTION: Getting voice files CAUSE: {}", ioe.getMessage());
+        }
+
+        return new ArrayList<>();
+    }
+
 }

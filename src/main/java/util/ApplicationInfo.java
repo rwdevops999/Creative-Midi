@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.MidiDevice;
+import java.util.List;
 
 @Setter
 @Getter
@@ -72,4 +73,9 @@ public class ApplicationInfo {
      */
     private MidiDevice midiInputDevice;
     private MidiDevice midiOutputDevice;
+
+    /**
+     * Filename of available voice names
+     */
+    private List<String> voiceFilenames;
 }

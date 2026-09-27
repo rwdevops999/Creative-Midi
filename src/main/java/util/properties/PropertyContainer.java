@@ -13,9 +13,14 @@ public class PropertyContainer {
     // PATHS CONSTANTS
     public static String MIDI_PATH = "midi.path";
     public static String MIDI_EVENTS_FILE = "midi.events.file";
+    public static String VOICES_PATH = "voices.path";
+
+    // KEYBOARD CONSTANTS
+    public static String DEFAULT_KEYBOARD = "default.voice.file";
 
     private static Properties systemProperties = new Properties();
     private static Properties pathProperties = new Properties();
+    private static Properties keyboardProperties = new Properties();
 
     public static void setProperties(PropertyType type, Properties props) {
         switch (type) {
@@ -25,12 +30,17 @@ public class PropertyContainer {
             case Path:
                 pathProperties = props;
                 break;
+            case Keyboard:
+                keyboardProperties = props;
+                break;
         }
     }
 
     public static boolean getPropertyAsBoolean (PropertyType type, String key, boolean defaultvalue) {
         String property = switch (type) {
             case System -> (String)systemProperties.get(key);
+            case Path -> (String)pathProperties.get(key);
+            case Keyboard -> (String)keyboardProperties.get(key);
             default -> null;
         };
 
@@ -44,6 +54,8 @@ public class PropertyContainer {
     public static Integer getPropertyAsInteger (PropertyType type, String key, int defaultvalue) {
         String property = switch (type) {
             case System -> (String)systemProperties.get(key);
+            case Path -> (String)pathProperties.get(key);
+            case Keyboard -> (String)keyboardProperties.get(key);
             default -> null;
         };
 
@@ -58,6 +70,7 @@ public class PropertyContainer {
         String property = switch (type) {
             case System -> (String)systemProperties.get(key);
             case Path -> (String)pathProperties.get(key);
+            case Keyboard -> (String)keyboardProperties.get(key);
             default -> null;
         };
 

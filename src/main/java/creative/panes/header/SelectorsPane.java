@@ -7,7 +7,10 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 import util.Registry;
+import util.properties.PropertyContainer;
+import util.properties.PropertyType;
 
 import java.util.ArrayList;
 
@@ -31,7 +34,7 @@ public class SelectorsPane extends VBox {
     private void buildPane() {
         logger.debug("[CM_SELECTORS_PANE] Building {}", getId());
 
-        SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", new ArrayList<>(), new KeyboardHandler<>(), "");
+        SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", ApplicationInfo.getInstance().getVoiceFilenames(), new KeyboardHandler<>(), PropertyContainer.getPropertyAsString(PropertyType.Keyboard, PropertyContainer.DEFAULT_KEYBOARD, ""));
         SelectorPane deviceSelectorPane = new SelectorPane("Device", "Select a device", new ArrayList<>(), null, "");
 //        SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", VoiceContainer.getVoiceFilenames(), new KeyboardHandler<>(), voices);
 //        SelectorPane deviceSelectorPane = new SelectorPane("Device", "Select a device", new ArrayList<>(), null, Globals.getSelectedDevice());
@@ -42,7 +45,7 @@ public class SelectorsPane extends VBox {
             DeviceInfo di = (DeviceInfo) data;
 
 //            System.out.println("Data received");
-            selectorPane.updateComboData(di);
+//            selectorPane.updateComboData(di);
         });
 
         logger.debug("[CM_SELECTORS_PANE] Built {}", getId());

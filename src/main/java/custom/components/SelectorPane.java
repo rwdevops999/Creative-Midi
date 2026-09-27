@@ -36,12 +36,12 @@ public class SelectorPane extends HBox {
     public SelectorPane(String name, String tooltip, List<String> selections, EventHandler<ActionEvent> handler, String selected) {
         this(name);
 
-        buildPane(name, tooltip, handler);
+        buildPane(name, tooltip, selections, selected, handler);
     }
 
     private ComboBox<String> comboBox;
 
-    private void buildPane(String name, String tooltip, EventHandler<ActionEvent> handler) {
+    private void buildPane(String name, String tooltip, List<String> selections, String selected, EventHandler<ActionEvent> handler) {
         logger.debug("[CM_SELECTOR_PANE] Building {}", getId());
 
         Label selectorLabel = new Label(name);
@@ -62,11 +62,28 @@ public class SelectorPane extends HBox {
                 }
             }
         });
+
+        comboBox.setOnAction(e -> {
+            System.out.println("🔥 ActionEvent getriggerd!");
+            if (!mute) {
+                selectedDevice = comboBox.getValue();
+            }
+        });
+
         comboBox.setOnAction(Objects.requireNonNullElseGet(handler, () -> event -> {
             if (!mute) {
                 selectedDevice = comboBox.getValue();
             }
         }));
+
+        if (selections != null && !selections.isEmpty()) {
+            comboBox.getItems().addAll(selections);
+        }
+
+        if (selected != null && !selected.isEmpty()) {
+            comboBox.getSelectionModel().select(selected);
+            comboBox.fireEvent(new ActionEvent(comboBox, comboBox));
+        }
 
         getChildren().add(comboBox);
 
