@@ -70,6 +70,8 @@ public class AddablePane extends GridPane {
             searchInputField.setPromptText("and ...");
         }
         searchInputField.textProperty().bindBidirectional(inputValue);
+        searchInputField.setOnAction(e -> linkedSearchButton.fire());
+
         add(searchInputField, 2, row, 3, 1);
 
         Button removeButton = new Button("-");
@@ -82,6 +84,11 @@ public class AddablePane extends GridPane {
             patchSearchPane.removePane(buttonId);
             btn.setDisable(false);
         });
+    }
+
+    private Button linkedSearchButton;
+    public void addLinkedSearchButton(Button button) {
+        linkedSearchButton = button;
     }
 
     public String getInputValue() {

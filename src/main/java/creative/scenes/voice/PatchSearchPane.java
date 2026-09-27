@@ -4,6 +4,7 @@ import creative.scenes.voice.components.AddablePane;
 import creative.scenes.voice.components.TitleSearchPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
@@ -67,8 +68,11 @@ public class PatchSearchPane extends VBox {
         TitleSearchPane titleSearchPane = new TitleSearchPane(this, "Patches");
         getChildren().add(titleSearchPane);
 
+        Button searchButton = titleSearchPane.getSearchButton();
+
         for (AddablePane addPane : addPanes) {
             if (addPane != null) {
+                addPane.addLinkedSearchButton(searchButton);
                 getChildren().add(addPane);
             }
         }

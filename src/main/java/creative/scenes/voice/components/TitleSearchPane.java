@@ -44,6 +44,8 @@ public class TitleSearchPane extends GridPane {
         buildPane(owner, title);
     }
 
+    private Button searchButton;
+
     private void buildPane(Pane owner, String title) {
         logger.debug("[CM_TITLE_SEARCH_PANE] Building {}", getId());
 
@@ -52,7 +54,7 @@ public class TitleSearchPane extends GridPane {
         Label titleLabel = new Label(title);
         add(titleLabel, 0, row, 3, 1);
 
-        Button searchButton = new Button("Search");
+        searchButton = new Button("Search");
         searchButton.setOnAction(event -> {
             if (owner instanceof PatchSearchPane patchSearchPane) {
                 patchSearchPane.handleSearch();
@@ -64,5 +66,9 @@ public class TitleSearchPane extends GridPane {
         add(searchButton, 4, row, 2, 1);
 
         logger.debug("[CM_TITLE_SEARCH_PANE] Built {}", getId());
+    }
+
+    public Button getSearchButton() {
+        return searchButton;
     }
 }
