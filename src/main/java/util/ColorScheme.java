@@ -1,5 +1,6 @@
 package util;
 
+import custom.components.ColoredItem;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -25,8 +26,12 @@ public class ColorScheme {
         colors.put(new ColorKey("component", "OnOffSwitch","on"), Color.valueOf("#4CAF50"));
         colors.put(new ColorKey("component", "OnOffSwitch","off"), Color.LIGHTGRAY);
 
-        Circle trigger = new Circle(10);
-        trigger.setFill(ColorScheme.getColor("Component", "OnOffSwitch", "TriggerFill"));
+        // monitoring
+        colors.put(new ColorKey("monitor", "message", "outbound"), Color.BLUE);
+        colors.put(new ColorKey("monitor", "message", "inbound"), Color.GREEN);
+        colors.put(new ColorKey("monitor", "message", "info"), Color.GREEN);
+        colors.put(new ColorKey("monitor", "message", "error"), Color.RED);
+        colors.put(new ColorKey("monitor", "message", "warning"), Color.ORANGE);
 
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);

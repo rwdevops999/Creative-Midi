@@ -45,7 +45,7 @@ public class SelectorsPane extends VBox {
             DeviceInfo di = (DeviceInfo) data;
 
 //            System.out.println("Data received");
-//            selectorPane.updateComboData(di);
+            selectorPane.updateComboData(di);
         });
 
         logger.debug("[CM_SELECTORS_PANE] Built {}", getId());

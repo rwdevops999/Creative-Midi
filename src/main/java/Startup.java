@@ -7,7 +7,7 @@ import util.ApplicationInfo;
 import java.net.URL;
 import java.util.Locale;
 
-import static util.constants.*;
+import static util.Constants.*;
 
 public class Startup {
     static {

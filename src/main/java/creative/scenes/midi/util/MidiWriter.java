@@ -2,6 +2,7 @@ package creative.scenes.midi.util;
 
 import communication.CommunicationModel;
 import entity.midi.Midi;
+import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
@@ -18,7 +19,7 @@ public class MidiWriter {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             // TODO Add Monitoring and Dialogs
-//            CommunicationModel.monitorError("No device selected");
+            CommunicationModel.monitorError("No device selected");
 //            DialogFactory.renderWarningDialog("No device selected");
         } else {
             try {
@@ -41,6 +42,10 @@ public class MidiWriter {
                 ShortMessage message = new ShortMessage();
                 message.setMessage(status, data1, data2);
 
+                String monitorMessage = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
+                CommunicationModel.setStatus(monitorMessage);
+                CommunicationModel.monitorOutgoing("[MIDI] " + message);
+
                 // 4. Send message
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
@@ -59,7 +64,7 @@ public class MidiWriter {
 
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
-//            CommunicationModel.monitorError("No device selected");
+            CommunicationModel.monitorError("No device selected");
 //            DialogFactory.renderWarningDialog("No device selected");
         } else {
             try {
@@ -68,7 +73,7 @@ public class MidiWriter {
                 String message;
                 message = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
                 CommunicationModel.setStatus(message);
-  //              CommunicationModel.monitorOutgoing("[MIDI] " + message);
+                CommunicationModel.monitorOutgoing("[MIDI] " + message);
 
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
@@ -82,7 +87,7 @@ public class MidiWriter {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             // TODO Add Monitoring and Dialogs
-//            CommunicationModel.monitorError("No device selected");
+            CommunicationModel.monitorError("No device selected");
 //            DialogFactory.renderWarningDialog("No device selected");
         } else {
             try {
@@ -102,6 +107,11 @@ public class MidiWriter {
                 // 3. Construct and configure the ShortMessage
                 ShortMessage shortMessage = new ShortMessage();
                 shortMessage.setMessage(status, data1, data2);
+
+                Platform.runLater(() -> {
+                    CommunicationModel.setStatus(message);
+                    CommunicationModel.monitorOutgoing("[MIDI] " + message);
+                });
 
                 // 4. Send message
                 receiver.send(shortMessage, -1);

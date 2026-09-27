@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import static util.constants.*;
+import static util.Constants.*;
 
 public class Util {
     private static final Logger logger = LoggerFactory.getLogger(Util.class);

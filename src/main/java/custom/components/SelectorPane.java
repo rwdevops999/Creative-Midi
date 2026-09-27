@@ -1,5 +1,6 @@
 package custom.components;
 
+import communication.CommunicationModel;
 import entity.device.DeviceInfo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -122,6 +123,8 @@ public class SelectorPane extends HBox {
 
                 if (candidates.contains(defaultDeviceName)) {
                     comboBox.getSelectionModel().select(defaultDeviceName);
+
+                    CommunicationModel.monitorInfo("Connected to device " + defaultDeviceName);
                     // NOTIFICATION (Connection established)
                     Notifications.create()
                             .title("Connection established")
@@ -140,6 +143,7 @@ public class SelectorPane extends HBox {
                 comboBox.getSelectionModel().clearSelection();
 
                 // NOTIFICATION (Connection Lost)
+                CommunicationModel.monitorWarning("Connection to device " + selectedDevice + " lost");
                 Notifications.create()
                         .title("Connection lost")
                         .text("The connection with Device '" +  selectedDevice + "'is lost")

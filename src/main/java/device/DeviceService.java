@@ -24,7 +24,6 @@ public class DeviceService {
 
         DeviceInfo deviceInfo = new DeviceInfo();
 
-        List<String> availableDevices = new ArrayList<>();
         try {
             MidiDevice.Info[] infos;
             if (OS.isWindows()) {

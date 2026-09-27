@@ -3,8 +3,8 @@ package util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static util.constants.OS_MAC;
-import static util.constants.OS_WINDOWS;
+import static util.Constants.OS_MAC;
+import static util.Constants.OS_WINDOWS;
 
 public class OS {
     private static final Logger logger = LoggerFactory.getLogger(OS.class);

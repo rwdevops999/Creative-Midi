@@ -69,16 +69,18 @@ public class DeviceInfo {
     public void deselectDevice(String deviceName) {
         List<MidiDevice> devs = devices.get(deviceName);
 
-        MidiDevice device = devs.get(0);
-        if (device != null && device.isOpen()) {
-            device.close();
-            ApplicationInfo.getInstance().setMidiInputDevice(null);
-        }
+        if (devs != null) {
+            MidiDevice device = devs.get(0);
+            if (device != null && device.isOpen()) {
+                device.close();
+                ApplicationInfo.getInstance().setMidiInputDevice(null);
+            }
 
-        device = devs.get(1);
-        if (device != null && device.isOpen()) {
-            device.close();
-            ApplicationInfo.getInstance().setMidiOutputDevice(null);
+            device = devs.get(1);
+            if (device != null && device.isOpen()) {
+                device.close();
+                ApplicationInfo.getInstance().setMidiOutputDevice(null);
+            }
         }
     }
 }

@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static util.Util.setPaneBackground;
-import static util.constants.APP_WIDTH;
+import static util.Constants.APP_WIDTH;
 
 public class HeaderPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(HeaderPane.class);

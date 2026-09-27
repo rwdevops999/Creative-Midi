@@ -15,7 +15,7 @@ import util.Theme;
 import java.util.Locale;
 import java.util.Objects;
 
-import static util.constants.TEST;
+import static util.Constants.TEST;
 
 public class CreativeApp extends Application {
     private static final Logger logger = LoggerFactory.getLogger(CreativeApp.class);

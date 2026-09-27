@@ -4,11 +4,8 @@ import creative.panes.monitor.MonitorPane;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ApplicationInfo;
 
-import javax.swing.border.Border;
-
-import static util.constants.*;
+import static util.Constants.*;
 
 public class RootPane extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(RootPane.class);

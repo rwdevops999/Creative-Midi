@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
-import static util.constants.SPA;
+import static util.Constants.SPA;
 
 public class Base extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(Base.class);

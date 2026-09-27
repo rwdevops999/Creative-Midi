@@ -1,6 +1,6 @@
 package util;
 
-public class constants {
+public class Constants {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_RESET = "\u001B[0m";
 
@@ -19,4 +19,7 @@ public class constants {
 
     public final static int OS_MAC=1;
     public final static int OS_WINDOWS=2;
+
+    public static String MONITOR_ACTION_CLEAR = "Clear";
+    public static String MONITOR_ACTION_EXPORT = "Export";
 }
