@@ -269,7 +269,6 @@ public class MidiEntrySelect extends GridPane {
             byteValue.set(0);
         }
 
-        byteValue.set(byteValue.get() - 64);
         spinner.getValueFactory().valueProperty().bindBidirectional(byteValue);
         add(spinner, 3, currentRow, 2, 1);
     }
@@ -369,9 +368,7 @@ public class MidiEntrySelect extends GridPane {
         });
 
         noteSelect.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (! mute) {
-                byteValue.set(newValue.getId());
-            }
+            byteValue.set(newValue.getId());
         });
 
         noteSelect.setOnShowing(event -> {

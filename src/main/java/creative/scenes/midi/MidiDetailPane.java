@@ -186,8 +186,8 @@ public class MidiDetailPane extends GridPane {
     private void renderByteEntry(int byteId, int onRow) {
         MidiEntrySelect byteSelect = new MidiEntrySelect(byteId);
         if (byteId == 1) {
-            byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte1TypeProperty());
             byteSelect.byteValue.bindBidirectional(currentMidi.getByte1Property());
+            byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte1TypeProperty());
             byteSelect.byteValue.addListener((observable, oldValue, newValue) -> {
                 if (changedHandler != null) {
                     changedHandler.accept(currentMidi, this);
@@ -202,8 +202,8 @@ public class MidiDetailPane extends GridPane {
             });
         } else if (byteId == 2) {
             byteSelect.showAddButton(false);
-            byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte2TypeProperty());
             byteSelect.byteValue.bindBidirectional(currentMidi.getByte2Property());
+            byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte2TypeProperty());
             byteSelect.setRemoveHandler(e -> {
                 Button btn = (Button)e.getSource();
                 MidiEntrySelect src = (MidiEntrySelect)btn.getParent();

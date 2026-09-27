@@ -1,1 +1,10 @@
-[ ]
+[ {
+  "byte1" : 60,
+  "byte1Type" : "Key",
+  "byte2" : 127,
+  "byte2Type" : "Continuous",
+  "channel" : 0,
+  "messageType" : "channel",
+  "name" : "Note On",
+  "status" : "90"
+} ]

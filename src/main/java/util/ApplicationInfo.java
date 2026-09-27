@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.sound.midi.MidiDevice;
+
 @Setter
 @Getter
 public class ApplicationInfo {
@@ -64,4 +66,10 @@ public class ApplicationInfo {
      * The Selected output device
      */
     private String selectedDevice;
+
+    /**
+     * devices
+     */
+    private MidiDevice midiInputDevice;
+    private MidiDevice midiOutputDevice;
 }

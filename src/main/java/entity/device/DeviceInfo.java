@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiUnavailableException;
@@ -42,7 +43,7 @@ public class DeviceInfo {
                 logger.debug("[CM_DEVICE_INFO] Device {} is midiInputDevice", device.getDeviceInfo().getName());
                 if (! device.isOpen()) {
                     device.open();
-//                    DirectSingleton.getInstance().setMidiInputDevice(device);
+                    ApplicationInfo.getInstance().setMidiInputDevice(device);
                 }
             }
 
@@ -51,7 +52,7 @@ public class DeviceInfo {
                 logger.debug("[CM_DEVICE_INFO] Device {} is midiOutputDevice", device.getDeviceInfo().getName());
                 if (! device.isOpen()) {
                     device.open();
-//                    DirectSingleton.getInstance().setMidiOutputDevice(device);
+                    ApplicationInfo.getInstance().setMidiOutputDevice(device);
                 }
             }
         } catch (MidiUnavailableException mue) {
@@ -71,13 +72,13 @@ public class DeviceInfo {
         MidiDevice device = devs.get(0);
         if (device != null && device.isOpen()) {
             device.close();
-//            DirectSingleton.getInstance().setMidiInputDevice(null);
+            ApplicationInfo.getInstance().setMidiInputDevice(null);
         }
 
         device = devs.get(1);
         if (device != null && device.isOpen()) {
             device.close();
-//            DirectSingleton.getInstance().setMidiOutputDevice(null);
+            ApplicationInfo.getInstance().setMidiOutputDevice(null);
         }
     }
 }
