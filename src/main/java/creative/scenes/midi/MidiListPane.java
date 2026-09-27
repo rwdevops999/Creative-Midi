@@ -1,5 +1,6 @@
 package creative.scenes.midi;
 
+import creative.scenes.SceneActionsPane;
 import creative.scenes.midi.provider.MidiProvider;
 import entity.midi.Midi;
 import entity.midi.NoteEntity;
@@ -22,6 +23,8 @@ import java.util.List;
 public class MidiListPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(MidiListPane.class);
 
+    private ListView<Midi> midiListView = null;
+
     public MidiListPane() {
         super();
 
@@ -40,15 +43,8 @@ public class MidiListPane extends VBox {
     private void buildPane() {
         logger.debug("[CM_MIDI_LIST_PANE] Building {}", getId());
 
-        ListView<Midi> midiListView = new ListView<Midi>();
-
-        MidiProvider midiProvider = ApplicationInfo.getInstance().getMidiProvider();
-        List<Midi> midis = new ArrayList<>();
-        if (midiProvider != null) {
-            midis = midiProvider.getMidis();
-        }
-
-        midiListView.setItems(FXCollections.observableList(midis));
+        midiListView = new ListView<Midi>();
+        updateMidiList();
         midiListView.setCellFactory(param -> new ListCell<Midi>() {
             @Override
             protected void updateItem(Midi midi, boolean empty) {
@@ -64,11 +60,36 @@ public class MidiListPane extends VBox {
         });
 
         midiListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                ApplicationInfo.getInstance().setCurrentMidi(newValue);
+                MidiDetailPane midiDetailPane = new MidiDetailPane(parent);
+                parent.setCenter(midiDetailPane);
+                int enables = SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_NEW] |
+                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_DELETE] |
+                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ACTION];
+
+                parent.getActionsPane().setEnables(enables);
+            }
         });
 
         VBox.setVgrow(midiListView, Priority.ALWAYS);
         getChildren().add(midiListView);
 
         logger.debug("[CM_MIDI_LIST_PANE] Built {}", getId());
+    }
+
+    public void updateMidiList() {
+        MidiProvider midiProvider = ApplicationInfo.getInstance().getMidiProvider();
+        List<Midi> midis = new ArrayList<>();
+        if (midiProvider != null) {
+            midis = midiProvider.getMidis();
+        }
+
+        midiListView.setItems(FXCollections.observableList(midis));
+    }
+
+    // ACCESSOR
+    public MidiPane getMidiPane() {
+        return parent;
     }
 }

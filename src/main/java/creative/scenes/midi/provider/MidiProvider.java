@@ -47,4 +47,8 @@ public class MidiProvider {
             logger.error("[CM_MIDI_PROVIDER] Exception. CAUSE: {}", ioe.getMessage());
         }
     }
+
+    public void deleteMidi(Midi midi) {
+        midis.remove(midi);
+    }
 }

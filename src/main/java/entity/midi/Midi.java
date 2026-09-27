@@ -23,19 +23,19 @@ public class Midi extends AEntity {
     private ObjectProperty<MessageType> messageTypeProperty = new SimpleObjectProperty<>();
     MessageType messageType;
 
-    private ObjectProperty<Integer> channelProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Integer> channelProperty = new SimpleObjectProperty<>(0);
     int channel;
 
     private ObjectProperty<ByteType> byte1TypeProperty = new SimpleObjectProperty<>();
     ByteType byte1Type;
 
-    private ObjectProperty<Integer> byte1Property = new SimpleObjectProperty<>();
+    private ObjectProperty<Integer> byte1Property = new SimpleObjectProperty<>(0);
     int byte1;
 
     private ObjectProperty<ByteType> byte2TypeProperty = new SimpleObjectProperty<>();
     ByteType byte2Type;
 
-    private ObjectProperty<Integer> byte2Property = new SimpleObjectProperty<>();
+    private ObjectProperty<Integer> byte2Property = new SimpleObjectProperty<>(0);
     Integer byte2;
 
     public Midi() {

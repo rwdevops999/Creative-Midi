@@ -29,17 +29,16 @@ public class ChangedHandler<T extends AEntity, U extends Pane> implements BiCons
                 SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ACTION] |
                 SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_EXPORT];
         if (isDirty) {
-            System.out.println("DIRTY");
             ApplicationInfo.getInstance().setDirtyMidi(midi);
             if (midi.getName().equals(originalMidi.getName())) {
                 enables |=
                         SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_UPDATE];
             } else {
                 enables |=
-                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ADD];
+                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ADD] |
+                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_UPDATE];
             }
         } else  {
-            System.out.println("NOT DIRTY");
             ApplicationInfo.getInstance().setDirtyMidi(null);
         }
 
