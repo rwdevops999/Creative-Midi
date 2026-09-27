@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MidiProvider {
@@ -81,5 +82,17 @@ public class MidiProvider {
 
     public boolean constainsMidi(String midiName) {
         return midis.stream().anyMatch(obj -> midiName.equals(obj.getName()));
+    }
+
+    public void addMidi(Midi midi) {
+        midis.add(midi);
+    }
+
+    public void updateMidi(Midi midi) {
+        Optional<Midi> foundMidi = midis.stream().filter(item -> item.getName().equals(midi.getName())).findFirst();
+        if (foundMidi.isPresent()) {
+            int index = midis.indexOf(foundMidi.get());
+            midis.set(index, midi);
+        }
     }
 }

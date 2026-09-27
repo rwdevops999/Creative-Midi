@@ -58,7 +58,7 @@ public class MidiPane extends BorderPane {
     }
 
     public AEntity getEntity() {
-        return ApplicationInfo.getInstance().getCurrentMidi();
+        return getMidiDetailPane().getCurrentMidi();
     }
 
     // ACCESSORS

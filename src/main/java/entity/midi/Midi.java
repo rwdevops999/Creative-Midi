@@ -30,7 +30,7 @@ public class Midi extends AEntity {
         return statusProperty;
     }
 
-    private String status;
+    String status;
 
     private ObjectProperty<MessageType> messageTypeProperty = new SimpleObjectProperty<>();
     @JsonIgnore

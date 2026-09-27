@@ -228,6 +228,10 @@ public class MidiDetailPane extends GridPane {
         getChildren().clear();
     }
 
+    public Midi getCurrentMidi() {
+        return currentMidi;
+    }
+
     public MidiPane getMidiPane() {
         return parent;
     }

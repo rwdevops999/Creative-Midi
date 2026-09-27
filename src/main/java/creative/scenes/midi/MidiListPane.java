@@ -4,6 +4,7 @@ import creative.scenes.SceneActionsPane;
 import creative.scenes.midi.provider.MidiProvider;
 import entity.midi.Midi;
 import entity.midi.NoteEntity;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
@@ -44,7 +45,7 @@ public class MidiListPane extends VBox {
         logger.debug("[CM_MIDI_LIST_PANE] Building {}", getId());
 
         midiListView = new ListView<Midi>();
-        updateMidiList();
+        updateMidiList(null);
         midiListView.setCellFactory(param -> new ListCell<Midi>() {
             @Override
             protected void updateItem(Midi midi, boolean empty) {
@@ -68,7 +69,10 @@ public class MidiListPane extends VBox {
                         SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_DELETE] |
                         SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ACTION];
 
-                parent.getActionsPane().setEnables(enables);
+                parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_NEW, true);
+                parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_DELETE, true);
+                parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_ACTION, true);
+                parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_EXPORT, ApplicationInfo.getInstance().isGlobalDirty());
             }
         });
 
@@ -78,14 +82,22 @@ public class MidiListPane extends VBox {
         logger.debug("[CM_MIDI_LIST_PANE] Built {}", getId());
     }
 
-    public void updateMidiList() {
+    public void updateMidiList(Midi midi) {
         MidiProvider midiProvider = ApplicationInfo.getInstance().getMidiProvider();
-        List<Midi> midis = new ArrayList<>();
-        if (midiProvider != null) {
-            midis = midiProvider.getMidis();
-        }
+        midiListView.getItems().clear();
 
-        midiListView.setItems(FXCollections.observableList(midis));
+        Platform.runLater(() -> {
+            List<Midi> midis = new ArrayList<>();
+            if (midiProvider != null) {
+                midis = midiProvider.getMidis();
+            }
+
+            midiListView.setItems(FXCollections.observableArrayList(midis));
+
+            if (midi != null) {
+                midiListView.getSelectionModel().select(midi);
+            }
+        });
     }
 
     // ACCESSOR

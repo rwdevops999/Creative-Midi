@@ -34,7 +34,7 @@ public class DeleteConsumer<T extends AEntity, P extends Pane> implements BiCons
             sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, false);
             sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, false);
 
-            sceneActionsPane.getMidiPane().getMidiListPane().updateMidiList();
+            sceneActionsPane.getMidiPane().getMidiListPane().updateMidiList(null);
 
             ApplicationInfo.getInstance().setCurrentMidi(null);
             sceneActionsPane.getMidiPane().setCenter(new MidiDetailPane(sceneActionsPane.getMidiPane()));
