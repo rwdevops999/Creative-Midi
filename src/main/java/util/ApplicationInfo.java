@@ -2,6 +2,7 @@ package util;
 
 import creative.scenes.midi.MidiListPane;
 import creative.scenes.midi.provider.MidiProvider;
+import creative.scenes.voice.provider.InstrumentProvider;
 import entity.midi.Midi;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -78,4 +79,9 @@ public class ApplicationInfo {
      * Filename of available voice names
      */
     private List<String> voiceFilenames;
+
+    /**
+     * the instrument provider
+     */
+    private InstrumentProvider instrumentProvider;
 }
