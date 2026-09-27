@@ -3,6 +3,7 @@ package creative.scenes.test.test1;
 import communication.CommunicationModel;
 import custom.components.HexTextField;
 import custom.components.midi.MidiEntrySelect;
+import entity.midi.Midi;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;

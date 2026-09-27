@@ -93,7 +93,7 @@ public class Midi extends AEntity {
     }
 
     public Integer getByte1() {
-        return byte1Property.get();
+        return byte1Property.get() & 0xFF;
     }
 
     public void setByte2Type(ByteType type) {
@@ -111,7 +111,7 @@ public class Midi extends AEntity {
     }
 
     public Integer getByte2() {
-        return byte2Property.get();
+        return byte2Property.get() & 0xFF;
     }
 
     @Override
@@ -120,16 +120,16 @@ public class Midi extends AEntity {
 
         int status = Integer.parseInt(getStatus(), 16);
         if (getMessageType().equals(MessageType.channel)) {
-            status += channel;
-            sb.append(Integer.toHexString(status).toUpperCase());
+            status += getChannel();
+            sb.append(String.format("%02X", status));
             if (getByte1() != null) {
-                sb.append(" ").append(Integer.toHexString(getByte1()).toUpperCase());
+                sb.append(" ").append(String.format("%02X", getByte1()));
                 if (getByte2() != null) {
-                    sb.append(" ").append(Integer.toHexString(getByte2()).toUpperCase());
+                    sb.append(" ").append(String.format("%02X", getByte2()));
                 }
             }
         } else {
-            sb.append(Integer.toHexString(status).toUpperCase());
+            sb.append(String.format("%02X", status));
         }
 
         return sb.toString();

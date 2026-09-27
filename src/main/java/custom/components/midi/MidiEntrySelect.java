@@ -5,9 +5,12 @@ import creative.scenes.midi.convertor.PanningConvertor;
 import creative.scenes.midi.convertor.SplitConvertor;
 import creative.scenes.midi.data.Byte1Type;
 import creative.scenes.midi.data.ByteType;
+import creative.scenes.midi.handler.ChangedHandler;
 import custom.components.HexTextField;
 import custom.components.OnOffSwitch;
+import entity.midi.Midi;
 import entity.midi.NoteEntity;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -36,6 +40,9 @@ public class MidiEntrySelect extends GridPane {
     public ObjectProperty<Integer> byteValue = new SimpleObjectProperty<>(0);
     public ObjectProperty<String> byteAsStringValue = new SimpleObjectProperty<>("");
     public ObjectProperty<ByteType> byteTypeValue = new SimpleObjectProperty<>();
+
+    private ChangedHandler<Midi> changedHandler = null;
+    private boolean mute = false;
 
     public MidiEntrySelect() {
         super();
@@ -89,7 +96,7 @@ public class MidiEntrySelect extends GridPane {
     public MidiEntrySelect(int buttonId) {
         this();
 
-        buildComponent(buttonId, null, null);
+            buildComponent(buttonId, null, null);
     }
 
     public MidiEntrySelect(int buttonId, EventHandler<ActionEvent> addHandler, EventHandler<ActionEvent> removeHandler) {
@@ -257,11 +264,13 @@ public class MidiEntrySelect extends GridPane {
     }
 
     private void renderSpinner(int currentRow, int min, int max) {
-        Spinner<Integer> spinner = new Spinner<>(min, max, 0);
+        Spinner<Integer> spinner = new Spinner<>(min, max, byteValue.get() == null ? 0 : byteValue.get());
         spinner.setId("Deletable");
         if (byteValue.get() == null) {
             byteValue.set(0);
         }
+
+        byteValue.set(byteValue.get() - 64);
         spinner.getValueFactory().valueProperty().bindBidirectional(byteValue);
         add(spinner, 3, currentRow, 2, 1);
     }
@@ -311,7 +320,7 @@ public class MidiEntrySelect extends GridPane {
 
     private void renderSlider(int currentRow, int min, int max, String subtype) {
         currentRow++;
-        Slider slider = new Slider(min, max, 0);
+        Slider slider = new Slider(min, max, byteValue.get() == null ? 0 : byteValue.get());
         slider.setId("Deletable");
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
@@ -361,10 +370,31 @@ public class MidiEntrySelect extends GridPane {
         });
 
         noteSelect.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            byteValue.set(newValue.getId());
+            if (! mute) {
+                byteValue.set(newValue.getId());
+            }
         });
 
-        noteSelect.getSelectionModel().select(calcNote(byteValue.get(), baseOctave));
+        noteSelect.setOnShowing(event -> {
+            // JavaFX uses ComboBoxListViewSkin by default
+            if (noteSelect.getSkin() instanceof ComboBoxListViewSkin) {
+                ComboBoxListViewSkin<?> skin = (ComboBoxListViewSkin<?>) noteSelect.getSkin();
+                // Retrieve the internal ListView popup
+                ListView<?> listView = (ListView<?>) skin.getPopupContent();
+                if (listView != null) {
+                    int selectedIndex = noteSelect.getSelectionModel().getSelectedIndex();
+                    if (selectedIndex >= 0) {
+                        // Wrap in Platform.runLater to ensure the UI has laid out the popup elements
+                        Platform.runLater(() -> listView.scrollTo(selectedIndex));
+                    }
+                }
+            }
+        });
+
+//        mute = true;
+        int value = (byteValue.get() < 0 ? byteValue.get() + 64 : byteValue.get()) & 0xFF;
+        noteSelect.getSelectionModel().select(calcNote(value, baseOctave));
+//        mute = false;
 
         add(noteSelect, 3, currentRow, 3, 1);
     }
@@ -402,5 +432,9 @@ public class MidiEntrySelect extends GridPane {
 
         propertyA.addListener(listenerA);
         propertyB.addListener(listenerB);
+    }
+
+    public void setGlobalChangeHandler(ChangedHandler<Midi> changedHandler) {
+        this.changedHandler = changedHandler;
     }
 }

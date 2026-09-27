@@ -1,17 +1,20 @@
 package creative.scenes.midi.handler;
 
 import communication.CommunicationModel;
+import entity.AEntity;
 import entity.midi.Midi;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import util.ApplicationInfo;
 
-public class ChangedHandler implements EventHandler<ActionEvent> {
-    @Override
-    public void handle(ActionEvent actionEvent) {
-        Midi currentMidi = ApplicationInfo.getInstance().getCurrentMidi();
+import java.util.function.Consumer;
 
-        CommunicationModel.setStatus(currentMidi.toString());
+public class ChangedHandler<T extends AEntity> implements Consumer<T> {
+    @Override
+    public void accept(T t) {
+        Midi midi = (Midi)t;
+
+        CommunicationModel.setStatus(midi.toString());
 
         System.out.println("CHANGIE");
     }

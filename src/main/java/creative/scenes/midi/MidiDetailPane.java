@@ -4,6 +4,7 @@ import creative.scenes.midi.data.MessageType;
 import creative.scenes.midi.handler.ChangedHandler;
 import custom.components.HexTextField;
 import custom.components.midi.MidiEntrySelect;
+import entity.AEntity;
 import entity.midi.Midi;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,6 +28,7 @@ public class MidiDetailPane extends GridPane {
     private ObjectProperty<Integer> channel = new SimpleObjectProperty<>(0);
 
     private ChangedHandler changedHandler = new ChangedHandler();
+    private Midi currentMidi;
 
     public MidiDetailPane() {
         super();
@@ -67,7 +69,7 @@ public class MidiDetailPane extends GridPane {
 
         setPaneBackground(this);
 
-        Midi currentMidi = ApplicationInfo.getInstance().getCurrentMidi();
+        currentMidi = ApplicationInfo.getInstance().getCurrentMidi();
         if (currentMidi != null) {
             AtomicInteger row = new AtomicInteger(0);
 
@@ -79,7 +81,7 @@ public class MidiDetailPane extends GridPane {
             midiNameInputField.textProperty().bindBidirectional(currentMidi.getNameProperty());
             midiNameInputField.setPromptText("name...");
             midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> {
-               changedHandler.handle(new ActionEvent());
+               changedHandler.accept(currentMidi);
             });
             add(midiNameInputField, 1, row.get(), 5, 1);
 
@@ -92,7 +94,7 @@ public class MidiDetailPane extends GridPane {
             hexInput.setPromptText("status");
             hexInput.textProperty().bindBidirectional(currentMidi.getStatusProperty());
             hexInput.textProperty().addListener((observable, oldValue, newValue) -> {
-                changedHandler.handle(new ActionEvent());
+                changedHandler.accept(currentMidi);
             });
             add(hexInput, 1, row.get(), 2, 1);
 
@@ -114,11 +116,11 @@ public class MidiDetailPane extends GridPane {
             channelRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     row.set(3);
-                    handleChannelMessageSelected(row.get(), currentMidi);
+                    handleChannelMessageSelected(row.get());
 
                     if (currentMidi.getByte2() != null) {
                         row.getAndAdd(7);
-                        renderByteEntry(2, currentMidi, row.get());
+                        renderByteEntry(2, row.get());
                     }
 
                 } else {
@@ -137,7 +139,7 @@ public class MidiDetailPane extends GridPane {
             group.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
                 if (newToggle != null) {
                     currentMidi.getMessageTypeProperty().set((MessageType)newToggle.getUserData());
-                    changedHandler.handle(new ActionEvent());
+                    changedHandler.accept(currentMidi);
                 }
             });
 
@@ -152,14 +154,14 @@ public class MidiDetailPane extends GridPane {
         logger.debug("[CM_MIDI_DETAIL_PANE] Built {}", getId());
     }
 
-    private void handleChannelMessageSelected(int currentRow, Midi currentMidi) {
+    private void handleChannelMessageSelected(int currentRow) {
         currentRow++;
-        renderChannelSelection(currentRow, currentMidi);
+        renderChannelSelection(currentRow);
         currentRow++;
-        renderByteEntry(1, currentMidi, currentRow);
+        renderByteEntry(1, currentRow);
     }
 
-    private void renderChannelSelection(int onRow, Midi currentMidi) {
+    private void renderChannelSelection(int onRow) {
         Label channelLabel = new Label("Chnl:");
         channelLabel.setId("Deletable");
         add(channelLabel, 0, onRow, 2, 1);
@@ -169,21 +171,32 @@ public class MidiDetailPane extends GridPane {
         for (int i = 0; i < 16; i++) {
             channelSelect.getItems().add(i);
         }
+        channelSelect.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (changedHandler != null) {
+                changedHandler.accept(currentMidi);
+            }
+        });
 
         channelSelect.valueProperty().bindBidirectional(currentMidi.getChannelProperty());
         add(channelSelect, 1, onRow, 2, 1);
     }
 
-    private void renderByteEntry(int byteId, Midi currentMidi, int onRow) {
+    private void renderByteEntry(int byteId, int onRow) {
         MidiEntrySelect byteSelect = new MidiEntrySelect(byteId);
+        byteSelect.setGlobalChangeHandler(changedHandler);
         if (byteId == 1) {
             byteSelect.byteTypeValue.bindBidirectional(currentMidi.getByte1TypeProperty());
             byteSelect.byteValue.bindBidirectional(currentMidi.getByte1Property());
+            byteSelect.byteValue.addListener((observable, oldValue, newValue) -> {
+                if (changedHandler != null) {
+                    changedHandler.accept(currentMidi);
+                }
+            });
             byteSelect.showRemoveButton(false);
             byteSelect.setAddHandler(e -> {
                 if (currentMidi.getByte2() == null) {
                     currentMidi.setByte2(0);
-                    renderByteEntry(byteId + 1, currentMidi, onRow + 5);
+                    renderByteEntry(byteId + 1,onRow + 5);
                 }
             });
         } else if (byteId == 2) {
@@ -195,6 +208,11 @@ public class MidiDetailPane extends GridPane {
                 MidiEntrySelect src = (MidiEntrySelect)btn.getParent();
                 getChildren().remove(src);
                 currentMidi.setByte2(null);
+            });
+            byteSelect.byteValue.addListener((observable, oldValue, newValue) -> {
+                if (changedHandler != null) {
+                    changedHandler.accept(currentMidi);
+                }
             });
         }
         byteSelect.setId("Deletable");
