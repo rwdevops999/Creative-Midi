@@ -6,6 +6,7 @@ import creative.scenes.voice.provider.InstrumentProvider;
 import entity.midi.Midi;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,9 @@ public class ApplicationInfo {
 
     // Debugging
     private boolean debugging = false;
+
+    // Primary Stage
+    private Stage primaryStage;
 
     // Root Scene
     private Scene rootScene;

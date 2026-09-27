@@ -40,6 +40,8 @@ public class CreativeApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         logger.debug("[CM_CREATIVE_APP] Starting CREATIVE MIDI");
 
+        ApplicationInfo.getInstance().setPrimaryStage(primaryStage);
+
         primaryStage.setTitle("Creative Midi");
         primaryStage.initStyle(StageStyle.UNDECORATED);
 

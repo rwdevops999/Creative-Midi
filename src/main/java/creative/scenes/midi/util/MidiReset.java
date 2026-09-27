@@ -90,7 +90,9 @@ public class MidiReset {
 
     private void executeBulk(MidiWriter midiWriter, List<String> midiMessages) {
         for (String mid : midiMessages) {
-            midiWriter.sendMidiMessageAsString(mid);
+            if (! midiWriter.sendMidiMessageAsString(mid)) {
+                break;
+            }
         }
     }
 }

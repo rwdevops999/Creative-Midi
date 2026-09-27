@@ -1,0 +1,61 @@
+package custom.dialog;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
+
+import java.util.Optional;
+
+public class DialogFactory {
+    private static final Logger logger = LoggerFactory.getLogger(DialogFactory.class);
+
+    private static Alert renderDialog (String message, Alert.AlertType alertType, String headerText) {
+        logger.debug("[CM_DIALOG_FACTORY] Render a uniform dialog. Type = {}", alertType.name());
+        Alert alert = new Alert(alertType);
+        alert.setHeaderText(headerText);
+        alert.setContentText(message);
+
+        alert.initOwner(ApplicationInfo.getInstance().getPrimaryStage());
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.showAndWait();
+
+        return alert;
+    }
+
+    public static void renderWarningDialog (String message) {
+        logger.debug("[CM_DIALOG_FACTORY] Render a WARNING dialog");
+        renderDialog(message, Alert.AlertType.WARNING, "Warning");
+    }
+
+    public static void renderInformationDialog (String message) {
+        logger.debug("[CM_DIALOG_FACTORY] Render an INFORMATION dialog");
+        renderDialog(message, Alert.AlertType.INFORMATION, "Information");
+    }
+
+    public static void renderErrorDialog (String message) {
+        logger.debug("[CM_DIALOG_FACTORY] Render an ERROR dialog");
+        renderDialog(message, Alert.AlertType.ERROR, "Error");
+    }
+
+    public static boolean renderConfirmationDialog (String header, String message) {
+        boolean returnValue = false;
+        logger.debug("[CM_DIALOG_FACTORY] Render a CONFIRMATION dialog");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+
+        alert.initOwner(ApplicationInfo.getInstance().getPrimaryStage());
+
+        alert.initStyle(StageStyle.UNDECORATED);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            returnValue = true;
+        }
+
+        return returnValue;
+    }
+}

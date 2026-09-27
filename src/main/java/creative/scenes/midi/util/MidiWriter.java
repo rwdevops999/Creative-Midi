@@ -1,6 +1,7 @@
 package creative.scenes.midi.util;
 
 import communication.CommunicationModel;
+import custom.dialog.DialogFactory;
 import entity.midi.Midi;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -78,17 +79,18 @@ public class MidiWriter {
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION: Device not ready for sending midi. CAUSE {}", mue.getMessage());
-//                DialogFactory.renderErrorDialog("Device not ready");
+                DialogFactory.renderErrorDialog("Device not ready");
             }
         }
     }
 
-    public void sendMidiMessageAsString (String message) {
+    public boolean sendMidiMessageAsString (String message) {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             // TODO Add Monitoring and Dialogs
             CommunicationModel.monitorError("No device selected");
-//            DialogFactory.renderWarningDialog("No device selected");
+            DialogFactory.renderWarningDialog("No device selected");
+            return false;
         } else {
             try {
                 Receiver receiver = outputDevice.getReceiver();
@@ -117,12 +119,16 @@ public class MidiWriter {
                 receiver.send(shortMessage, -1);
             } catch (MidiUnavailableException mue) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION: Device not ready for sending midi. CAUSE {}", mue.getMessage());
-//                DialogFactory.renderErrorDialog("Device not ready");
+                DialogFactory.renderErrorDialog("Device not ready");
+                return false;
             } catch (InvalidMidiDataException imde) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION: Midi data incorrect. CAUSE {}", imde.getMessage());
-//                String message = MessageFormatter.basicArrayFormat("MIDI Command is not constructed well for {}", new Object[]{midi.getStatus()});
-//                DialogFactory.renderErrorDialog(message);
+                String strMessage = MessageFormatter.basicArrayFormat("MIDI Command is not constructed well for {}", new Object[]{message});
+                DialogFactory.renderErrorDialog(strMessage);
+                return false;
             }
         }
+
+        return true;
     }
 }
