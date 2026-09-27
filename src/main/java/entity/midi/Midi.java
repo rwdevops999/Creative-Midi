@@ -42,6 +42,19 @@ public class Midi extends AEntity {
         this.name = "";
     }
 
+    public Midi(Midi other) {
+        if (other == null) return;
+
+        this.setName(other.getName());
+        this.setStatus(other.getStatus());
+        this.setMessageType(other.getMessageType().name());
+        this.setChannel(other.getChannel());
+        this.setByte1Type(other.getByte1Type());
+        this.setByte1(other.getByte1());
+        this.setByte2Type(other.getByte2Type());
+        this.setByte2(other.getByte2());
+    }
+
     public void setName(String name) {
         nameProperty.set(name);
         this.name = name;
@@ -112,6 +125,33 @@ public class Midi extends AEntity {
 
     public Integer getByte2() {
         return byte2Property.get() & 0xFF;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        // Replace 'Note' with your actual class name
+        Midi other = (Midi)obj;
+
+        // Replace 'id' with your object's unique identifier (e.g., getId())
+        return (
+                this.getName().equals(other.getName()) &&
+                        this.getStatus().equals(other.getStatus()) &&
+                        this.getMessageType().equals(other.getMessageType()) &&
+                        this.getChannel() == other.getChannel() &&
+                        this.getByte1Type().equals(other.getByte1Type()) &&
+                        this.getByte1().equals(other.getByte1()) &&
+                        this.getByte2Type().equals(other.getByte2Type()) &&
+                        this.getByte2().equals(other.getByte2())
+                );
+    }
+
+    @Override
+    public int hashCode() {
+        // Keeps hashCode consistent with equals
+        return java.util.Objects.hash(getName());
     }
 
     @Override

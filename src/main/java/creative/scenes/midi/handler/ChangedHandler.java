@@ -16,6 +16,11 @@ public class ChangedHandler<T extends AEntity> implements Consumer<T> {
 
         CommunicationModel.setStatus(midi.toString());
 
-        System.out.println("CHANGIE");
+        Midi originalMidi = ApplicationInfo.getInstance().getCurrentMidi();
+        boolean isDirty = ! originalMidi.equals(midi);
+
+        if (isDirty) {
+            System.out.println("CHANGIE");
+        }
     }
 }

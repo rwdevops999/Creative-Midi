@@ -69,87 +69,90 @@ public class MidiDetailPane extends GridPane {
 
         setPaneBackground(this);
 
-        currentMidi = ApplicationInfo.getInstance().getCurrentMidi();
-        if (currentMidi != null) {
-            AtomicInteger row = new AtomicInteger(0);
-
-            // ROW0
-            Label midiName = new Label("Name:");
-            add(midiName, 0, row.get());
-
-            TextField midiNameInputField = new TextField();
-            midiNameInputField.textProperty().bindBidirectional(currentMidi.getNameProperty());
-            midiNameInputField.setPromptText("name...");
-            midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> {
-               changedHandler.accept(currentMidi);
-            });
-            add(midiNameInputField, 1, row.get(), 5, 1);
-
-            // ROW1
-            row.getAndIncrement();
-            Label statusLabel = new Label("Status:");
-            add(statusLabel, 0, row.get());
-
-            HexTextField hexInput = new HexTextField();
-            hexInput.setPromptText("status");
-            hexInput.textProperty().bindBidirectional(currentMidi.getStatusProperty());
-            hexInput.textProperty().addListener((observable, oldValue, newValue) -> {
-                changedHandler.accept(currentMidi);
-            });
-            add(hexInput, 1, row.get(), 2, 1);
-
-            ToggleGroup group = new ToggleGroup();
-
-            // ROW2
-            row.getAndIncrement();
-            RadioButton systemRadio = new RadioButton("System Message");
-            systemRadio.setUserData(MessageType.system);
-            systemRadio.setToggleGroup(group);
-            systemRadio.setSelected(true);
-            add(systemRadio, 1, row.get(), 3, 1);
-
-            // ROW3
-            row.getAndIncrement();
-            RadioButton channelRadio = new RadioButton("Channel Message");
-            channelRadio.setUserData(MessageType.channel);
-            channelRadio.setToggleGroup(group);
-            channelRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) {
-                    row.set(3);
-                    handleChannelMessageSelected(row.get());
-
-                    if (currentMidi.getByte2() != null) {
-                        row.getAndAdd(7);
-                        renderByteEntry(2, row.get());
-                    }
-
-                } else {
-                    removeDeletables();
-                }
-            });
-            add(channelRadio, 1, row.get(), 3, 1);
-
-            if (currentMidi.getMessageType() != null) {
-                if (currentMidi.getMessageType().name().equals("system")) {
-                    systemRadio.setSelected(true);
-                } else {
-                    channelRadio.setSelected(true);
-                }
-            }
-            group.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
-                if (newToggle != null) {
-                    currentMidi.getMessageTypeProperty().set((MessageType)newToggle.getUserData());
-                    changedHandler.accept(currentMidi);
-                }
-            });
-
-            currentMidi.getMessageTypeProperty().addListener((obs, oldMode, newMode) -> {
-                group.getToggles().stream()
-                        .filter(t -> t.getUserData() == newMode)
-                        .findFirst()
-                        .ifPresent(group::selectToggle);
-            });
+        if (ApplicationInfo.getInstance().getCurrentMidi() == null) {
+          return;
         }
+
+        currentMidi = new Midi(ApplicationInfo.getInstance().getCurrentMidi());
+
+        AtomicInteger row = new AtomicInteger(0);
+
+        // ROW0
+        Label midiName = new Label("Name:");
+        add(midiName, 0, row.get());
+
+        TextField midiNameInputField = new TextField();
+        midiNameInputField.textProperty().bindBidirectional(currentMidi.getNameProperty());
+        midiNameInputField.setPromptText("name...");
+        midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> {
+           changedHandler.accept(currentMidi);
+        });
+        add(midiNameInputField, 1, row.get(), 5, 1);
+
+        // ROW1
+        row.getAndIncrement();
+        Label statusLabel = new Label("Status:");
+        add(statusLabel, 0, row.get());
+
+        HexTextField hexInput = new HexTextField();
+        hexInput.setPromptText("status");
+        hexInput.textProperty().bindBidirectional(currentMidi.getStatusProperty());
+        hexInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            changedHandler.accept(currentMidi);
+        });
+        add(hexInput, 1, row.get(), 2, 1);
+
+        ToggleGroup group = new ToggleGroup();
+
+        // ROW2
+        row.getAndIncrement();
+        RadioButton systemRadio = new RadioButton("System Message");
+        systemRadio.setUserData(MessageType.system);
+        systemRadio.setToggleGroup(group);
+        systemRadio.setSelected(true);
+        add(systemRadio, 1, row.get(), 3, 1);
+
+        // ROW3
+        row.getAndIncrement();
+        RadioButton channelRadio = new RadioButton("Channel Message");
+        channelRadio.setUserData(MessageType.channel);
+        channelRadio.setToggleGroup(group);
+        channelRadio.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                row.set(3);
+                handleChannelMessageSelected(row.get());
+
+                if (currentMidi.getByte2() != null) {
+                    row.getAndAdd(7);
+                    renderByteEntry(2, row.get());
+                }
+
+            } else {
+                removeDeletables();
+            }
+        });
+        add(channelRadio, 1, row.get(), 3, 1);
+
+        if (currentMidi.getMessageType() != null) {
+            if (currentMidi.getMessageType().name().equals("system")) {
+                systemRadio.setSelected(true);
+            } else {
+                channelRadio.setSelected(true);
+            }
+        }
+        group.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            if (newToggle != null) {
+                currentMidi.getMessageTypeProperty().set((MessageType)newToggle.getUserData());
+                changedHandler.accept(currentMidi);
+            }
+        });
+
+        currentMidi.getMessageTypeProperty().addListener((obs, oldMode, newMode) -> {
+            group.getToggles().stream()
+                    .filter(t -> t.getUserData() == newMode)
+                    .findFirst()
+                    .ifPresent(group::selectToggle);
+        });
 
         logger.debug("[CM_MIDI_DETAIL_PANE] Built {}", getId());
     }
