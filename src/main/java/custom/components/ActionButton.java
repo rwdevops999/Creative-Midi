@@ -28,7 +28,7 @@ public class ActionButton extends Button {
         super();
     }
 
-    public ActionButton(IScene ownerScene, String name, String tooltip, String iconname, IScene forScene) {
+    public ActionButton(IScene ownerScene, int size, String name, String tooltip, String iconname, IScene forScene) {
         this();
 
         logger.debug("[CM_ACTION_BUTTON] Create action button {}", name);
@@ -43,10 +43,10 @@ public class ActionButton extends Button {
         String nameOfIcon = "/icons/" + iconname + ".png";
         Image icon = new Image(Util.class.getResourceAsStream(nameOfIcon));
         ImageView imageView = new ImageView(icon);
-        imageView.setFitWidth(96);
-        imageView.setFitHeight(96);
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
 
-        setPrefSize(96,96);
+        setPrefSize(size,size);
         setPadding(new Insets(1));
         setId(name);
         setTooltip(tooltipField);
@@ -57,7 +57,7 @@ public class ActionButton extends Button {
         logger.debug("[CM_UTIL] Created icon button {}", name);
     }
 
-    public ActionButton(IScene ownerScene, String name, String tooltip, String iconname, String paneName) {
+    public ActionButton(IScene ownerScene, int size, String name, String tooltip, String iconname, String paneName) {
         this();
 
         logger.debug("[CM_ACTION_BUTTON] Create action button {}", name);
@@ -90,14 +90,14 @@ public class ActionButton extends Button {
         String nameOfIcon = "/icons/" + iconname + ".png";
         Image icon = new Image(Util.class.getResourceAsStream(nameOfIcon));
         ImageView imageView = new ImageView(icon);
-        imageView.setFitWidth(96);
-        imageView.setFitHeight(96);
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
 
-        setPrefSize(96,96);
+        setPrefSize(size,size);
         setPadding(new Insets(1));
         setId(name);
         setTooltip(tooltipField);
-        setGraphic(imageView);
+      setGraphic(imageView);
         setOnAction(handler);
         setStyle("-fx-background-color: yellow; -fx-padding: 1;");
 
