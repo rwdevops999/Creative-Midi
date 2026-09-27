@@ -1,5 +1,6 @@
 package entity.midi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import creative.scenes.midi.data.Byte1Type;
 import creative.scenes.midi.data.ByteType;
 import creative.scenes.midi.data.MessageType;
@@ -15,31 +16,73 @@ import lombok.Setter;
 @Setter
 public class Midi extends AEntity {
     private StringProperty nameProperty = new SimpleStringProperty();
+
+    @JsonIgnore
+    public StringProperty getNameProperty() {
+        return nameProperty;
+    }
+
     private String name;
 
     private StringProperty statusProperty = new SimpleStringProperty();
+    @JsonIgnore
+    public StringProperty getStatusProperty() {
+        return statusProperty;
+    }
+
     private String status;
 
     private ObjectProperty<MessageType> messageTypeProperty = new SimpleObjectProperty<>();
+    @JsonIgnore
+    public ObjectProperty<MessageType> getMessageTypeProperty() {
+        return messageTypeProperty;
+    }
+
     MessageType messageType;
 
     private ObjectProperty<Integer> channelProperty = new SimpleObjectProperty<>(0);
+    @JsonIgnore
+    public ObjectProperty<Integer> getChannelProperty() {
+        return channelProperty;
+    }
     int channel;
 
     private ObjectProperty<ByteType> byte1TypeProperty = new SimpleObjectProperty<>();
+    @JsonIgnore
+    public ObjectProperty<ByteType> getByte1TypeProperty() {
+        return byte1TypeProperty;
+    }
+
     ByteType byte1Type;
 
     private ObjectProperty<Integer> byte1Property = new SimpleObjectProperty<>(0);
+    @JsonIgnore
+    public ObjectProperty<Integer> getByte1Property() {
+        return byte1Property;
+    }
+
     int byte1;
 
     private ObjectProperty<ByteType> byte2TypeProperty = new SimpleObjectProperty<>();
+    @JsonIgnore
+    public ObjectProperty<ByteType> getByte2TypeProperty() {
+        return byte2TypeProperty;
+    }
+
     ByteType byte2Type;
 
     private ObjectProperty<Integer> byte2Property = new SimpleObjectProperty<>(0);
+    @JsonIgnore
+    public ObjectProperty<Integer> getByte2Property() {
+        return byte2Property;
+    }
+
     Integer byte2;
 
     public Midi() {
-        this.name = "";
+        setName("Unknown");
+        setStatus("00");
+        setMessageType("system");
     }
 
     public Midi(Midi other) {
@@ -87,7 +130,7 @@ public class Midi extends AEntity {
         this.channel = channel;
     }
 
-    public int getChannel() {
+    public Integer getChannel() {
         return channelProperty.get();
     }
 
@@ -135,17 +178,38 @@ public class Midi extends AEntity {
         // Replace 'Note' with your actual class name
         Midi other = (Midi)obj;
 
+        boolean result = this.getName().equals(other.getName());
+
+        if (this.getStatus() != null) {
+            result = result && this.getStatus().equals(other.getStatus());
+        }
+
+        if (this.getMessageType() != null) {
+            result = result && this.getMessageType().equals(other.getMessageType());
+        }
+
+        if (this.getChannel() != null) {
+            result = result && this.getChannel().equals(other.getChannel());
+        }
+
+        if (this.getByte1Type() != null) {
+            result = result && this.getByte1Type().equals(other.getByte1Type());
+        }
+
+        if (this.getByte1() != null) {
+            result = result && this.getByte1().equals(other.getByte1());
+        }
+
+        if (this.getByte2Type() != null) {
+            result = result && this.getByte2Type().equals(other.getByte2Type());
+        }
+
+        if (this.getByte2() != null) {
+            result = result && this.getByte2().equals(other.getByte2());
+        }
+
         // Replace 'id' with your object's unique identifier (e.g., getId())
-        return (
-                this.getName().equals(other.getName()) &&
-                        this.getStatus().equals(other.getStatus()) &&
-                        this.getMessageType().equals(other.getMessageType()) &&
-                        this.getChannel() == other.getChannel() &&
-                        this.getByte1Type().equals(other.getByte1Type()) &&
-                        this.getByte1().equals(other.getByte1()) &&
-                        this.getByte2Type().equals(other.getByte2Type()) &&
-                        this.getByte2().equals(other.getByte2())
-                );
+        return result;
     }
 
     @Override
@@ -158,18 +222,20 @@ public class Midi extends AEntity {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        int status = Integer.parseInt(getStatus(), 16);
-        if (getMessageType().equals(MessageType.channel)) {
-            status += getChannel();
-            sb.append(String.format("%02X", status));
-            if (getByte1() != null) {
-                sb.append(" ").append(String.format("%02X", getByte1()));
-                if (getByte2() != null) {
-                    sb.append(" ").append(String.format("%02X", getByte2()));
+        if (! getStatus().isEmpty()) {
+            int status = Integer.parseInt(getStatus(), 16);
+            if (getMessageType().equals(MessageType.channel)) {
+                status += getChannel();
+                sb.append(String.format("%02X", status));
+                if (getByte1() != null) {
+                    sb.append(" ").append(String.format("%02X", getByte1()));
+                    if (getByte2() != null) {
+                        sb.append(" ").append(String.format("%02X", getByte2()));
+                    }
                 }
+            } else {
+                sb.append(String.format("%02X", status));
             }
-        } else {
-            sb.append(String.format("%02X", status));
         }
 
         return sb.toString();

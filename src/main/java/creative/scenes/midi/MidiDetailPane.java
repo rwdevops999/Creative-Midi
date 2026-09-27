@@ -3,6 +3,7 @@ package creative.scenes.midi;
 import creative.scenes.midi.data.MessageType;
 import creative.scenes.midi.handler.ChangedHandler;
 import custom.components.HexTextField;
+import custom.components.SimpleHexTextField;
 import custom.components.midi.MidiEntrySelect;
 import entity.midi.Midi;
 import javafx.beans.property.ObjectProperty;
@@ -92,7 +93,7 @@ public class MidiDetailPane extends GridPane {
         Label statusLabel = new Label("Status:");
         add(statusLabel, 0, row.get());
 
-        HexTextField hexInput = new HexTextField();
+        SimpleHexTextField hexInput = new SimpleHexTextField();
         hexInput.setPromptText("status");
         hexInput.textProperty().bindBidirectional(currentMidi.getStatusProperty());
         hexInput.textProperty().addListener((observable, oldValue, newValue) -> {

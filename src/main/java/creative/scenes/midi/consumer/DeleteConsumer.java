@@ -27,15 +27,18 @@ public class DeleteConsumer<T extends AEntity, P extends Pane> implements BiCons
 
         if (midiProvider != null) {
             midiProvider.deleteMidi(midi);
+            ApplicationInfo.getInstance().setGlobalDirty(true);
+
+            sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+            sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
+            sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, false);
+            sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, false);
+
             sceneActionsPane.getMidiPane().getMidiListPane().updateMidiList();
 
             ApplicationInfo.getInstance().setCurrentMidi(null);
             sceneActionsPane.getMidiPane().setCenter(new MidiDetailPane(sceneActionsPane.getMidiPane()));
 
-            int enables =
-                    SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_NEW] |
-                    SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_EXPORT];
-            sceneActionsPane.setEnables(enables);
         }
 
         System.out.println("END");

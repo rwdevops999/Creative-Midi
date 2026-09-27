@@ -5,6 +5,7 @@ import creative.scenes.midi.MidiDetailPane;
 import creative.scenes.midi.MidiListPane;
 import creative.scenes.midi.MidiPane;
 import creative.scenes.midi.data.ByteType;
+import creative.scenes.midi.provider.MidiProvider;
 import entity.AEntity;
 import entity.midi.Midi;
 import javafx.scene.layout.Pane;
@@ -26,19 +27,15 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
 
         Midi midi = new Midi();
 
-        // TODO Remove this test data
-        midi.setName("Unknown");
-        midi.setStatus("F8");
-        midi.setMessageType("channel");
-        midi.setChannel(5);
-        midi.setByte1Type(ByteType.FreeValue);
-        midi.setByte1(123);
-        midi.setByte2Type(ByteType.Continuous);
-        midi.setByte2(100);
-
         ApplicationInfo.getInstance().setCurrentMidi(midi);
 
         MidiDetailPane midiDetailPane = new MidiDetailPane(midiPane);
         midiPane.setCenter(midiDetailPane);
+
+        MidiProvider midiProvider = ApplicationInfo.getInstance().getMidiProvider();
+
+        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
+        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, midiProvider.constainsMidi(midi.getName()));
     }
 }

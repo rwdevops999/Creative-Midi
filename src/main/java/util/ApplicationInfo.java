@@ -54,4 +54,9 @@ public class ApplicationInfo {
      * Dirty MIDI
      */
     private Midi dirtyMidi;
+
+    /**
+     * Global Dirty : when something is removed from list or added to list => for export
+     */
+    private boolean globalDirty;
 }

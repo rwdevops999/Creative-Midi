@@ -1,0 +1,70 @@
+MIDI
+
+Channel Message
+
+8nH Note Off, 		Key No 0-127 (Key),  		Velocity 0-127 (Continuous)
+9nH Note On,		Key No 0-127 (Key),		Velocity 1-127, Velocity 0 = Note Off (Continuous)
+BnH Control change,
+CnH Program change,	Voice No 0-127 (Continuous),		
+DnH Aftertouch,		Data 0-127 (Continous)
+AnH Polyphonic AT,	Key No 0-127 (Key),		Data 0-127 (Continuous)
+EnH Pitch Bend,		LSB 0-127 (Continous),		MSB 0-127 (Continuous)
+
+Realtime messages (No channel)
+
+F8H MIDI Clock		NoValue
+FAH Start		NoValue
+FBH Continue		NoValue
+FCH Stop		NoValue
+FEH Active Sense	NoValue
+FFH System Reset	NoValue
+
+control change BnH
+
+Byte1 = Command
+
+	Byte2
+00H	0-127						Continuous
+01H	0-127						Continuous
+05H	0-127						Continuous
+06H	0-127						Continuous
+07H	0-127						Continuous
+0AH	0-127	L64-C-R63				Continuous - Pan
+0BH	0-127						Continuous
+10H	0-127						Continuous
+20H	0-127						Continuous
+26H	0-127						Continuous
+40H	0-127						Continuous
+41H	0-127	0..63 = OFF, 64-127 = ON		Continuous - OnOff
+42H	0-127	idem					Continuous - OnOff
+43H	0-127	idem					Continuous - OnOff
+47H	0-127	-64..0..+63				Continuous - MinusPlus
+48H	0-127	idem					Continuous - MinusPlus
+49H	0-127	idem					Continuous - MinusPlus
+4AH	0-127	idem					Continuous - MinusPlus
+4BH	0-127	idem					Continuous - MinusPlus
+4CH	0-127	idem					Continuous - MinusPlus
+4DH	0-127	idem					Continuous - MinusPlus
+4EH	0-127	idem					Continuous - MinusPlus
+50H	0-127	0 = OFF, 127 = ON			OnOff
+51H	0-127	idem					OnOff
+52H	0-127	idem					OnOff
+54H	0-127	key No					Key
+5BH	0-127						Continuous
+5DH	0-127						Continuous
+5EH	0-127						Continuous
+60H	-						NoValue
+61H	-						NoValue
+62H	0-127						Continuous
+63H	0-127						Continuous
+64H	0-127						Continuous
+65H	0-127						Continuous
+
+78H	0						Default
+79H	0						Default
+7AH	0 & 127	0 = OFF, 127 = ON			OnOff
+7BH	0						Default
+7CH	0						Default
+7DH	0						Default
+7EH	0-16						Continuous - Range
+7FH	0						Default

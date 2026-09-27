@@ -38,32 +38,34 @@ public class HexTextField extends TextField {
             if (isUpdating) return;
 
             // If the user cleared the field, treat it as 0
-            if (newValue.isEmpty()) {
-                isUpdating = true;
-                hexValue.set(0);
-                isUpdating = false;
-                return;
+            if (newValue != null) {
+                if (newValue.isEmpty()) {
+                    isUpdating = true;
+                    hexValue.set(0);
+                    isUpdating = false;
+                    return;
+                }
+
+                // Force validation: If it's not a valid 1-2 char Hex string, reject the keystroke
+                if (!newValue.matches("^[0-9a-fA-F]{1,2}$")) {
+                    setText(oldValue);
+                    return;
+                }
+
+                // If it is valid hex, parse it back to the IntegerProperty
+                try {
+                    isUpdating = true;
+                    hexValue.set(Integer.parseInt(newValue.trim(), 16));
+                } catch (NumberFormatException e) {
+                    setText(oldValue);
+                } finally {
+                    isUpdating = false;
+                }
             }
 
-            // Force validation: If it's not a valid 1-2 char Hex string, reject the keystroke
-            if (!newValue.matches("^[0-9a-fA-F]{1,2}$")) {
-                setText(oldValue);
-                return;
-            }
-
-            // If it is valid hex, parse it back to the IntegerProperty
-            try {
-                isUpdating = true;
-                hexValue.set(Integer.parseInt(newValue.trim(), 16));
-            } catch (NumberFormatException e) {
-                setText(oldValue);
-            } finally {
-                isUpdating = false;
-            }
+            // 3. Trigger initial formatting for the startup value (e.g., 123 -> "7B")
+            setText(String.format("%02X", hexValue.get() & 0xFF));
         });
-
-        // 3. Trigger initial formatting for the startup value (e.g., 123 -> "7B")
-        setText(String.format("%02X", hexValue.get() & 0xFF));
     }
 
     public int getHexValue() { return hexValue.get(); }

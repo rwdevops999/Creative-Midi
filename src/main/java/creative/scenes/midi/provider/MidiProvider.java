@@ -7,16 +7,19 @@ import org.slf4j.LoggerFactory;
 import tools.jackson.core.json.JsonReadFeature;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MidiProvider {
     private static final Logger logger = LoggerFactory.getLogger(MidiProvider.class);
@@ -50,5 +53,33 @@ public class MidiProvider {
 
     public void deleteMidi(Midi midi) {
         midis.remove(midi);
+    }
+
+    public boolean exportMidis() {
+        AtomicBoolean result = new AtomicBoolean(false);
+
+        String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi" );
+        String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_EVENTS_FILE, "midievents.json" );
+
+        String midifile = midiPath + "/" + filename;
+
+        ObjectMapper mapperExport = JsonMapper.builder()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .build();
+
+        try {
+            File file = new File(midifile);
+            mapperExport.writeValue(file, midis);
+            result.set(true);
+        } catch (Exception e) {
+            logger.error("[CM_MIDI_PROVIDER] Exception. CAUSE: {}", e.getMessage());
+            result.set(false);
+        }
+
+        return result.get();
+    }
+
+    public boolean constainsMidi(String midiName) {
+        return midis.stream().anyMatch(obj -> midiName.equals(obj.getName()));
     }
 }

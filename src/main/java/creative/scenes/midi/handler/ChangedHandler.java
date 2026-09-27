@@ -18,31 +18,25 @@ public class ChangedHandler<T extends AEntity, U extends Pane> implements BiCons
     public void accept(T t, U u) {
         Midi midi = (Midi)t;
         MidiDetailPane midiDetailPane = (MidiDetailPane)u;
+        SceneActionsPane sceneActionsPane = midiDetailPane.getMidiPane().getActionsPane();
 
         CommunicationModel.setStatus(midi.toString());
 
         Midi originalMidi = ApplicationInfo.getInstance().getCurrentMidi();
         boolean isDirty = ! originalMidi.equals(midi);
 
-        int enables =
-                SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_NEW] |
-                SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ACTION] |
-                SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_EXPORT];
         if (isDirty) {
+            sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
             ApplicationInfo.getInstance().setDirtyMidi(midi);
-            if (midi.getName().equals(originalMidi.getName())) {
-                enables |=
-                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_UPDATE];
+            if (ApplicationInfo.getInstance().getMidiProvider().constainsMidi(midi.getName())) {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
             } else {
-                enables |=
-                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ADD] |
-                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_UPDATE];
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
             }
         } else  {
             ApplicationInfo.getInstance().setDirtyMidi(null);
         }
-
-        SceneActionsPane sceneActionsPane = midiDetailPane.getMidiPane().getActionsPane();
-        sceneActionsPane.setEnables(enables);
     }
 }
