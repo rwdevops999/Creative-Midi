@@ -1,5 +1,6 @@
 package creative.panes.header;
 
+import creative.scenes.midi.util.MidiReset;
 import custom.components.IconButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -38,6 +39,7 @@ public class ControlsPane extends HBox {
 
         // Midi Off Button
         getChildren().add(new IconButton("midireset", "reset MIDI", "icons/midi.png", e -> {
+            MidiReset midiReset = new MidiReset();
         }));
 
         // Light/dark Button
