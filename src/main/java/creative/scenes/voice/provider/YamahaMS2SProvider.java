@@ -20,7 +20,7 @@ public class YamahaMS2SProvider implements InstrumentProvider {
 
     @Override
     public String getSourceType() {
-        return "Yamaha Style";
+        return "Yamaha";
     }
 
     @Override

@@ -52,7 +52,6 @@ public class ExcludesPane extends VBox {
     }
 
     public void updateExcludes() {
-        System.out.println("UPDATING EXCLUDES");
         buildPane();
     }
 

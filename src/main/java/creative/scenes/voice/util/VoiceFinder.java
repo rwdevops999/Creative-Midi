@@ -92,18 +92,23 @@ public class VoiceFinder {
     }
 
     public static Set<String> getVoiceTypes() {
-        List<Patch> result = getVoices(ApplicationInfo.getInstance().getInstrumentProvider().getGroups());
-        Map<String, Integer> voiceTypes = new HashMap<>();
+        InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
+        if (instrumentProvider.getSourceType() == "Yamaha") {
+            List<Patch> result = getVoices(ApplicationInfo.getInstance().getInstrumentProvider().getGroups());
+            Map<String, Integer> voiceTypes = new HashMap<>();
 
-        for (Patch patch : result) {
-            String patchName = patch.getPatch();
-            int index = patchName.indexOf(" ");
-            if (index != -1) {
-                String type = patchName.substring(0, index);
-                voiceTypes.merge(type, 1, Integer::sum);
+            for (Patch patch : result) {
+                String patchName = patch.getPatch();
+                int index = patchName.indexOf(" ");
+                if (index != -1) {
+                    String type = patchName.substring(0, index);
+                    voiceTypes.merge(type, 1, Integer::sum);
+                }
             }
+
+            return voiceTypes.keySet();
         }
 
-        return voiceTypes.keySet();
+        return new HashSet<>();
     }
 }

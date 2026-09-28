@@ -56,7 +56,6 @@ public class ExcludePane extends GridPane {
 
         parent = owner;
 
-//        availableData = new HashSet<>(VoiceFinder.getVoiceTypes());
         availableVoiceTypes = new HashSet<>(VoiceFinder.getVoiceTypes());
 
         setPaneWidthAsPercentage(this, owner, 50);
