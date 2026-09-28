@@ -1,5 +1,6 @@
 package util;
 
+import javafx.scene.control.Control;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -15,4 +16,12 @@ public class DummyUtil {
         )));
     }
 
+    public static void showPaneBorder (Control control, Color color) {
+        control.setBorder(new Border(new BorderStroke(
+                color,
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                new BorderWidths(BORDER_SIZE)
+        )));
+    }
 }

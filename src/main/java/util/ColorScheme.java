@@ -37,6 +37,12 @@ public class ColorScheme {
         colors.put(new ColorKey("voice", "led", "on"), Color.RED);
         colors.put(new ColorKey("voice", "led", "off"), Color.DARKRED);
 
+        // borders
+        colors.put(new ColorKey("border", "red", null), Color.RED);
+        colors.put(new ColorKey("border", "green", null), Color.GREEN);
+        colors.put(new ColorKey("border", "blue", null), Color.BLUE);
+        colors.put(new ColorKey("border", "orange", null), Color.ORANGE);
+
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);
         colors.put(new ColorKey("test", "green", null), Color.GREEN);

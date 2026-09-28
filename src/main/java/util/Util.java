@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.Control;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -43,6 +44,11 @@ public class Util {
     public static void setPaneBackground(Pane pane) {
         Background background = new Background(new BackgroundFill(ColorScheme.getColor(), null, null));
         pane.setBackground(background);
+    }
+
+    public static void setControlBackground(Control control) {
+        Background background = new Background(new BackgroundFill(ColorScheme.getColor(), null, null));
+        control.setBackground(background);
     }
 
     public static void setPaneWidthAsPercentage(Pane originator, Pane parent, int size) {

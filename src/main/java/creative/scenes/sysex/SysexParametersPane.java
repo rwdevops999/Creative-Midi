@@ -1,0 +1,110 @@
+package creative.scenes.sysex;
+
+import creative.scenes.sysex.component.ParameterPane;
+import entity.sysex.InputBlock;
+import entity.sysex.Master;
+import javafx.geometry.Insets;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.VBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import static util.ColorScheme.getColor;
+import static util.DummyUtil.showPaneBorder;
+import static util.Util.setControlBackground;
+import static util.Util.setPaneBackground;
+
+public class SysexParametersPane extends TabPane {
+    private static final Logger logger = LoggerFactory.getLogger(SysexParametersPane.class);
+
+    private static final int TAB_SIZE = 10;
+
+    public SysexParametersPane() {
+        super();
+
+        setId("SysExParametersPane");
+
+        setPadding(new Insets(5));
+    }
+
+    private SysexPane parent;
+
+    public SysexParametersPane(SysexPane owner) {
+        parent = owner;
+
+//        showPaneBorder(this, getColor("border", "blue"));
+
+        this.setPrefWidth(100);
+        this.setPrefHeight(100);
+
+        setControlBackground(this);
+
+        buildPane();
+    }
+
+    private List<InputBlock> parameterBlockList = new ArrayList<>();
+
+    private void buildPane() {
+        logger.debug("[CM_SYSEX_PARAMETERS_PANE] Building {}", getId());
+
+        buildTabs(parameterBlockList);
+
+        logger.debug("[CM_SYSEX_PARAMETERS_PANE] Built {}", getId());
+    }
+
+    private void buildTabs (List<InputBlock> list) {
+        list = list.stream().filter(ib -> ib.getParameter() != null && ! ib.getParameter().equals("Type")).toList();
+
+        getTabs().clear();
+
+        int numtabs = list.size() / TAB_SIZE;
+        if (! list.isEmpty()) {
+            numtabs++;
+        }
+
+        for (int i = 0; i < numtabs; i++) {
+            List<InputBlock> partiallyList = list.stream().filter(ib -> ib.getParameter() != null).skip((long) i * TAB_SIZE).limit(TAB_SIZE).toList();
+
+            Tab tab = new Tab("Parameters " + (i + 1));
+            tab.setContent(createContent(partiallyList));
+            getTabs().add(tab);
+        }
+    }
+
+    private Master master;
+
+    private Consumer<InputBlock> consumer = new  Consumer<InputBlock>() {
+        @Override
+        public void accept(InputBlock inputBlock) {
+            if (inputBlock.getInputValues() != null) {
+                List<String> sysexList = master.generateSysEx(parameterBlockList);
+// TODO                parent.getSysexResultPane().renderSysex(sysexList);
+            }
+        }
+    };
+
+    private VBox createContent(List<InputBlock> list) {
+        VBox pane = new VBox();
+
+        if (! list.isEmpty()) {
+            for (InputBlock inputBlock : list) {
+                if (inputBlock.getParameter() != null && ! inputBlock.getParameter().equals("Type")) {
+                    pane.getChildren().add(new ParameterPane(inputBlock, consumer));
+                }
+            }
+        }
+
+        return pane;
+    }
+
+    // ACCESSORS
+    public SysexPane getSysexPane() {
+        return parent;
+    }
+}
+
