@@ -1,6 +1,8 @@
 package creative.scenes.voice.util;
 
 import creative.scenes.voice.VoiceSearchResultsPane;
+import creative.scenes.voice.dialog.VoiceDetailDialog;
+import creative.scenes.voice.provider.InstrumentProvider;
 import entity.voice.Patch;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -11,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,8 +111,18 @@ public class SearchResultsPane extends AnchorPane {
         MenuItem details = new MenuItem("Show details");
         details.setOnAction(event -> {
             Patch patch = table.getSelectionModel().getSelectedItem();
-//            VoiceDetailDialog dialog = new VoiceDetailDialog(patch);
-//            dialog.showAndWait();
+
+            // TODO Here we must handle INS file with the MS2S files
+            InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
+            if ("INS".equals(instrumentProvider.getSourceType())) {
+                patch = instrumentProvider.findLinkedPatch(patch);
+                if (patch == null) {
+                    System.out.println("PATCH NOT FOUND");
+                }
+            }
+
+            VoiceDetailDialog dialog = new VoiceDetailDialog(patch);
+            dialog.showAndWait();
         });
 
         contextMenu.getItems().addAll(right1, right2, left, separator1, details);

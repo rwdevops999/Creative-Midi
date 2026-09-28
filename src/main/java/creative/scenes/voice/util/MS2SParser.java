@@ -66,9 +66,6 @@ public class MS2SParser {
         }
     }
 
-    // Those are the things like Sweet!, Cool!, Live!, MegaVoice, ...
-    private Map<String, Integer> voiceTypes = new HashMap<>();
-
     private void parsePatch (String patchLine) {
         // use currentGroup to store
         try {
@@ -92,7 +89,6 @@ public class MS2SParser {
             int index = patchName.indexOf(" ");
             if (index != -1) {
                 String type = patchName.substring(0, index);
-                voiceTypes.merge(type, 1, Integer::sum);
             }
 
             if (currentGroup != null) {
@@ -129,5 +125,27 @@ public class MS2SParser {
             logger.error("[CM_MS2S_PARSER] Exception. CAUSE: {}", ioe.getMessage());
         }
 
+    }
+
+    private List<Patch> findPatches(List<Group> groups) {
+        List<Patch> result = new ArrayList<>();
+
+        for (Group group : groups) {
+            result.addAll(group.getPatches());
+
+            if (! group.getGroups().isEmpty()) {
+                result.addAll(findPatches(group.getGroups()));
+            }
+        }
+
+        return result;
+    }
+
+
+    public Patch findPatch(Patch inPatch) {
+        List<Patch> patches = findPatches(rootGroups);
+
+//        return patches.stream().filter(p -> (p.getMsb() == inPatch.getMsb() && p.getLsb() == inPatch.getLsb() && p.getPc() == inPatch.getPc())).findFirst().orElse(inPatch);
+        return patches.stream().filter(p -> (p.getMsb() == inPatch.getMsb() && p.getLsb() == inPatch.getLsb() && p.getPc() == inPatch.getPc())).findFirst().orElse(null);
     }
 }

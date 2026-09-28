@@ -63,19 +63,43 @@ public class VoiceFinder {
     }
 
     public static List<Patch> getVoicesOfGroup(List<Group> groups, String groupName) {
+        String[] split = groupName.split("/");
         List<Patch> result = new ArrayList<>();
-        for (Group group : groups) {
-            if (group.getGroupName().toLowerCase().contains(groupName)) {
-                result.addAll(group.getPatches());
-                break;
-            } else if (! group.getGroups().isEmpty()) {
-                result.addAll(getVoicesOfGroup(group.getGroups(), groupName));
+
+        List<Group> groupsToSearch = groups;
+        for (int i = 0; i < split.length; i++) {
+            String groupToSearch = split[i];
+
+            for (Group group : groupsToSearch) {
+                if (group.getGroupName().equals(groupToSearch)) {
+                    if (i == split.length - 1) {
+                        result.addAll(group.getPatches());
+                        if (! group.getGroups().isEmpty()) {
+                            result.addAll(getVoicesOfGroups(group.getGroups()));
+                        }
+                    } else {
+                        groupsToSearch = group.getGroups();
+                    }
+                }
             }
         }
 
         return result;
     }
 
+    public static List<Patch> getVoicesOfGroups(List<Group> groups) {
+        List<Patch> result = new ArrayList<>();
+
+        for (Group group : groups) {
+            result.addAll(group.getPatches());
+
+            if (! group.getGroups().isEmpty()) {
+                result.addAll(getVoicesOfGroups(group.getGroups()));
+            }
+        }
+
+        return result;
+    }
 
     public static List<Patch> getVoices(List<Group> groups) {
         List<Patch> result = new ArrayList<>();
@@ -93,7 +117,7 @@ public class VoiceFinder {
 
     public static Set<String> getVoiceTypes() {
         InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
-        if (instrumentProvider.getSourceType() == "Yamaha") {
+        if ("Yamaha".equals(instrumentProvider.getSourceType())) {
             List<Patch> result = getVoices(ApplicationInfo.getInstance().getInstrumentProvider().getGroups());
             Map<String, Integer> voiceTypes = new HashMap<>();
 

@@ -86,7 +86,7 @@ public class GroupPane extends GridPane {
 
     public String getSelectedGroup() {
         if (selectedGroup != null) {
-            return selectedGroup.toLowerCase();
+            return selectedGroup;
         }
 
         return null;
