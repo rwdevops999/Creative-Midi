@@ -2,6 +2,10 @@ package creative.scenes.voice.components;
 
 import creative.scenes.voice.GroupSearchPane;
 import creative.scenes.voice.util.VoiceFinder;
+import custom.components.SelectorPane;
+import entity.device.DeviceInfo;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import util.ApplicationInfo;
 import javafx.collections.FXCollections;
@@ -12,6 +16,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import util.Registry;
 
 import java.util.List;
 
@@ -41,7 +46,7 @@ public class GroupPane extends GridPane {
     private GroupSearchPane parent;
 
     public GroupPane(GroupSearchPane owner) {
-        super();
+        this();
 
         parent = owner;
 
@@ -61,12 +66,15 @@ public class GroupPane extends GridPane {
             selectedGroup = newValue;
             linkedSearchButton.fire();
         });
-//        groupsComboBox.setOnAction(e -> linkedSearchButton.fire());
-
         groupsComboBox.setMaxWidth(Double.MAX_VALUE);
 
-        add(groupsComboBox, 2, row, 3, 1);
+        Registry.register("VoiceGroupSelector", groupsComboBox, (node, data) -> {
+            List<String> newGroupNames = VoiceFinder.getGroupsNames(ApplicationInfo.getInstance().getInstrumentProvider().getGroups(), "");
+            ObservableList<String> newGroups = FXCollections.observableArrayList(newGroupNames);
+            groupsComboBox.setItems(newGroups);
+        });
 
+        add(groupsComboBox, 2, row, 3, 1);
     }
 
     public String getSelectedGroup() {

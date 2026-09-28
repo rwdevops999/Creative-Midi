@@ -41,7 +41,7 @@ public class GroupSearchPane extends VBox {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("test", "red"));
+//        showPaneBorder(this, getColor("test", "red"));
 
         setPaneHeightAsPercentage(this, parent, 15);
         setPaneBackground(this);

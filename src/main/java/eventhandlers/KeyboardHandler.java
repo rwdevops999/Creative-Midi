@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
+import util.Registry;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
@@ -35,6 +36,8 @@ public class KeyboardHandler<T extends ActionEvent> implements EventHandler<T> {
 
         InstrumentProvider instrumentProvider = InstrumentProviderFactory.getProvider(dirPath + "/" + keyboard + extension);
         ApplicationInfo.getInstance().setInstrumentProvider(instrumentProvider);
+
+        Registry.publish("VoiceGroupSelector", null);
 
         logger.debug("[CM_KEYBOARD_HANDLER] Handled event {}", event.getClass().getSimpleName());
     }
