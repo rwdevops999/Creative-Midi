@@ -35,10 +35,18 @@ public class Master extends Root {
     public TypeBlock getDefaultTypeBlock() {
         TypeBlock result = null;
 
-        if (! typeBlocks.isEmpty()) {
-            result = typeBlocks.get(0);
+        ParameterChangeTable pct = this.parameterChangeTable.stream().filter(p -> "Type".equals(p.parameter)).findFirst().orElse(null);
+        if (pct != null) {
+            int msb = pct.defaultValues.b1;
+            int lsb = pct.defaultValues.b2;
+
+            result = typeBlocks.stream().filter(t -> t.getMsb() == msb && t.getLsb() == lsb).findFirst().orElse(null);
         }
 
+/*        if (! typeBlocks.isEmpty()) {
+            result = typeBlocks.get(0);
+        }
+*/
         return result;
     }
 

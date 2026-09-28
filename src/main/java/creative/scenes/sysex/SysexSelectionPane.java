@@ -73,6 +73,7 @@ public class SysexSelectionPane extends GridPane {
         Label sysexLabel = new Label("SysEx");
         add(sysexLabel, 0, row);
 
+        // We start with the master combo
         ComboBox<Master> masterComboBox = new ComboBox<>();
         masterComboBox.getItems().addAll(SysexGenHelper.getMasters());
         masterComboBox.setConverter(new StringConverter<Master>() {
@@ -95,18 +96,15 @@ public class SysexSelectionPane extends GridPane {
 
         masterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                if (!newValue.equals(selectedMaster)) {
-                    selectedMaster = newValue;
-                    availableCategories = selectedMaster.getCategories();
+                selectedMaster = newValue;
 
-                    processMaster();
+                processMaster();
 
-                    buildPane();
-                }
+                buildPane();
             }
         });
         add(masterComboBox, 1, row, 2, 1);
-
+/*
         if (!availableCategories.isEmpty()) {
             row++;
 
@@ -169,17 +167,21 @@ public class SysexSelectionPane extends GridPane {
 
             }
         }
-
+*/
         logger.debug("[CM_SYSEXSELECTION_PANE] Built {}", getId());
     }
 
     private List<InputBlock> inputBlockList = new ArrayList<>();
-    private TypeBlock selectedTypeBlock;
     private String selectedCategory;
     private List<TypeBlock> availableTypes = new ArrayList<>();
 
+    private TypeBlock defaultTypeBlock;
+
     private void processMaster() {
-        inputBlockList = new ArrayList<>();
+        availableCategories = selectedMaster.getCategories();
+        defaultTypeBlock = selectedMaster.getDefaultTypeBlock();
+
+/*        inputBlockList = new ArrayList<>();
 
         selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
 
@@ -229,9 +231,9 @@ public class SysexSelectionPane extends GridPane {
                     .build());
         }
 
-        processType();
+        processType(); */
     }
-
+/*
     private void processType() {
         TypeBlock block = selectedTypeBlock;
         if (block != null) {
@@ -259,7 +261,7 @@ public class SysexSelectionPane extends GridPane {
 
         transmitInputBlocks();
     }
-
+*/
     private void transmitInputBlocks() {
         if (! inputBlockList.isEmpty()) {
             List<String> sysexList = selectedMaster.generateSysEx(inputBlockList);
