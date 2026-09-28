@@ -50,7 +50,6 @@ public class PatchSearchPane extends VBox {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("test", "red"));
         setPaneHeightAsPercentage(this, parent, 55);
         setPaneBackground(this);
 
@@ -118,9 +117,7 @@ public class PatchSearchPane extends VBox {
         List<Patch> result = new ArrayList<>();
 
         if (voiceToSearch != null) {
-            InstrumentProvider provider = ApplicationInfo.getInstance().getInstrumentProvider();
-
-            result = VoiceFinder.findVoice(provider, voiceToSearch);
+            result = VoiceFinder.findVoice(voiceToSearch);
 
             for (int i = 1; i < addPanes.size(); i++) {
                 if (addPanes.get(i) != null) {
