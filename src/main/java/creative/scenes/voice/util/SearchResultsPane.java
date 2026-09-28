@@ -72,6 +72,25 @@ public class SearchResultsPane extends AnchorPane {
         });
         table.getColumns().addAll(patchColumn, bankColumn, msbColumn, lsbColumn, pcColumn);
 
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.widthProperty().addListener((observable, oldValue, newValue) -> {
+            double tableWidth = newValue.doubleValue();
+
+            // Corrigeer eventueel met 2 pixels voor de buitenrand van de tabel
+            double availableWidth = tableWidth - 2.0;
+
+            // Bereken de exacte doelbreedtes
+            double w60 = availableWidth * 0.60;
+            double w10 = availableWidth * 0.10;
+
+            // Dwing JavaFX door MIN, MAX en PREF op exact dezelfde waarde te zetten
+            // Dit heft de automatische 'evenredige' verdeling volledig op.
+            setAbsoluteColumnWidth(patchColumn, w60);
+            setAbsoluteColumnWidth(bankColumn,  w10);
+            setAbsoluteColumnWidth(msbColumn,   w10);
+            setAbsoluteColumnWidth(lsbColumn,   w10);
+            setAbsoluteColumnWidth(pcColumn,    w10);
+        });
         createContextMenu(table);
 
         getChildren().add(table);
@@ -79,6 +98,12 @@ public class SearchResultsPane extends AnchorPane {
         logger.debug("[CM_SEARCH_RESULTS_PANE] Built {}", getId());
     }
 
+    private void setAbsoluteColumnWidth(TableColumn<?, ?> column, double width) {
+        column.setMinWidth(width);
+        column.setMaxWidth(width);
+        column.setPrefWidth(width);
+    }
+    
     private void createContextMenu(TableView<Patch> table) {
         // add Context Menu here
         ContextMenu contextMenu = new ContextMenu();
