@@ -50,10 +50,33 @@ public class VoiceSearchResultsPane extends BorderPane {
         logger.debug("[CM_VOICE_SEARCH_RESULT_PANE] Built {}", getId());
     }
 
+    private List<Patch> tableResults = new ArrayList<>();
+    private List<String> excludes = new ArrayList<>();
     public void showResults (List<Patch> data) {
-//        List<Patch> newData = removeExcludes(data);
+        tableResults = data;
 
-        getSearchResultsPane().showResults(data);
+        List<Patch> newData = removeExcludes(tableResults);
+
+        getSearchResultsPane().showResults(newData);
+    }
+
+    private List<Patch> removeExcludes(List<Patch> tableResults) {
+        List<Patch> newResults = new ArrayList<>(tableResults);
+
+        for (String exclude : excludes) {
+            newResults.removeIf(patch -> patch.getPatch().contains(exclude));
+        }
+
+        return newResults;
+    }
+
+    public void clear () {
+        getSearchResultsPane().clear();
+    }
+
+    public void setExcludes(List<String> excludes) {
+        this.excludes = excludes;
+        showResults(tableResults);
     }
 
     // ACCESSORS

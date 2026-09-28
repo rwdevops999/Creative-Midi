@@ -150,6 +150,10 @@ public class SearchResultsPane extends AnchorPane {
         });
     }
 
+    public void clear() {
+        table.getItems().clear();
+    }
+
     // ACCESSORS
     public VoiceSearchResultsPane getVoiceSearchResultsPane() {
         return parent;

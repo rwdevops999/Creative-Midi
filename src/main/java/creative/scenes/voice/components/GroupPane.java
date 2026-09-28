@@ -70,8 +70,15 @@ public class GroupPane extends GridPane {
 
         Registry.register("VoiceGroupSelector", groupsComboBox, (node, data) -> {
             List<String> newGroupNames = VoiceFinder.getGroupsNames(ApplicationInfo.getInstance().getInstrumentProvider().getGroups(), "");
+            groupsComboBox.getItems().clear();
             ObservableList<String> newGroups = FXCollections.observableArrayList(newGroupNames);
             groupsComboBox.setItems(newGroups);
+
+            // update excludes pane
+            getGroupSearchPane().getVoiceSearchPane().getExcludesPane().updateExcludes();
+
+            // clean results pane
+            getGroupSearchPane().getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane().clear();
         });
 
         add(groupsComboBox, 2, row, 3, 1);

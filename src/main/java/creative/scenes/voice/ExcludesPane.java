@@ -1,6 +1,8 @@
 package creative.scenes.voice;
 
+import creative.scenes.voice.components.ExcludePane;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ public class ExcludesPane extends VBox {
         setId("ExcludesPane");
 
         setPadding(new Insets(5));
+        setAlignment(Pos.TOP_LEFT);
     }
 
     VoiceSearchPane parent;
@@ -40,9 +43,17 @@ public class ExcludesPane extends VBox {
     private void buildPane() {
         logger.debug("[CM_EXCLUDES_PANE] Building {}", getId());
 
-        setPaneHeightAsPercentage(this, parent, 30);
+        getChildren().clear();
+
+        ExcludePane excludePane = new ExcludePane(this);
+        getChildren().add(excludePane);
 
         logger.debug("[CM_EXCLUDES_PANE] Built {}", getId());
+    }
+
+    public void updateExcludes() {
+        System.out.println("UPDATING EXCLUDES");
+        buildPane();
     }
 
     // ACCESSORS
