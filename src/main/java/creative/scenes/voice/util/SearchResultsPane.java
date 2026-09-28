@@ -69,6 +69,9 @@ public class SearchResultsPane extends AnchorPane {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         table.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 //            DirectSingleton.getInstance().setSelectedPatch(newValue);
+            if (ApplicationInfo.getInstance().getMidiOutputDevice() != null && newValue != null) {
+                getVoiceSearchResultsPane().getSpeakerPane().sendAsMidi(0, newValue);
+            }
         });
         table.getColumns().addAll(patchColumn, bankColumn, msbColumn, lsbColumn, pcColumn);
 
@@ -190,6 +193,10 @@ public class SearchResultsPane extends AnchorPane {
 
     public void clear() {
         table.getItems().clear();
+    }
+
+    public Patch getSelectedPatch() {
+        return table.getSelectionModel().getSelectedItem();
     }
 
     // ACCESSORS

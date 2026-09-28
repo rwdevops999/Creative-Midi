@@ -15,6 +15,7 @@ public class PropertyContainer {
     public static String MIDI_EVENTS_FILE = "midi.events.file";
     public static String VOICES_PATH = "voices.path";
     public static String EXPORT_PATH = "export.path";
+    public static String MIDI_DEMO_FILE = "midi.demo.file";
 
     // KEYBOARD CONSTANTS
     public static String DEFAULT_KEYBOARD = "default.voice.file";

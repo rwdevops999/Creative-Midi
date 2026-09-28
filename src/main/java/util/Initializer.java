@@ -10,6 +10,7 @@ import util.properties.PropertyContainer;
 import util.properties.PropertyLoader;
 import util.properties.PropertyType;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -69,5 +70,11 @@ public class Initializer {
         Properties keyboardProperties = propertyLoader.loadPropertiesFromPath(keyboardPath);
         PropertyContainer.setProperties(PropertyType.Keyboard, keyboardProperties);
 
+        // 7. Load midi file
+        String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi");
+        String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_DEMO_FILE, "creative.mid");
+
+        File midiFile = new File(midiPath + "/" + filename);
+        ApplicationInfo.getInstance().setMidiToTry(midiFile);
     }
 }

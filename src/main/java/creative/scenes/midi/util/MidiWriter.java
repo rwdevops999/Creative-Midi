@@ -94,13 +94,9 @@ public class MidiWriter {
         } else {
             try {
                 Receiver receiver = outputDevice.getReceiver();
-                ShortMessage midiMessage = new ShortMessage();
 
                 // 1. Split the string into hex tokens
                 String[] hexTokens = message.trim().split("\\s+");
-                if (hexTokens.length < 3) {
-                    throw new IllegalArgumentException("MIDI string must contain at least 3 hex bytes.");
-                }
 
                 int status = Integer.parseInt(hexTokens[0], 16); // 0x90 (144) -> Note On, Channel 1
                 int data1  = Integer.parseInt(hexTokens[1], 16); // 0x3C (60)  -> Note C4

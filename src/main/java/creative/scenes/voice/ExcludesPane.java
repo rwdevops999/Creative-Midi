@@ -30,7 +30,7 @@ public class ExcludesPane extends VBox {
     public ExcludesPane(VoiceSearchPane owner) {
         this();
 
-        showPaneBorder(this, getColor("test", "red"));
+//        showPaneBorder(this, getColor("test", "red"));
 
         parent = owner;
 

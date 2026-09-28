@@ -1,9 +1,9 @@
 package util;
 
-import creative.scenes.midi.MidiListPane;
 import creative.scenes.midi.provider.MidiProvider;
 import creative.scenes.voice.provider.InstrumentProvider;
 import entity.midi.Midi;
+import entity.voice.Patch;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.sound.midi.MidiDevice;
+import java.io.File;
 import java.util.List;
 
 @Setter
@@ -88,4 +89,14 @@ public class ApplicationInfo {
      * the instrument provider
      */
     private InstrumentProvider instrumentProvider;
+
+    /**
+     * The patch to be used for playing a midi
+     */
+    private Patch selectedPatch;
+
+    /** The Midi File to play in voices
+     *
+     */
+    private File midiToTry;
 }

@@ -1,9 +1,15 @@
 package creative.scenes.voice;
 
 import communication.CommunicationModel;
+import creative.scenes.base.Base;
+import creative.scenes.base.BaseClosePane;
+import creative.scenes.midi.util.MidiDemo;
+import custom.dialog.DialogFactory;
+import javafx.event.EventHandler;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 import java.util.ArrayList;
 

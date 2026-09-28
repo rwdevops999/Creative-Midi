@@ -1,5 +1,6 @@
 package creative.panes.header;
 
+import creative.scenes.midi.util.MidiDemo;
 import creative.scenes.midi.util.MidiReset;
 import custom.components.IconButton;
 import javafx.geometry.Insets;
@@ -56,6 +57,9 @@ public class ControlsPane extends HBox {
 
         // Exit Button
         getChildren().add(new IconButton("exit", "exit", "icons/exit.png", e -> {
+            if (MidiDemo.isPlaying()) {
+                MidiDemo.stopDemo(null);
+            }
             AnsiConsole.systemUninstall();
             System.exit(0);
         }));

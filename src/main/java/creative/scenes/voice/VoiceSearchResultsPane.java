@@ -32,7 +32,7 @@ public class VoiceSearchResultsPane extends BorderPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("test", "green"));
+//        showPaneBorder(this, getColor("test", "green"));
         setPaneWidthAsPercentage(this, parent, 70);
         setPaneBackground(this);
 

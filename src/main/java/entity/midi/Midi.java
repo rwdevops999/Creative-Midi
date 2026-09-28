@@ -167,7 +167,7 @@ public class Midi extends AEntity {
     }
 
     public Integer getByte2() {
-        return byte2Property.get() & 0xFF;
+        return byte2Property.get() == null ? null : byte2Property.get() & 0xFF;
     }
 
     @Override
