@@ -7,6 +7,8 @@ import entity.device.DeviceInfo;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import util.ApplicationInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -67,12 +69,14 @@ public class GroupPane extends GridPane {
             linkedSearchButton.fire();
         });
         groupsComboBox.setMaxWidth(Double.MAX_VALUE);
+        setShowingProperty(groupsComboBox);
 
         Registry.register("VoiceGroupSelector", groupsComboBox, (node, data) -> {
             List<String> newGroupNames = VoiceFinder.getGroupsNames(ApplicationInfo.getInstance().getInstrumentProvider().getGroups(), "");
             groupsComboBox.getItems().clear();
             ObservableList<String> newGroups = FXCollections.observableArrayList(newGroupNames);
             groupsComboBox.setItems(newGroups);
+            setShowingProperty(groupsComboBox);
 
             // update excludes pane
             getGroupSearchPane().getVoiceSearchPane().getExcludesPane().updateExcludes();
@@ -90,6 +94,21 @@ public class GroupPane extends GridPane {
         }
 
         return null;
+    }
+
+    public void setShowingProperty(ComboBox comboBox) {
+        comboBox.setOnShowing(event -> {
+            if (comboBox.getSkin() instanceof ComboBoxListViewSkin) {
+                ComboBoxListViewSkin<?> skin = (ComboBoxListViewSkin<?>) comboBox.getSkin();
+                ListView<?> listView = (ListView<?>) skin.getPopupContent();
+                if (listView != null) {
+                    listView.scrollTo(0);
+
+                    // Verwijder de handler zodat dit de volgende keer NIET meer gebeurt
+                    comboBox.setOnShowing(null);
+                }
+            }
+        });
     }
 
     private Button linkedSearchButton;

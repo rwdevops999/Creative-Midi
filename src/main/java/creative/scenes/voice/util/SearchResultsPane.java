@@ -103,7 +103,7 @@ public class SearchResultsPane extends AnchorPane {
         column.setMaxWidth(width);
         column.setPrefWidth(width);
     }
-    
+
     private void createContextMenu(TableView<Patch> table) {
         // add Context Menu here
         ContextMenu contextMenu = new ContextMenu();
