@@ -1,17 +1,18 @@
 package creative.scenes.voice;
 
+import creative.scenes.midi.provider.MidiProvider;
 import creative.scenes.voice.components.AddablePane;
 import creative.scenes.voice.components.TitleSearchPane;
+import creative.scenes.voice.provider.InstrumentProvider;
+import creative.scenes.voice.util.VoiceFinder;
+import entity.voice.Patch;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ColorScheme;
-import util.Util;
+import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class PatchSearchPane extends VBox {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("test", "green"));
+        showPaneBorder(this, getColor("test", "red"));
         setPaneHeightAsPercentage(this, parent, 55);
         setPaneBackground(this);
 
@@ -113,7 +114,38 @@ public class PatchSearchPane extends VBox {
     }
 
     public void handleSearch() {
+        String voiceToSearch = addPanes.get(0).getInputValue();
+        List<Patch> result = new ArrayList<>();
 
+        if (voiceToSearch != null) {
+            InstrumentProvider provider = ApplicationInfo.getInstance().getInstrumentProvider();
+
+            result = VoiceFinder.findVoice(provider, voiceToSearch);
+
+            for (int i = 1; i < addPanes.size(); i++) {
+                if (addPanes.get(i) != null) {
+                    String voiceName = addPanes.get(i).getInputValue();
+                    if (voiceName != null) {
+                        result = refine(result, voiceName.toLowerCase());
+                    }
+                }
+            }
+
+            VoiceSearchResultsPane resultsPane = getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane();
+            resultsPane.showResults(result);
+        }
+    }
+
+    private List<Patch> refine(List<Patch> previousResult, String voiceName) {
+        List<Patch> result = new ArrayList<>();
+
+        for (Patch patch : previousResult) {
+            if (patch.getPatch().toLowerCase().contains(voiceName)) {
+                result.add(patch);
+            }
+        }
+
+        return result;
     }
 
     // ACCESSORS

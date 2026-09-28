@@ -24,13 +24,13 @@ public class VoiceSearchPane extends BorderPane {
 
         this.parent = owner;
 
+        setPaneWidthAsPercentage(this, parent, 30);
+
         buildPane();
     }
 
     private void buildPane() {
         logger.debug("[CM_VOICE_SEARCH_PANE] Building {}", getId());
-
-        setPaneWidthAsPercentage(this, parent, 30);
 
         setTop(new PatchSearchPane(this));
         setCenter(new GroupSearchPane(this));

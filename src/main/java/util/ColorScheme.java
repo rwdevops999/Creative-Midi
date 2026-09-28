@@ -33,6 +33,10 @@ public class ColorScheme {
         colors.put(new ColorKey("monitor", "message", "error"), Color.RED);
         colors.put(new ColorKey("monitor", "message", "warning"), Color.ORANGE);
 
+        // led simulator
+        colors.put(new ColorKey("voice", "led", "on"), Color.RED);
+        colors.put(new ColorKey("voice", "led", "off"), Color.DARKRED);
+
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);
         colors.put(new ColorKey("test", "green", null), Color.GREEN);

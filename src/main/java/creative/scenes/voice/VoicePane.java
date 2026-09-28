@@ -36,4 +36,8 @@ public class VoicePane extends BorderPane {
     public VoiceSearchPane getVoiceSearchPane() {
         return (VoiceSearchPane)getLeft();
     }
+
+    public VoiceSearchResultsPane getVoiceSearchResultsPane() {
+        return (VoiceSearchResultsPane)getCenter();
+    }
 }
