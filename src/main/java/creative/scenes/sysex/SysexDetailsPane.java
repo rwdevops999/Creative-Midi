@@ -2,7 +2,6 @@ package creative.scenes.sysex;
 
 import creative.scenes.sysex.component.AddableSysexPane;
 import creative.scenes.sysex.component.SysexNamePane;
-import creative.scenes.voice.components.AddablePane;
 import entity.sysex.Sysex;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -10,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class SysexDetailsPane extends VBox {
         setSpacing(2);
     }
 
-    private List<AddableSysexPane> addPanes = new ArrayList<>();
+    private final List<AddableSysexPane> addPanes = new ArrayList<>();
 
     private SysexPane parent;
     private final StringProperty dsSysexName = new SimpleStringProperty();
@@ -64,6 +64,9 @@ public class SysexDetailsPane extends VBox {
 
     private void buildPane() {
         logger.debug("[CM_SYSEX_DETAILS_PANE] Building {}", getId());
+        if (ApplicationInfo.getInstance().getCurrentSysex() == null) {
+            return;
+        }
 
         getChildren().add(new SysexNamePane(this, dsSysexName));
 
@@ -87,7 +90,7 @@ public class SysexDetailsPane extends VBox {
         }
     }
 
-    private void removeDeletables() {
+    private void removeDeletable() {
         getChildren().removeIf(node -> "Deletable".equals(node.getId()));
     }
 
@@ -104,7 +107,7 @@ public class SysexDetailsPane extends VBox {
             addPanes.set(id+1, new AddableSysexPane(this, id+1, dsSysexValue[id+1]));
         }
 
-        removeDeletables();
+        removeDeletable();
         buildDynamicPane();
     }
 
@@ -120,7 +123,7 @@ public class SysexDetailsPane extends VBox {
 
             addPanes.set(addPanes.size()-1, null);
 
-            removeDeletables();
+            removeDeletable();
             buildDynamicPane();
         }
     }

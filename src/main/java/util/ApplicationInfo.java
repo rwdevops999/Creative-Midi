@@ -3,6 +3,7 @@ package util;
 import creative.scenes.midi.provider.MidiProvider;
 import creative.scenes.voice.provider.InstrumentProvider;
 import entity.midi.Midi;
+import entity.sysex.Sysex;
 import entity.voice.Patch;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -99,4 +100,9 @@ public class ApplicationInfo {
      *
      */
     private File midiToTry;
+
+    /**
+     * Current MIDI
+     */
+    private Sysex currentSysex;
 }

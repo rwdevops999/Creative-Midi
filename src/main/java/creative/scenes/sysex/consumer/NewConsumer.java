@@ -1,11 +1,16 @@
 package creative.scenes.sysex.consumer;
 
 import creative.scenes.SceneActionsPane;
+import creative.scenes.midi.MidiDetailPane;
+import creative.scenes.sysex.SysexDetailsPane;
 import creative.scenes.sysex.SysexPane;
 import entity.AEntity;
+import entity.midi.Midi;
+import entity.sysex.Sysex;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
 import java.util.function.BiConsumer;
 
@@ -18,5 +23,12 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
 
         SceneActionsPane sceneActionsPane = (SceneActionsPane) pane;
         SysexPane sysexPane = sceneActionsPane.getSysexPane();
+
+        Sysex sysex = new Sysex();
+
+        ApplicationInfo.getInstance().setCurrentSysex(sysex);
+
+        SysexDetailsPane sysexDetailsPane = new SysexDetailsPane(sysexPane);
+        sysexPane.setCenter(sysexDetailsPane);
     }
 }
