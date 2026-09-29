@@ -67,8 +67,8 @@ public class Master extends Root {
 
     @Override
     public boolean equals(Object other) {
-        if (other != null) {
-            return this.getName().equals(((Master) other).name);
+        if (other != null && other instanceof Master otherMaster) {
+            return this.getName().equals(otherMaster.name);
         }
 
         return false;

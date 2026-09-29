@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -62,6 +63,7 @@ public class SysexSelectionPane extends GridPane {
 
     private Master selectedMaster;
     private List<String> availableCategories = new ArrayList<>();
+    private TypeBlock selectedTypeBlock;
 
     private void buildPane() {
         logger.debug("[CM_SYSEXSELECTION_PANE] Building {}", getId());
@@ -103,35 +105,38 @@ public class SysexSelectionPane extends GridPane {
                 buildPane();
             }
         });
+
         add(masterComboBox, 1, row, 2, 1);
-/*
-        if (!availableCategories.isEmpty()) {
+
+        // There are categories available
+        if (! availableCategories.isEmpty()) {
             row++;
 
+            // display categories combo filled with available categories
             Label categoryLabel = new Label("Category");
             add(categoryLabel, 0, row);
 
             ComboBox<String> categoriesComboBox = new ComboBox<>();
             categoriesComboBox.getItems().addAll(availableCategories);
             add(categoriesComboBox, 1, row, 2, 1);
-            categoriesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    if (!newValue.equals(selectedCategory)) {
-                        selectedCategory = newValue;
-                        selectedTypeBlock = null;
 
-                        availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
-
-                        buildPane();
-                    }
-                }
-            });
-
+            // what if we change the category ?
+            // if there is a category selected, select it in the combo box
             if (selectedCategory != null) {
                 categoriesComboBox.setValue(selectedCategory);
             }
 
+            categoriesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                selectedCategory = newValue;
+                processCategory();
+
+                buildPane();
+            });
+
+            // There are also types available
             if (!availableTypes.isEmpty()) {
+
+                // display the types combo box filled with avaiable types
                 Label typeLabel = new Label("Type");
                 add(typeLabel, 3, row);
 
@@ -151,6 +156,27 @@ public class SysexSelectionPane extends GridPane {
                     }
                 });
 
+                add(typesComboBox, 4, row, 2, 1);
+
+                // if there is a type selected, select it again in the combo box
+                if (selectedTypeBlock != null) {
+                    typesComboBox.setValue(selectedTypeBlock);
+                }
+
+                // what if we change the type ?
+                typesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        if (! newValue.equals(selectedTypeBlock)) {
+                            selectedTypeBlock = newValue;
+                            processType();
+                        }
+                    }
+                });
+            }
+        }
+/*
+        if (!availableCategories.isEmpty()) {
+            if (!availableTypes.isEmpty()) {
                 typesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         if (! newValue.equals(selectedTypeBlock)) {
@@ -160,10 +186,6 @@ public class SysexSelectionPane extends GridPane {
                     }
                 });
                 add(typesComboBox, 4, row, 2, 1);
-
-                if (selectedTypeBlock != null) {
-                    typesComboBox.setValue(selectedTypeBlock);
-                }
 
             }
         }
@@ -175,11 +197,17 @@ public class SysexSelectionPane extends GridPane {
     private String selectedCategory;
     private List<TypeBlock> availableTypes = new ArrayList<>();
 
-    private TypeBlock defaultTypeBlock;
-
     private void processMaster() {
+        selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
         availableCategories = selectedMaster.getCategories();
-        defaultTypeBlock = selectedMaster.getDefaultTypeBlock();
+        if (selectedTypeBlock != null) {
+            selectedCategory = selectedTypeBlock.getCategory();
+            availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
+        } else {
+            selectedCategory = null;
+            availableTypes = new ArrayList<>();
+        }
+
 
 /*        inputBlockList = new ArrayList<>();
 
@@ -233,6 +261,27 @@ public class SysexSelectionPane extends GridPane {
 
         processType(); */
     }
+
+    private void processCategory() {
+        TypeBlock defaultTypeBlock = selectedMaster.getDefaultTypeBlock();
+
+        selectedTypeBlock = null;
+        if (defaultTypeBlock != null) {
+            if (selectedCategory.equals(defaultTypeBlock.getCategory())) {
+                selectedTypeBlock = defaultTypeBlock;
+            }
+        }
+
+        availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
+        if (selectedTypeBlock == null && ! availableTypes.isEmpty()) {
+            selectedTypeBlock = availableTypes.get(0);
+        }
+    }
+
+    private void processType() {
+        System.out.println("PROCESSSING NEW TYPE");
+    }
+
 /*
     private void processType() {
         TypeBlock block = selectedTypeBlock;
