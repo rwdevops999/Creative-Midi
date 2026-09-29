@@ -14,6 +14,7 @@ public class Master extends Root {
     String name;
     @Getter
     List<ParameterChangeTable> parameterChangeTable;
+    @Getter
     List<TypeBlock> typeBlocks;
 
     public TypeBlock findTypeBlockByDefaultValues( String category, int def1, int def2) {

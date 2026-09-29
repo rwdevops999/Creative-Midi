@@ -61,8 +61,9 @@ public class SysexGenSelectionPane extends GridPane {
     }
 
     private Master selectedMaster;
-    private List<String> availableCategories = new ArrayList<>();
-    private TypeBlock selectedTypeBlock;
+    private List<String> masterCategories = new ArrayList<>();
+
+    private String selectedCategory;
 
     private void buildPane() {
         logger.debug("[CM_SYSEX_GEN_SELECTION_PANE] Building {}", getId());
@@ -104,11 +105,10 @@ public class SysexGenSelectionPane extends GridPane {
                 buildPane();
             }
         });
-
         add(masterComboBox, 1, row, 2, 1);
 
         // There are categories available
-        if (! availableCategories.isEmpty()) {
+        if (! masterCategories.isEmpty()) {
             row++;
 
             // display categories combo filled with available categories
@@ -116,10 +116,20 @@ public class SysexGenSelectionPane extends GridPane {
             add(categoryLabel, 0, row);
 
             ComboBox<String> categoriesComboBox = new ComboBox<>();
-            categoriesComboBox.getItems().addAll(availableCategories);
+            categoriesComboBox.getItems().addAll(masterCategories);
             add(categoriesComboBox, 1, row, 2, 1);
 
-            // what if we change the category ?
+            if (selectedCategory != null) {
+                categoriesComboBox.setValue(selectedCategory);
+            }
+
+            categoriesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                selectedCategory = newValue;
+                processCategory();
+
+                buildPane();
+            });
+/*            // what if we change the category ?
             // if there is a category selected, select it in the combo box
             if (selectedCategory != null) {
                 categoriesComboBox.setValue(selectedCategory);
@@ -131,16 +141,16 @@ public class SysexGenSelectionPane extends GridPane {
 
                 buildPane();
             });
-
+*/
             // There are also types available
-            if (!availableTypes.isEmpty()) {
+            if (!categoryTypeBlocks.isEmpty()) {
 
                 // display the types combo box filled with avaiable types
                 Label typeLabel = new Label("Type");
                 add(typeLabel, 3, row);
 
                 ComboBox<TypeBlock> typesComboBox = new ComboBox<>();
-                typesComboBox.getItems().addAll(availableTypes);
+                typesComboBox.getItems().addAll(categoryTypeBlocks);
                 typesComboBox.setConverter(new StringConverter<TypeBlock>() {
                     @Override
                     public String toString(TypeBlock type) {
@@ -154,7 +164,6 @@ public class SysexGenSelectionPane extends GridPane {
                         return null;
                     }
                 });
-
                 add(typesComboBox, 4, row, 2, 1);
 
                 // if there is a type selected, select it again in the combo box
@@ -162,6 +171,7 @@ public class SysexGenSelectionPane extends GridPane {
                     typesComboBox.setValue(selectedTypeBlock);
                 }
 
+                /*
                 // what if we change the type ?
                 typesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
@@ -172,134 +182,145 @@ public class SysexGenSelectionPane extends GridPane {
                             buildPane();
                         }
                     }
-                });
+                }); */
             }
         }
 
         logger.debug("[CM_SYSEX_GEN_SELECTION_PANE] Built {}", getId());
     }
 
-    private List<InputBlock> inputBlockList = new ArrayList<>();
-    private String selectedCategory;
-    private List<TypeBlock> availableTypes = new ArrayList<>();
+    List<ParameterChangeTable> masterParameterChangeTable = new ArrayList<>();
+    List<TypeBlock> masterTypeBlocks = new ArrayList<>();
+    ParameterChangeTable defaultTypeParameterChangeTable = null;
+    TypeBlock defaultTypeBlock = null;
+    TypeBlock selectedTypeBlock = null;
 
     private void processMaster() {
-        inputBlockList.clear();
-//        if (selectedTypeBlock == null) {
-//            selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
-//        }
+        // get available categories
+        masterCategories = selectedMaster.getCategories();
+        masterParameterChangeTable = selectedMaster.getParameterChangeTable();
+        masterTypeBlocks = selectedMaster.getTypeBlocks();
 
-        selectedTypeBlock = null;
-        availableCategories = selectedMaster.getCategories();
+        if (! masterTypeBlocks.isEmpty()) {
+            defaultTypeParameterChangeTable = masterParameterChangeTable.stream().filter(pct -> "Type".equals(pct.getParameter())).findFirst().orElse(null);
+            if (defaultTypeParameterChangeTable != null) {
+                // We have a default Parameter Type, So we need to find the according TypeBlock later in types
+                int msb = defaultTypeParameterChangeTable.getDefaultValues().getB1();
+                int lsb = defaultTypeParameterChangeTable.getDefaultValues().getB2();
 
-        inputBlockList = new ArrayList<>();
-
-        InputBlock.InputBlockBuilder inputBlockBuilder = new InputBlock.InputBlockBuilder();
-
-        for (ParameterChangeTable pct : selectedMaster.getParameterChangeTable()) {
-            String parameter = null;
-            String display = null;
-            boolean useMsbLsb = false;
-            Integer parameterId = null;
-
-            if (pct.getParameter().equals("Type")) {
-                parameter = "Type";
-                useMsbLsb = true;
-                if (pct.hasDefaultValues()) {
-                    DataBlock defaultValues = pct.getDefaultValues();
-
-                    // default values determine selectedCategory and selectedType;
-                    selectedTypeBlock = selectedMaster.findTypeBlockByDefaultValues(selectedCategory, defaultValues.getB1(), defaultValues.getB2());
-                    if (selectedTypeBlock != null) {
-                        selectedCategory = selectedTypeBlock.getCategory();
-                    }
-                    availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
-                }
-            } else if (pct.getParameter().startsWith("Parameter")) {
-                String[] split = pct.getParameter().split(" ");
-                parameterId = Integer.parseInt(split[1]);
+                defaultTypeBlock = masterTypeBlocks.stream().filter(tb -> tb.getMsb() == msb && tb.getLsb() == lsb).findAny().orElse(null);
+                selectedTypeBlock = defaultTypeBlock;
+                selectedCategory = defaultTypeBlock.getCategory();
             } else {
-                parameter = pct.getParameter();
-                display = pct.getDescription();
+                selectedTypeBlock = masterTypeBlocks.get(0);
+                categoryParameterChangeTable = masterParameterChangeTable;
             }
-
-            int min = 0x0;
-            int max = 0x7F;
-
-            if (pct.hasRange()) {
-                min = pct.getRangeValues().getB1();
-                max = pct.getRangeValues().getB2();
-            }
-
-            inputBlockList.add(inputBlockBuilder.reset()
-                    .withPosition(pct.getId())
-                    .withNumBytes(pct.getNumBytes())
-                    .withParameterId(parameterId)
-                    .withParameter(parameter)
-                    .withDisplay(display)
-                    .withLsbMsb(useMsbLsb)
-                    .withMinMax(min, max)
-                    .build());
         }
+
+        printDebugInfo("ProcessMaster");
 
         processCategory();
     }
 
+    private List<ParameterChangeTable> categoryParameterChangeTable = new ArrayList<>();
+    private List<TypeBlock> categoryTypeBlocks = new ArrayList<>();
+
     private void processCategory() {
-        if (selectedTypeBlock == null) {
-            selectedTypeBlock = availableTypes.get(0);
-        }
-//        TypeBlock defaultTypeBlock = selectedMaster.getDefaultTypeBlock();
+        if (selectedCategory != null) {
+            categoryTypeBlocks = masterTypeBlocks.stream().filter(t -> t.getCategory() != null && t.getCategory().equals(selectedCategory)).toList();
 
-/*        if (selectedTypeBlock == null) {
-            if (defaultTypeBlock != null) {
-                if (selectedCategory.equals(defaultTypeBlock.getCategory())) {
-                    selectedTypeBlock = defaultTypeBlock;
-                }
+            categoryParameterChangeTable = selectedMaster.getParameterChangeTable();
+            boolean needParameters = categoryTypeBlocks.stream().anyMatch(tb -> tb.getParameters() != null);
+            if (! needParameters) {
+                System.out.println("For The Selected Category we don't need parameters");
+                categoryParameterChangeTable = categoryParameterChangeTable.stream().filter(t -> t.getParameter().contains("Type")).toList();
             }
-        }
-*/
-        availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
 
-/*        if (selectedTypeBlock == null && ! availableTypes.isEmpty()) {
-            selectedTypeBlock = availableTypes.get(0);
-        }
-*/
-        processType();
-    }
-
-    private void processType() {
-        TypeBlock block = selectedTypeBlock;
-
-        if (block == null) {
-            block = selectedMaster.getFirstTypeBlock();
-        }
-
-        if (block != null && block.getParameters() != null) {
-            ParameterBlock[] parameters = block.getParameters().getParameters();
-
-            for (InputBlock inputBlock : inputBlockList) {
-                if (inputBlock.getUseMsbLsb()) {
-                    inputBlock.setInputValues(new DataBlock(block.getMsb(), block.getLsb()));
+            if (defaultTypeBlock != null) {
+                if (defaultTypeBlock.getCategory().equals(selectedCategory)) {
+                    selectedTypeBlock = defaultTypeBlock;
                 } else {
-                    Integer parameterId = inputBlock.getParameterId();
-                    if (parameterId != null && parameters[parameterId] != null) {
-                        inputBlock.setParameter(parameters[parameterId].getParameter());
-                        inputBlock.setDisplay(parameters[parameterId].getDisplay());
-                        inputBlock.setMin(parameters[parameterId].getMin());
-                        inputBlock.setMax(parameters[parameterId].getMax());
-                        if (inputBlockList.size() == 1) {
-                            DataBlock db = new DataBlock(parameters[parameterId].getMin(), null);
-                            inputBlock.setInputValues(db);
-                        }
-                        inputBlock.setRefTable(parameters[parameterId].getParametersTable());
+                    if (!categoryTypeBlocks.isEmpty()) {
+                        selectedTypeBlock = categoryTypeBlocks.get(0);
                     }
                 }
             }
-        } else {
-            inputBlockList = new ArrayList<>();
         }
 
+        processType();
+
+        printDebugInfo("ProcessCategory");
+    }
+
+    private List<InputBlock> inputBlockList = new ArrayList<>();
+
+    private void processType() {
+        if (selectedTypeBlock != null) {
+            // create inputBlockList
+            inputBlockList = new ArrayList<>();
+
+            InputBlock.InputBlockBuilder inputBlockBuilder = new InputBlock.InputBlockBuilder();
+            for (ParameterChangeTable pct : categoryParameterChangeTable) {
+                String parameter = null;
+                String display = null;
+                boolean useMsbLsb = false;
+                Integer parameterId = null;
+
+                if (pct.getParameter().equals("Type")) {
+                    parameter = "Type";
+                    useMsbLsb = true;
+                } else if (pct.getParameter().startsWith("Parameter")) {
+                    String[] split = pct.getParameter().split(" ");
+                    parameterId = Integer.parseInt(split[1]);
+                } else {
+                    parameter = pct.getParameter();
+                    display = pct.getDescription();
+                }
+
+                int min = 0x0;
+                int max = 0x7F;
+
+                if (pct.hasRange()) {
+                    min = pct.getRangeValues().getB1();
+                    max = pct.getRangeValues().getB2();
+                }
+
+                InputBlock inputBlock = inputBlockBuilder.reset()
+                        .withPosition(pct.getId())
+                        .withNumBytes(pct.getNumBytes())
+                        .withParameterId(parameterId)
+                        .withParameter(parameter)
+                        .withDisplay(display)
+                        .withLsbMsb(useMsbLsb)
+                        .withMinMax(min, max)
+                        .build();
+
+                if (useMsbLsb) {
+                    inputBlock.setInputValues(new DataBlock(selectedTypeBlock.getMsb(), selectedTypeBlock.getLsb()));
+                } else {
+                    inputBlock.setInputValues(new DataBlock(0, null));
+                    if (parameterId != null && selectedTypeBlock.getParameters() != null) {
+                        ParameterBlock[] parameters = selectedTypeBlock.getParameters().getParameters();
+
+                        if (parameters[parameterId] != null) {
+                            inputBlock.setParameter(parameters[parameterId].getParameter());
+                            inputBlock.setDisplay(parameters[parameterId].getDisplay());
+                            inputBlock.setMin(parameters[parameterId].getMin());
+                            inputBlock.setMax(parameters[parameterId].getMax());
+                            if (inputBlockList.size() == 1) {
+                                DataBlock db = new DataBlock(parameters[parameterId].getMin(), null);
+                                inputBlock.setInputValues(db);
+                            }
+                            inputBlock.setRefTable(parameters[parameterId].getParametersTable());
+                        }
+                    }
+                }
+
+                inputBlockList.add(inputBlock);
+            }
+
+            System.out.println("Input Blocks Built");
+        }
         forwardInputBlocks();
     }
 
@@ -308,9 +329,53 @@ public class SysexGenSelectionPane extends GridPane {
             List<String> sysexList = selectedMaster.generateSysEx(inputBlockList);
             getSysexPane().getSysexGenResultPane().renderSysex(sysexList);
             getSysexPane().getSysexGenParametersPane().setParameters(selectedMaster, inputBlockList);
-        } else {
-            getSysexPane().getSysexGenParametersPane().clearParameters();
         }
+    }
+
+    private void printDebugInfo(String step) {
+        // MASTER
+        if (selectedMaster != null) {
+            System.out.println(String.format("[%s] MASTER = %s", step, selectedMaster.getName()));
+        } else {
+            System.out.println(String.format("[%s] MASTER = NULL", step));
+        }
+
+        if (! masterCategories.isEmpty()) {
+            System.out.println(String.format("[%s] - Categories = %d", step, masterCategories.size()));
+        }
+
+        if (! masterParameterChangeTable.isEmpty()) {
+            System.out.println(String.format("[%s] - PCT = %d", step, masterParameterChangeTable.size()));
+        }
+
+        if (! masterTypeBlocks.isEmpty()) {
+            System.out.println(String.format("[%s] - Type Blocks = %d", step, masterTypeBlocks.size()));
+        }
+
+        if (defaultTypeParameterChangeTable != null) {
+            System.out.println(String.format("[%s] - Default PCT Found", step));
+        }
+
+        if (defaultTypeBlock != null) {
+            System.out.println(String.format("[%s] - Default Type Block = '%s' in Category '%s'", step, defaultTypeBlock.getType(), defaultTypeBlock.getCategory()));
+        }
+
+        // CATEGORY
+        if (selectedCategory != null) {
+            System.out.println(String.format("[%s] CATEGORY = %s", step, selectedCategory));
+        } else {
+            System.out.println(String.format("[%s] CATEGORY = NULL", step));
+        }
+
+        if (! categoryParameterChangeTable.isEmpty()) {
+            System.out.println(String.format("[%s] - PCT = %d", step, categoryParameterChangeTable.size()));
+        }
+
+        if (! categoryTypeBlocks.isEmpty()) {
+            System.out.println(String.format("[%s] - Type Blocks = %d", step, categoryTypeBlocks.size()));
+        }
+
+        // TYPE
     }
 
     // ACCESSORS

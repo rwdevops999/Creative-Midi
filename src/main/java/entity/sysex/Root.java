@@ -45,9 +45,9 @@ public class Root implements IRoot {
                 if (addedValues) {
                     sb.append(" ").append(SYSEX_END);
                     sysexList.add(sb.toString());
+                    sb = new StringBuilder();
                 }
 
-                sb = new StringBuilder();
                 addedValues = false;
             }
         }
@@ -56,6 +56,15 @@ public class Root implements IRoot {
             sb.append(" ").append(SYSEX_END);
             sysexList.add(sb.toString());
         }
+
+        return sysexList;
+    }
+
+    @Override
+    public List<String> generateSysEx() {
+        List<String> sysexList = new ArrayList<>();
+
+        sysexList.add(baseSysEx + " " + baseAddress);
 
         return sysexList;
     }
