@@ -2,13 +2,12 @@ package creative.scenes.main;
 
 import creative.scenes.IScene;
 import creative.scenes.midi.MidiScene;
-import creative.scenes.sysex.SysexScene;
+import creative.scenes.sysexgen.SysexGenScene;
 import creative.scenes.voice.VoiceScene;
 import custom.components.ActionButton;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
-import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -53,7 +52,7 @@ public class MainActionsPane extends GridPane {
 
         add(new ActionButton(ownerScene, SIZE, "midiButton", "handle midi", "midi_out", new MidiScene()), 0, 0);
         add(new ActionButton(ownerScene, SIZE, "voiceButton", "handle voice", "voice_search", new VoiceScene()), 1, 0);
-        add(new ActionButton(ownerScene, SIZE, "sysexButton", "Generate SysEx", "sysex-generator", new SysexScene()), 4, 0);
+        add(new ActionButton(ownerScene, SIZE, "sysexButton", "Generate SysEx", "sysex-generator", new SysexGenScene()), 4, 0);
 
 /*        add(new ActionButton(ownerScene,"sysexButton", "handle sysex", "sysex_out", new SysExScene()), 1, 0);
         add(new ActionButton(ownerScene, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 2, 0);

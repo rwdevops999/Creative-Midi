@@ -1,4 +1,4 @@
-package creative.scenes.sysex;
+package creative.scenes.sysexgen;
 
 import entity.sysex.*;
 

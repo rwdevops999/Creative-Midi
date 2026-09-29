@@ -1,6 +1,6 @@
-package creative.scenes.sysex;
+package creative.scenes.sysexgen;
 
-import creative.scenes.sysex.component.ParameterPane;
+import creative.scenes.sysexgen.component.ParameterPane;
 import entity.sysex.InputBlock;
 import entity.sysex.Master;
 import javafx.geometry.Insets;
@@ -17,24 +17,23 @@ import java.util.function.Consumer;
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
 import static util.Util.setControlBackground;
-import static util.Util.setPaneBackground;
 
-public class SysexParametersPane extends TabPane {
-    private static final Logger logger = LoggerFactory.getLogger(SysexParametersPane.class);
+public class SysexGenParametersPane extends TabPane {
+    private static final Logger logger = LoggerFactory.getLogger(SysexGenParametersPane.class);
 
     private static final int TAB_SIZE = 10;
 
-    public SysexParametersPane() {
+    public SysexGenParametersPane() {
         super();
 
-        setId("SysExParametersPane");
+        setId("SysExGenParametersPane");
 
         setPadding(new Insets(5));
     }
 
-    private SysexPane parent;
+    private SysexGenPane parent;
 
-    public SysexParametersPane(SysexPane owner) {
+    public SysexGenParametersPane(SysexGenPane owner) {
         parent = owner;
 
 //        showPaneBorder(this, getColor("border", "blue"));
@@ -50,11 +49,11 @@ public class SysexParametersPane extends TabPane {
     private List<InputBlock> parameterBlockList = new ArrayList<>();
 
     private void buildPane() {
-        logger.debug("[CM_SYSEX_PARAMETERS_PANE] Building {}", getId());
+        logger.debug("[CM_SYSEX_GEN_PARAMETERS_PANE] Building {}", getId());
 
         buildTabs(parameterBlockList);
 
-        logger.debug("[CM_SYSEX_PARAMETERS_PANE] Built {}", getId());
+        logger.debug("[CM_SYSEX_GEN_PARAMETERS_PANE] Built {}", getId());
     }
 
     private void buildTabs (List<InputBlock> list) {
@@ -83,7 +82,7 @@ public class SysexParametersPane extends TabPane {
         public void accept(InputBlock inputBlock) {
             if (inputBlock.getInputValues() != null) {
                 List<String> sysexList = master.generateSysEx(parameterBlockList);
-                parent.getSysexResultPane().renderSysex(sysexList);
+                parent.getSysexGenResultPane().renderSysex(sysexList);
             }
         }
     };
@@ -110,7 +109,7 @@ public class SysexParametersPane extends TabPane {
     }
 
     // ACCESSORS
-    public SysexPane getSysexPane() {
+    public SysexGenPane getSysexGenPane() {
         return parent;
     }
 }

@@ -1,6 +1,7 @@
-package creative.scenes.sysex;
+package creative.scenes.sysexgen;
 
-import creative.scenes.sysex.component.SysexActionButton;
+import creative.scenes.sysex.SysexContainer;
+import creative.scenes.sysexgen.component.SysexActionButton;
 import custom.dialog.NameDialog;
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
@@ -12,16 +13,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class ActionsPane extends HBox {
-    public ActionsPane() {
+public class SysexGenActionsPane extends HBox {
+    public SysexGenActionsPane() {
         super();
+
+        setId("SysexGenActionsPane");
 
         setPadding(new Insets(2));
         setSpacing(10);
         setAlignment(Pos.CENTER);
     }
 
-    public ActionsPane(Supplier<List<String>> supplier) {
+    public SysexGenActionsPane(Supplier<List<String>> supplier) {
         this();
 
         buildPane(supplier);
@@ -56,13 +59,13 @@ public class ActionsPane extends HBox {
 
             sysexName.ifPresent(name -> {
                 Sysex sysEx = new Sysex(name, contents);
-// TODO                SysExContainer.addSysex(sysEx);
+                SysexContainer.addSysex(sysEx);
             });
         });
         getChildren().add(sysexAddToList);
 
         SysexActionButton sysexExportToFile = new SysexActionButton("exportButton", "export sysex to file", "export-to-file", e-> {
-// TODO            SysExContainer.exportSysEx();
+            SysexContainer.exportSysEx();
         });
         getChildren().add(sysexExportToFile);
 

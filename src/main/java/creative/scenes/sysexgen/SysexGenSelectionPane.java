@@ -1,4 +1,4 @@
-package creative.scenes.sysex;
+package creative.scenes.sysexgen;
 
 import entity.sysex.*;
 import javafx.geometry.HPos;
@@ -15,27 +15,26 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 
-public class SysexSelectionPane extends GridPane {
-    private static final Logger logger = LoggerFactory.getLogger(SysexSelectionPane.class);
+public class SysexGenSelectionPane extends GridPane {
+    private static final Logger logger = LoggerFactory.getLogger(SysexGenSelectionPane.class);
 
-    public SysexSelectionPane() {
+    public SysexGenSelectionPane() {
         super();
 
-        setId("SysexSelectionPane");
+        setId("SysexGenSelectionPane");
 
         setVgap(5);
         setPadding(new Insets(5));
     }
 
-    private SysexPane parent;
+    private SysexGenPane parent;
 
-    public SysexSelectionPane(SysexPane owner) {
+    public SysexGenSelectionPane(SysexGenPane owner) {
         this();
 
         parent = owner;
@@ -66,7 +65,7 @@ public class SysexSelectionPane extends GridPane {
     private TypeBlock selectedTypeBlock;
 
     private void buildPane() {
-        logger.debug("[CM_SYSEXSELECTION_PANE] Building {}", getId());
+        logger.debug("[CM_SYSEX_GEN_SELECTION_PANE] Building {}", getId());
 
         getChildren().clear();
 
@@ -175,7 +174,7 @@ public class SysexSelectionPane extends GridPane {
             }
         }
 
-        logger.debug("[CM_SYSEXSELECTION_PANE] Built {}", getId());
+        logger.debug("[CM_SYSEX_GEN_SELECTION_PANE] Built {}", getId());
     }
 
     private List<InputBlock> inputBlockList = new ArrayList<>();
@@ -185,14 +184,6 @@ public class SysexSelectionPane extends GridPane {
     private void processMaster() {
         selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
         availableCategories = selectedMaster.getCategories();
-/*        if (selectedTypeBlock != null) {
-            selectedCategory = selectedTypeBlock.getCategory();
-            availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
-        } else {
-            selectedCategory = null;
-            availableTypes = new ArrayList<>();
-        }
-*/
 
         inputBlockList = new ArrayList<>();
 
@@ -300,13 +291,13 @@ public class SysexSelectionPane extends GridPane {
     private void forwardInputBlocks() {
         if (! inputBlockList.isEmpty()) {
             List<String> sysexList = selectedMaster.generateSysEx(inputBlockList);
-            getSysexPane().getSysexResultPane().renderSysex(sysexList);
-            getSysexPane().getSysexParametersPane().setParameters(selectedMaster, inputBlockList);
+            getSysexPane().getSysexGenResultPane().renderSysex(sysexList);
+            getSysexPane().getSysexGenParametersPane().setParameters(selectedMaster, inputBlockList);
         }
     }
 
     // ACCESSORS
-    public SysexPane getSysexPane() {
+    public SysexGenPane getSysexPane() {
         return parent;
     }
 }

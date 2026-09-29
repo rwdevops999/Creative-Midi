@@ -22,4 +22,7 @@ public class Constants {
 
     public static String MONITOR_ACTION_CLEAR = "Clear";
     public static String MONITOR_ACTION_EXPORT = "Export";
+
+    public static String SYSEX_START_BYTE="F0";
+    public static String SYSEX_STOP_BYTE="F7";
 }

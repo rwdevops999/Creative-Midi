@@ -1,4 +1,4 @@
-package creative.scenes.sysex;
+package creative.scenes.sysexgen;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +9,6 @@ import javafx.scene.layout.VBox;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -23,17 +22,17 @@ import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 import static util.Util.setPaneHeightAsPercentage;
 
-public class SysexResultPane extends VBox {
-    private static final Logger logger = LoggerFactory.getLogger(SysexResultPane.class);
+public class SysexGenResultPane extends VBox {
+    private static final Logger logger = LoggerFactory.getLogger(SysexGenResultPane.class);
 
-    public SysexResultPane() {
+    public SysexGenResultPane() {
         super();
 
-        setId("SysexResultPane");
+        setId("SysexGenResultPane");
     }
 
-    private SysexPane parent;
-    public SysexResultPane(SysexPane owner) {
+    private SysexGenPane parent;
+    public SysexGenResultPane(SysexGenPane owner) {
         this();
 
         this.parent = owner;
@@ -48,9 +47,9 @@ public class SysexResultPane extends VBox {
     ListView<String> listView = null;
 
     @Getter     // ACCESSOR
-    ActionsPane actionsPane = null;
+    SysexGenActionsPane sysexGenActionsPane = null;
     private void buildPane() {
-        logger.debug("[CM_SYSEX_RESULT_PANE] Building {}", getId());
+        logger.debug("[CM_SYSEX_GEN_RESULT_PANE] Building {}", getId());
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem copy = new MenuItem("Copy To Clipboard");
@@ -73,10 +72,10 @@ public class SysexResultPane extends VBox {
         listView.setContextMenu(contextMenu);
         getChildren().add(listView);
 
-        actionsPane = new ActionsPane(sysexSupplier);
-        getChildren().add(actionsPane);
+        sysexGenActionsPane = new SysexGenActionsPane(sysexSupplier);
+        getChildren().add(sysexGenActionsPane);
 
-        logger.debug("[CM_SYSEX_RESULT_PANE] Built {}", getId());
+        logger.debug("[CM_SYSEX_GEN_RESULT_PANE] Built {}", getId());
     }
 
     private List<String> currentSysexList = new ArrayList<>();
@@ -89,15 +88,15 @@ public class SysexResultPane extends VBox {
         listView.getItems().clear();
         listView.getItems().addAll(items);
 
-        if (actionsPane != null) {
-            actionsPane.setEnables(sysexSupplier);
+        if (sysexGenActionsPane != null) {
+            sysexGenActionsPane.setEnables(sysexSupplier);
         }
     }
 
     public Supplier<List<String>> sysexSupplier = () -> currentSysexList;
 
     // ACCESSORS
-    public SysexPane getSysexPane() {
+    public SysexGenPane getSysexGenPane() {
         return parent;
     }
 }

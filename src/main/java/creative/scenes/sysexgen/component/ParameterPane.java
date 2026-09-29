@@ -1,4 +1,4 @@
-package creative.scenes.sysex.component;
+package creative.scenes.sysexgen.component;
 
 import entity.sysex.DataBlock;
 import entity.sysex.InputBlock;
