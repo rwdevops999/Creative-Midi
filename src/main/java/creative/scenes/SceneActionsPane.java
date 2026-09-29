@@ -1,6 +1,7 @@
 package creative.scenes;
 
 import creative.scenes.midi.MidiPane;
+import creative.scenes.sysex.SysexPane;
 import entity.AEntity;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -41,9 +42,9 @@ public class SceneActionsPane extends VBox {
         }
     }
 
-    private MidiPane parent;
+    private Pane parent;
 
-    public SceneActionsPane(MidiPane owner, String actionName, BiConsumer<AEntity, Pane>[] consumers, Supplier<AEntity> supplier) {
+    public SceneActionsPane(Pane owner, String actionName, BiConsumer<AEntity, Pane>[] consumers, Supplier<AEntity> supplier) {
         this();
 
         this.parent = owner;
@@ -85,6 +86,10 @@ public class SceneActionsPane extends VBox {
 
     // ACCESSOR
     public MidiPane getMidiPane() {
-        return parent;
+        return (MidiPane) parent;
+    }
+
+    public SysexPane getSysexPane() {
+        return (SysexPane) parent;
     }
 }

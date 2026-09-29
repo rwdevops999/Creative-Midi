@@ -1,8 +1,15 @@
 package creative.scenes.sysex;
 
+import creative.scenes.SceneActionsPane;
+import creative.scenes.sysex.consumer.*;
+import entity.AEntity;
+import entity.sysex.Sysex;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiConsumer;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -23,6 +30,41 @@ public class SysexPane extends BorderPane {
     public void buildPane() {
         logger.debug("[CM_SYSEX_PANE] Building {}", getId());
 
+        setLeft(new SysexListPane(this));
+        setCenter(new SysexDetailsPane(this));
+
+        BiConsumer<AEntity, Pane>[] consumers = new BiConsumer[]{
+                new NewConsumer<Sysex, Pane>(),
+                new AddConsumer<Sysex, Pane>(),
+                new DeleteConsumer<Sysex, Pane>(),
+                new UpdateConsumer<Sysex, Pane>(),
+                new SendConsumer<Sysex, Pane>(),
+                new ExportConsumer<Sysex, Pane>()
+        };
+
+        SceneActionsPane sceneActionsPane = new SceneActionsPane(this, "Send", consumers, this::getEntity);
+//        sceneActionsPane.setDisabledButtons(new boolean[]{false, true, false, false, true, true});
+        setRight(sceneActionsPane);
+
         logger.debug("[CM_SYSEX_PANE] Built {}", getId());
+    }
+
+    public AEntity getEntity() {
+        SysexListPane listPane = (SysexListPane)getLeft();
+//        return listPane.getSelectedItem();
+        return null;
+    };
+
+    // ACCESSORS
+    public SysexListPane getSysexListPane() {
+        return (SysexListPane) getLeft();
+    }
+
+    public SysexDetailsPane getSysexDetailsPane() {
+        return (SysexDetailsPane) getCenter();
+    }
+
+    public SceneActionsPane getSceneActionsPane() {
+        return (SceneActionsPane) getRight();
     }
 }

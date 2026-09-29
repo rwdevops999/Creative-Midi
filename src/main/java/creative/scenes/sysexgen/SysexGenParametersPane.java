@@ -72,6 +72,7 @@ public class SysexGenParametersPane extends TabPane {
 
             Tab tab = new Tab("Parameters " + (i + 1));
             tab.setContent(createContent(partiallyList));
+            tab.setClosable(false);
             getTabs().add(tab);
         }
     }

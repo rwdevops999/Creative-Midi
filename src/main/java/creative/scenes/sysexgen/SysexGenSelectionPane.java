@@ -171,7 +171,6 @@ public class SysexGenSelectionPane extends GridPane {
                     typesComboBox.setValue(selectedTypeBlock);
                 }
 
-                /*
                 // what if we change the type ?
                 typesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
@@ -182,7 +181,7 @@ public class SysexGenSelectionPane extends GridPane {
                             buildPane();
                         }
                     }
-                }); */
+                });
             }
         }
 
