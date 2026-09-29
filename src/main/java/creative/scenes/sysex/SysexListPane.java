@@ -28,7 +28,7 @@ public class SysexListPane extends VBox {
     public SysexListPane(SysexPane owner) {
         this();
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
         setPaneWidthAsPercentage(this, owner, 30);
 
         parent = owner;
@@ -41,11 +41,13 @@ public class SysexListPane extends VBox {
         logger.debug("[CM_SYSEX_LIST_PANE] Building {}", getId());
 
         sysexListView = new ListView<>();
-        sysexListView.setItems(FXCollections.observableArrayList(SysexContainer.getSysex()));
+        sysexListView.setItems(FXCollections.observableArrayList(SysexContainer.getSysexList()));
 
         sysexListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             SysexPane sysexPane = getSysexPane();
             SysexDetailsPane sysExDetailsPane = sysexPane.getSysexDetailsPane();
+            sysExDetailsPane.setSysex(newValue);
+            // TODO Enable some buttons here
         });
         sysexListView.setCellFactory(param -> new ListCell<Sysex>() {
             @Override
@@ -55,7 +57,6 @@ public class SysexListPane extends VBox {
                 if (empty || sysex == null) {
                     setText(null);
                 } else {
-                    // Hier kies je welke variabele je wilt tonen
                     setText(sysex.getName());
                 }
             }

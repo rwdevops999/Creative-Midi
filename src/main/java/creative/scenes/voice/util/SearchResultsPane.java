@@ -140,7 +140,6 @@ public class SearchResultsPane extends AnchorPane {
         details.setOnAction(event -> {
             Patch patch = table.getSelectionModel().getSelectedItem();
 
-            // TODO Here we must handle INS file with the MS2S files
             InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
             if ("INS".equals(instrumentProvider.getSourceType())) {
                 patch = instrumentProvider.findLinkedPatch(patch);

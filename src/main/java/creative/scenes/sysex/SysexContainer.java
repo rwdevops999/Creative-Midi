@@ -113,7 +113,7 @@ public class SysexContainer {
         return result;
     }
 
-    public static List<Sysex> getSysex() {
+    public static List<Sysex> getSysexList() {
         return sysexList;
     }
 }

@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.BiConsumer;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
-
 public class SysexPane extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(SysexPane.class);
 
