@@ -83,7 +83,7 @@ public class SysexParametersPane extends TabPane {
         public void accept(InputBlock inputBlock) {
             if (inputBlock.getInputValues() != null) {
                 List<String> sysexList = master.generateSysEx(parameterBlockList);
-// TODO                parent.getSysexResultPane().renderSysex(sysexList);
+                parent.getSysexResultPane().renderSysex(sysexList);
             }
         }
     };
@@ -100,6 +100,13 @@ public class SysexParametersPane extends TabPane {
         }
 
         return pane;
+    }
+
+    public void setParameters (Master master, List<InputBlock> list) {
+        this.master = master;
+        this.parameterBlockList = list;
+
+        buildTabs(parameterBlockList);
     }
 
     // ACCESSORS

@@ -266,6 +266,11 @@ public class SysexSelectionPane extends GridPane {
 
     private void processType() {
         TypeBlock block = selectedTypeBlock;
+
+        if (block == null) {
+            block = selectedMaster.getFirstTypeBlock();
+        }
+
         if (block != null && block.getParameters() != null) {
             ParameterBlock[] parameters = block.getParameters().getParameters();
 
@@ -296,7 +301,7 @@ public class SysexSelectionPane extends GridPane {
         if (! inputBlockList.isEmpty()) {
             List<String> sysexList = selectedMaster.generateSysEx(inputBlockList);
             getSysexPane().getSysexResultPane().renderSysex(sysexList);
-// TODO            getSysexPane().getSysexParametersPane().setParameters(selectedMaster, inputBlockList);
+            getSysexPane().getSysexParametersPane().setParameters(selectedMaster, inputBlockList);
         }
     }
 

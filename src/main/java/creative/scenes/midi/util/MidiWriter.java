@@ -19,9 +19,8 @@ public class MidiWriter {
 
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
-            // TODO Add Monitoring and Dialogs
             CommunicationModel.monitorError("No device selected");
-//            DialogFactory.renderWarningDialog("No device selected");
+            DialogFactory.renderWarningDialog("No device selected");
         } else {
             try {
                 Receiver receiver = outputDevice.getReceiver();
@@ -51,11 +50,11 @@ public class MidiWriter {
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION: Device not ready for sending midi. CAUSE {}", mue.getMessage());
-//                DialogFactory.renderErrorDialog("Device not ready");
+                DialogFactory.renderErrorDialog("Device not ready");
             } catch (InvalidMidiDataException imde) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION: Midi data incorrect. CAUSE {}", imde.getMessage());
-//                String message = MessageFormatter.basicArrayFormat("MIDI Command is not constructed well for {}", new Object[]{midi.getStatus()});
-//                DialogFactory.renderErrorDialog(message);
+                String message = MessageFormatter.basicArrayFormat("MIDI Command is not constructed well for {}", new Object[]{midi.getStatus()});
+                DialogFactory.renderErrorDialog(message);
             }
         }
     }
@@ -66,7 +65,7 @@ public class MidiWriter {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             CommunicationModel.monitorError("No device selected");
-//            DialogFactory.renderWarningDialog("No device selected");
+            DialogFactory.renderWarningDialog("No device selected");
         } else {
             try {
                 Receiver receiver = outputDevice.getReceiver();
@@ -87,7 +86,6 @@ public class MidiWriter {
     public boolean sendMidiMessageAsString (String message) {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
-            // TODO Add Monitoring and Dialogs
             CommunicationModel.monitorError("No device selected");
             DialogFactory.renderWarningDialog("No device selected");
             return false;

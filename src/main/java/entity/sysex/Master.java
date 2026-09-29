@@ -50,6 +50,16 @@ public class Master extends Root {
         return result;
     }
 
+    public TypeBlock getFirstTypeBlock() {
+        TypeBlock result = null;
+
+        if (! typeBlocks.isEmpty()) {
+            result = typeBlocks.get(0);
+        }
+
+        return result;
+    }
+
     public TypeBlock getTypeBlockFromCategoryAndType(String category, String type) {
         return typeBlocks.stream().filter(t -> t.getCategory().equals(category) && t.getType().equals(type)).findFirst().orElse(null);
     }

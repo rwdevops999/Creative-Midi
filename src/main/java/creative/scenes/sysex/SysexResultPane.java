@@ -6,6 +6,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.Util;
@@ -37,7 +38,7 @@ public class SysexResultPane extends VBox {
 
         this.parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
         setPaneHeightAsPercentage(this, owner, 21);
         setPaneBackground(this);
 
@@ -45,6 +46,8 @@ public class SysexResultPane extends VBox {
     }
 
     ListView<String> listView = null;
+
+    @Getter     // ACCESSOR
     ActionsPane actionsPane = null;
     private void buildPane() {
         logger.debug("[CM_SYSEX_RESULT_PANE] Building {}", getId());
@@ -96,9 +99,5 @@ public class SysexResultPane extends VBox {
     // ACCESSORS
     public SysexPane getSysexPane() {
         return parent;
-    }
-
-    public ActionsPane getActionsPane() {
-        return actionsPane;
     }
 }
