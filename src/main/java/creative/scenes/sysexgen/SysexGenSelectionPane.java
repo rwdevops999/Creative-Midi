@@ -127,7 +127,7 @@ public class SysexGenSelectionPane extends GridPane {
 
             categoriesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 selectedCategory = newValue;
-                processCategory();
+                processMaster();
 
                 buildPane();
             });
@@ -168,6 +168,8 @@ public class SysexGenSelectionPane extends GridPane {
                         if (! newValue.equals(selectedTypeBlock)) {
                             selectedTypeBlock = newValue;
                             processType();
+
+                            buildPane();
                         }
                     }
                 });
@@ -182,7 +184,12 @@ public class SysexGenSelectionPane extends GridPane {
     private List<TypeBlock> availableTypes = new ArrayList<>();
 
     private void processMaster() {
-        selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
+        inputBlockList.clear();
+//        if (selectedTypeBlock == null) {
+//            selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
+//        }
+
+        selectedTypeBlock = null;
         availableCategories = selectedMaster.getCategories();
 
         inputBlockList = new ArrayList<>();
@@ -202,15 +209,17 @@ public class SysexGenSelectionPane extends GridPane {
                     DataBlock defaultValues = pct.getDefaultValues();
 
                     // default values determine selectedCategory and selectedType;
-                    selectedTypeBlock = selectedMaster.findTypeBlockByDefaultValues(defaultValues.getB1(), defaultValues.getB2());
-                    selectedCategory = selectedTypeBlock.getCategory();
+                    selectedTypeBlock = selectedMaster.findTypeBlockByDefaultValues(selectedCategory, defaultValues.getB1(), defaultValues.getB2());
+                    if (selectedTypeBlock != null) {
+                        selectedCategory = selectedTypeBlock.getCategory();
+                    }
                     availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
                 }
             } else if (pct.getParameter().startsWith("Parameter")) {
                 String[] split = pct.getParameter().split(" ");
                 parameterId = Integer.parseInt(split[1]);
             } else {
-                parameter =pct.getParameter();
+                parameter = pct.getParameter();
                 display = pct.getDescription();
             }
 
@@ -237,21 +246,25 @@ public class SysexGenSelectionPane extends GridPane {
     }
 
     private void processCategory() {
-        TypeBlock defaultTypeBlock = selectedMaster.getDefaultTypeBlock();
-
-        selectedTypeBlock = null;
-        if (defaultTypeBlock != null) {
-            if (selectedCategory.equals(defaultTypeBlock.getCategory())) {
-                selectedTypeBlock = defaultTypeBlock;
-            }
-        }
-
-        availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
-
-        if (selectedTypeBlock == null && ! availableTypes.isEmpty()) {
+        if (selectedTypeBlock == null) {
             selectedTypeBlock = availableTypes.get(0);
         }
+//        TypeBlock defaultTypeBlock = selectedMaster.getDefaultTypeBlock();
 
+/*        if (selectedTypeBlock == null) {
+            if (defaultTypeBlock != null) {
+                if (selectedCategory.equals(defaultTypeBlock.getCategory())) {
+                    selectedTypeBlock = defaultTypeBlock;
+                }
+            }
+        }
+*/
+        availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
+
+/*        if (selectedTypeBlock == null && ! availableTypes.isEmpty()) {
+            selectedTypeBlock = availableTypes.get(0);
+        }
+*/
         processType();
     }
 
@@ -283,6 +296,8 @@ public class SysexGenSelectionPane extends GridPane {
                     }
                 }
             }
+        } else {
+            inputBlockList = new ArrayList<>();
         }
 
         forwardInputBlocks();
@@ -293,6 +308,8 @@ public class SysexGenSelectionPane extends GridPane {
             List<String> sysexList = selectedMaster.generateSysEx(inputBlockList);
             getSysexPane().getSysexGenResultPane().renderSysex(sysexList);
             getSysexPane().getSysexGenParametersPane().setParameters(selectedMaster, inputBlockList);
+        } else {
+            getSysexPane().getSysexGenParametersPane().clearParameters();
         }
     }
 

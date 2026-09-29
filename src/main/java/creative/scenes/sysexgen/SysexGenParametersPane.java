@@ -108,6 +108,13 @@ public class SysexGenParametersPane extends TabPane {
         buildTabs(parameterBlockList);
     }
 
+    public void clearParameters () {
+        this.master = master;
+        this.parameterBlockList = new ArrayList<>();
+
+        buildTabs(parameterBlockList);
+    }
+
     // ACCESSORS
     public SysexGenPane getSysexGenPane() {
         return parent;

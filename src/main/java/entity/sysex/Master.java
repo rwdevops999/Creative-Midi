@@ -16,8 +16,12 @@ public class Master extends Root {
     List<ParameterChangeTable> parameterChangeTable;
     List<TypeBlock> typeBlocks;
 
-    public TypeBlock findTypeBlockByDefaultValues( int def1, int def2) {
-        return typeBlocks.stream().filter(t -> ((t.getMsb() != null && t.getMsb() == def1) && (t.getLsb() != null && t.getLsb() == def2))).findFirst().orElse(null);
+    public TypeBlock findTypeBlockByDefaultValues( String category, int def1, int def2) {
+        if (category == null) {
+            return typeBlocks.stream().filter(t -> ((t.getMsb() != null && t.getMsb() == def1) && (t.getLsb() != null && t.getLsb() == def2))).findFirst().orElse(null);
+        }
+
+        return typeBlocks.stream().filter(t -> t.getCategory().equals(category) && ((t.getMsb() != null && t.getMsb() == def1) && (t.getLsb() != null && t.getLsb() == def2))).findFirst().orElse(null);
     }
 
     public ParameterChangeTable getDefaultParameterChangeTable() {
