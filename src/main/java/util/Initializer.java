@@ -2,6 +2,7 @@ package util;
 
 import communication.CommunicationModel;
 import creative.panes.MainPane;
+import creative.scenes.sysex.SysexContainer;
 import device.DeviceScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,5 +77,8 @@ public class Initializer {
 
         File midiFile = new File(midiPath + "/" + filename);
         ApplicationInfo.getInstance().setMidiToTry(midiFile);
+
+        // 8. Load Sysex events
+        SysexContainer.loadSysexEvents();
     }
 }

@@ -1,5 +1,6 @@
 package creative.scenes.sysex;
 
+import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.sysex.consumer.*;
 import entity.AEntity;
@@ -22,13 +23,13 @@ public class SysexPane extends BorderPane {
 
         setId("SysexPane");
 
-        showPaneBorder(this, getColor("border", "red", null));
-
         buildPane();
     }
 
     public void buildPane() {
         logger.debug("[CM_SYSEX_PANE] Building {}", getId());
+
+        CommunicationModel.setStatus("Handling SYSEX");
 
         setLeft(new SysexListPane(this));
         setCenter(new SysexDetailsPane(this));
@@ -43,7 +44,7 @@ public class SysexPane extends BorderPane {
         };
 
         SceneActionsPane sceneActionsPane = new SceneActionsPane(this, "Send", consumers, this::getEntity);
-//        sceneActionsPane.setDisabledButtons(new boolean[]{false, true, false, false, true, true});
+        sceneActionsPane.setEnables(SceneActionsPane.BUTTON[0]);
         setRight(sceneActionsPane);
 
         logger.debug("[CM_SYSEX_PANE] Built {}", getId());

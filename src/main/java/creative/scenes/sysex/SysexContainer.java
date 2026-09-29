@@ -4,6 +4,7 @@ import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
@@ -11,7 +12,12 @@ import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,7 +29,27 @@ import static util.Constants.SYSEX_STOP_BYTE;
 public class SysexContainer {
     private static final Logger logger = LoggerFactory.getLogger(SysexContainer.class);
 
-    private static List<Sysex> sysexList = new ArrayList<>();
+    private final static ObjectMapper mapper;
+    private static List<Sysex> sysexList;
+
+    static {
+        mapper = new ObjectMapper();
+        sysexList = new ArrayList<>();
+    }
+
+    public static void loadSysexEvents() {
+        String sysexPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_PATH, "./sysex");
+        String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_EVENTS_FILE, "sysexevents.json");
+
+        String sysexfile = sysexPath + "/" + filename;
+
+        logger.debug("[CM_SYSEX_CONTAINER] Loading SysEx events from {}", sysexfile);
+        try (InputStream in = Files.newInputStream(Path.of(sysexfile))) {
+            sysexList = mapper.readValue(in, new TypeReference<List<Sysex>>() {});
+        } catch (IOException ioe) {
+            logger.error("[CM_SYSEX_CONTAINER] Exception. CAUSE: {}", ioe.getMessage());
+        }
+    }
 
     private static String completeSysex(String sysex) {
         String result = sysex;
@@ -85,5 +111,9 @@ public class SysexContainer {
         }
 
         return result;
+    }
+
+    public static List<Sysex> getSysex() {
+        return sysexList;
     }
 }
