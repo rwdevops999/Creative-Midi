@@ -50,6 +50,6 @@ public class SysexNamePane extends GridPane {
 
         TextField nameTextField = new TextField();
         nameTextField.textProperty().bindBidirectional(dsProperty);
-        add(nameTextField, 1, 0, 7, 1);
+        add(nameTextField, 1, 0, 4, 1);
     }
 }

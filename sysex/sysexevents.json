@@ -6,6 +6,8 @@
 }, {
   "list" : [ {
     "content" : "F0 43 10 4C 00 00 04 7F F7"
+  }, {
+    "content" : "F0 43 10 4C 00 00 AA 7F F7"
   } ],
   "name" : "FullVolume"
 }, {

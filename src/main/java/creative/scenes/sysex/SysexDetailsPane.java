@@ -126,6 +126,7 @@ public class SysexDetailsPane extends VBox {
     }
 
     public void setSysex (Sysex sysex) {
+        System.out.println("ADDING SYSEX DETAILS");
     }
 
     // ACCESSORS
