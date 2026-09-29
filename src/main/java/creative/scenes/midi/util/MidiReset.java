@@ -74,10 +74,6 @@ public class MidiReset {
         midi.setByte2(0x00);
         collectMessages(midi);
 
-        if (ApplicationInfo.getInstance().isDebugging()) {
-            midiMessages.stream().forEach(System.out::println);
-        }
-
         executeBulk(midiWriter, midiMessages);
     }
 

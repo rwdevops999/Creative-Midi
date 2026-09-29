@@ -214,10 +214,9 @@ public class SysexGenSelectionPane extends GridPane {
             } else {
                 selectedTypeBlock = masterTypeBlocks.get(0);
                 categoryParameterChangeTable = masterParameterChangeTable;
+                selectedCategory = null;
             }
         }
-
-        printDebugInfo("ProcessMaster");
 
         processCategory();
     }
@@ -232,7 +231,6 @@ public class SysexGenSelectionPane extends GridPane {
             categoryParameterChangeTable = selectedMaster.getParameterChangeTable();
             boolean needParameters = categoryTypeBlocks.stream().anyMatch(tb -> tb.getParameters() != null);
             if (! needParameters) {
-                System.out.println("For The Selected Category we don't need parameters");
                 categoryParameterChangeTable = categoryParameterChangeTable.stream().filter(t -> t.getParameter().contains("Type")).toList();
             }
 
@@ -248,8 +246,6 @@ public class SysexGenSelectionPane extends GridPane {
         }
 
         processType();
-
-        printDebugInfo("ProcessCategory");
     }
 
     private List<InputBlock> inputBlockList = new ArrayList<>();
@@ -298,7 +294,7 @@ public class SysexGenSelectionPane extends GridPane {
                 if (useMsbLsb) {
                     inputBlock.setInputValues(new DataBlock(selectedTypeBlock.getMsb(), selectedTypeBlock.getLsb()));
                 } else {
-                    inputBlock.setInputValues(new DataBlock(0, null));
+//                    inputBlock.setInputValues(new DataBlock(0, null));
                     if (parameterId != null && selectedTypeBlock.getParameters() != null) {
                         ParameterBlock[] parameters = selectedTypeBlock.getParameters().getParameters();
 
@@ -318,9 +314,8 @@ public class SysexGenSelectionPane extends GridPane {
 
                 inputBlockList.add(inputBlock);
             }
-
-            System.out.println("Input Blocks Built");
         }
+
         forwardInputBlocks();
     }
 
@@ -330,52 +325,6 @@ public class SysexGenSelectionPane extends GridPane {
             getSysexPane().getSysexGenResultPane().renderSysex(sysexList);
             getSysexPane().getSysexGenParametersPane().setParameters(selectedMaster, inputBlockList);
         }
-    }
-
-    private void printDebugInfo(String step) {
-        // MASTER
-        if (selectedMaster != null) {
-            System.out.println(String.format("[%s] MASTER = %s", step, selectedMaster.getName()));
-        } else {
-            System.out.println(String.format("[%s] MASTER = NULL", step));
-        }
-
-        if (! masterCategories.isEmpty()) {
-            System.out.println(String.format("[%s] - Categories = %d", step, masterCategories.size()));
-        }
-
-        if (! masterParameterChangeTable.isEmpty()) {
-            System.out.println(String.format("[%s] - PCT = %d", step, masterParameterChangeTable.size()));
-        }
-
-        if (! masterTypeBlocks.isEmpty()) {
-            System.out.println(String.format("[%s] - Type Blocks = %d", step, masterTypeBlocks.size()));
-        }
-
-        if (defaultTypeParameterChangeTable != null) {
-            System.out.println(String.format("[%s] - Default PCT Found", step));
-        }
-
-        if (defaultTypeBlock != null) {
-            System.out.println(String.format("[%s] - Default Type Block = '%s' in Category '%s'", step, defaultTypeBlock.getType(), defaultTypeBlock.getCategory()));
-        }
-
-        // CATEGORY
-        if (selectedCategory != null) {
-            System.out.println(String.format("[%s] CATEGORY = %s", step, selectedCategory));
-        } else {
-            System.out.println(String.format("[%s] CATEGORY = NULL", step));
-        }
-
-        if (! categoryParameterChangeTable.isEmpty()) {
-            System.out.println(String.format("[%s] - PCT = %d", step, categoryParameterChangeTable.size()));
-        }
-
-        if (! categoryTypeBlocks.isEmpty()) {
-            System.out.println(String.format("[%s] - Type Blocks = %d", step, categoryTypeBlocks.size()));
-        }
-
-        // TYPE
     }
 
     // ACCESSORS

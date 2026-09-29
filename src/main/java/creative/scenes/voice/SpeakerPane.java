@@ -191,7 +191,6 @@ public class SpeakerPane extends HBox {
         } else {
             Patch patch = ApplicationInfo.getInstance().getSelectedPatch();
             if (patch != null) {
-                System.out.println("PLAY MIDI DEMO");
                 MidiDemo.playDemo(anyHandler, anyHandler, midiChannelIndicator, 0);
             }
         }
@@ -199,7 +198,6 @@ public class SpeakerPane extends HBox {
 
     private void stopDemoFile (ToggleButton button, ChannelIndicator midiChannelIndicator) {
         MidiDemo.stopDemo(midiChannelIndicator);
-        System.out.println("STOP MIDI DEMO");
         button.setSelected(false);
     }
 

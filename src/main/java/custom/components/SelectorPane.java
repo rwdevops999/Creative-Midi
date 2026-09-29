@@ -65,7 +65,6 @@ public class SelectorPane extends HBox {
         });
 
         comboBox.setOnAction(e -> {
-            System.out.println("🔥 ActionEvent getriggerd!");
             if (!mute) {
                 selectedDevice = comboBox.getValue();
             }

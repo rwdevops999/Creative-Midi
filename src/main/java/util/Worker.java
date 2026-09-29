@@ -83,7 +83,6 @@ public class Worker implements Runnable {
                     public void meta(MetaMessage meta) {
                         // Type 47 staat voor het einde van de MIDI-track
                         if (meta.getType() == 47) {
-                            System.out.println("De MIDI is afgelopen!");
                             synchronized (lock) {
                                 lock.notify(); // Maak de hoofdthread wakker
                             }

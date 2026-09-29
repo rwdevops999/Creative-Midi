@@ -144,9 +144,6 @@ public class SearchResultsPane extends AnchorPane {
             InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
             if ("INS".equals(instrumentProvider.getSourceType())) {
                 patch = instrumentProvider.findLinkedPatch(patch);
-                if (patch == null) {
-                    System.out.println("PATCH NOT FOUND");
-                }
             }
 
             VoiceDetailDialog dialog = new VoiceDetailDialog(patch);

@@ -58,10 +58,6 @@ public class InsParser {
     }
 
     private String bepaalYamahaCategorie(int rawPc, int msb, int lsb, String lijstNaam, String voiceName) {
-        if (voiceName.contains("Acoustic Grand Piano") || rawPc == 0) {
-            System.out.println("DEBUG INPUT -> PC: " + rawPc + " | MSB: " + msb + " | LSB: " + lsb + " | Lijst: " + lijstNaam);
-        }
-
         // Uitzondering voor Drums en SFX op basis van de lijstnaam of LSB
         if (voiceName.toLowerCase().contains("drum") || lsb == 127 || msb == 127) {
             return "Drums & Percussion";
@@ -140,14 +136,9 @@ public class InsParser {
             logger.error("[INS_PARSER] Exception. CAUSE {}", ioe.getMessage());
         }
 
-        System.out.println("Gevonden secties in het bestand:");
-        for (String section : rawSections.keySet()) {
-            System.out.println(" -> [" + section + "]");
-        }
-
         // --- PASS 2: Parse into structured objects ---
 
-// --- PASS 2a: Filter de klanklijsten uit rawSections en zet de PC om naar Integer ---
+        // --- PASS 2a: Filter de klanklijsten uit rawSections en zet de PC om naar Integer ---
         Map<String, Map<Integer, String>> allRawPatchLists = new HashMap<>();
 
         for (Map.Entry<String, Map<String, String>> sectionEntry : rawSections.entrySet()) {
@@ -256,7 +247,6 @@ public class InsParser {
             }
             // Voeg de hoofdgroep toe aan de eindlijst van de parser
             rootGroups.add(instrumentGroup);
-            System.out.println("Gereed met sorteren op categorieën! Aantal groepen gemaakt: " + categorieGroepenMap.size());
         }
     }
 }

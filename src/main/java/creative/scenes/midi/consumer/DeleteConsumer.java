@@ -40,7 +40,5 @@ public class DeleteConsumer<T extends AEntity, P extends Pane> implements BiCons
             sceneActionsPane.getMidiPane().setCenter(new MidiDetailPane(sceneActionsPane.getMidiPane()));
 
         }
-
-        System.out.println("END");
     }
 }

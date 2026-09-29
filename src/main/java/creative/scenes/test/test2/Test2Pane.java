@@ -25,7 +25,7 @@ public class Test2Pane extends HBox {
         int value = 60;
         int baseOctave = -1;
         NoteEntity noteEntity = calcNote(value, baseOctave);
-        System.out.println("SELECTED NOTE = " + noteEntity.getName());
+        logger.info("SELECTED NOTE = " + noteEntity.getName());
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

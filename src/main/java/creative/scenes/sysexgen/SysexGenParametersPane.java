@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen;
 
 import creative.scenes.sysexgen.component.ParameterPane;
+import entity.sysex.DataBlock;
 import entity.sysex.InputBlock;
 import entity.sysex.Master;
 import javafx.geometry.Insets;
@@ -104,6 +105,12 @@ public class SysexGenParametersPane extends TabPane {
     public void setParameters (Master master, List<InputBlock> list) {
         this.master = master;
         this.parameterBlockList = list;
+
+        if (list.size() == 1 && consumer != null) {
+            InputBlock ib = list.get(0);
+            ib.setInputValues(new DataBlock(0, 0));
+            consumer.accept(list.get(0));
+        }
 
         buildTabs(parameterBlockList);
     }

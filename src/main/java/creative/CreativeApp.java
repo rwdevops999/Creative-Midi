@@ -28,7 +28,6 @@ public class CreativeApp extends Application {
 
         for (String arg : args) {
             if (TEST.equals(arg.toLowerCase(Locale.ROOT))) {
-                System.out.println("Activated TEST mode");
                 ApplicationInfo.getInstance().setTestMode(true);
             }
         }

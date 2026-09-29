@@ -95,6 +95,15 @@ public class SysexGenResultPane extends VBox {
 
     public Supplier<List<String>> sysexSupplier = () -> currentSysexList;
 
+    public void clear() {
+        currentSysexList = new ArrayList<>();
+
+        listView.getItems().clear();
+
+        if (sysexGenActionsPane != null) {
+            sysexGenActionsPane.setEnables(sysexSupplier);
+        }
+    }
     // ACCESSORS
     public SysexGenPane getSysexGenPane() {
         return parent;

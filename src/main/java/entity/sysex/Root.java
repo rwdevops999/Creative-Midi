@@ -45,9 +45,9 @@ public class Root implements IRoot {
                 if (addedValues) {
                     sb.append(" ").append(SYSEX_END);
                     sysexList.add(sb.toString());
-                    sb = new StringBuilder();
                 }
 
+                sb = new StringBuilder();
                 addedValues = false;
             }
         }
