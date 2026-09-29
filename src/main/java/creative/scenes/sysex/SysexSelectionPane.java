@@ -174,22 +174,7 @@ public class SysexSelectionPane extends GridPane {
                 });
             }
         }
-/*
-        if (!availableCategories.isEmpty()) {
-            if (!availableTypes.isEmpty()) {
-                typesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        if (! newValue.equals(selectedTypeBlock)) {
-                            selectedTypeBlock = newValue;
-                            processType();
-                        }
-                    }
-                });
-                add(typesComboBox, 4, row, 2, 1);
 
-            }
-        }
-*/
         logger.debug("[CM_SYSEXSELECTION_PANE] Built {}", getId());
     }
 
@@ -200,18 +185,16 @@ public class SysexSelectionPane extends GridPane {
     private void processMaster() {
         selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
         availableCategories = selectedMaster.getCategories();
-        if (selectedTypeBlock != null) {
+/*        if (selectedTypeBlock != null) {
             selectedCategory = selectedTypeBlock.getCategory();
             availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
         } else {
             selectedCategory = null;
             availableTypes = new ArrayList<>();
         }
+*/
 
-
-/*        inputBlockList = new ArrayList<>();
-
-        selectedTypeBlock = selectedMaster.getDefaultTypeBlock();
+        inputBlockList = new ArrayList<>();
 
         InputBlock.InputBlockBuilder inputBlockBuilder = new InputBlock.InputBlockBuilder();
 
@@ -259,7 +242,7 @@ public class SysexSelectionPane extends GridPane {
                     .build());
         }
 
-        processType(); */
+        processCategory();
     }
 
     private void processCategory() {
@@ -273,20 +256,18 @@ public class SysexSelectionPane extends GridPane {
         }
 
         availableTypes = selectedMaster.getTypesOfCategory(selectedCategory);
+
         if (selectedTypeBlock == null && ! availableTypes.isEmpty()) {
             selectedTypeBlock = availableTypes.get(0);
         }
+
+        processType();
     }
 
-    private void processType() {
-        System.out.println("PROCESSSING NEW TYPE");
-    }
-
-/*
     private void processType() {
         TypeBlock block = selectedTypeBlock;
-        if (block != null) {
-            ParameterBlock[] parameters = selectedTypeBlock.getParameters().getParameters();
+        if (block != null && block.getParameters() != null) {
+            ParameterBlock[] parameters = block.getParameters().getParameters();
 
             for (InputBlock inputBlock : inputBlockList) {
                 if (inputBlock.getUseMsbLsb()) {
@@ -308,13 +289,13 @@ public class SysexSelectionPane extends GridPane {
             }
         }
 
-        transmitInputBlocks();
+        forwardInputBlocks();
     }
-*/
-    private void transmitInputBlocks() {
+
+    private void forwardInputBlocks() {
         if (! inputBlockList.isEmpty()) {
             List<String> sysexList = selectedMaster.generateSysEx(inputBlockList);
-// TODO            getSysexPane().getSysexResultPane().renderSysex(sysexList);
+            getSysexPane().getSysexResultPane().renderSysex(sysexList);
 // TODO            getSysexPane().getSysexParametersPane().setParameters(selectedMaster, inputBlockList);
         }
     }

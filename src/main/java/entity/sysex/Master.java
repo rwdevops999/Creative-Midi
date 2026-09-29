@@ -29,7 +29,7 @@ public class Master extends Root {
     }
 
     public List<TypeBlock> getTypesOfCategory(String category) {
-        return typeBlocks.stream().filter(t -> t.getCategory().equals(category)).toList();
+        return typeBlocks.stream().filter(t -> t.getCategory() != null && t.getCategory().equals(category)).toList();
     }
 
     public TypeBlock getDefaultTypeBlock() {
