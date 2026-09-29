@@ -28,25 +28,23 @@ public class ActionsPane extends HBox {
     }
 
     private void buildPane(Supplier<List<String>> supplier) {
-        SysexActionButton sysExSend = new SysexActionButton("sendButton", "send sysex", "send", e-> {
-            List<String> sysexList = supplier.get();
+        List<String> sysexList = supplier.get();
 
+        SysexActionButton sysexSend = new SysexActionButton("sendButton", "send sysex", "send", e-> {
             List<SysexContent> contents = sysexList.stream().map(s -> {
                 SysexContent content = new SysexContent();
                 content.setContent(s);
                 return content;
             }).toList();
 
-            Sysex sysExToSend = new Sysex("Send", contents);
+            Sysex sysexToSend = new Sysex("Send", contents);
 
 // TODO            SysExWriter sysExWriter = new SysExWriter();
 //            sysExWriter.sendSysex(sysExToSend);
         });
-        getChildren().add(sysExSend);
+        getChildren().add(sysexSend);
 
-        SysexActionButton sysExAddToList = new SysexActionButton("addButton", "add sysex to list", "add-to-list", e-> {
-            List<String> sysexList = supplier.get();
-
+        SysexActionButton sysexAddToList = new SysexActionButton("addButton", "add sysex to list", "add-to-list", e-> {
             List<SysexContent> contents = sysexList.stream().map(s -> {
                 SysexContent content = new SysexContent();
                 content.setContent(s);
@@ -61,11 +59,20 @@ public class ActionsPane extends HBox {
 // TODO                SysExContainer.addSysex(sysEx);
             });
         });
-        getChildren().add(sysExAddToList);
+        getChildren().add(sysexAddToList);
 
-        SysexActionButton sysExExportToFile = new SysexActionButton("exportButton", "export sysex to file", "export-to-file", e-> {
+        SysexActionButton sysexExportToFile = new SysexActionButton("exportButton", "export sysex to file", "export-to-file", e-> {
 // TODO            SysExContainer.exportSysEx();
         });
-        getChildren().add(sysExExportToFile);
+        getChildren().add(sysexExportToFile);
+
+        sysexSend.setDisable(sysexList.isEmpty());
+        sysexAddToList.setDisable(sysexList.isEmpty());
+        sysexExportToFile.setDisable(sysexList.isEmpty());
+    }
+
+    public void setEnables(Supplier<List<String>> supplier) {
+        getChildren().clear();
+        buildPane(supplier);
     }
 }

@@ -45,6 +45,7 @@ public class SysexResultPane extends VBox {
     }
 
     ListView<String> listView = null;
+    ActionsPane actionsPane = null;
     private void buildPane() {
         logger.debug("[CM_SYSEX_RESULT_PANE] Building {}", getId());
 
@@ -69,7 +70,7 @@ public class SysexResultPane extends VBox {
         listView.setContextMenu(contextMenu);
         getChildren().add(listView);
 
-        ActionsPane actionsPane = new ActionsPane(sysexSupplier);
+        actionsPane = new ActionsPane(sysexSupplier);
         getChildren().add(actionsPane);
 
         logger.debug("[CM_SYSEX_RESULT_PANE] Built {}", getId());
@@ -84,6 +85,10 @@ public class SysexResultPane extends VBox {
 
         listView.getItems().clear();
         listView.getItems().addAll(items);
+
+        if (actionsPane != null) {
+            actionsPane.setEnables(sysexSupplier);
+        }
     }
 
     public Supplier<List<String>> sysexSupplier = () -> currentSysexList;
@@ -91,5 +96,9 @@ public class SysexResultPane extends VBox {
     // ACCESSORS
     public SysexPane getSysexPane() {
         return parent;
+    }
+
+    public ActionsPane getActionsPane() {
+        return actionsPane;
     }
 }
