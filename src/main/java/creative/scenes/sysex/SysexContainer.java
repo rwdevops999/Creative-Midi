@@ -70,7 +70,7 @@ public class SysexContainer {
         String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_EVENTS_FILE, "sysexevents.json");
 
         String sysexfile = sysexPath + "/" + filename;
-        logger.debug("[CM_SYSEX_CONTAINER] Exporting SYSEX messages to {}", sysexfile));
+        logger.debug("[CM_SYSEX_CONTAINER] Exporting SYSEX messages to {}", sysexfile);
 
         ObjectMapper mapperExport = JsonMapper.builder()
                 .enable(SerializationFeature.INDENT_OUTPUT)

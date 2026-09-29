@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen;
 
 import creative.scenes.sysex.SysexContainer;
+import creative.scenes.sysex.util.SysexWriter;
 import creative.scenes.sysexgen.component.SysexActionButton;
 import custom.dialog.NameDialog;
 import entity.sysex.Sysex;
@@ -42,7 +43,7 @@ public class SysexGenActionsPane extends HBox {
 
             Sysex sysexToSend = new Sysex("Send", contents);
 
-// TODO            SysExWriter sysExWriter = new SysExWriter();
+            SysexWriter sysExWriter = new SysexWriter();
 //            sysExWriter.sendSysex(sysExToSend);
         });
         getChildren().add(sysexSend);
