@@ -40,7 +40,6 @@ public class DeviceInfo {
         try {
             // This is from keyboard to Java
             if (device.getMaxTransmitters() != 0) {
-                logger.debug("[CM_DEVICE_INFO] Device {} is midiInputDevice", device.getDeviceInfo().getName());
                 if (! device.isOpen()) {
                     device.open();
                     ApplicationInfo.getInstance().setMidiInputDevice(device);
@@ -49,7 +48,6 @@ public class DeviceInfo {
 
             // This is from Java to Keyboard
             if (device.getMaxReceivers() != 0) {
-                logger.debug("[CM_DEVICE_INFO] Device {} is midiOutputDevice", device.getDeviceInfo().getName());
                 if (! device.isOpen()) {
                     device.open();
                     ApplicationInfo.getInstance().setMidiOutputDevice(device);

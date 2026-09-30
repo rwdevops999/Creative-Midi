@@ -44,7 +44,7 @@ public class SysexGenActionsPane extends HBox {
             Sysex sysexToSend = new Sysex("Send", contents);
 
             SysexWriter sysExWriter = new SysexWriter();
-//            sysExWriter.sendSysex(sysExToSend);
+            sysExWriter.sendSysex(sysexToSend);
         });
         getChildren().add(sysexSend);
 
