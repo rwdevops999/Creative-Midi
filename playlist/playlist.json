@@ -1,0 +1,272 @@
+[ {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  } ],
+  "songId" : 1,
+  "songInfo" : {
+    "performer" : "Nana Mouskouri",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "E"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 137
+  },
+  "songName" : "Weisse Rosen Aus Athen"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  } ],
+  "songId" : 2,
+  "songInfo" : {
+    "performer" : "Freddy Fender",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "C"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 3
+    },
+    "tempo" : 95
+  },
+  "songName" : "Vaya Con Dios"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 4"
+  } ],
+  "songId" : 4,
+  "songInfo" : {
+    "performer" : "Linda Rondstadt",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "C"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 120
+  },
+  "songName" : "Blue Bayou"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 3"
+  } ],
+  "songId" : 5,
+  "songInfo" : {
+    "performer" : "Pussycat",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "A#"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 122
+  },
+  "songName" : "Mississippi"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  } ],
+  "songId" : 7,
+  "songInfo" : {
+    "performer" : "Pierre Kartner",
+    "scale" : {
+      "pitch" : "minor",
+      "scale" : "G"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 3
+    },
+    "tempo" : 178
+  },
+  "songName" : "Het Kleine Cafe"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 4"
+  } ],
+  "songId" : 8,
+  "songInfo" : {
+    "performer" : "Vangelis",
+    "scale" : {
+      "pitch" : "minor",
+      "scale" : "D"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 3
+    },
+    "tempo" : 74
+  },
+  "songName" : "Conquest Of Paradise"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 7"
+  }, {
+    "receive" : "Intro 3 End",
+    "reply" : "Select Registration 2"
+  } ],
+  "songId" : 9,
+  "songInfo" : {
+    "performer" : "Boney M",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "C"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 114
+  },
+  "songName" : "Rivers Of Babylon"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 4"
+  } ],
+  "songId" : 11,
+  "songInfo" : {
+    "performer" : "Neil Diamong",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "G"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 120
+  },
+  "songName" : "Sweet Caroline"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  } ],
+  "songId" : 12,
+  "songInfo" : {
+    "performer" : "Andre Hazes",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "C"
+    },
+    "signature" : {
+      "beat" : 8,
+      "beats" : 6
+    },
+    "tempo" : 100
+  },
+  "songName" : "Een Beetje Verliefd"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 3"
+  } ],
+  "songId" : 13,
+  "songInfo" : {
+    "performer" : "ABBA",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "C"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 104
+  },
+  "songName" : "Fernando"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 6"
+  } ],
+  "songId" : 10,
+  "songInfo" : {
+    "performer" : "Peter Maffay",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "C"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 3
+    },
+    "tempo" : 64
+  },
+  "songName" : "Du"
+}, {
+  "mappings" : [ ],
+  "songId" : 3,
+  "songInfo" : {
+    "performer" : "Fats Domino",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "D"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 6
+    },
+    "tempo" : 80
+  },
+  "songName" : "Blueberry Hill"
+}, {
+  "mappings" : [ {
+    "receive" : "Intro 1 End",
+    "reply" : "Select Registration 2"
+  }, {
+    "receive" : "Intro 2 End",
+    "reply" : "Select Registration 6"
+  } ],
+  "songId" : 6,
+  "songInfo" : {
+    "performer" : "James LLoyd",
+    "scale" : {
+      "pitch" : "major",
+      "scale" : "A"
+    },
+    "signature" : {
+      "beat" : 4,
+      "beats" : 4
+    },
+    "tempo" : 92
+  },
+  "songName" : "Keep On Smiling"
+} ]
