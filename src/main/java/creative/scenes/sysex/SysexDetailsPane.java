@@ -6,9 +6,11 @@ import creative.scenes.sysex.data.SysexChangeHandler;
 import creative.scenes.sysex.data.SysexState;
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -86,28 +88,33 @@ public class SysexDetailsPane extends VBox {
             ApplicationInfo.getInstance().setCurrentSysex(new Sysex(sysex));
         }
 
-        dsSysexValue[0] = new SimpleStringProperty();
+        for (int i = 0; i < SYSEX_VALUES; i++) {
+            dsSysexValue[i] = new SimpleStringProperty("");
+        }
+
+/*        dsSysexValue[0] = new SimpleStringProperty();
         addPanes.add(new AddableSysexPane(this, 0));
         for (int i = 1; i < SYSEX_VALUES; i++) {
             dsSysexValue[i] = new SimpleStringProperty();
             addPanes.add(null);
         }
-
+*/
         parent = owner;
 
         showPaneBorder(this, getColor("border", "red", null));
         setPaneWidthAsPercentage(this, owner, 60);
         setPaneBackground(this);
 
-        for (int i =0; i < SYSEX_VALUES; i++) {
-            dsSysexValue[i] = new SimpleStringProperty();
-        }
+//        for (int i =0; i < SYSEX_VALUES; i++) {
+//            dsSysexValue[i] = new SimpleStringProperty();
+//        }
 
         buildPane();
     }
 
 
-    private void setupDatasource() {
+    private void setupNameDatasource(String name) {
+        dsSysexName.set(name);
         dsSysexName.addListener((observable, oldValue, newValue) -> {
             if (workingSysex != null) {
                 workingSysex.setName(newValue);
@@ -139,16 +146,9 @@ public class SysexDetailsPane extends VBox {
             return;
         }
 
-        setupDatasource();
-
-        dsSysexName.setValue(workingSysex.getName());
+        setupNameDatasource(workingSysex.getName());
         getChildren().add(new SysexNamePane(this, dsSysexName, changeHandler));
 
-/*        getChildren().add(addPanes.get(0));
-        if (!workingSysex.getList().isEmpty()) {
-            dsSysexValue[0].setValue(workingSysex.getList().get(0).getContent());
-        }
-*/
         buildDynamicPane();
 
         logger.debug("[CM_SYSEX_DETAILS_PANE] Built {}", getId());
@@ -157,23 +157,21 @@ public class SysexDetailsPane extends VBox {
     private void buildDynamicPane() {
         int index = 0;
 
-        dsSysexValue[0].setValue("");
-        AddableSysexPane pane = new AddableSysexPane(this, index);
-        addPanes.add(pane);
-        getChildren().add(pane);
-        bindProperty(index, pane);
-
         for (SysexContent sysexContent : workingSysex.getList()) {
-            if (index != 0) {
-                dsSysexValue[index].setValue(sysexContent.getContent());
-                pane = new AddableSysexPane(this, index);
-                addPanes.add(pane);
-                pane.setId("Deletable");
-                getChildren().add(pane);
-                bindProperty(index, pane);
-            } else {
+            dsSysexValue[index] = new SimpleStringProperty("");
+            if (sysexContent != null) {
                 dsSysexValue[index].set(sysexContent.getContent());
             }
+
+            AddableSysexPane pane = new AddableSysexPane(this, index);
+            pane.setButtonId(index);
+
+            pane.setId("Deletable");
+
+            addPanes.add(pane);
+            getChildren().add(pane);
+
+            bindProperty(index, pane);
 
             index++;
         }
@@ -200,37 +198,23 @@ public class SysexDetailsPane extends VBox {
     }
 
     private void removeDeletable() {
-        getChildren().removeIf(node -> "Deletable".equals(node.getId()));
+        getChildren().removeIf(p -> "Deletable".equals(p.getId()));
     }
 
     public void addPane(int id) {
-        for (int i = addPanes.size() - 2; i > id; i-- ) {
-            AddableSysexPane addPane = addPanes.get(i);
-            if (addPane != null) {
-                addPane.setButtonId(i+1);
-            }
-            addPanes.set(i+1, addPane);
+        if (workingSysex != null) {
+            workingSysex.getList().add(id, new SysexContent(""));
         }
-
-        if (id+1 < addPanes.size()) {
-            addPanes.set(id+1, new AddableSysexPane(this, id+1));
-        }
-
+        
         removeDeletable();
         buildDynamicPane();
     }
 
     public void removePane(int id) {
         if (id > 0) {
-            for (int i = id; i < addPanes.size() - 1; i++) {
-                AddableSysexPane addPane = addPanes.get(i+1);
-                if (addPane != null) {
-                    addPane.setButtonId(i);
-                }
-                addPanes.set(i, addPane);
+            if (workingSysex != null && workingSysex.getList().size() > 0) {
+                workingSysex.getList().remove(id);
             }
-
-            addPanes.set(addPanes.size()-1, null);
 
             removeDeletable();
             buildDynamicPane();
