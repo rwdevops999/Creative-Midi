@@ -20,6 +20,10 @@ public class PlaylistPane extends BorderPane {
 
         setId("PlaylistPane");
 
+        if (! PlaylistContainer.isFileLoaded()) {
+            PlaylistContainer.loadPlaylist();
+        }
+
         buildPane();
     }
 
