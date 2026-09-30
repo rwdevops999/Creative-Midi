@@ -47,9 +47,7 @@ public class Initializer {
 
         // 4. Scan for devices
         boolean autoSelectDevice = PropertyContainer.getPropertyAsBoolean(PropertyType.System, PropertyContainer.AUTO_SELECT_DEVICE, false);
-//        String defaultDeviceName = PropertyContainer.getPropertyAsString("default.device.name", "");
-        // TODO Replace this from keyboard properties file
-        String defaultDeviceName = "Digital Keyboard-1";
+        String defaultDeviceName = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.DEVICE_NAME, "Digital Keyboard");
 
         DeviceScanner task = new DeviceScanner(autoSelectDevice, defaultDeviceName, data -> {
             Registry.publish("DeviceSelector", data);
@@ -58,7 +56,10 @@ public class Initializer {
         task.setOnSucceeded(e -> {
             logger.info("[CM_INIT] Device Scanning Task Completed");
         });
-        new Thread(task).start();
+
+        Thread thread = new Thread(task);
+        thread.start();
+        ApplicationInfo.getInstance().setDeviceScannerThread(thread);
 
         // 5. Loading the voices (keyboard files)
         // loading the voices
@@ -67,9 +68,10 @@ public class Initializer {
         ApplicationInfo.getInstance().setVoiceFilenames(voiceFileNames);
 
         // 6. Load keyboard properties
+        // TODO Solve this to properties file
         Path keyboardPath = Paths.get(propertiesDirectory, "keyboard.properties"); // Use your actual path
         Properties keyboardProperties = propertyLoader.loadPropertiesFromPath(keyboardPath);
-        PropertyContainer.setProperties(PropertyType.Keyboard, keyboardProperties);
+        PropertyContainer.setProperties(PropertyType.GeneralKeyboard, keyboardProperties);
 
         // 7. Load midi file
         String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi");

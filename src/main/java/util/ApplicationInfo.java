@@ -106,4 +106,9 @@ public class ApplicationInfo {
      */
     private Sysex currentSysex;
     private Sysex dirtySysex = null;
+
+    /**
+     * Device Scanner Thread
+     */
+    private Thread deviceScannerThread;
 }

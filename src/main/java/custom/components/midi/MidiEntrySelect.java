@@ -347,8 +347,10 @@ public class MidiEntrySelect extends GridPane {
     }
 
     private void renderNotesCombo(int currentRow) {
-//        Integer baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, "base.octave", 0);
-        Integer baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.System, "base.octave", -1);
+        Integer baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, null);
+        if (baseOctave == null) {
+            baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.System, PropertyContainer.BASE_OCTAVE, -1);
+        }
         ObservableList<NoteEntity> notes = FXCollections.observableList(Util.calcNotes(baseOctave));
 
         ComboBox<NoteEntity> noteSelect = new ComboBox<>(notes);

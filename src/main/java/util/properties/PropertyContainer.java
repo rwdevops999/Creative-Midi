@@ -21,10 +21,13 @@ public class PropertyContainer {
 
     // KEYBOARD CONSTANTS
     public static String DEFAULT_KEYBOARD = "default.voice.file";
+    public static String BASE_OCTAVE="base.octave";
+    public static String DEVICE_NAME="device.name";
 
     private static Properties systemProperties = new Properties();
     private static Properties pathProperties = new Properties();
     private static Properties keyboardProperties = new Properties();
+    private static Properties generalKeyboardProperties = new Properties();
 
     public static void setProperties(PropertyType type, Properties props) {
         switch (type) {
@@ -33,6 +36,9 @@ public class PropertyContainer {
                 break;
             case Path:
                 pathProperties = props;
+                break;
+            case GeneralKeyboard:
+                generalKeyboardProperties = props;
                 break;
             case Keyboard:
                 keyboardProperties = props;
@@ -45,6 +51,7 @@ public class PropertyContainer {
             case System -> (String)systemProperties.get(key);
             case Path -> (String)pathProperties.get(key);
             case Keyboard -> (String)keyboardProperties.get(key);
+            case GeneralKeyboard -> (String)generalKeyboardProperties.get(key);
             default -> null;
         };
 
@@ -55,11 +62,12 @@ public class PropertyContainer {
         return Boolean.parseBoolean(property);
     }
 
-    public static Integer getPropertyAsInteger (PropertyType type, String key, int defaultvalue) {
+    public static Integer getPropertyAsInteger (PropertyType type, String key, Integer defaultvalue) {
         String property = switch (type) {
             case System -> (String)systemProperties.get(key);
             case Path -> (String)pathProperties.get(key);
             case Keyboard -> (String)keyboardProperties.get(key);
+            case GeneralKeyboard -> (String)generalKeyboardProperties.get(key);
             default -> null;
         };
 
@@ -75,6 +83,7 @@ public class PropertyContainer {
             case System -> (String)systemProperties.get(key);
             case Path -> (String)pathProperties.get(key);
             case Keyboard -> (String)keyboardProperties.get(key);
+            case GeneralKeyboard -> (String)generalKeyboardProperties.get(key);
             default -> null;
         };
 
