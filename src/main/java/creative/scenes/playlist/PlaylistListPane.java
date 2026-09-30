@@ -29,7 +29,7 @@ public class PlaylistListPane extends VBox {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
 
         setPaneWidthAsPercentage(this, owner, 30);
         setPaneBackground(this);
@@ -43,7 +43,7 @@ public class PlaylistListPane extends VBox {
 
         playlistListView = new ListView<String>();
         playlistListView.setId("PlaylistListView");
-//        playlistListView.setItems(FXCollections.observableArrayList(PlaylistContainer.getSongnamesFromPlaylist()));
+        playlistListView.setItems(FXCollections.observableArrayList(PlaylistContainer.getSongnamesFromPlaylist()));
         playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
         });
         VBox.setVgrow(playlistListView, Priority.ALWAYS);
