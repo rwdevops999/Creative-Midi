@@ -26,7 +26,7 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
         SceneActionsPane sceneActionsPane = (SceneActionsPane) pane;
         SysexPane sysexPane = sceneActionsPane.getSysexPane();
 
-        Sysex sysex = new Sysex();
+        Sysex sysex = new Sysex("Unknown");
 
         ApplicationInfo.getInstance().setCurrentSysex(sysex);
 

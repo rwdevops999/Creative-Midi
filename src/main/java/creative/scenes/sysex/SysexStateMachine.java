@@ -17,6 +17,10 @@ public class SysexStateMachine {
         transitionTo(initialState, true);
     }
 
+    public SysexState getLastState() {
+        return stateHistory.peek();
+    }
+
     public void transitionTo(SysexState newState, boolean clearHistory) {
         if (clearHistory) {
             stateHistory.clear();
@@ -37,6 +41,17 @@ public class SysexStateMachine {
         }
     }
 
+    public void undoStateWithSkips(SysexState skipState) {
+        if (!stateHistory.isEmpty()) {
+            while (stateHistory.peek().equals(skipState)) {
+                stateHistory.pop();
+            }
+
+            this.currentState = stateHistory.pop();
+            updateUI();
+        }
+    }
+
     // De centrale plek waar buttons worden en-/disabled op basis van de state
     private void updateUI() {
         switch (currentState) {
@@ -47,8 +62,11 @@ public class SysexStateMachine {
             case NEW -> {
                 CommunicationModel.setStatus("SYSEX STATE = NEW");
             }
-            case DIRTY -> {
-                CommunicationModel.setStatus("SYSEX STATE = DIRTY");
+            case ADDABLE -> {
+                CommunicationModel.setStatus("SYSEX STATE = ADDABLE");
+            }
+            case UPDATABLE -> {
+                CommunicationModel.setStatus("SYSEX STATE = UPDATABLE");
             }
         }
     }
