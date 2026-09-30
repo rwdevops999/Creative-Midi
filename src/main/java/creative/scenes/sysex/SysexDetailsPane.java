@@ -69,7 +69,7 @@ public class SysexDetailsPane extends VBox {
         if (workingSysex != null && ! workingSysex.equals(originalSysex)) {
             ApplicationInfo.getInstance().setDirtySysex(workingSysex);
 
-            if (originalSysex.getName().equals(dsSysexName.get())) {
+            if (originalSysex.getName().equals(dsSysexName.get()) || (SysexContainer.containsSysex(dsSysexName.get()))) {
                 stateMachine.transitionTo(SysexState.UPDATABLE, false, supplier);
             } else {
                 stateMachine.transitionTo(SysexState.ADDABLE, false, supplier);
@@ -94,8 +94,6 @@ public class SysexDetailsPane extends VBox {
             dsSysexValue[i] = new SimpleStringProperty();
             addPanes.add(null);
         }
-
-        setupDatasource();
 
         parent = owner;
 
@@ -143,14 +141,16 @@ public class SysexDetailsPane extends VBox {
             return;
         }
 
+        setupDatasource();
+
         dsSysexName.setValue(workingSysex.getName());
         getChildren().add(new SysexNamePane(this, dsSysexName, changeHandler));
 
-        getChildren().add(addPanes.get(0));
+/*        getChildren().add(addPanes.get(0));
         if (!workingSysex.getList().isEmpty()) {
             dsSysexValue[0].setValue(workingSysex.getList().get(0).getContent());
         }
-
+*/
         buildDynamicPane();
 
         logger.debug("[CM_SYSEX_DETAILS_PANE] Built {}", getId());
@@ -158,20 +158,23 @@ public class SysexDetailsPane extends VBox {
 
     private void buildDynamicPane() {
         int index = 0;
+
+        dsSysexValue[0].setValue("");
+        AddableSysexPane pane = new AddableSysexPane(this, index);
+        addPanes.add(pane);
+        getChildren().add(pane);
+        bindProperty(index, pane);
+
         for (SysexContent sysexContent : workingSysex.getList()) {
             if (index != 0) {
                 dsSysexValue[index].setValue(sysexContent.getContent());
-                AddableSysexPane pane = new AddableSysexPane(this, index);
+                pane = new AddableSysexPane(this, index);
                 addPanes.add(pane);
                 pane.setId("Deletable");
                 getChildren().add(pane);
                 bindProperty(index, pane);
             } else {
                 dsSysexValue[index].set(sysexContent.getContent());
-                AddableSysexPane pane = addPanes.get(index);
-                if (pane != null) {
-                    bindProperty(index, pane);
-                }
             }
 
             index++;
@@ -197,36 +200,6 @@ public class SysexDetailsPane extends VBox {
             changeHandler.handle();
         });
     }
-/*
-
-        for (AddableSysexPane addPane : addPanes) {
-            if (addPane != null) {
-                if (index > 0) {
-                    addPane.setId("Deletable");
-                    getChildren().add(addPane);
-                }
-
-                final int fixedIntIndex = index;
-
-                addPane.getInputField().textProperty().bindBidirectional(dsSysexValue[fixedIntIndex]);
-                dsSysexValue[index].addListener((observable, oldValue, newValue) -> {
-                        if (newValue != null && !newValue.isEmpty()) {
-                            if (workingSysex.getList().size() > fixedIntIndex) {
-                                workingSysex.getList().set(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
-                            } else {
-                                workingSysex.getList().add(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
-                            }
-                        } else {
-                            if (! workingSysex.getList().isEmpty()) {
-                                workingSysex.getList().remove(fixedIntIndex);
-                            }
-                        }
-                        changeHandler.handle();
-                });
-
-                index++;
-            }
-        } */
 
     private void removeDeletable() {
         getChildren().removeIf(node -> "Deletable".equals(node.getId()));

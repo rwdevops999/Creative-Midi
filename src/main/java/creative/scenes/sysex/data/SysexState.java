@@ -6,5 +6,6 @@ public enum SysexState {
     UPDATABLE,
     ADDABLE,
     LOADED,
-    ADDED;
+    ADDED,
+    UPDATED;
 }

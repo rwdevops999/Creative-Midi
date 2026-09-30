@@ -88,6 +88,10 @@ public class SysexContainer {
         sysexList.add(sysex);
     }
 
+    public static boolean containsSysex(String name) {
+        return sysexList.stream().anyMatch(s -> s.getName().equals(name));
+    }
+
     public static void deleteSysex(Sysex sysex) {
         sysexList.removeIf(s -> s.getName().equals(sysex.getName()));
     }

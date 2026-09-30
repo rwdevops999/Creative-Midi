@@ -91,6 +91,7 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
                 CommunicationModel.setStatus("SYSEX STATE = ADDED");
             }
             case LOADED -> {
@@ -99,6 +100,14 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
                 CommunicationModel.setStatus("SYSEX STATE = LOADED");
+            }
+            case UPDATED -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false );
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
+                CommunicationModel.setStatus("SYSEX STATE = UPDATED");
             }
         }
     }
