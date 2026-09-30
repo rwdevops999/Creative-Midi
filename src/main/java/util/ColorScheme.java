@@ -43,6 +43,9 @@ public class ColorScheme {
         colors.put(new ColorKey("border", "blue", null), Color.BLUE);
         colors.put(new ColorKey("border", "orange", null), Color.ORANGE);
 
+        // sysex entries
+        colors.put(new ColorKey("sysex", "entries", "full"), Color.RED);
+
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);
         colors.put(new ColorKey("test", "green", null), Color.GREEN);

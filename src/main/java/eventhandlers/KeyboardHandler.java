@@ -49,37 +49,44 @@ public class KeyboardHandler<T extends ActionEvent> implements EventHandler<T> {
         String propertyPath = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.PROPERTIES_PATH, "./properties");
         PropertyLoader propertyLoader = new PropertyLoader();
 
-        Path path = Paths.get(propertyPath, keyboard + ".properties"); // Use your actual path
-        Properties props = propertyLoader.loadPropertiesFromPath(path);
-        PropertyContainer.setProperties(PropertyType.Keyboard, props);
+        String filename = propertyPath + "/" + keyboard + ".properties";
+        String loadedFilename = ApplicationInfo.getInstance().getKeyboardProperties();
 
-        Thread thread = ApplicationInfo.getInstance().getDeviceScannerThread();
-        if (thread != null) {
-            thread.interrupt();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+        if (! filename.equals(loadedFilename)) {
+            ApplicationInfo.getInstance().setKeyboardProperties(filename);
+
+            Path path = Paths.get(propertyPath, keyboard + ".properties"); // Use your actual path
+            Properties props = propertyLoader.loadPropertiesFromPath(path);
+            PropertyContainer.setProperties(PropertyType.Keyboard, props);
+
+            Thread thread = ApplicationInfo.getInstance().getDeviceScannerThread();
+            if (thread != null) {
+                thread.interrupt();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
+
+            String defaultDeviceName = PropertyContainer.getPropertyAsString(PropertyType.Keyboard, PropertyContainer.DEVICE_NAME, null);
+            if (defaultDeviceName == null) {
+                DialogFactory.renderErrorDialog("Default device name not found in properties file");
+            }
+
+            DeviceScanner task = new DeviceScanner(false, defaultDeviceName, data -> {
+                Registry.publish("DeviceSelector", data);
+            });
+
+            task.setOnSucceeded(e -> {
+                logger.info("[CM_KEYBOARD_HANDLER] Device Scanning Task Completed");
+            });
+
+            thread = new Thread(task);
+            thread.start();
+
+            ApplicationInfo.getInstance().setDeviceScannerThread(thread);
         }
-
-        String defaultDeviceName = PropertyContainer.getPropertyAsString(PropertyType.Keyboard, PropertyContainer.DEVICE_NAME, null);
-        if (defaultDeviceName == null) {
-            DialogFactory.renderErrorDialog("Default device name not found in properties file");
-        }
-
-        DeviceScanner task = new DeviceScanner(false, defaultDeviceName, data -> {
-            Registry.publish("DeviceSelector", data);
-        });
-
-        task.setOnSucceeded(e -> {
-            logger.info("[CM_KEYBOARD_HANDLER] Device Scanning Task Completed");
-        });
-
-        thread = new Thread(task);
-        thread.start();
-
-        ApplicationInfo.getInstance().setDeviceScannerThread(thread);
 
         logger.debug("[CM_KEYBOARD_HANDLER] Handled event {}", event.getClass().getSimpleName());
     }

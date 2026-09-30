@@ -9,6 +9,7 @@ import creative.scenes.sysex.data.SysexState;
 import entity.AEntity;
 import entity.midi.Midi;
 import entity.sysex.Sysex;
+import entity.sysex.SysexContent;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
         SysexPane sysexPane = sceneActionsPane.getSysexPane();
 
         Sysex sysex = new Sysex("Unknown");
+        sysex.getList().add(new SysexContent(""));
 
         ApplicationInfo.getInstance().setCurrentSysex(sysex);
 

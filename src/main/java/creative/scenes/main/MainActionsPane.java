@@ -2,6 +2,7 @@ package creative.scenes.main;
 
 import creative.scenes.IScene;
 import creative.scenes.midi.MidiScene;
+import creative.scenes.playlist.PlaylistScene;
 import creative.scenes.sysex.SysexScene;
 import creative.scenes.sysexgen.SysexGenScene;
 import creative.scenes.voice.VoiceScene;
@@ -54,6 +55,7 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, SIZE, "midiButton", "handle midi", "midi_out", new MidiScene()), 0, 0);
         add(new ActionButton(ownerScene, SIZE, "sysexButton", "handle sysex", "sysex_out", new SysexScene()), 1, 0);
         add(new ActionButton(ownerScene, SIZE, "voiceButton", "handle voice", "voice_search", new VoiceScene()), 2, 0);
+        add(new ActionButton(ownerScene, SIZE, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 3, 0);
         add(new ActionButton(ownerScene, SIZE, "sysexButton", "Generate SysEx", "sysex-generator", new SysexGenScene()), 4, 0);
 
 /*        add(new ActionButton(ownerScene,"sysexButton", "handle sysex", "sysex_out", new SysExScene()), 1, 0);

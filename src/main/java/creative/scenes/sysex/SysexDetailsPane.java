@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class SysexDetailsPane extends VBox {
         if (workingSysex != null && ! workingSysex.equals(originalSysex)) {
             ApplicationInfo.getInstance().setDirtySysex(workingSysex);
 
-            if (originalSysex.getName().equals(dsSysexName.get()) || (SysexContainer.containsSysex(dsSysexName.get()))) {
+            if (originalSysex.getName().equals(dsSysexName.get()) && (SysexContainer.containsSysex(dsSysexName.get()))) {
                 stateMachine.transitionTo(SysexState.UPDATABLE, false, supplier);
             } else {
                 stateMachine.transitionTo(SysexState.ADDABLE, false, supplier);
@@ -92,26 +93,14 @@ public class SysexDetailsPane extends VBox {
             dsSysexValue[i] = new SimpleStringProperty("");
         }
 
-/*        dsSysexValue[0] = new SimpleStringProperty();
-        addPanes.add(new AddableSysexPane(this, 0));
-        for (int i = 1; i < SYSEX_VALUES; i++) {
-            dsSysexValue[i] = new SimpleStringProperty();
-            addPanes.add(null);
-        }
-*/
         parent = owner;
 
         showPaneBorder(this, getColor("border", "red", null));
         setPaneWidthAsPercentage(this, owner, 60);
         setPaneBackground(this);
 
-//        for (int i =0; i < SYSEX_VALUES; i++) {
-//            dsSysexValue[i] = new SimpleStringProperty();
-//        }
-
         buildPane();
     }
-
 
     private void setupNameDatasource(String name) {
         dsSysexName.set(name);
@@ -175,6 +164,17 @@ public class SysexDetailsPane extends VBox {
 
             index++;
         }
+
+        Label addLabel = new Label();
+        String message = "Still " + (SYSEX_VALUES - workingSysex.getList().size()) + " entries allowed";
+        addLabel.setId("Deletable");
+        if (SYSEX_VALUES - workingSysex.getList().size() == 0) {
+            message = "No more entries allowed";
+            addLabel.setTextFill(getColor("sysex", "entries", "full"));
+        }
+
+        addLabel.setText(message);
+        getChildren().add(addLabel);
     }
 
     private void bindProperty(int index, AddableSysexPane pane) {
@@ -203,9 +203,11 @@ public class SysexDetailsPane extends VBox {
 
     public void addPane(int id) {
         if (workingSysex != null) {
-            workingSysex.getList().add(id, new SysexContent(""));
+            if (workingSysex.getList().size() < SYSEX_VALUES) {
+                workingSysex.getList().add(id+1, new SysexContent(""));
+            }
         }
-        
+
         removeDeletable();
         buildDynamicPane();
     }

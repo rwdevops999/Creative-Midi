@@ -111,4 +111,9 @@ public class ApplicationInfo {
      * Device Scanner Thread
      */
     private Thread deviceScannerThread;
+
+    /**
+     * Indiciation which keyboard file is loaded
+     */
+    private String keyboardProperties = null;
 }
