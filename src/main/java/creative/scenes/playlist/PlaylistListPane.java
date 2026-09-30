@@ -1,6 +1,9 @@
 package creative.scenes.playlist;
 
 import entity.playlist.Song;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +30,24 @@ public class PlaylistListPane extends VBox {
         parent = owner;
 
         showPaneBorder(this, getColor("border", "red", null));
+
         setPaneWidthAsPercentage(this, owner, 30);
         setPaneBackground(this);
 
         buildPane();
     }
 
+    private ListView<String> playlistListView;
     private void buildPane() {
         logger.debug("[CM_PLAYLIST_LIST_PANE] Building {}", getId());
+
+        playlistListView = new ListView<String>();
+        playlistListView.setId("PlaylistListView");
+//        playlistListView.setItems(FXCollections.observableArrayList(PlaylistContainer.getSongnamesFromPlaylist()));
+        playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        });
+        VBox.setVgrow(playlistListView, Priority.ALWAYS);
+        getChildren().add(playlistListView);
 
         logger.debug("[CM_PLAYLIST_LIST_PANE] Built {}", getId());
     }
