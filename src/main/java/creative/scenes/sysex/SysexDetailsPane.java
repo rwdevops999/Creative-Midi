@@ -13,6 +13,7 @@ import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -36,6 +37,13 @@ public class SysexDetailsPane extends VBox {
     private SysexPane parent;
     private final StringProperty dsSysexName = new SimpleStringProperty();
     private final StringProperty[] dsSysexValue = new StringProperty[SYSEX_VALUES];
+
+    private Consumer<Integer> changedConsumer = new Consumer<Integer>() {
+        @Override
+        public void accept(Integer newState) {
+            System.out.println("Data has changed");
+        }
+    };
 
     public SysexDetailsPane(SysexPane owner) {
         this();
@@ -68,7 +76,7 @@ public class SysexDetailsPane extends VBox {
             return;
         }
 
-        getChildren().add(new SysexNamePane(this, dsSysexName));
+        getChildren().add(new SysexNamePane(this, dsSysexName, changedConsumer));
 
         getChildren().add(addPanes.get(0));
 

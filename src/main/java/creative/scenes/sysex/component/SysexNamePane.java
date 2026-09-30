@@ -1,5 +1,6 @@
 package creative.scenes.sysex.component;
 
+import creative.scenes.sysex.SysexStateMachine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
@@ -12,6 +13,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.function.Consumer;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -40,7 +43,7 @@ public class SysexNamePane extends GridPane {
         getRowConstraints().add(rowConstraints);
     }
 
-    public SysexNamePane(Pane owner, StringProperty dsProperty) {
+    public SysexNamePane(Pane owner, StringProperty dsProperty, Consumer<Integer> changedConsumer) {
         this();
 
         resizePaneWidth(this, owner, 90);
@@ -50,6 +53,9 @@ public class SysexNamePane extends GridPane {
 
         TextField nameTextField = new TextField();
         nameTextField.textProperty().bindBidirectional(dsProperty);
+        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            changedConsumer.accept(SysexStateMachine.STATE_DIRTY);
+        });
         add(nameTextField, 1, 0, 4, 1);
     }
 }

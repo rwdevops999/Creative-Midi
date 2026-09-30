@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,5 +30,24 @@ public class Sysex extends AEntity {
         this();
         this.name = name;
         this.list = list;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Sysex other)) {
+            return false;
+        }
+
+        return Objects.equals(this.name, other.name) &&
+                Objects.deepEquals(this.list, other.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, list);
     }
 }

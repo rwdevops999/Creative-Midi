@@ -3,8 +3,11 @@ package creative.scenes.sysex;
 import creative.scenes.SceneActionsPane;
 
 public class SysexStateMachine {
+    public static final int STATE_NIL=-1;
+
     public static final int STATE_IDLE=0;
-    public static final int STATE_NEW=1;
+    public static final int STATE_DIRTY=1;
+    public static final int STATE_NEW=2;
 
     private static int runningState;
 
@@ -24,9 +27,14 @@ public class SysexStateMachine {
 
     private static void handleState() {
         switch (runningState) {
+            case STATE_NIL:
+                break;
             case STATE_IDLE:
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 break;
+            case STATE_DIRTY:
+                break;
+            case STATE_NEW:
         }
     }
 }
