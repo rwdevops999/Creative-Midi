@@ -1,40 +1,63 @@
 package creative.scenes.sysex;
 
+import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
+import creative.scenes.sysex.data.SysexState;
+import entity.sysex.Sysex;
+
+import java.util.Stack;
 
 public class SysexStateMachine {
-    public static final int STATE_NIL=-1;
-
-    public static final int STATE_IDLE=0;
-    public static final int STATE_DIRTY=1;
-    public static final int STATE_NEW=2;
-
-    private static int runningState;
-
-    public static void setState(int state) {
-        runningState = state;
-        refresh();
-    }
-
-    public static void refresh() {
-        handleState();
-    }
+    private SysexState currentState;
+    private final Stack<SysexState> stateHistory = new Stack<>();
 
     private static SceneActionsPane sceneActionsPane;
-    public static void setActionsPane (SceneActionsPane actionsPane) {
-        sceneActionsPane = actionsPane;
+
+    public SysexStateMachine(SysexState initialState) {
+        transitionTo(initialState, true);
     }
 
-    private static void handleState() {
-        switch (runningState) {
-            case STATE_NIL:
-                break;
-            case STATE_IDLE:
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                break;
-            case STATE_DIRTY:
-                break;
-            case STATE_NEW:
+    public void transitionTo(SysexState newState, boolean clearHistory) {
+        if (clearHistory) {
+            stateHistory.clear();
         }
+
+        if (currentState != null) {
+            stateHistory.push(currentState);
+        }
+        this.currentState = newState;
+        updateUI();
+    }
+
+    // Herstel de vorige state
+    public void undoState() {
+        if (!stateHistory.isEmpty()) {
+            this.currentState = stateHistory.pop();
+            updateUI();
+        }
+    }
+
+    // De centrale plek waar buttons worden en-/disabled op basis van de state
+    private void updateUI() {
+        switch (currentState) {
+            case EMPTY -> {
+                CommunicationModel.setStatus("SYSEX STATE = EMPTY");
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+            }
+            case NEW -> {
+                CommunicationModel.setStatus("SYSEX STATE = NEW");
+            }
+            case DIRTY -> {
+                CommunicationModel.setStatus("SYSEX STATE = DIRTY");
+            }
+        }
+    }
+
+    public SysexState getCurrentState() {
+        return currentState;
+    }
+
+    public static void setActionsPane(SceneActionsPane sceneActionsPane) {
+        SysexStateMachine.sceneActionsPane = sceneActionsPane;
     }
 }

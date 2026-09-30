@@ -2,7 +2,10 @@ package creative.scenes.sysex;
 
 import creative.scenes.sysex.component.AddableSysexPane;
 import creative.scenes.sysex.component.SysexNamePane;
+import creative.scenes.sysex.data.SysexChangeHandler;
+import creative.scenes.sysex.data.SysexState;
 import entity.sysex.Sysex;
+import entity.sysex.SysexContent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -13,6 +16,7 @@ import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static util.ColorScheme.getColor;
@@ -23,8 +27,12 @@ import static util.Util.setPaneWidthAsPercentage;
 public class SysexDetailsPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(SysexDetailsPane.class);
 
+    private SysexStateMachine stateMachine = null;
+
     public SysexDetailsPane() {
         super();
+
+        stateMachine = new SysexStateMachine(SysexState.EMPTY);
 
         setId("SysexDetailsPane");
 
@@ -38,22 +46,41 @@ public class SysexDetailsPane extends VBox {
     private final StringProperty dsSysexName = new SimpleStringProperty();
     private final StringProperty[] dsSysexValue = new StringProperty[SYSEX_VALUES];
 
-    private Consumer<Integer> changedConsumer = new Consumer<Integer>() {
+    private Sysex workingSysex = new Sysex();
+
+    public SysexStateMachine getStateMachine() {
+        return stateMachine;
+    }
+
+    private SysexChangeHandler changeHandler = new SysexChangeHandler() {
         @Override
-        public void accept(Integer newState) {
-            System.out.println("Data has changed");
+        public void handle() {
+            if (! workingSysex.equals(ApplicationInfo.getInstance().getCurrentSysex())) {
+                ApplicationInfo.getInstance().setDirtySysex(workingSysex);
+                stateMachine.transitionTo(SysexState.DIRTY, false);
+            } else {
+                ApplicationInfo.getInstance().setDirtySysex(null);
+                stateMachine.undoState();
+            }
         }
     };
 
-    public SysexDetailsPane(SysexPane owner) {
+    public SysexDetailsPane(SysexPane owner, Sysex sysex) {
         this();
 
+        if (sysex != null) {
+            this.workingSysex = sysex;
+            ApplicationInfo.getInstance().setCurrentSysex(new Sysex(sysex));
+        }
+
         dsSysexValue[0] = new SimpleStringProperty();
-        addPanes.add(new AddableSysexPane(this, 0, dsSysexValue[0]));
+        addPanes.add(new AddableSysexPane(this, 0));
         for (int i = 1; i < SYSEX_VALUES; i++) {
             dsSysexValue[i] = new SimpleStringProperty();
             addPanes.add(null);
         }
+
+        setupDatasources();
 
         parent = owner;
 
@@ -68,6 +95,12 @@ public class SysexDetailsPane extends VBox {
         buildPane();
     }
 
+    private void setupDatasources() {
+        dsSysexName.addListener((observable, oldValue, newValue) -> {
+            workingSysex.setName(newValue);
+        });
+    }
+
     private static final int SYSEX_VALUES = 12;
 
     private void buildPane() {
@@ -76,7 +109,7 @@ public class SysexDetailsPane extends VBox {
             return;
         }
 
-        getChildren().add(new SysexNamePane(this, dsSysexName, changedConsumer));
+        getChildren().add(new SysexNamePane(this, dsSysexName, changeHandler));
 
         getChildren().add(addPanes.get(0));
 
@@ -93,6 +126,23 @@ public class SysexDetailsPane extends VBox {
                     addPane.setId("Deletable");
                     getChildren().add(addPane);
                 }
+
+                final int fixedIntIndex = index;
+
+                addPane.getInputField().textProperty().bindBidirectional(dsSysexValue[fixedIntIndex]);
+                dsSysexValue[index].addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null && !newValue.isEmpty()) {
+                            if (workingSysex.getList().size() > fixedIntIndex) {
+                                workingSysex.getList().set(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
+                            } else {
+                                workingSysex.getList().add(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
+                            }
+                        } else {
+                            workingSysex.getList().remove(fixedIntIndex);
+                        }
+                        changeHandler.handle();
+                });
+
                 index++;
             }
         }
@@ -112,7 +162,7 @@ public class SysexDetailsPane extends VBox {
         }
 
         if (id+1 < addPanes.size()) {
-            addPanes.set(id+1, new AddableSysexPane(this, id+1, dsSysexValue[id+1]));
+            addPanes.set(id+1, new AddableSysexPane(this, id+1));
         }
 
         removeDeletable();

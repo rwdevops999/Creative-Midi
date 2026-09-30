@@ -19,13 +19,8 @@ public class Test3Pane extends VBox {
         runTest();
     }
 
-    private StringProperty ds = new SimpleStringProperty("");
-
     private void runTest() {
         logger.debug("[CM_TEST1_PANE] Executing {}", getId());
-
-        AddableSysexPane pane = new AddableSysexPane(this, 0, ds);
-        getChildren().add(pane);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

@@ -32,6 +32,11 @@ public class Sysex extends AEntity {
         this.list = list;
     }
 
+    public Sysex(Sysex other) {
+        this.name = other.getName();
+        this.list = new ArrayList<>(other.getList());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

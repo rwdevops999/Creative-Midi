@@ -102,7 +102,8 @@ public class ApplicationInfo {
     private File midiToTry;
 
     /**
-     * Current MIDI
+     * Current Sysex and DirtySysex
      */
     private Sysex currentSysex;
+    private Sysex dirtySysex = null;
 }

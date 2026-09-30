@@ -8,6 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -44,7 +45,12 @@ public class AddableSysexPane extends GridPane {
 
     private StringProperty inputValue = new SimpleStringProperty();
 
-    public AddableSysexPane(Pane owner, int id, StringProperty dsProperty) {
+    private SimpleHexTextField textField;
+    public TextField getInputField() {
+        return textField;
+    }
+
+    public AddableSysexPane(Pane owner, int id) {
         this();
 
         this.buttonId = id;
@@ -74,7 +80,7 @@ public class AddableSysexPane extends GridPane {
 
         this.add(addButton, 0, row);
 
-        SimpleHexTextField textField = new SimpleHexTextField();
+        textField = new SimpleHexTextField();
         this.add(textField, 1, row, 9, 1);
 
         Button removeButton = new Button("-");

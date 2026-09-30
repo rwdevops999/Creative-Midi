@@ -1,6 +1,9 @@
 package creative.scenes.sysex.component;
 
+import creative.scenes.midi.handler.ChangedHandler;
 import creative.scenes.sysex.SysexStateMachine;
+import creative.scenes.sysex.data.SysexChangeHandler;
+import creative.scenes.sysex.data.SysexState;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
@@ -43,7 +46,7 @@ public class SysexNamePane extends GridPane {
         getRowConstraints().add(rowConstraints);
     }
 
-    public SysexNamePane(Pane owner, StringProperty dsProperty, Consumer<Integer> changedConsumer) {
+    public SysexNamePane(Pane owner, StringProperty dsProperty, SysexChangeHandler handler) {
         this();
 
         resizePaneWidth(this, owner, 90);
@@ -54,7 +57,7 @@ public class SysexNamePane extends GridPane {
         TextField nameTextField = new TextField();
         nameTextField.textProperty().bindBidirectional(dsProperty);
         nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            changedConsumer.accept(SysexStateMachine.STATE_DIRTY);
+            handler.handle();
         });
         add(nameTextField, 1, 0, 4, 1);
     }

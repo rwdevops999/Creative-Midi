@@ -28,9 +28,6 @@ public class SysexPane extends BorderPane {
 
         CommunicationModel.setStatus("Handling SYSEX");
 
-        setLeft(new SysexListPane(this));
-        setCenter(new SysexDetailsPane(this));
-
         BiConsumer<AEntity, Pane>[] consumers = new BiConsumer[]{
                 new NewConsumer<Sysex, Pane>(),
                 new AddConsumer<Sysex, Pane>(),
@@ -42,9 +39,10 @@ public class SysexPane extends BorderPane {
 
         SceneActionsPane sceneActionsPane = new SceneActionsPane(this, "Send", consumers, this::getEntity);
         setRight(sceneActionsPane);
-
         SysexStateMachine.setActionsPane(sceneActionsPane);
-        SysexStateMachine.setState(SysexStateMachine.STATE_IDLE);
+
+        setLeft(new SysexListPane(this));
+        setCenter(new SysexDetailsPane(this, null));
 
         logger.debug("[CM_SYSEX_PANE] Built {}", getId());
     }

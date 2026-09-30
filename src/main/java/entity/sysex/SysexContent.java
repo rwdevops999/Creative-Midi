@@ -21,10 +21,12 @@ public class SysexContent {
 
     private byte[] convertSysex() {
         if (content != null) {
-            String cleanHex = content.replace(" ", "");
+            if (content.contains(" ")) {
+                String cleanHex = content.replace(" ", "");
 
-            // Convert to byte array
-            return HexFormat.of().parseHex(cleanHex);
+                // Convert to byte array
+                return HexFormat.of().parseHex(cleanHex);
+            }
         }
 
         return new byte[0];
