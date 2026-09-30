@@ -5,13 +5,6 @@
   "name" : "XG System On"
 }, {
   "list" : [ {
-    "content" : "F0 43 10 4C 00 00 04 7F F7"
-  }, {
-    "content" : "F0 43 10 4C 00 00 AA 7F F7"
-  } ],
-  "name" : "FullVolume"
-}, {
-  "list" : [ {
     "content" : "F0 43 7E 00 00 00 F7"
   } ],
   "name" : "Intro 1 End"
@@ -94,4 +87,9 @@
     "content" : "F0 43 10 4C 02 01 16 01 F7"
   } ],
   "name" : "Harmony On"
+}, {
+  "list" : [ {
+    "content" : "F0 FA F7"
+  } ],
+  "name" : "FullVolume"
 } ]

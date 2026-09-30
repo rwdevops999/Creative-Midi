@@ -34,8 +34,6 @@ public class SysexDetailsPane extends VBox {
     public SysexDetailsPane() {
         super();
 
-    //    stateMachine = new SysexStateMachine(SysexState.EMPTY);
-
         setId("SysexDetailsPane");
 
         setPadding(new Insets(0, 0, 0, 0));

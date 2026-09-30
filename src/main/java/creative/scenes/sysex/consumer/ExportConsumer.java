@@ -1,6 +1,7 @@
 package creative.scenes.sysex.consumer;
 
 import creative.scenes.SceneActionsPane;
+import creative.scenes.sysex.SysexContainer;
 import creative.scenes.sysex.SysexPane;
 import entity.AEntity;
 import javafx.scene.layout.Pane;
@@ -18,5 +19,6 @@ public class ExportConsumer<T extends AEntity, P extends Pane> implements BiCons
         SceneActionsPane sceneActionsPane = (SceneActionsPane) pane;
         SysexPane sysexPane = sceneActionsPane.getSysexPane();
 
+        SysexContainer.exportSysEx();
     }
 }
