@@ -84,6 +84,12 @@ public class SceneActionsPane extends VBox {
         disabledProperties[id].set(!enable);
     };
 
+    public void disableAll() {
+        for (int i = 0; i < 6; i++) {
+            disabledProperties[i].set(true);
+        }
+    };
+
     // ACCESSOR
     public MidiPane getMidiPane() {
         return (MidiPane) parent;

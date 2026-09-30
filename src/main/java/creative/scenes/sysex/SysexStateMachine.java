@@ -6,6 +6,7 @@ import creative.scenes.sysex.data.SysexState;
 import entity.sysex.Sysex;
 
 import java.util.Stack;
+import java.util.function.BooleanSupplier;
 
 public class SysexStateMachine {
     private SysexState currentState;
@@ -14,14 +15,14 @@ public class SysexStateMachine {
     private static SceneActionsPane sceneActionsPane;
 
     public SysexStateMachine(SysexState initialState) {
-        transitionTo(initialState, true);
+        transitionTo(initialState, true, null);
     }
 
     public SysexState getLastState() {
         return stateHistory.peek();
     }
 
-    public void transitionTo(SysexState newState, boolean clearHistory) {
+    public void transitionTo(SysexState newState, boolean clearHistory, BooleanSupplier supplier) {
         if (clearHistory) {
             stateHistory.clear();
         }
@@ -30,30 +31,34 @@ public class SysexStateMachine {
             stateHistory.push(currentState);
         }
         this.currentState = newState;
-        updateUI();
+        updateUI(supplier);
     }
 
     // Herstel de vorige state
-    public void undoState() {
+    public void undoState(BooleanSupplier supplier) {
         if (!stateHistory.isEmpty()) {
             this.currentState = stateHistory.pop();
-            updateUI();
+            updateUI(supplier);
         }
     }
 
-    public void undoStateWithSkips(SysexState skipState) {
+    public void undoStateWithSkips(SysexState skipState, BooleanSupplier supplier) {
         if (!stateHistory.isEmpty()) {
-            while (stateHistory.peek().equals(skipState)) {
-                stateHistory.pop();
+            if (skipState.equals(SysexState.ADDABLE) || skipState.equals(SysexState.UPDATABLE)) {
+                while (stateHistory.peek().equals(skipState)) {
+                    stateHistory.pop();
+                }
             }
 
             this.currentState = stateHistory.pop();
-            updateUI();
+            updateUI(supplier);
         }
     }
 
     // De centrale plek waar buttons worden en-/disabled op basis van de state
-    private void updateUI() {
+    private void updateUI(BooleanSupplier supplier) {
+
+        sceneActionsPane.disableAll();
         switch (currentState) {
             case EMPTY -> {
                 CommunicationModel.setStatus("SYSEX STATE = EMPTY");
@@ -61,11 +66,20 @@ public class SysexStateMachine {
             }
             case NEW -> {
                 CommunicationModel.setStatus("SYSEX STATE = NEW");
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
             }
             case ADDABLE -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
                 CommunicationModel.setStatus("SYSEX STATE = ADDABLE");
             }
             case UPDATABLE -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
                 CommunicationModel.setStatus("SYSEX STATE = UPDATABLE");
             }
         }

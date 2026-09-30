@@ -34,6 +34,6 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
         sysexPane.setCenter(sysexDetailsPane);
 
         SysexStateMachine stateMachine = sysexPane.getSysexDetailsPane().getStateMachine();
-        stateMachine.transitionTo(SysexState.NEW, true);
+        stateMachine.transitionTo(SysexState.NEW, true, sysexPane.getSysexDetailsPane().getSupplier());
     }
 }

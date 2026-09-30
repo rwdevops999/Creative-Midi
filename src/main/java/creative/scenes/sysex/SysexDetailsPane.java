@@ -10,13 +10,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 import static util.ColorScheme.getColor;
@@ -27,12 +28,13 @@ import static util.Util.setPaneWidthAsPercentage;
 public class SysexDetailsPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(SysexDetailsPane.class);
 
-    private SysexStateMachine stateMachine = null;
+    @Getter
+    private final SysexStateMachine stateMachine = new SysexStateMachine(SysexState.EMPTY);
 
     public SysexDetailsPane() {
         super();
 
-        stateMachine = new SysexStateMachine(SysexState.EMPTY);
+    //    stateMachine = new SysexStateMachine(SysexState.EMPTY);
 
         setId("SysexDetailsPane");
 
@@ -48,26 +50,33 @@ public class SysexDetailsPane extends VBox {
 
     private Sysex workingSysex = new Sysex();
 
-    public SysexStateMachine getStateMachine() {
-        return stateMachine;
-    }
-
-    private SysexChangeHandler changeHandler = new SysexChangeHandler() {
+    @Getter
+    private BooleanSupplier supplier = new BooleanSupplier() {
         @Override
-        public void handle() {
-            Sysex originalSysex = ApplicationInfo.getInstance().getCurrentSysex();
-            if (! workingSysex.equals(originalSysex)) {
-                ApplicationInfo.getInstance().setDirtySysex(workingSysex);
+        public boolean getAsBoolean() {
+            boolean result = false;
 
-                if (originalSysex.getName().equals(dsSysexName.get())) {
-                    stateMachine.transitionTo(SysexState.UPDATABLE, false);
-                } else {
-                    stateMachine.transitionTo(SysexState.ADDABLE, false);
-                }
-            } else {
-                ApplicationInfo.getInstance().setDirtySysex(null);
-                stateMachine.undoStateWithSkips(stateMachine.getLastState());
+            for (StringProperty stringProperty : dsSysexValue) {
+                result = result || (stringProperty != null && !stringProperty.get().isEmpty());
             }
+
+            return result;
+        }
+    };
+
+    private final SysexChangeHandler changeHandler = () -> {
+        Sysex originalSysex = ApplicationInfo.getInstance().getCurrentSysex();
+        if (! workingSysex.equals(originalSysex)) {
+            ApplicationInfo.getInstance().setDirtySysex(workingSysex);
+
+            if (originalSysex.getName().equals(dsSysexName.get())) {
+                stateMachine.transitionTo(SysexState.UPDATABLE, false, supplier);
+            } else {
+                stateMachine.transitionTo(SysexState.ADDABLE, false, supplier);
+            }
+        } else {
+            ApplicationInfo.getInstance().setDirtySysex(null);
+            stateMachine.undoStateWithSkips(stateMachine.getLastState(), supplier);
         }
     };
 
@@ -86,7 +95,7 @@ public class SysexDetailsPane extends VBox {
             addPanes.add(null);
         }
 
-        setupDatasources();
+        setupDatasource();
 
         parent = owner;
 
@@ -101,10 +110,8 @@ public class SysexDetailsPane extends VBox {
         buildPane();
     }
 
-    private void setupDatasources() {
-        dsSysexName.addListener((observable, oldValue, newValue) -> {
-            workingSysex.setName(newValue);
-        });
+    private void setupDatasource() {
+        dsSysexName.addListener((observable, oldValue, newValue) -> workingSysex.setName(newValue));
     }
 
     private static final int SYSEX_VALUES = 12;
