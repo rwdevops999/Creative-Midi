@@ -48,9 +48,7 @@ public class SysexPane extends BorderPane {
     }
 
     public AEntity getEntity() {
-        SysexListPane listPane = (SysexListPane)getLeft();
-//        return listPane.getSelectedItem();
-        return null;
+        return getSysexDetailsPane().getSysex();
     };
 
     // ACCESSORS

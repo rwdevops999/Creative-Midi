@@ -4,5 +4,7 @@ public enum SysexState {
     EMPTY,
     NEW,
     UPDATABLE,
-    ADDABLE;
+    ADDABLE,
+    LOADED,
+    ADDED;
 }

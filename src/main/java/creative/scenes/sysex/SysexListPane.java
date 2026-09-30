@@ -41,13 +41,14 @@ public class SysexListPane extends VBox {
         logger.debug("[CM_SYSEX_LIST_PANE] Building {}", getId());
 
         sysexListView = new ListView<>();
-        sysexListView.setItems(FXCollections.observableArrayList(SysexContainer.getSysexList()));
+        setListviewItems();
 
         sysexListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             SysexPane sysexPane = getSysexPane();
             SysexDetailsPane sysExDetailsPane = sysexPane.getSysexDetailsPane();
-            sysExDetailsPane.setSysex(newValue);
-            // TODO Enable some buttons here
+//            if (newValue != null) {
+                sysExDetailsPane.setSysex(newValue);
+//            }
         });
         sysexListView.setCellFactory(param -> new ListCell<Sysex>() {
             @Override
@@ -66,6 +67,19 @@ public class SysexListPane extends VBox {
         getChildren().add(sysexListView);
 
         logger.debug("[CM_SYSEX_LIST_PANE] Built {}", getId());
+    }
+
+    private void setListviewItems() {
+        sysexListView.getItems().clear();
+        sysexListView.setItems(FXCollections.observableArrayList(SysexContainer.getSysexList()));
+    }
+
+    public void triggerReload(Sysex selectable) {
+        setListviewItems();
+
+        if (selectable != null) {
+            sysexListView.getSelectionModel().select(selectable);
+        }
     }
 
     // ACCESSORS

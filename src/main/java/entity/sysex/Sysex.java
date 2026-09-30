@@ -33,6 +33,9 @@ public class Sysex extends AEntity {
     }
 
     public Sysex(Sysex other) {
+        if (other == null) {
+            System.out.println("ERROR");
+        }
         this.name = other.getName();
         this.list = new ArrayList<>(other.getList());
     }

@@ -76,8 +76,20 @@ public class SysexContainer {
             sysExContent.setContent(completeSysex(sysExContent.getContent()));
         }
 
+        sysexList.add(sysex);
+    }
+
+    public static void updateSysex(Sysex sysex) {
+        for (SysexContent sysExContent : sysex.getList()) {
+            sysExContent.setContent(completeSysex(sysExContent.getContent()));
+        }
+
         sysexList.removeIf(s -> s.getName().equals(sysex.getName()));
         sysexList.add(sysex);
+    }
+
+    public static void deleteSysex(Sysex sysex) {
+        sysexList.removeIf(s -> s.getName().equals(sysex.getName()));
     }
 
     private static void removeEmptyContent() {

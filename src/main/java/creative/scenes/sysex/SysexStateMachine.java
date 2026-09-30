@@ -19,7 +19,11 @@ public class SysexStateMachine {
     }
 
     public SysexState getLastState() {
-        return stateHistory.peek();
+        if (! stateHistory.isEmpty()) {
+            return stateHistory.peek();
+        }
+
+        return SysexState.EMPTY;
     }
 
     public void transitionTo(SysexState newState, boolean clearHistory, BooleanSupplier supplier) {
@@ -45,12 +49,12 @@ public class SysexStateMachine {
     public void undoStateWithSkips(SysexState skipState, BooleanSupplier supplier) {
         if (!stateHistory.isEmpty()) {
             if (skipState.equals(SysexState.ADDABLE) || skipState.equals(SysexState.UPDATABLE)) {
-                while (stateHistory.peek().equals(skipState)) {
+                while (!stateHistory.isEmpty() && stateHistory.peek().equals(skipState)) {
                     stateHistory.pop();
                 }
             }
 
-            this.currentState = stateHistory.pop();
+            this.currentState = getLastState();
             updateUI(supplier);
         }
     }
@@ -81,6 +85,20 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
                 CommunicationModel.setStatus("SYSEX STATE = UPDATABLE");
+            }
+            case ADDED -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+                CommunicationModel.setStatus("SYSEX STATE = ADDED");
+            }
+            case LOADED -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
+                CommunicationModel.setStatus("SYSEX STATE = LOADED");
             }
         }
     }

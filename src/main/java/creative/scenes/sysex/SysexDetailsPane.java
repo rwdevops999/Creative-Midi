@@ -57,7 +57,7 @@ public class SysexDetailsPane extends VBox {
             boolean result = false;
 
             for (StringProperty stringProperty : dsSysexValue) {
-                result = result || (stringProperty != null && !stringProperty.get().isEmpty());
+                result = result || (stringProperty != null && stringProperty.get() != null && !stringProperty.get().isEmpty());
             }
 
             return result;
@@ -66,7 +66,7 @@ public class SysexDetailsPane extends VBox {
 
     private final SysexChangeHandler changeHandler = () -> {
         Sysex originalSysex = ApplicationInfo.getInstance().getCurrentSysex();
-        if (! workingSysex.equals(originalSysex)) {
+        if (workingSysex != null && ! workingSysex.equals(originalSysex)) {
             ApplicationInfo.getInstance().setDirtySysex(workingSysex);
 
             if (originalSysex.getName().equals(dsSysexName.get())) {
@@ -110,8 +110,29 @@ public class SysexDetailsPane extends VBox {
         buildPane();
     }
 
+
     private void setupDatasource() {
-        dsSysexName.addListener((observable, oldValue, newValue) -> workingSysex.setName(newValue));
+        dsSysexName.addListener((observable, oldValue, newValue) -> {
+            if (workingSysex != null) {
+                workingSysex.setName(newValue);
+            }
+        });
+    }
+
+    private void clearDataSource() {
+        if (workingSysex != null) {
+            dsSysexName.set(workingSysex.getName());
+
+            for (int i = 0; i < dsSysexValue.length; i++) {
+                dsSysexValue[i] = new SimpleStringProperty(workingSysex.getList().isEmpty() ? "" : i < workingSysex.getList().size() ? workingSysex.getList().get(i).getContent() : "");
+            }
+        } else {
+            dsSysexName.set("");
+
+            for (int i = 0; i < dsSysexValue.length; i++) {
+                dsSysexValue[i] = new SimpleStringProperty("");
+            }
+        }
     }
 
     private static final int SYSEX_VALUES = 12;
@@ -122,9 +143,13 @@ public class SysexDetailsPane extends VBox {
             return;
         }
 
+        dsSysexName.setValue(workingSysex.getName());
         getChildren().add(new SysexNamePane(this, dsSysexName, changeHandler));
 
         getChildren().add(addPanes.get(0));
+        if (!workingSysex.getList().isEmpty()) {
+            dsSysexValue[0].setValue(workingSysex.getList().get(0).getContent());
+        }
 
         buildDynamicPane();
 
@@ -133,6 +158,47 @@ public class SysexDetailsPane extends VBox {
 
     private void buildDynamicPane() {
         int index = 0;
+        for (SysexContent sysexContent : workingSysex.getList()) {
+            if (index != 0) {
+                dsSysexValue[index].setValue(sysexContent.getContent());
+                AddableSysexPane pane = new AddableSysexPane(this, index);
+                addPanes.add(pane);
+                pane.setId("Deletable");
+                getChildren().add(pane);
+                bindProperty(index, pane);
+            } else {
+                dsSysexValue[index].set(sysexContent.getContent());
+                AddableSysexPane pane = addPanes.get(index);
+                if (pane != null) {
+                    bindProperty(index, pane);
+                }
+            }
+
+            index++;
+        }
+    }
+
+    private void bindProperty(int index, AddableSysexPane pane) {
+        final int fixedIntIndex = index;
+
+        pane.getInputField().textProperty().bindBidirectional(dsSysexValue[fixedIntIndex]);
+        dsSysexValue[index].addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty()) {
+                if (workingSysex.getList().size() > fixedIntIndex) {
+                    workingSysex.getList().set(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
+                } else {
+                    workingSysex.getList().add(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
+                }
+            } else {
+                if (! workingSysex.getList().isEmpty()) {
+                    workingSysex.getList().remove(fixedIntIndex);
+                }
+            }
+            changeHandler.handle();
+        });
+    }
+/*
+
         for (AddableSysexPane addPane : addPanes) {
             if (addPane != null) {
                 if (index > 0) {
@@ -151,15 +217,16 @@ public class SysexDetailsPane extends VBox {
                                 workingSysex.getList().add(fixedIntIndex, new SysexContent(dsSysexValue[fixedIntIndex].get()));
                             }
                         } else {
-                            workingSysex.getList().remove(fixedIntIndex);
+                            if (! workingSysex.getList().isEmpty()) {
+                                workingSysex.getList().remove(fixedIntIndex);
+                            }
                         }
                         changeHandler.handle();
                 });
 
                 index++;
             }
-        }
-    }
+        } */
 
     private void removeDeletable() {
         getChildren().removeIf(node -> "Deletable".equals(node.getId()));
@@ -200,7 +267,23 @@ public class SysexDetailsPane extends VBox {
     }
 
     public void setSysex (Sysex sysex) {
-        System.out.println("ADDING SYSEX DETAILS");
+        workingSysex = sysex;
+
+        if (sysex != null) {
+            ApplicationInfo.getInstance().setCurrentSysex(new Sysex(sysex));
+        } else {
+            ApplicationInfo.getInstance().setCurrentSysex(null);
+        }
+
+        clearDataSource();
+        getChildren().clear();
+        buildPane();
+
+        stateMachine.transitionTo(SysexState.LOADED, true, supplier);
+    }
+
+    public Sysex getSysex () {
+        return workingSysex;
     }
 
     // ACCESSORS
