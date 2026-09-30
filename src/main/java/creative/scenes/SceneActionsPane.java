@@ -38,7 +38,7 @@ public class SceneActionsPane extends VBox {
         setId("SceneActionsPane");
 
         for (int i = 0; i < 6; i++) {
-            disabledProperties[i] = new SimpleBooleanProperty(false);
+            disabledProperties[i] = new SimpleBooleanProperty(true);
         }
     }
 

@@ -93,8 +93,7 @@ public class Util {
                 consumer.accept(supplier.get(), owner);
             }
         });
-//        button.visibleProperty().bindBidirectional(visiblePropery);
-        button.disableProperty().bindBidirectional(disableProperty);
+        button.disableProperty().bind(disableProperty);
 
         return button;
     }

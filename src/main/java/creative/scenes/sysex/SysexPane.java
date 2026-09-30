@@ -41,8 +41,10 @@ public class SysexPane extends BorderPane {
         };
 
         SceneActionsPane sceneActionsPane = new SceneActionsPane(this, "Send", consumers, this::getEntity);
-        sceneActionsPane.setEnables(SceneActionsPane.BUTTON[0]);
         setRight(sceneActionsPane);
+
+        SysexStateMachine.setActionsPane(sceneActionsPane);
+        SysexStateMachine.setState(SysexStateMachine.STATE_IDLE);
 
         logger.debug("[CM_SYSEX_PANE] Built {}", getId());
     }

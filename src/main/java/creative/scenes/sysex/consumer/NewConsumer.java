@@ -4,6 +4,7 @@ import creative.scenes.SceneActionsPane;
 import creative.scenes.midi.MidiDetailPane;
 import creative.scenes.sysex.SysexDetailsPane;
 import creative.scenes.sysex.SysexPane;
+import creative.scenes.sysex.SysexStateMachine;
 import entity.AEntity;
 import entity.midi.Midi;
 import entity.sysex.Sysex;
@@ -30,5 +31,7 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
 
         SysexDetailsPane sysexDetailsPane = new SysexDetailsPane(sysexPane);
         sysexPane.setCenter(sysexDetailsPane);
+
+        SysexStateMachine.setState(SysexStateMachine.STATE_NEW);
     }
 }
