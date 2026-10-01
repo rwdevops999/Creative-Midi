@@ -71,6 +71,7 @@ public class PlaylistStateMachine {
                 CommunicationModel.setStatus("PLAYLIST STATE = EMPTY");
             }
             case NEW -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = NEW");
             }
             case ADDABLE -> {
@@ -92,10 +93,9 @@ public class PlaylistStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = ADDED");
             }
-            case LOADED -> {
+            case READY -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = LOADED");
             }
             case UPDATED -> {
@@ -104,6 +104,11 @@ public class PlaylistStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = UPDATED");
+            }
+            case DELETED -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
+                CommunicationModel.setStatus("PLAYLIST STATE = DELETED");
             }
         }
     }

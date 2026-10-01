@@ -269,36 +269,4 @@
     "tempo" : 92
   },
   "songName" : "Keep On Smiling"
-}, {
-  "mappings" : [ ],
-  "songId" : 14,
-  "songInfo" : {
-    "performer" : "",
-    "scale" : {
-      "pitch" : "major",
-      "scale" : "C"
-    },
-    "signature" : {
-      "beat" : 4,
-      "beats" : 4
-    },
-    "tempo" : 1
-  },
-  "songName" : "Test"
-}, {
-  "mappings" : [ ],
-  "songId" : 15,
-  "songInfo" : {
-    "performer" : "",
-    "scale" : {
-      "pitch" : "major",
-      "scale" : "C"
-    },
-    "signature" : {
-      "beat" : 4,
-      "beats" : 4
-    },
-    "tempo" : 1
-  },
-  "songName" : "TestX"
 } ]

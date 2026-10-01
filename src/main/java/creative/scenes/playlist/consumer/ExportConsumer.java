@@ -1,5 +1,8 @@
 package creative.scenes.playlist.consumer;
 
+import creative.scenes.SceneActionsPane;
+import creative.scenes.playlist.PlaylistContainer;
+import creative.scenes.playlist.statemachine.PlaylistState;
 import custom.dialog.DialogFactory;
 import entity.AEntity;
 import javafx.scene.layout.Pane;
@@ -15,5 +18,9 @@ public class ExportConsumer<T extends AEntity, P extends Pane> implements BiCons
     public void accept(T entity, P pane) {
         logger.debug("[CM_EXPORT_CONSUMER<Playlist>] Handling Export Song");
 
+        PlaylistContainer.exportSongs();
+
+        SceneActionsPane sceneActionsPane = (SceneActionsPane)pane;
+        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.READY);
     }
 }
