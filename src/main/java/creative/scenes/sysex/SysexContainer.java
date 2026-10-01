@@ -133,4 +133,7 @@ public class SysexContainer {
         return sysexList;
     }
 
+    public static List<String> getSysexNames() {
+        return sysexList.stream().map(Sysex::getName).toList();
+    }
 }

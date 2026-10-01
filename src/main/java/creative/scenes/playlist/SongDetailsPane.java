@@ -4,6 +4,7 @@ import creative.scenes.playlist.statemachine.PlaylistState;
 import creative.scenes.playlist.statemachine.PlaylistStateMachine;
 import custom.components.playlist.ScaleSelector;
 import custom.components.playlist.SignatureSelector;
+import entity.playlist.Mapping;
 import entity.playlist.Song;
 import eventhandlers.ChangeHandler;
 import javafx.beans.property.ObjectProperty;
@@ -18,10 +19,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import lombok.Getter;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import static util.ColorScheme.getColor;
@@ -59,7 +63,7 @@ public class SongDetailsPane extends GridPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
 
         buildPane();
     }
@@ -69,6 +73,7 @@ public class SongDetailsPane extends GridPane {
 
     private final StringProperty songNameProperty = new SimpleStringProperty();
 
+    @Getter
     private final BooleanSupplier supplier = () -> {
         boolean result = false;
 
@@ -77,6 +82,7 @@ public class SongDetailsPane extends GridPane {
         return result;
     };
 
+    @Getter
     private final ChangeHandler songHasChangedHandler = () -> {
         Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
         if (workingSong != null && ! workingSong.equals(originalSong)) {
@@ -258,15 +264,21 @@ public class SongDetailsPane extends GridPane {
 
     public void setSong(Song song) {
         if (song != null) {
+            Song deepCopiedSong = SerializationUtils.clone(song);
+            ApplicationInfo.getInstance().setCurrentSong(deepCopiedSong);
+
             workingSong = song;
 
+            getPlaylistDetailsPane().getSongMappingsPane().setSong(workingSong);
+
             getPlaylistDetailsPane().getSongTitlePane().updateSongTitle(song.getSongName());
-            ApplicationInfo.getInstance().setCurrentSong(new Song(song));
 
             setDatasource(song);
 
             buildPane();
             addComponents();
+
+            getPlaylistDetailsPane().getSongMappingsPane().buildPane(song.getMappings());
         } else {
             workingSong = null;
             getPlaylistDetailsPane().getSongTitlePane().updateSongTitle("");
@@ -276,6 +288,12 @@ public class SongDetailsPane extends GridPane {
 
     public Song getSong() {
         return workingSong;
+    }
+
+    public void updateSongMapping(List<Mapping> mapping) {
+        Song original = ApplicationInfo.getInstance().getCurrentSong();
+        this.workingSong.setMappings(mapping);
+        songHasChangedHandler.handle();
     }
 
     public void setState(PlaylistState state) {

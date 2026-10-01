@@ -3,11 +3,14 @@ package entity.playlist;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Setter
-public class ScaleInfo {
+public class ScaleInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String scale;
     private String pitch;
 

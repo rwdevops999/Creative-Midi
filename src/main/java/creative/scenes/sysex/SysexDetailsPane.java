@@ -92,7 +92,7 @@ public class SysexDetailsPane extends VBox {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
         setPaneWidthAsPercentage(this, owner, 60);
         setPaneBackground(this);
 

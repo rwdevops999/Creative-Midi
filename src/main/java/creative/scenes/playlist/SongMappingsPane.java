@@ -1,21 +1,29 @@
 package creative.scenes.playlist;
 
+import custom.dialog.MappingDialog;
 import entity.playlist.Mapping;
+import entity.playlist.Song;
+import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
+import util.Util;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static util.ColorScheme.getColor;
+import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneHeightAsPercentage;
 
 public class SongMappingsPane extends StackPane {
@@ -33,71 +41,92 @@ public class SongMappingsPane extends StackPane {
 
         parent = owner;
 
-//        showPaneBorder(this, getColor("border", "red", null));
+        showPaneBorder(this, getColor("border", "red", null));
         setPaneHeightAsPercentage(this, owner, 50);
 
-        buildPane();
-    }
-
-    private TableView<Mapping> table;
-
-    public void buildPane() {
-        logger.debug("[CM_SONG_MAPPINGS_PANE] Building {}", getId());
-
-        table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        defineTableColumns(table);
-        setTableData(table);
-        createContextMenu(table);
-        getChildren().add(table);
-
-        logger.debug("[CM_SONG_MAPPINGS_PANE] Built {}", getId());
-    }
-
-    private void defineTableColumns(TableView<Mapping> table) {
-        TableColumn<Mapping, String> receiveColumn = new TableColumn<>("Received");
-        receiveColumn.setCellValueFactory(new PropertyValueFactory<>("receive"));
-        table.getColumns().add(receiveColumn);
-
-        TableColumn<Mapping, String> replyColumn = new TableColumn<>("Reply");
-        replyColumn.setCellValueFactory(new PropertyValueFactory<>("reply"));
-        table.getColumns().add(replyColumn);
+        buildPane(new ArrayList<>());
     }
 
     private final ObjectProperty<ObservableList<Mapping>> mappingProperty = new SimpleObjectProperty<>(FXCollections.observableArrayList(new ArrayList<>()));
-    private void setTableData(TableView<Mapping> table) {
-        ObservableList<Mapping> tableData = FXCollections.observableArrayList(new ArrayList<>());
-        table.setItems(tableData);
-        table.itemsProperty().bindBidirectional(mappingProperty);
+
+    private TableView<Mapping> table  = new TableView<>();
+    private boolean isPaneBuilt = false;
+    public void buildPane(List<Mapping> mappings) {
+        if (getPlaylistDetailsPane().getSongDetailsPane().getSong() != null && ! isPaneBuilt) {
+            table = new TableView<>();
+            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            table.itemsProperty().bindBidirectional(mappingProperty);
+
+            buildColumns(table);
+            setMappingData(mappings);
+            buildContextMenu(table);
+
+            getChildren().add(table);
+
+            isPaneBuilt = true;
+        }
+
+        logger.debug("[CM_SONG_MAPPING_PANE] Built {}", getId());
     }
 
-    private void createContextMenu(TableView<Mapping> table) {
+    private void buildContextMenu(TableView<Mapping> table) {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem addMenuItem = new MenuItem("Add mapping");
         addMenuItem.setOnAction(e -> {
-            // TODO add context menu action
+            new MappingDialog(this, table, false, null);
+            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
         });
-        contextMenu.getItems().add(addMenuItem);
 
         MenuItem deleteMenuItem = new MenuItem("Delete mapping");
         deleteMenuItem.setOnAction(e -> {
-            // TODO add context menu action
+            Mapping mapping = table.getSelectionModel().getSelectedItem();
+            table.getItems().remove(mapping);
+            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
         });
         deleteMenuItem.disableProperty().bind(
-            table.getSelectionModel().selectedItemProperty().isNull()
+                table.getSelectionModel().selectedItemProperty().isNull()
         );
-        contextMenu.getItems().add(deleteMenuItem);
 
         MenuItem editMenuItem = new MenuItem("Edit mapping");
         editMenuItem.setOnAction(e -> {
-            // TODO add context menu action
+            Mapping mapping = table.getSelectionModel().getSelectedItem();
+            showAddMappingDialog(table, true, mapping);
+            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
         });
         editMenuItem.disableProperty().bind(
-            table.getSelectionModel().selectedItemProperty().isNull()
+                table.getSelectionModel().selectedItemProperty().isNull()
         );
-        contextMenu.getItems().add(editMenuItem);
 
+        contextMenu.getItems().addAll(addMenuItem, deleteMenuItem, editMenuItem);
         table.setContextMenu(contextMenu);
+    }
+
+    private void setMappingData(List<Mapping> mappings) {
+        ObservableList<Mapping> tableData = FXCollections.observableArrayList(mappings);
+        mappingProperty.set(tableData);
+    }
+
+    private void buildColumns(TableView<Mapping> table) {
+        TableColumn<Mapping, String> receiveColumn = new TableColumn<>("Received");
+        receiveColumn.setCellValueFactory(new PropertyValueFactory<>("receive"));
+
+        TableColumn<Mapping, String> replyColumn = new TableColumn<>("Reply");
+        replyColumn.setCellValueFactory(new PropertyValueFactory<>("reply"));
+
+        table.getColumns().addAll(receiveColumn, replyColumn);
+    }
+
+    private void showAddMappingDialog(TableView<Mapping> table, boolean isUpdate, @Nullable Mapping currentMapping) {
+        new MappingDialog(this, table, isUpdate, currentMapping);
+    }
+
+    public void setSong(Song song) {
+        if (song != null) {
+            if (table != null) {
+                ObservableList<Mapping> tableData = FXCollections.observableArrayList(new ArrayList<>(song.getMappings()));
+                mappingProperty.set(tableData);
+            }
+        }
     }
 
     // ACCESSORS

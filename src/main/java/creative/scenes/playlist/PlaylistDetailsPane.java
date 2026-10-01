@@ -25,7 +25,7 @@ public class PlaylistDetailsPane extends BorderPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "green", null));
+//        showPaneBorder(this, getColor("border", "green", null));
 
         setPaneWidthAsPercentage(this, owner, 55);
         setPaneBackground(this);

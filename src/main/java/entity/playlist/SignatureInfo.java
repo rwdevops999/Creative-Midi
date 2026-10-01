@@ -3,11 +3,14 @@ package entity.playlist;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Setter
-public class SignatureInfo {
+public class SignatureInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     // beats / beat (e.g. 3/4)
     private Integer beats;
     private Integer beat;

@@ -5,13 +5,16 @@ import entity.sysex.Sysex;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
-public class Song extends AEntity {
+public class Song extends AEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Integer songId;
     private String songName;
     private SongInfo songInfo;
@@ -28,7 +31,9 @@ public class Song extends AEntity {
         this.songId = other.getSongId();
         this.songName = other.getSongName();
         this.songInfo = new SongInfo(other.getSongInfo());
-        this.mappings = new ArrayList<>(other.getMappings());
+        this.mappings = new ArrayList<>();
+
+
     }
 
     public Song() {
@@ -88,4 +93,7 @@ public class Song extends AEntity {
         return Objects.hash(songId, songName, songInfo, mappings);
     }
 
+    public void removeMapping (Mapping mapping) {
+        this.mappings.removeIf(m -> m.getReceive().equals(mapping.getReceive()) && m.getReply().equals(mapping.getReply()));
+    }
 }
