@@ -24,6 +24,13 @@ public class Song extends AEntity {
         this.mappings = new ArrayList<>();
     }
 
+    public Song(Song other) {
+        this.songId = other.getSongId();
+        this.songName = other.getSongName();
+        this.songInfo = new SongInfo(other.getSongInfo());
+        this.mappings = new ArrayList<>(other.getMappings());
+    }
+
     public Song() {
         this(1);
     }
@@ -70,7 +77,7 @@ public class Song extends AEntity {
         }
 
         return Objects.equals(this.songName, other.songName) &&
-                Objects.deepEquals(this.songInfo, other.songInfo) &&
+                this.songInfo.equals(other.songInfo) &&
                 Objects.deepEquals(this.mappings, other.mappings) &&
                 Objects.equals(this.songId, other.songId)
                 ;

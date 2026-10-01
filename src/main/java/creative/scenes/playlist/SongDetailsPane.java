@@ -68,19 +68,16 @@ public class SongDetailsPane extends GridPane {
 
     private final StringProperty songNameProperty = new SimpleStringProperty();
 
-    private BooleanSupplier supplier = new BooleanSupplier() {
-        @Override
-        public boolean getAsBoolean() {
-            boolean result = false;
+    private final BooleanSupplier supplier = () -> {
+        boolean result = false;
 
-            // TODO set supplier action
+        // TODO set supplier action
 
-            return result;
-        }
+        return result;
     };
 
     private final ChangeHandler songHasChangedHandler = () -> {
-        Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
+/*        Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
         if (workingSong != null && ! workingSong.equals(originalSong)) {
             ApplicationInfo.getInstance().setDirtySong(workingSong);
 
@@ -92,6 +89,14 @@ public class SongDetailsPane extends GridPane {
         } else {
             ApplicationInfo.getInstance().setDirtySysex(null);
             stateMachine.undoStateWithSkips(stateMachine.getLastState(), supplier);
+        }
+ */
+        System.out.println("Some Song value has changed");
+        Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
+        if (workingSong != null && ! workingSong.equals(originalSong)) {
+            System.out.println("Working song is dirty");
+        } else {
+            System.out.println("Working song is clean");
         }
     };
 
@@ -106,11 +111,11 @@ public class SongDetailsPane extends GridPane {
 
         int row = -1;
 
-        // ROW 1 (Song Id)
+        // ROW 1 (Song id)
         row++;
         setSongId(row);
 
-        // ROW 2 (Song Name)
+        // ROW 2 (Song name)
         row++;
         setSongName(row);
 
@@ -126,7 +131,7 @@ public class SongDetailsPane extends GridPane {
         row++;
         setScale(row);
 
-        // ROW 6 (Time Signature)
+        // ROW 6 (Time signature)
         row++;
         setTimeSignature(row);
 
@@ -143,6 +148,7 @@ public class SongDetailsPane extends GridPane {
         songIdSpinner.setPromptText("id ...");
         songIdSpinner.getValueFactory().valueProperty().bindBidirectional(songIdProperty);
         songIdProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.setSongId(newValue);
             songHasChangedHandler.handle();
         });
         add(songIdSpinner, 2, row, 1, 1);
@@ -157,6 +163,7 @@ public class SongDetailsPane extends GridPane {
         songNameTextField.setPromptText("enter song name ...");
         songNameTextField.textProperty().bindBidirectional(songNameProperty);
         songNameProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.setSongName(newValue);
             songHasChangedHandler.handle();
         });
         add(songNameTextField, 2, row, 4, 1);
@@ -171,6 +178,7 @@ public class SongDetailsPane extends GridPane {
         performerTextField.setPromptText("enter performer name ...");
         performerTextField.textProperty().bindBidirectional(performerProperty);
         performerProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.getSongInfo().setPerformer(newValue);
             songHasChangedHandler.handle();
         });
         add(performerTextField, 2, row, 4, 1);
@@ -186,6 +194,7 @@ public class SongDetailsPane extends GridPane {
         tempoSpinner.setPromptText("tempo ...");
         tempoSpinner.getValueFactory().valueProperty().bindBidirectional(tempoProperty);
         tempoProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.getSongInfo().setTempo(newValue);
             songHasChangedHandler.handle();
         });
         add(tempoSpinner, 2, row, 1, 1);
@@ -200,10 +209,12 @@ public class SongDetailsPane extends GridPane {
         ScaleSelector scaleSelector = new ScaleSelector(false);
         scaleSelector.scaleProperty.bindBidirectional(scaleProperty);
         scaleProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.getSongInfo().getScale().setScale(newValue);
             songHasChangedHandler.handle();
         });
         scaleSelector.pitchProperty.bindBidirectional(pitchProperty);
         pitchProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.getSongInfo().getScale().setPitch(newValue);
             songHasChangedHandler.handle();
         });
         add(scaleSelector, 2, row, 6, 1);
@@ -219,17 +230,35 @@ public class SongDetailsPane extends GridPane {
         signatureSelector.setId("SignatureSelector");
         signatureSelector.bpmProperty.bindBidirectional(beatsProperty);
         beatsProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.getSongInfo().getSignature().setBeats(newValue);
             songHasChangedHandler.handle();
         });
         signatureSelector.beatProperty.bindBidirectional(beatProperty);
         beatProperty.addListener((observable, oldValue, newValue) -> {
+            workingSong.getSongInfo().getSignature().setBeat(newValue);
             songHasChangedHandler.handle();
         });
         add(signatureSelector, 2, row, 3, 1);
     }
 
+    private void setDatasource(Song song) {
+        songIdProperty.set(song.getSongId());
+        songNameProperty.set(song.getSongName());
+        performerProperty.set(song.getSongInfo().getPerformer());
+        tempoProperty.set(song.getSongInfo().getTempo());
+        scaleProperty.set(song.getSongInfo().getScale().getScale());
+        pitchProperty.set(song.getSongInfo().getScale().getPitch());
+        beatsProperty.set(song.getSongInfo().getSignature().getBeats());
+        beatProperty.set(song.getSongInfo().getSignature().getBeat());
+    }
+
     public void setSong(Song song) {
         workingSong = song;
+
+        ApplicationInfo.getInstance().setCurrentSong(new Song(song));
+        ApplicationInfo.getInstance().setDirtySong(null);
+
+        setDatasource(song);
 
         buildPane();
     }

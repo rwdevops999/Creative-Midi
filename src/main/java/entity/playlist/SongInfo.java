@@ -3,6 +3,8 @@ package entity.playlist;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class SongInfo {
@@ -13,9 +15,16 @@ public class SongInfo {
 
     public SongInfo() {
         this.performer = "";
-        this.tempo = 0;
+        this.tempo = 1;
         this.scale = new ScaleInfo();
         this.signature = new SignatureInfo();
+    }
+
+    public SongInfo(SongInfo other) {
+        this.performer = other.getPerformer();
+        this.tempo = other.getTempo();
+        this.scale = new ScaleInfo(other.getScale());
+        this.signature = new SignatureInfo(other.getSignature());
     }
 
     @Override
@@ -29,5 +38,26 @@ public class SongInfo {
                         "]";
 
 
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof SongInfo other)) {
+            return false;
+        }
+
+        return Objects.equals(this.performer, other.performer) &&
+                Objects.equals(this.tempo, other.tempo) &&
+                this.scale.equals(other.scale) &&
+                this.signature.equals(other.signature)
+                ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(performer, tempo, scale, signature);
     }
 }

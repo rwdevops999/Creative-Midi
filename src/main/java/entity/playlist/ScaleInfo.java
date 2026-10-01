@@ -3,6 +3,8 @@ package entity.playlist;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class ScaleInfo {
@@ -14,12 +16,33 @@ public class ScaleInfo {
         this.pitch = "major";
     }
 
+    public ScaleInfo(ScaleInfo other) {
+        this.scale = other.getScale();
+        this.pitch = other.getPitch();
+    }
+
     @Override
     public String toString() {
         return this.scale + (this.pitch.equals("minor") ? "m" : "");
     }
 
-    public void set() {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
 
+        if (!(obj instanceof ScaleInfo other)) {
+            return false;
+        }
+
+        return Objects.equals(this.scale, other.scale) &&
+                Objects.equals(this.pitch, other.pitch)
+                ;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scale, pitch);
+    }
+
 }
