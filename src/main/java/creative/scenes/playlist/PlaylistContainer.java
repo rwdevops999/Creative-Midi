@@ -65,6 +65,10 @@ public class PlaylistContainer {
         return playlist.stream().anyMatch(song -> song.getSongName().equals(songName));
     }
 
+    public static Song getSong(String songName) {
+        return playlist.stream().filter(song -> song.getSongName().equals(songName)).findFirst().orElse(null);
+    }
+
     /**
      * Get the next song id from the list.
      *

@@ -65,6 +65,14 @@ public class Util {
         originator.prefHeightProperty().bind(parent.heightProperty().multiply(size / 100.0));
     }
 
+    public static void setPaneMinHeightAsPercentage(Pane originator, Pane parent, int size) {
+        originator.minHeightProperty().bind(parent.heightProperty().multiply(size / 100.0));
+    }
+
+    public static void setPaneMaxHeightAsPercentage(Pane originator, Pane parent, int size) {
+        originator.maxHeightProperty().bind(parent.heightProperty().multiply(size / 100.0));
+    }
+
     public static List<NoteEntity> calcNotes (int baseOctave) {
         List<NoteEntity> result = new ArrayList<>();
         for (int i = 0; i < 128; i++) {

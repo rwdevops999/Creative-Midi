@@ -6,6 +6,7 @@ import custom.components.playlist.ScaleSelector;
 import custom.components.playlist.SignatureSelector;
 import entity.playlist.Song;
 import eventhandlers.ChangeHandler;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +18,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +27,7 @@ import util.ApplicationInfo;
 import java.awt.Container;
 import java.util.function.BooleanSupplier;
 
-import static util.Util.setPaneBackground;
-import static util.Util.setPaneHeightAsPercentage;
+import static util.Util.*;
 
 public class SongDetailsPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(SongDetailsPane.class);
@@ -78,20 +79,6 @@ public class SongDetailsPane extends GridPane {
     };
 
     private final ChangeHandler songHasChangedHandler = () -> {
-/*        Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
-        if (workingSong != null && ! workingSong.equals(originalSong)) {
-            ApplicationInfo.getInstance().setDirtySong(workingSong);
-
-            if (originalSong.getSongName().equals(songNameProperty.get()) && (SysexContainer.containsSysex(songNameProperty.get()))) {
-                stateMachine.transitionTo(PlaylistState.UPDATABLE, false, supplier);
-            } else {
-                stateMachine.transitionTo(PlaylistState.ADDABLE, false, supplier);
-            }
-        } else {
-            ApplicationInfo.getInstance().setDirtySysex(null);
-            stateMachine.undoStateWithSkips(stateMachine.getLastState(), supplier);
-        }
- */
         Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
         if (workingSong != null && ! workingSong.equals(originalSong)) {
             if (originalSong.getSongName().equals(songNameProperty.get()) && (PlaylistContainer.containsSong(songNameProperty.get()))) {
@@ -110,8 +97,6 @@ public class SongDetailsPane extends GridPane {
         if (workingSong == null) {
             return;
         }
-
-        getChildren().clear();
 
         int row = -1;
 
@@ -143,11 +128,10 @@ public class SongDetailsPane extends GridPane {
     }
 
     private final ObjectProperty<Integer> songIdProperty = new SimpleObjectProperty<>(PlaylistContainer.getNextSongId());
-    private void setSongId(int row) {
-        Label songIdLabel = new Label("Id");
-        add(songIdLabel, 0, row, 1, 1);
+    private final Label songIdLabel  = new Label("Id");;
+    private final Spinner<Integer> songIdSpinner = new Spinner<>(1, 999, 1);
 
-        Spinner<Integer> songIdSpinner = new Spinner<>(1, 999, 1);
+    private void setSongId(int row) {
         songIdSpinner.setEditable(true);
         songIdSpinner.setPromptText("id ...");
         songIdSpinner.getValueFactory().valueProperty().bindBidirectional(songIdProperty);
@@ -155,45 +139,37 @@ public class SongDetailsPane extends GridPane {
             workingSong.setSongId(newValue);
             songHasChangedHandler.handle();
         });
-        add(songIdSpinner, 2, row, 1, 1);
     }
 
-    private void setSongName(int row) {
-        Label songNameLabel = new Label("Name");
-        songNameLabel.setId("SongNameLabel");
-        add(songNameLabel, 0, row, 1, 1);
+    private final Label songNameLabel = new Label("Name");;
+    private final TextField songNameTextField = new TextField();;
 
-        TextField songNameTextField = new TextField();
+    private void setSongName(int row) {
         songNameTextField.setPromptText("enter song name ...");
         songNameTextField.textProperty().bindBidirectional(songNameProperty);
         songNameProperty.addListener((observable, oldValue, newValue) -> {
             workingSong.setSongName(newValue);
             songHasChangedHandler.handle();
         });
-        add(songNameTextField, 2, row, 4, 1);
     }
 
     private final StringProperty performerProperty = new SimpleStringProperty();
-    private void setPerformer(int row) {
-        Label performerLabel = new Label("Performer");
-        add(performerLabel, 0, row, 1, 1);
+    private final Label performerLabel = new Label("Performer");
+    private final TextField performerTextField = new TextField();
 
-        TextField performerTextField = new TextField();
+    private void setPerformer(int row) {
         performerTextField.setPromptText("enter performer name ...");
         performerTextField.textProperty().bindBidirectional(performerProperty);
         performerProperty.addListener((observable, oldValue, newValue) -> {
             workingSong.getSongInfo().setPerformer(newValue);
             songHasChangedHandler.handle();
         });
-        add(performerTextField, 2, row, 4, 1);
     }
 
     private final ObjectProperty<Integer> tempoProperty = new SimpleObjectProperty<>(0);
+    private final Label tempoLabel = new Label("Tempo");
+    private final Spinner<Integer> tempoSpinner = new Spinner<>(1, 999, 1);
     private void setTempo(int row) {
-        Label tempoLabel = new Label("Tempo");
-        add(tempoLabel, 0, row, 1, 1);
-
-        Spinner<Integer> tempoSpinner = new Spinner<>(1, 999, 1);
         tempoSpinner.setEditable(true);
         tempoSpinner.setPromptText("tempo ...");
         tempoSpinner.getValueFactory().valueProperty().bindBidirectional(tempoProperty);
@@ -201,16 +177,14 @@ public class SongDetailsPane extends GridPane {
             workingSong.getSongInfo().setTempo(newValue);
             songHasChangedHandler.handle();
         });
-        add(tempoSpinner, 2, row, 1, 1);
     }
 
     private final StringProperty scaleProperty = new SimpleStringProperty(ScaleSelector.scales[0]);
     private final StringProperty pitchProperty = new SimpleStringProperty(ScaleSelector.pitches[0]);
-    private void setScale(int row) {
-        Label scaleLabel = new Label("Scale");
-        add(scaleLabel, 0, row, 1, 1);
+    private final Label scaleLabel = new Label("Scale");
+    private final ScaleSelector scaleSelector = new ScaleSelector(false);
 
-        ScaleSelector scaleSelector = new ScaleSelector(false);
+    private void setScale(int row) {
         scaleSelector.scaleProperty.bindBidirectional(scaleProperty);
         scaleProperty.addListener((observable, oldValue, newValue) -> {
             workingSong.getSongInfo().getScale().setScale(newValue);
@@ -221,16 +195,14 @@ public class SongDetailsPane extends GridPane {
             workingSong.getSongInfo().getScale().setPitch(newValue);
             songHasChangedHandler.handle();
         });
-        add(scaleSelector, 2, row, 6, 1);
     }
 
     private final ObjectProperty<Integer> beatsProperty = new SimpleObjectProperty<>(4);
     private final ObjectProperty<Integer> beatProperty = new SimpleObjectProperty<>(4);
-    private void setTimeSignature(int row) {
-        Label meterLabel = new Label("Meter");
-        add(meterLabel, 0, row, 1, 1);
 
-        SignatureSelector signatureSelector = new SignatureSelector();
+    private final Label meterLabel = new Label("Meter");
+    private final SignatureSelector signatureSelector = new SignatureSelector();;
+    private void setTimeSignature(int row) {
         signatureSelector.setId("SignatureSelector");
         signatureSelector.bpmProperty.bindBidirectional(beatsProperty);
         beatsProperty.addListener((observable, oldValue, newValue) -> {
@@ -242,7 +214,6 @@ public class SongDetailsPane extends GridPane {
             workingSong.getSongInfo().getSignature().setBeat(newValue);
             songHasChangedHandler.handle();
         });
-        add(signatureSelector, 2, row, 3, 1);
     }
 
     private void setDatasource(Song song) {
@@ -256,14 +227,46 @@ public class SongDetailsPane extends GridPane {
         beatProperty.set(song.getSongInfo().getSignature().getBeat());
     }
 
+    private void addComponents() {
+        getChildren().clear();
+
+        int row = 0;
+        add(songIdLabel, 0, row, 1, 1);
+        add(songIdSpinner, 2, row, 1, 1);
+
+        row++;
+        add(songNameLabel, 0, row, 1, 1);
+        add(songNameTextField, 2, row, 4, 1);
+
+        row++;
+        add(performerLabel, 0, row, 1, 1);
+        add(performerTextField, 2, row, 4, 1);
+
+        row++;
+        add(tempoLabel, 0, row, 1, 1);
+        add(tempoSpinner, 2, row, 1, 1);
+
+        row++;
+        add(scaleLabel, 0, row, 1, 1);
+        add(scaleSelector, 2, row, 6, 1);
+
+        row++;
+        add(meterLabel, 0, row, 1, 1);
+        add(signatureSelector, 2, row, 3, 1);
+
+    }
+
     public void setSong(Song song) {
-        workingSong = song;
+        if (song != null) {
+            workingSong = song;
 
-        ApplicationInfo.getInstance().setCurrentSong(new Song(song));
+            ApplicationInfo.getInstance().setCurrentSong(new Song(song));
 
-        setDatasource(song);
+            setDatasource(song);
 
-        buildPane();
+            buildPane();
+            addComponents();
+        }
     }
 
     public void setState(PlaylistState state) {
