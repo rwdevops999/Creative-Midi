@@ -6,6 +6,8 @@ import creative.scenes.sysex.SysexPane;
 import entity.AEntity;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -65,6 +67,7 @@ public class SceneActionsPane extends VBox {
         }
     }
 
+    private final StringProperty actionNameProperty = new SimpleStringProperty("Execute");
     private void buildPane(Pane owner, BiConsumer<AEntity, Pane>[] consumers, Supplier<AEntity> supplier, String actionName) {
         logger.debug("[CM_SCENE_ACTIONS_PANE] Building {}", getId());
 
@@ -75,6 +78,7 @@ public class SceneActionsPane extends VBox {
         getChildren().add(createButton(this, "deleteButton", "Delete", 80, consumers[BUTTON_DELETE], disabledProperties[BUTTON_DELETE], supplier));
         getChildren().add(createButton(this, "updateButton", "Update", 80, consumers[BUTTON_UPDATE], disabledProperties[BUTTON_UPDATE], supplier));
         Button actionButton = createButton(this, "actionButton", actionName, 80, consumers[BUTTON_ACTION], disabledProperties[BUTTON_ACTION], supplier);
+        actionButton.textProperty().bind(actionNameProperty);
         getChildren().add(actionButton);
         getChildren().add(createButton(this, "exportButton", "Export", 80, consumers[BUTTON_EXPORT], disabledProperties[BUTTON_EXPORT], supplier));
 
@@ -90,6 +94,10 @@ public class SceneActionsPane extends VBox {
             disabledProperties[i].set(true);
         }
     };
+
+    public void renameActionButtonName(String name) {
+        actionNameProperty.set(name);
+    }
 
     // ACCESSOR
     public MidiPane getMidiPane() {

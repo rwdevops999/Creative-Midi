@@ -20,28 +20,33 @@ public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiCon
     public void accept(T entity, P pane) {
         logger.debug("[CM_EXECUTE_CONSUMER<Playlist>] Handling Startup Playlist Thread");
 
+        SceneActionsPane actionsPane = (SceneActionsPane) pane;
+
         if (ApplicationInfo.getInstance().getMidiInputDevice() == null) {
             DialogFactory.renderErrorDialog("Device is not selected");
         } else {
-            logger.debug("[CM_EXECUTE_CONSUMER<Playlist>] Start keyboard service");
-            Service<SharedEntity> service = new KeyboardService();
-            service.start();
+            Service<SharedEntity> service = ApplicationInfo.getInstance().getKeyboardService();
+            if (service != null) {
+                service.cancel();
 
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ie) {
+                actionsPane.renameActionButtonName("Execute");
 
+                ApplicationInfo.getInstance().setKeyboardService(null);
+            } else {
+                actionsPane.renameActionButtonName("Stop");
+
+                service = new KeyboardService();
+                ApplicationInfo.getInstance().setKeyboardService(service);
+                service.start();
+
+                // handle stuff from keyboard service
+                service.valueProperty().addListener((observable, oldValue, newValue) -> {
+                    // newValue = Shared Entity
+                    if (newValue != null) {
+                        CommunicationModel.monitorInbound(newValue.getValue());
+                    }
+                });
             }
-
-            service.cancel();
-
-            service.valueProperty().addListener((observable, oldValue, newValue) -> {
-                // newValue = Shared Entity
-                if (newValue != null) {
-                    logger.debug("[CM_EXECUTE_CONSUMER<Playlist>] service received {}  -> FORWARD TO MONITOR",  newValue);
-
-                }
-            });
         }
     }
 }

@@ -31,7 +31,7 @@ public class SysexWriter {
 
                     receiver.send(message, -1);
 
-                    CommunicationModel.monitorOutgoing(sysexContent.getContent());
+                    CommunicationModel.monitorOutbound(sysexContent.getContent());
                 }
 
                 receiver.close();

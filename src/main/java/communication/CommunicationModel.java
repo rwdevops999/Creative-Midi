@@ -44,8 +44,13 @@ public class CommunicationModel {
         messageProperty.set(message);
     }
 
-    public static void monitorOutgoing (String message) {
+    public static void monitorOutbound (String message) {
         typeProperty.setValue(CommunicationType.OUTGOING);
+        messageProperty.set(message);
+    }
+
+    public static void monitorInbound (String message) {
+        typeProperty.setValue(CommunicationType.INCOMING);
         messageProperty.set(message);
     }
 }

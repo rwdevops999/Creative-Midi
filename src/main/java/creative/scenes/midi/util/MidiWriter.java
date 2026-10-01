@@ -44,7 +44,7 @@ public class MidiWriter {
 
                 String monitorMessage = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
                 CommunicationModel.setStatus(monitorMessage);
-                CommunicationModel.monitorOutgoing("[MIDI] " + message);
+                CommunicationModel.monitorOutbound("[MIDI] " + message);
 
                 // 4. Send message
                 receiver.send(midiMessage, -1);
@@ -73,7 +73,7 @@ public class MidiWriter {
                 String message;
                 message = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
                 CommunicationModel.setStatus(message);
-                CommunicationModel.monitorOutgoing("[MIDI] " + message);
+                CommunicationModel.monitorOutbound("[MIDI] " + message);
 
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
@@ -106,7 +106,7 @@ public class MidiWriter {
 
                 Platform.runLater(() -> {
                     CommunicationModel.setStatus(message);
-                    CommunicationModel.monitorOutgoing("[MIDI] " + message);
+                    CommunicationModel.monitorOutbound("[MIDI] " + message);
                 });
 
                 // 4. Send message

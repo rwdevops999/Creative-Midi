@@ -1,19 +1,140 @@
 package creative.scenes.playlist.service;
 
+import creative.panes.monitor.data.CommunicationType;
+import creative.scenes.playlist.PlaylistContainer;
+import creative.scenes.playlist.consumer.LoadSongConsumer;
 import creative.scenes.playlist.entity.SharedEntity;
+import creative.scenes.sysex.SysexContainer;
+import entity.playlist.Mapping;
+import entity.playlist.Song;
+import entity.sysex.Sysex;
+import entity.sysex.SysexContent;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
 import javax.sound.midi.*;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public class KeyboardService extends Service<SharedEntity> {
+    private static final Logger logger = LoggerFactory.getLogger(KeyboardService.class);
+
     private static final long FOREVER = Long.MAX_VALUE;
+
+    private static final byte ACTIVE_SENCE = -2;
+
+    private boolean songPlaying = false;
+    private String currentSong = null;
+
+    private final Function<Integer, SharedEntity> midiHandler = ((status) -> {
+        SharedEntity sharedEntity = null;
+
+        if (status == ShortMessage.START) {
+            sharedEntity = new SharedEntity(CommunicationType.INCOMING, "START");
+//            logger.error("[CM_KEYBOARD_SERVICE] MIDI = START => SongPlaying = true");
+            songPlaying = true;
+        } else if (status == ShortMessage.STOP) {
+            sharedEntity = new SharedEntity(CommunicationType.INCOMING, "STOP");
+//            logger.error("[CM_KEYBOARD_SERVICE] MIDI = STOP => current song = null");
+            currentSong = null;
+        }
+
+        return sharedEntity;
+    });
+
+    private Map<ByteBuffer, List<byte[]>> sysexTosysexMapping = new HashMap<>();
+    private Map<ByteBuffer, String> sysexToHumanMapping = new HashMap<>();
+
+    private ByteBuffer mapSysexToBytes(String name, SysexContent content) {
+        ByteBuffer bb = ByteBuffer.wrap(content.getData());
+
+        sysexToHumanMapping.put(bb, name);
+
+        return bb;
+    }
+
+    private List<byte[]> mapSysexToBytesList(String name, List<SysexContent> contentList) {
+        List<byte[]> byteBufferList = new ArrayList<>();
+
+        for (SysexContent sysexContent : contentList) {
+            mapSysexToBytes("part of " + name, sysexContent);
+            byteBufferList.add(sysexContent.getData());
+        }
+
+        return byteBufferList;
+    }
+
+    private void setupMappings (List<Mapping> mappings) {
+        sysexTosysexMapping = new HashMap<>();
+        sysexToHumanMapping = new HashMap<>();
+
+        mappings.forEach((mapping) -> {
+            Sysex srcSysex = SysexContainer.getSysex(mapping.getReceive());
+            Sysex dstSysex = SysexContainer.getSysex(mapping.getReply());
+
+            ByteBuffer srcBytes = mapSysexToBytes(srcSysex.getName(), srcSysex.getList().get(0));
+            List<byte[]> dstBytes = mapSysexToBytesList(dstSysex.getName(), dstSysex.getList());
+
+            sysexTosysexMapping.put(srcBytes, dstBytes);
+        });
+    }
+
+    private void prepareSong(String songName) {
+        Song song = PlaylistContainer.getSong(songName);
+
+        if (song != null) {
+            setupMappings(song.getMappings());
+        }
+    }
+
+    private final Function<String, SharedEntity> checkSongHandler = ((message) -> {
+        SharedEntity sharedEntity = null;
+
+        if (message.startsWith("F0 43 73 01 52 26")) {
+            logger.error("[CM_KEYBOARD_SERVICE] Received a song name");
+            LoadSongConsumer consumer = new LoadSongConsumer();
+            String songName = consumer.apply(message);
+
+            if (! songName.equals(currentSong)) {
+                logger.error("[CM_KEYBOARD_SERVICE] It's a new song => SongPlaying = false");
+                currentSong = songName;
+                prepareSong(songName);
+
+                sharedEntity = new SharedEntity(CommunicationType.SONG_SELECT, songName);
+                songPlaying = false;
+            }
+        }
+
+        return sharedEntity;
+    });
 
     @Override
     protected Task<SharedEntity> createTask() {
+
         return new Task<>() {
             private final MidiDevice midiInputDevice = ApplicationInfo.getInstance().getMidiInputDevice();
+
+            private void handleSysex(SysexMessage msg) {
+                ByteBuffer input = ByteBuffer.wrap(msg.getMessage());
+            }
+
+            private void handleMidi(ShortMessage msg) {
+                byte[] rawBytes = msg.getMessage();
+
+                if (rawBytes[0] != ACTIVE_SENCE) {
+                    SharedEntity sharedEntity = midiHandler.apply(msg.getStatus());
+                    if (sharedEntity != null) {
+                        updateValue(sharedEntity);
+                    }
+                }
+            }
 
             @Override
             protected SharedEntity call() throws Exception {
@@ -27,8 +148,9 @@ public class KeyboardService extends Service<SharedEntity> {
                     @Override
                     public void send(MidiMessage message, long timeStamp) {
                         if (message instanceof SysexMessage sysexMessage) {
+                            handleSysex(sysexMessage);
                         } else if (message instanceof ShortMessage shortMessage) {
-                        } else if (message instanceof MetaMessage metaMessage) {
+                            handleMidi(shortMessage);
                         }
                     }
 
@@ -36,6 +158,9 @@ public class KeyboardService extends Service<SharedEntity> {
                     public void close() {
                     }
                 };
+
+                Transmitter transmitter = midiInputDevice.getTransmitter();
+                transmitter.setReceiver(receiver);
 
                 while (!isCancelled()) {
                     try {
@@ -52,6 +177,8 @@ public class KeyboardService extends Service<SharedEntity> {
                 if (midiInputDevice.isOpen()) {
                     midiInputDevice.close();
                 }
+
+                songPlaying = false;
 
                 return null;
             }

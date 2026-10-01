@@ -1,11 +1,13 @@
 package util;
 
 import creative.scenes.midi.provider.MidiProvider;
+import creative.scenes.playlist.entity.SharedEntity;
 import creative.scenes.voice.provider.InstrumentProvider;
 import entity.midi.Midi;
 import entity.playlist.Song;
 import entity.sysex.Sysex;
 import entity.voice.Patch;
+import javafx.concurrent.Service;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -123,4 +125,9 @@ public class ApplicationInfo {
      */
     private Song currentSong;
 //    private Song dirtySong = null;
+
+    /**
+     * Keeping track of the keyboard (play) service
+     */
+    private Service<SharedEntity> keyboardService;
 }
