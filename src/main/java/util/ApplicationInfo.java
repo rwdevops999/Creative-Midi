@@ -3,6 +3,7 @@ package util;
 import creative.scenes.midi.provider.MidiProvider;
 import creative.scenes.voice.provider.InstrumentProvider;
 import entity.midi.Midi;
+import entity.playlist.Song;
 import entity.sysex.Sysex;
 import entity.voice.Patch;
 import javafx.scene.Scene;
@@ -116,4 +117,10 @@ public class ApplicationInfo {
      * Indiciation which keyboard file is loaded
      */
     private String keyboardProperties = null;
+
+    /**
+     * Current Song and DirtySong
+     */
+    private Song currentSong;
+    private Song dirtySong = null;
 }

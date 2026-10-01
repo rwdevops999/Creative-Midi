@@ -1,11 +1,13 @@
 package entity.playlist;
 
 import entity.AEntity;
+import entity.sysex.Sysex;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -57,4 +59,26 @@ public class Song extends AEntity {
     public String toString() {
         return "[SONG]: " + songName + System.lineSeparator() + getAdditionalInfo();
     }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Song other)) {
+            return false;
+        }
+
+        return Objects.equals(this.songName, other.songName) &&
+                Objects.deepEquals(this.songInfo, other.songInfo) &&
+                Objects.deepEquals(this.mappings, other.mappings) &&
+                Objects.equals(this.songId, other.songId)
+                ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(songId, songName, songInfo, mappings);
+    }
+
 }

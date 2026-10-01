@@ -1,10 +1,6 @@
 package creative.scenes.sysex.component;
 
-import creative.scenes.midi.handler.ChangedHandler;
-import creative.scenes.sysex.SysexStateMachine;
-import creative.scenes.sysex.data.SysexChangeHandler;
-import creative.scenes.sysex.data.SysexState;
-import javafx.beans.property.SimpleStringProperty;
+import eventhandlers.ChangeHandler;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -16,8 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.function.Consumer;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -46,7 +40,7 @@ public class SysexNamePane extends GridPane {
         getRowConstraints().add(rowConstraints);
     }
 
-    public SysexNamePane(Pane owner, StringProperty dsProperty, SysexChangeHandler handler) {
+    public SysexNamePane(Pane owner, StringProperty dsProperty, ChangeHandler handler) {
         this();
 
         resizePaneWidth(this, owner, 90);

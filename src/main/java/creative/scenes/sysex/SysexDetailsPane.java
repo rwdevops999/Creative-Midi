@@ -2,15 +2,13 @@ package creative.scenes.sysex;
 
 import creative.scenes.sysex.component.AddableSysexPane;
 import creative.scenes.sysex.component.SysexNamePane;
-import creative.scenes.sysex.data.SysexChangeHandler;
 import creative.scenes.sysex.data.SysexState;
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
-import javafx.application.Platform;
+import eventhandlers.ChangeHandler;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
@@ -21,7 +19,6 @@ import util.ApplicationInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -65,7 +62,7 @@ public class SysexDetailsPane extends VBox {
         }
     };
 
-    private final SysexChangeHandler changeHandler = () -> {
+    private final ChangeHandler changeHandler = () -> {
         Sysex originalSysex = ApplicationInfo.getInstance().getCurrentSysex();
         if (workingSysex != null && ! workingSysex.equals(originalSysex)) {
             ApplicationInfo.getInstance().setDirtySysex(workingSysex);
