@@ -69,6 +69,11 @@ public class PlaylistContainer {
         playlist.add(song);
     }
 
+    public static void updateSong(Song song) {
+        int index = playlist.indexOf(song);
+        playlist.set(index, song);
+    }
+
     public static Song getSong(String songName) {
         return playlist.stream().filter(song -> song.getSongName().equals(songName)).findFirst().orElse(null);
     }

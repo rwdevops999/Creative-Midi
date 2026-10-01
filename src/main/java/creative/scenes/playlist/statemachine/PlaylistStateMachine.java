@@ -80,6 +80,9 @@ public class PlaylistStateMachine {
                 CommunicationModel.setStatus("PLAYLIST STATE = ADDABLE");
             }
             case UPDATABLE -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = UPDATABLE");
             }
             case ADDED -> {
@@ -96,6 +99,10 @@ public class PlaylistStateMachine {
                 CommunicationModel.setStatus("PLAYLIST STATE = LOADED");
             }
             case UPDATED -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = UPDATED");
             }
         }
