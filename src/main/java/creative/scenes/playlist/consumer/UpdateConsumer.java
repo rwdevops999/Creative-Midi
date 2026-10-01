@@ -27,6 +27,6 @@ public class UpdateConsumer<T extends AEntity, P extends Pane> implements BiCons
         SceneActionsPane sceneActionsPane = (SceneActionsPane)pane;
         sceneActionsPane.getPlaylistPane().getPlaylistListPane().refreshList(song);
 
-        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.UPDATED);
+        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.FINISHED);
     }
 }

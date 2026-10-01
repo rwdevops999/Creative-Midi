@@ -4,6 +4,7 @@ import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import lombok.Getter;
 
+import java.util.Locale;
 import java.util.Stack;
 import java.util.function.BooleanSupplier;
 
@@ -65,50 +66,28 @@ public class PlaylistStateMachine {
     private void updateUI(BooleanSupplier supplier) {
 
         sceneActionsPane.disableAll();
+        CommunicationModel.setStatus("Playlist entry is " + currentState.name().toLowerCase());
         switch (currentState) {
             case EMPTY -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = EMPTY");
             }
-            case NEW -> {
+            case READY -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = NEW");
             }
             case ADDABLE -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
-                CommunicationModel.setStatus("PLAYLIST STATE = ADDABLE");
             }
             case UPDATABLE -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = UPDATABLE");
             }
-            case ADDED -> {
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = ADDED");
-            }
-            case READY -> {
+            case LOADED, FINISHED -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = LOADED");
-            }
-            case UPDATED -> {
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = UPDATED");
-            }
-            case DELETED -> {
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
-                CommunicationModel.setStatus("PLAYLIST STATE = DELETED");
+                if (currentState != PlaylistState.LOADED) {
+                    sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
+                }
             }
         }
     }

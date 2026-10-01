@@ -26,6 +26,6 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
 
         SceneActionsPane sceneActionsPane = (SceneActionsPane)pane;
         sceneActionsPane.getPlaylistPane().getSongDetailsPane().setSong(newSong);
-        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.NEW);
+        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.READY);
     }
 }
