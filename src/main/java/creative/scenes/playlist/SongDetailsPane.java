@@ -24,12 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.*;
 
 public class SongDetailsPane extends GridPane {
@@ -68,19 +65,15 @@ public class SongDetailsPane extends GridPane {
         buildPane();
     }
 
-    @Getter
-    private final PlaylistStateMachine stateMachine = new PlaylistStateMachine(PlaylistState.EMPTY);
-
     private final StringProperty songNameProperty = new SimpleStringProperty();
 
     @Getter
     private final BooleanSupplier supplier = () -> {
-        boolean result = false;
-
-        // TODO set supplier action
-
-        return result;
+        return ! PlaylistContainer.isEmpty();
     };
+
+    @Getter
+    private final PlaylistStateMachine stateMachine = new PlaylistStateMachine(PlaylistState.EMPTY, supplier);
 
     @Getter
     private final ChangeHandler songHasChangedHandler = () -> {

@@ -118,6 +118,9 @@ public class PlaylistContainer {
         }
 
         return result;
+    }
 
+    public static boolean isEmpty() {
+        return playlist.isEmpty();
     }
 }

@@ -48,7 +48,7 @@ public class PlaylistListPane extends VBox {
         playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 getPlaylistPane().getSongDetailsPane().setSong(PlaylistContainer.getSong(newValue));
-                getPlaylistPane().getSongDetailsPane().setState(PlaylistState.LOADED);
+                getPlaylistPane().getSongDetailsPane().setState(PlaylistState.FINISHED);
             }
         });
         VBox.setVgrow(playlistListView, Priority.ALWAYS);

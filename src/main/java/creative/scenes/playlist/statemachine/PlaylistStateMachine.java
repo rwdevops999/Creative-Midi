@@ -16,8 +16,8 @@ public class PlaylistStateMachine {
 
     private static SceneActionsPane sceneActionsPane;
 
-    public PlaylistStateMachine(PlaylistState initialState) {
-        transitionTo(initialState, true, null);
+    public PlaylistStateMachine(PlaylistState initialState, BooleanSupplier supplier) {
+        transitionTo(initialState, true, supplier);
     }
 
     public PlaylistState getLastState() {
@@ -66,6 +66,8 @@ public class PlaylistStateMachine {
     private void updateUI(BooleanSupplier supplier) {
 
         sceneActionsPane.disableAll();
+        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+
         CommunicationModel.setStatus("Playlist entry is " + currentState.name().toLowerCase());
         switch (currentState) {
             case EMPTY -> {
