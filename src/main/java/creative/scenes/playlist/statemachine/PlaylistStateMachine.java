@@ -1,9 +1,7 @@
-package creative.scenes.playlist;
+package creative.scenes.playlist.statemachine;
 
 import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
-import creative.scenes.playlist.statemachine.PlaylistState;
-import creative.scenes.sysex.data.SysexState;
 import lombok.Getter;
 
 import java.util.Stack;
@@ -85,6 +83,9 @@ public class PlaylistStateMachine {
                 CommunicationModel.setStatus("PLAYLIST STATE = ADDED");
             }
             case LOADED -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = LOADED");
             }
             case UPDATED -> {

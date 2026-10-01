@@ -83,4 +83,8 @@ public class PlaylistContainer {
 
         return 1;
     }
+
+    public static void deleteSongById(int id) {
+        playlist.removeIf(song -> song.getSongId() == id);
+    }
 }

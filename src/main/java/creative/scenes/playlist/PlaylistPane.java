@@ -3,7 +3,7 @@ package creative.scenes.playlist;
 import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.playlist.consumer.*;
-import creative.scenes.sysex.SysexStateMachine;
+import creative.scenes.playlist.statemachine.PlaylistStateMachine;
 import entity.AEntity;
 import entity.playlist.Song;
 import javafx.scene.layout.BorderPane;

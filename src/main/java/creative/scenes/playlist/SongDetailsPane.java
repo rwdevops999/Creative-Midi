@@ -1,12 +1,11 @@
 package creative.scenes.playlist;
 
 import creative.scenes.playlist.statemachine.PlaylistState;
-import creative.scenes.sysex.SysexContainer;
+import creative.scenes.playlist.statemachine.PlaylistStateMachine;
 import custom.components.playlist.ScaleSelector;
 import custom.components.playlist.SignatureSelector;
 import entity.playlist.Song;
 import eventhandlers.ChangeHandler;
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,13 +17,11 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
-import java.awt.Container;
 import java.util.function.BooleanSupplier;
 
 import static util.ColorScheme.getColor;
@@ -270,6 +267,10 @@ public class SongDetailsPane extends GridPane {
 
             buildPane();
             addComponents();
+        } else {
+            workingSong = null;
+            getPlaylistDetailsPane().getSongTitlePane().updateSongTitle("");
+            getChildren().clear();
         }
     }
 

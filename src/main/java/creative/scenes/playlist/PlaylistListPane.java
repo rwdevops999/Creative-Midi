@@ -57,8 +57,17 @@ public class PlaylistListPane extends VBox {
         logger.debug("[CM_PLAYLIST_LIST_PANE] Built {}", getId());
     }
 
+    public void refreshList(Song song) {
+        playlistListView.setItems(FXCollections.observableArrayList(PlaylistContainer.getSongnamesFromPlaylist()));
+
+        if (song != null) {
+            playlistListView.getSelectionModel().select(song.getSongName());
+        }
+    }
+
     public Song getSelectedSong() {
-        return null;
+        String songName = playlistListView.getSelectionModel().getSelectedItem();
+        return PlaylistContainer.getSong(songName);
     }
 
     // ACCESSORS
