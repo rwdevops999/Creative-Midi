@@ -80,7 +80,7 @@ public class SongDetailsPane extends GridPane {
     private final ChangeHandler songHasChangedHandler = () -> {
         Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
         if (workingSong != null && ! workingSong.equals(originalSong)) {
-            if (originalSong.getSongName().equals(songNameProperty.get()) && (PlaylistContainer.containsSong(songNameProperty.get()))) {
+            if (PlaylistContainer.containsSong(songNameProperty.get())) {
                 stateMachine.transitionTo(PlaylistState.UPDATABLE, false, supplier);
             } else {
                 stateMachine.transitionTo(PlaylistState.ADDABLE, false, supplier);
@@ -272,6 +272,10 @@ public class SongDetailsPane extends GridPane {
             getPlaylistDetailsPane().getSongTitlePane().updateSongTitle("");
             getChildren().clear();
         }
+    }
+
+    public Song getSong() {
+        return workingSong;
     }
 
     public void setState(PlaylistState state) {

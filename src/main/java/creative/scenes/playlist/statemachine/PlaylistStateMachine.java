@@ -74,6 +74,9 @@ public class PlaylistStateMachine {
                 CommunicationModel.setStatus("PLAYLIST STATE = NEW");
             }
             case ADDABLE -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
                 CommunicationModel.setStatus("PLAYLIST STATE = ADDABLE");
             }
             case UPDATABLE -> {

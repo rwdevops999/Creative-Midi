@@ -53,8 +53,7 @@ public class PlaylistPane extends BorderPane {
     }
 
     public AEntity getEntity() {
-        PlaylistListPane listPane = (PlaylistListPane)getLeft();
-        return listPane.getSelectedSong();
+        return getPlaylistDetailsPane().getSongDetailsPane().getSong();
     };
 
     // ACCESSORS
