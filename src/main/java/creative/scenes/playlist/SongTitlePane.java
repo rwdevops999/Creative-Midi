@@ -28,7 +28,7 @@ public class SongTitlePane extends VBox {
     public SongTitlePane(PlaylistDetailsPane owner) {
         this();
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
 
         setPaneHeightAsPercentage(this, owner, 5);
 
@@ -37,7 +37,7 @@ public class SongTitlePane extends VBox {
         buildPane();
     }
 
-    private final StringProperty songTitleProperty = new SimpleStringProperty("Here comes the song name");
+    private final StringProperty songTitleProperty = new SimpleStringProperty("");
 
     private void buildPane() {
         logger.debug("[CM_SONG_TITLE_PANE] Building {}", getId());
