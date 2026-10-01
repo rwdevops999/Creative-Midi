@@ -13,12 +13,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
 
 import java.util.ArrayList;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneHeightAsPercentage;
 
 public class SongMappingsPane extends StackPane {
@@ -36,8 +33,8 @@ public class SongMappingsPane extends StackPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
-        setPaneHeightAsPercentage(this, owner, 40);
+//        showPaneBorder(this, getColor("border", "red", null));
+        setPaneHeightAsPercentage(this, owner, 55);
 
         buildPane();
     }

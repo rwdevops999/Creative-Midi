@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PlaylistContainer {
@@ -51,7 +52,27 @@ public class PlaylistContainer {
         }
     }
 
+    /**
+     * Get all song names out of the playlist.
+     *
+     * @return A list containing the song names
+     */
     public static List<String> getSongnamesFromPlaylist() {
         return playlist.stream().sorted(Comparator.comparing(Song::getSongId)).map(Song::getSongName).toList();
+    }
+
+    /**
+     * Get the next song id from the list.
+     *
+     * @return The id + 1 (this will be the next song Id)
+     */
+    public static Integer getNextSongId() {
+        Song found = playlist.stream().max(Comparator.comparing(Song::getSongId)).orElse(null);
+
+        if (found != null) {
+            return found.getSongId()+1;
+        }
+
+        return 1;
     }
 }
