@@ -27,6 +27,8 @@ import util.ApplicationInfo;
 import java.awt.Container;
 import java.util.function.BooleanSupplier;
 
+import static util.ColorScheme.getColor;
+import static util.DummyUtil.showPaneBorder;
 import static util.Util.*;
 
 public class SongDetailsPane extends GridPane {
@@ -60,7 +62,7 @@ public class SongDetailsPane extends GridPane {
 
         parent = owner;
 
-//        showPaneBorder(this, getColor("border", "red", null));
+        showPaneBorder(this, getColor("border", "red", null));
 
         buildPane();
     }
@@ -150,6 +152,7 @@ public class SongDetailsPane extends GridPane {
         songNameProperty.addListener((observable, oldValue, newValue) -> {
             workingSong.setSongName(newValue);
             songHasChangedHandler.handle();
+            getPlaylistDetailsPane().getSongTitlePane().updateSongTitle(newValue);
         });
     }
 
@@ -260,6 +263,7 @@ public class SongDetailsPane extends GridPane {
         if (song != null) {
             workingSong = song;
 
+            getPlaylistDetailsPane().getSongTitlePane().updateSongTitle(song.getSongName());
             ApplicationInfo.getInstance().setCurrentSong(new Song(song));
 
             setDatasource(song);

@@ -22,6 +22,7 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
         logger.debug("[CM_NEW_CONSUMER<Playlist>] Handling New Song");
 
         Song newSong = new Song(PlaylistContainer.getNextSongId());
+        newSong.setSongName("Unknown");
 
         SceneActionsPane sceneActionsPane = (SceneActionsPane)pane;
         sceneActionsPane.getPlaylistPane().getSongDetailsPane().setSong(newSong);

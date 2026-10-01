@@ -1,5 +1,6 @@
 package creative.scenes.playlist;
 
+import creative.scenes.playlist.statemachine.PlaylistState;
 import entity.playlist.Song;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
@@ -47,6 +48,7 @@ public class PlaylistListPane extends VBox {
         playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 getPlaylistPane().getSongDetailsPane().setSong(PlaylistContainer.getSong(newValue));
+                getPlaylistPane().getSongDetailsPane().setState(PlaylistState.LOADED);
             }
         });
         VBox.setVgrow(playlistListView, Priority.ALWAYS);

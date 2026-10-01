@@ -2,6 +2,7 @@ package creative.scenes.playlist;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -21,6 +22,8 @@ public class SongTitlePane extends VBox {
         super();
 
         setId("SongTitlePane");
+
+        setPadding(new Insets(0, 0, 0, 5));
     }
 
     private PlaylistDetailsPane parent;
@@ -45,10 +48,9 @@ public class SongTitlePane extends VBox {
         Label songTitle = new Label();
         songTitle.textProperty().bind(songTitleProperty);
         songTitle.setStyle(
-                "-fx-text-fill: black; " +
+                "-fx-text-fill: blue; " +
                         "-fx-font-weight: bold;"
         );
-        songTitle.setId("DetailsTitleLabel");
         getChildren().add(songTitle);
 
         Separator separator = new Separator(Orientation.HORIZONTAL);
