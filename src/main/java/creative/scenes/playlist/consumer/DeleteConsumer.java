@@ -30,5 +30,7 @@ public class DeleteConsumer<T extends AEntity, P extends Pane> implements BiCons
 
         sceneActionsPane.getPlaylistPane().getSongDetailsPane().setSong(null);
         sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.EMPTY);
+
+        sceneActionsPane.getPlaylistPane().getSongMappingsPane().reset();
     }
 }

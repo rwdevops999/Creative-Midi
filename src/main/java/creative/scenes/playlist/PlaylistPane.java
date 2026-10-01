@@ -72,4 +72,8 @@ public class PlaylistPane extends BorderPane {
     public SongDetailsPane getSongDetailsPane() {
         return getPlaylistDetailsPane().getSongDetailsPane();
     }
+
+    public SongMappingsPane getSongMappingsPane() {
+        return getPlaylistDetailsPane().getSongMappingsPane();
+    }
 }

@@ -129,6 +129,10 @@ public class SongMappingsPane extends StackPane {
         }
     }
 
+    public void reset() {
+        getChildren().clear();
+        isPaneBuilt = false;
+    }
     // ACCESSORS
     public PlaylistDetailsPane getPlaylistDetailsPane() {
         return parent;
