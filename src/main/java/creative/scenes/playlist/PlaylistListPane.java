@@ -45,6 +45,7 @@ public class PlaylistListPane extends VBox {
         playlistListView.setId("PlaylistListView");
         playlistListView.setItems(FXCollections.observableArrayList(PlaylistContainer.getSongnamesFromPlaylist()));
         playlistListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            // TODO add handler functionality
         });
         VBox.setVgrow(playlistListView, Priority.ALWAYS);
         getChildren().add(playlistListView);

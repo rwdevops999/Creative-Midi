@@ -24,9 +24,9 @@ public class PlaylistDetailsPane extends BorderPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
+        showPaneBorder(this, getColor("border", "green", null));
 
-        setPaneWidthAsPercentage(this, owner, 70);
+        setPaneWidthAsPercentage(this, owner, 55);
         setPaneBackground(this);
 
         buildPane();
@@ -34,6 +34,10 @@ public class PlaylistDetailsPane extends BorderPane {
 
     private void buildPane() {
         logger.debug("[CM_PLAYLIST_DETAILS_PANE] Building {}", getId());
+
+        setTop(new SongTitlePane(this));
+        setCenter(new SongDetailsPane(this));
+        setBottom(new SongMappingsPane(this));
 
         logger.debug("[CM_PLAYLIST_DETAILS_PANE] Built {}", getId());
     }
