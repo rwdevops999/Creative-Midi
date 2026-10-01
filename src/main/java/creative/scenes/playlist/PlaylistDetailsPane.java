@@ -46,4 +46,14 @@ public class PlaylistDetailsPane extends BorderPane {
     public PlaylistPane getPlaylistPane() {
         return parent;
     }
+
+    public SongTitlePane getSongTitlePane() {
+        return (SongTitlePane) getTop();
+    }
+    public SongDetailsPane getSongDetailsPane() {
+        return (SongDetailsPane) getCenter();
+    }
+    public SongMappingsPane getSongMappingsPane() {
+        return (SongMappingsPane) getBottom();
+    }
 }

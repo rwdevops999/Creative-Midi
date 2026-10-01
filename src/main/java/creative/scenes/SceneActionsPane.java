@@ -1,6 +1,7 @@
 package creative.scenes;
 
 import creative.scenes.midi.MidiPane;
+import creative.scenes.playlist.PlaylistPane;
 import creative.scenes.sysex.SysexPane;
 import entity.AEntity;
 import javafx.beans.property.BooleanProperty;
@@ -97,5 +98,9 @@ public class SceneActionsPane extends VBox {
 
     public SysexPane getSysexPane() {
         return (SysexPane) parent;
+    }
+
+    public PlaylistPane getPlaylistPane() {
+        return (PlaylistPane) parent;
     }
 }

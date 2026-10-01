@@ -3,6 +3,7 @@ package creative.scenes.playlist;
 import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.playlist.consumer.*;
+import creative.scenes.sysex.SysexStateMachine;
 import entity.AEntity;
 import entity.playlist.Song;
 import javafx.scene.layout.BorderPane;
@@ -32,9 +33,6 @@ public class PlaylistPane extends BorderPane {
 
         CommunicationModel.setStatus("Let's play");
 
-        setLeft(new PlaylistListPane(this));
-        setCenter(new PlaylistDetailsPane(this));
-
         BiConsumer<AEntity, Pane>[] consumers = new BiConsumer[]{
                 new NewConsumer<Song, Pane>(),
                 new AddConsumer<Song, Pane>(),
@@ -44,9 +42,12 @@ public class PlaylistPane extends BorderPane {
                 new ExportConsumer<Song, Pane>()
         };
 
-        SceneActionsPane actionsPane = new SceneActionsPane(this, "Execute", consumers, this::getEntity);
-//        actionsPane.setDisabledButtons(new boolean[]{false, true, false, false, PlaylistContainer.containsSongs(), PlaylistContainer.containsSongs()});
-        setRight(actionsPane);
+        SceneActionsPane sceneActionsPane = new SceneActionsPane(this, "Execute", consumers, this::getEntity);
+        setRight(sceneActionsPane);
+        PlaylistStateMachine.setActionsPane(sceneActionsPane);
+
+        setLeft(new PlaylistListPane(this));
+        setCenter(new PlaylistDetailsPane(this));
 
         logger.debug("[CM_PLAYLIST_PANE] Built {}", getId());
     }
@@ -67,5 +68,9 @@ public class PlaylistPane extends BorderPane {
 
     public SceneActionsPane getSceneActionsPane() {
         return (SceneActionsPane) getRight();
+    }
+
+    public SongDetailsPane getSongDetailsPane() {
+        return getPlaylistDetailsPane().getSongDetailsPane();
     }
 }

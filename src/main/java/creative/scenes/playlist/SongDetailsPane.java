@@ -53,7 +53,7 @@ public class SongDetailsPane extends GridPane {
     public SongDetailsPane(PlaylistDetailsPane owner) {
         this();
 
-        setPaneHeightAsPercentage(this, owner, 40);
+        setPaneHeightAsPercentage(this, owner, 45);
         setPaneBackground(this);
 
         parent = owner;
@@ -101,6 +101,8 @@ public class SongDetailsPane extends GridPane {
         if (workingSong == null) {
             return;
         }
+
+        getChildren().clear();
 
         int row = -1;
 
@@ -224,6 +226,16 @@ public class SongDetailsPane extends GridPane {
             songHasChangedHandler.handle();
         });
         add(signatureSelector, 2, row, 3, 1);
+    }
+
+    public void setSong(Song song) {
+        workingSong = song;
+
+        buildPane();
+    }
+
+    public void setState(PlaylistState state) {
+        stateMachine.transitionTo(state, true, supplier);
     }
 
     // ACCESSORS

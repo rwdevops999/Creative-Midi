@@ -69,6 +69,7 @@ public class PlaylistStateMachine {
         sceneActionsPane.disableAll();
         switch (currentState) {
             case EMPTY -> {
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 CommunicationModel.setStatus("PLAYLIST STATE = EMPTY");
             }
             case NEW -> {

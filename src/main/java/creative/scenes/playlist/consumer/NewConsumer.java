@@ -1,8 +1,11 @@
 package creative.scenes.playlist.consumer;
 
+import creative.scenes.SceneActionsPane;
+import creative.scenes.playlist.PlaylistContainer;
 import creative.scenes.playlist.PlaylistDetailsPane;
 import creative.scenes.playlist.PlaylistListPane;
 import creative.scenes.playlist.PlaylistPane;
+import creative.scenes.playlist.statemachine.PlaylistState;
 import entity.AEntity;
 import entity.playlist.Song;
 import javafx.scene.layout.Pane;
@@ -17,5 +20,11 @@ public class NewConsumer<T extends AEntity, P extends Pane> implements BiConsume
     @Override
     public void accept(T entity, P pane) {
         logger.debug("[CM_NEW_CONSUMER<Playlist>] Handling New Song");
+
+        Song newSong = new Song(PlaylistContainer.getNextSongId());
+
+        SceneActionsPane sceneActionsPane = (SceneActionsPane)pane;
+        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setSong(newSong);
+        sceneActionsPane.getPlaylistPane().getSongDetailsPane().setState(PlaylistState.NEW);
     }
 }
