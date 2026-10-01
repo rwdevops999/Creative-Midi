@@ -65,7 +65,7 @@ public class SysexDetailsPane extends VBox {
     private final ChangeHandler changeHandler = () -> {
         Sysex originalSysex = ApplicationInfo.getInstance().getCurrentSysex();
         if (workingSysex != null && ! workingSysex.equals(originalSysex)) {
-            ApplicationInfo.getInstance().setDirtySysex(workingSysex);
+//            ApplicationInfo.getInstance().setDirtySysex(workingSysex);
 
             if (originalSysex.getName().equals(dsSysexName.get()) && (SysexContainer.containsSysex(dsSysexName.get()))) {
                 stateMachine.transitionTo(SysexState.UPDATABLE, false, supplier);
@@ -73,7 +73,7 @@ public class SysexDetailsPane extends VBox {
                 stateMachine.transitionTo(SysexState.ADDABLE, false, supplier);
             }
         } else {
-            ApplicationInfo.getInstance().setDirtySysex(null);
+//            ApplicationInfo.getInstance().setDirtySysex(null);
             stateMachine.undoStateWithSkips(stateMachine.getLastState(), supplier);
         }
     };

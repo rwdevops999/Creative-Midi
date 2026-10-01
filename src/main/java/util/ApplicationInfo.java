@@ -106,7 +106,7 @@ public class ApplicationInfo {
      * Current Sysex and DirtySysex
      */
     private Sysex currentSysex;
-    private Sysex dirtySysex = null;
+//    private Sysex dirtySysex = null;
 
     /**
      * Device Scanner Thread
@@ -122,5 +122,5 @@ public class ApplicationInfo {
      * Current Song and DirtySong
      */
     private Song currentSong;
-    private Song dirtySong = null;
+//    private Song dirtySong = null;
 }

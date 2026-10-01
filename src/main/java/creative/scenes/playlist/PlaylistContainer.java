@@ -61,6 +61,10 @@ public class PlaylistContainer {
         return playlist.stream().sorted(Comparator.comparing(Song::getSongId)).map(Song::getSongName).toList();
     }
 
+    public static boolean containsSong(String songName) {
+        return playlist.stream().anyMatch(song -> song.getSongName().equals(songName));
+    }
+
     /**
      * Get the next song id from the list.
      *

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
+import java.awt.Container;
 import java.util.function.BooleanSupplier;
 
 import static util.Util.setPaneBackground;
@@ -91,12 +92,15 @@ public class SongDetailsPane extends GridPane {
             stateMachine.undoStateWithSkips(stateMachine.getLastState(), supplier);
         }
  */
-        System.out.println("Some Song value has changed");
         Song originalSong = ApplicationInfo.getInstance().getCurrentSong();
         if (workingSong != null && ! workingSong.equals(originalSong)) {
-            System.out.println("Working song is dirty");
+            if (originalSong.getSongName().equals(songNameProperty.get()) && (PlaylistContainer.containsSong(songNameProperty.get()))) {
+                stateMachine.transitionTo(PlaylistState.UPDATABLE, false, supplier);
+            } else {
+                stateMachine.transitionTo(PlaylistState.ADDABLE, false, supplier);
+            }
         } else {
-            System.out.println("Working song is clean");
+            stateMachine.undoStateWithSkips(stateMachine.getLastState(), supplier);
         }
     };
 
@@ -256,7 +260,6 @@ public class SongDetailsPane extends GridPane {
         workingSong = song;
 
         ApplicationInfo.getInstance().setCurrentSong(new Song(song));
-        ApplicationInfo.getInstance().setDirtySong(null);
 
         setDatasource(song);
 
