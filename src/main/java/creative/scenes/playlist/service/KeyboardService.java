@@ -3,12 +3,16 @@ package creative.scenes.playlist.service;
 import creative.panes.monitor.data.CommunicationType;
 import creative.scenes.playlist.PlaylistContainer;
 import creative.scenes.playlist.consumer.LoadSongConsumer;
+import creative.scenes.playlist.entity.CommunicationInfo;
 import creative.scenes.playlist.entity.SharedEntity;
 import creative.scenes.sysex.SysexContainer;
+import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
+import creative.scenes.sysex.util.SysexWriter;
 import entity.playlist.Mapping;
 import entity.playlist.Song;
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -26,12 +30,16 @@ import java.util.function.Function;
 public class KeyboardService extends Service<SharedEntity> {
     private static final Logger logger = LoggerFactory.getLogger(KeyboardService.class);
 
+    private final SysexWriter sysexWriter = new SysexWriter();
+
     private static final long FOREVER = Long.MAX_VALUE;
 
     private static final byte ACTIVE_SENCE = -2;
 
     private boolean songPlaying = false;
     private String currentSong = null;
+
+    private Map<ByteBuffer, CommunicationInfo> communicationInfoMap = new HashMap<>();
 
     private final Function<Integer, SharedEntity> midiHandler = ((status) -> {
         SharedEntity sharedEntity = null;
@@ -49,40 +57,28 @@ public class KeyboardService extends Service<SharedEntity> {
         return sharedEntity;
     });
 
-    private Map<ByteBuffer, List<byte[]>> sysexTosysexMapping = new HashMap<>();
-    private Map<ByteBuffer, String> sysexToHumanMapping = new HashMap<>();
-
-    private ByteBuffer mapSysexToBytes(String name, SysexContent content) {
-        ByteBuffer bb = ByteBuffer.wrap(content.getData());
-
-        sysexToHumanMapping.put(bb, name);
-
-        return bb;
-    }
-
-    private List<byte[]> mapSysexToBytesList(String name, List<SysexContent> contentList) {
-        List<byte[]> byteBufferList = new ArrayList<>();
-
-        for (SysexContent sysexContent : contentList) {
-            mapSysexToBytes("part of " + name, sysexContent);
-            byteBufferList.add(sysexContent.getData());
-        }
-
-        return byteBufferList;
+    private ByteBuffer mapSysexToBytes(SysexContent content) {
+        return ByteBuffer.wrap(content.getData());
     }
 
     private void setupMappings (List<Mapping> mappings) {
-        sysexTosysexMapping = new HashMap<>();
-        sysexToHumanMapping = new HashMap<>();
+        communicationInfoMap = new HashMap<>();
 
         mappings.forEach((mapping) -> {
             Sysex srcSysex = SysexContainer.getSysex(mapping.getReceive());
             Sysex dstSysex = SysexContainer.getSysex(mapping.getReply());
 
-            ByteBuffer srcBytes = mapSysexToBytes(srcSysex.getName(), srcSysex.getList().get(0));
-            List<byte[]> dstBytes = mapSysexToBytesList(dstSysex.getName(), dstSysex.getList());
+            ByteBuffer srcBytes = mapSysexToBytes(srcSysex.getList().get(0));
 
-            sysexTosysexMapping.put(srcBytes, dstBytes);
+            CommunicationInfo ci = new CommunicationInfo(mapping.getReceive());
+            for (SysexContent content : dstSysex.getList()) {
+                CommunicationInfo sysexCi = new CommunicationInfo("part of " + dstSysex.getName());
+                sysexCi.setData(content.getData());
+
+                ci.getReplies().add(sysexCi);
+            }
+
+            communicationInfoMap.put(srcBytes, ci);
         });
     }
 
@@ -123,6 +119,31 @@ public class KeyboardService extends Service<SharedEntity> {
 
             private void handleSysex(SysexMessage msg) {
                 ByteBuffer input = ByteBuffer.wrap(msg.getMessage());
+                CommunicationInfo ci = communicationInfoMap.get(input);
+                if (ci != null) {
+                    Platform.runLater(() -> {
+                        SharedEntity inEntity = new SharedEntity(CommunicationType.INCOMING, ci.getName());
+                        // TODO Send to Monitor INBOUND ci.getName();
+                        updateValue(inEntity);
+                    });
+
+                    if (songPlaying) {
+                        for (CommunicationInfo communicationInfo : ci.getReplies()) {
+                            Platform.runLater(() -> {
+                                SharedEntity outEntity = new SharedEntity(CommunicationType.OUTGOING, communicationInfo.getName());
+                                updateValue(outEntity);
+                            });
+                            sysexWriter.sendSysex(communicationInfo.getData());
+                        }
+                    } else {
+                        SharedEntity sharedEntity = checkSongHandler.apply(SysexToHexStringConvertor.convertToHexString(msg.getMessage()));
+                        if (sharedEntity != null) {
+                            Platform.runLater(() -> {
+                                updateValue(sharedEntity);
+                            });
+                        }
+                    }
+                }
             }
 
             private void handleMidi(ShortMessage msg) {

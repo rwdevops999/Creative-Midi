@@ -40,4 +40,22 @@ public class SysexWriter {
             }
         }
     }
+
+    public void sendSysex(byte[] data) {
+        MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
+        if (outputDevice == null) {
+            CommunicationModel.monitorError("No device selected");
+        } else {
+            try {
+                Receiver receiver = outputDevice.getReceiver();
+
+                SysexMessage message = new SysexMessage();
+                message.setMessage(data, data.length);
+
+                receiver.send(message, -1);
+            } catch (MidiUnavailableException | InvalidMidiDataException e) {
+                DialogFactory.renderErrorDialog(e.getMessage());
+            }
+        }
+    }
 }
