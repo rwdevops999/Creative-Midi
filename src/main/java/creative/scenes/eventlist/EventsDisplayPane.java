@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sound.midi.Sequence;
-import java.util.List;
 import java.util.Queue;
 
 import static util.ColorScheme.getColor;
@@ -150,10 +149,11 @@ public class EventsDisplayPane extends VBox {
                     MidiEventInfo eventInfo = getTableRow() != null ? getTableRow().getItem() : null;
 
                     if (eventInfo != null) {
-                        String hexColor = String.format("#%08X", eventInfo.getItemColor() & 0xFFFFFFFFL);
-                        setText(item);
-                        setStyle("-fx-text-fill: " + hexColor + ";");
+//TODO                        String hexColor = String.format("#%08X", eventInfo.getItemColor() & 0xFFFFFFFFL);
+//                        setText(item);
+//                        setStyle("-fx-text-fill: " + hexColor + ";");
                     } else {
+                        setText(null);
                         setText(null);
                         setStyle("-fx-text-fill: black;");
                     }
@@ -177,9 +177,9 @@ public class EventsDisplayPane extends VBox {
                     MidiEventInfo eventInfo = getTableRow() != null ? getTableRow().getItem() : null;
 
                     if (eventInfo != null) {
-                        String hexColor = String.format("#%08X", eventInfo.getItemColor() & 0xFFFFFFFFL);
-                        setText(item.toString());
-                        setStyle("-fx-text-fill: " + hexColor + ";");
+//TODO                        String hexColor = String.format("#%08X", eventInfo.getItemColor() & 0xFFFFFFFFL);
+//                        setText(item.toString());
+//                        setStyle("-fx-text-fill: " + hexColor + ";");
                     } else {
                         setText(null);
                         setStyle("-fx-text-fill: black;");

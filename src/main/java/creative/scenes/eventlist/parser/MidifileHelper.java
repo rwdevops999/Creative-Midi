@@ -1,16 +1,11 @@
 package creative.scenes.eventlist.parser;
 
-import creative.scenes.eventlist.parser.data.EventType;
-import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.eventlist.parser.entity.TimeSignature;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sound.midi.*;
 import java.time.Duration;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import static creative.scenes.eventlist.parser.data.MidiConstants.TEMPO_EVENT;
 import static creative.scenes.eventlist.parser.data.MidiConstants.TIME_SIGNATURE_EVENT;
@@ -117,71 +112,5 @@ public class MidifileHelper {
                 duration.toSecondsPart(),
                 duration.toMillisPart()
         );
-    }
-
-    @Getter
-    private static Queue<MidiEventInfo> events = new LinkedList<>();
-
-    public static void processMidi(Sequence sequence) {
-        events = new LinkedList<>();
-
-        int midiEvents = 0;
-        int metaEvents = 0;
-        int sysexEvents = 0;
-
-        int trackNumber = 0;
-
-        try {
-            for (Track track : sequence.getTracks()) {
-                trackNumber++;
-
-                for (int i = 0; i < track.size(); i++) {
-                    boolean handled = false;
-                    MidiEvent event = track.get(i);
-
-                    long tick = MBTCalculator.convertTick(event.getTick());
-                    MidiMessage message;
-                    MidiEventInfo midiEventInfo = new MidiEventInfo(tick, MBTCalculator.calculateMBT(tick), trackNumber, event);
-                    message = event.getMessage();
-                    if (message instanceof ShortMessage midiMessage) {
-                        midiEvents++;
-                        if (midiEvents == 6) {
-                            System.out.println("TEST");
-                        }
-                        midiEventInfo.setEventType(EventType.MIDI);
-/* TODO HandleMessage
-                        if (MidiProcessor.handleMessage(midiMessage, midiEventInfo)) {
-                            handled = true;
-                        } */
-                    } else if (message instanceof MetaMessage metaMessage) {
-                        metaEvents++;
-                        midiEventInfo.setEventType(EventType.META);
-/* TODO HandleMessage
-                        if (MetaProcessor.handleMessage(metaMessage, midiEventInfo)) {
-                            handled = true;
-                        } */
-                    } else if (message instanceof SysexMessage sysexMessage) {
-                        sysexEvents++;
-                        midiEventInfo.setEventType(EventType.SYSEX);
-/* TODO HandleMessage
-                        if (SysExProcessor.handleMessage(sysexMessage, midiEventInfo)) {
-                            handled = true;
-                        } */
-                    } else {
-                        logger.error("[CM_MIDI_FILE_PROCESSOR] Unknown message type: " + message.getClass().getName());
-                    }
-
-                    if (handled) {
-                        events.add(midiEventInfo);
-                    }
-                }
-            }
-
-            logger.debug("MIDI EVENTS  = {}", midiEvents);
-            logger.debug("META EVENTS  = {}", metaEvents);
-            logger.debug("SYSEX EVENTS = {}", sysexEvents);
-        } catch (Exception e) {
-            logger.error("[CM_MIDIFILE_HELPER] Exception. CAUSE {}", e.getMessage());
-        }
     }
 }
