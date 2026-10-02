@@ -169,14 +169,14 @@ public class SpeakerPane extends HBox {
         midi.setStatus(String.format("%02X", ShortMessage.CONTROL_CHANGE));
         midi.setByte1(0);
         midi.setByte2(patch.getMsb());
-        if (midiWriter.sendMidiMessageAsString(midi.toString())) {
+        if (midiWriter.sendMidiAsString(midi.toString())) {
             midi.setByte1(32);
             midi.setByte2(patch.getLsb());
-            if (midiWriter.sendMidiMessageAsString(midi.toString())) {
+            if (midiWriter.sendMidiAsString(midi.toString())) {
                 midi.setStatus(String.format("%02X", ShortMessage.PROGRAM_CHANGE));
                 midi.setByte1(patch.getPc());
                 midi.setByte2(0);
-                midiWriter.sendMidiMessageAsString(midi.toString());
+                midiWriter.sendMidiAsString(midi.toString());
             } else {
                 result = false;
             }

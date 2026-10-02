@@ -127,7 +127,7 @@ public class KeyboardService extends Service<SharedEntity> {
                     if (songPlaying) {
                         for (CommunicationInfo communicationInfo : ci.getReplies()) {
                             Platform.runLater(() -> {
-                                SharedEntity outEntity = new SharedEntity(CommunicationType.SONG_SELECT, communicationInfo.getName());
+                                SharedEntity outEntity = new SharedEntity(CommunicationType.OUTGOING, communicationInfo.getName());
                                 updateValue(outEntity);
                             });
                             sysexWriter.sendSysex(communicationInfo.getData());

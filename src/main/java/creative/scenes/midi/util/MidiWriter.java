@@ -83,7 +83,7 @@ public class MidiWriter {
         }
     }
 
-    public boolean sendMidiMessageAsString (String message) {
+    public boolean sendMidiAsString (String message) {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             CommunicationModel.monitorError("No device selected");
@@ -96,9 +96,17 @@ public class MidiWriter {
                 // 1. Split the string into hex tokens
                 String[] hexTokens = message.trim().split("\\s+");
 
+                int data1  = Integer.parseInt("00", 16); // 0x3C (60)  -> Note C4
+                int data2  = Integer.parseInt( "00", 16); // 0x3F (63)  -> Velocity
+
                 int status = Integer.parseInt(hexTokens[0], 16); // 0x90 (144) -> Note On, Channel 1
-                int data1  = Integer.parseInt(hexTokens[1], 16); // 0x3C (60)  -> Note C4
-                int data2  = Integer.parseInt(hexTokens[2], 16); // 0x3F (63)  -> Velocity
+                if (hexTokens.length > 1) {
+                    data1 = Integer.parseInt(hexTokens[1], 16); // 0x3C (60)  -> Note C4
+                }
+
+                if (hexTokens.length > 2) {
+                    data2 = Integer.parseInt(hexTokens[2], 16); // 0x3F (63)  -> Velocity
+                }
 
                 // 3. Construct and configure the ShortMessage
                 ShortMessage shortMessage = new ShortMessage();

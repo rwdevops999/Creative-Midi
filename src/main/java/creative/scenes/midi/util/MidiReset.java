@@ -10,10 +10,12 @@ import java.util.List;
 
 public class MidiReset {
     private List<String> midiMessages = new ArrayList<>();
+    private MidiWriter midiWriter = new MidiWriter();
 
     public MidiReset() {
-        MidiWriter midiWriter = new MidiWriter();
+    }
 
+    public void reset() {
         Midi midi = new Midi();
         midi.setMessageType(MessageType.channel.name());
         midi.setByte1Type(ByteType.FreeValue);
@@ -86,7 +88,7 @@ public class MidiReset {
 
     private void executeBulk(MidiWriter midiWriter, List<String> midiMessages) {
         for (String mid : midiMessages) {
-            if (! midiWriter.sendMidiMessageAsString(mid)) {
+            if (! midiWriter.sendMidiAsString(mid)) {
                 break;
             }
         }

@@ -40,7 +40,7 @@ public class ControlsPane extends HBox {
 
         // Midi Off Button
         getChildren().add(new IconButton("midireset", "reset MIDI", "icons/midi.png", e -> {
-            MidiReset midiReset = new MidiReset();
+            new MidiReset().reset();
         }));
 
         // Light/dark Button

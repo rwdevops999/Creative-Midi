@@ -83,6 +83,8 @@ public class Midi extends AEntity {
         setName("Unknown");
         setStatus("00");
         setMessageType("system");
+        setByte1(0);
+        setByte2(0);
     }
 
     public Midi(Midi other) {
