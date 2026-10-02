@@ -56,7 +56,7 @@ public class MetaProcessor {
      * @return true, if the event should be visible, false if the event shouldn't be visible
      */
     public static boolean processMessage(MetaMessage message, MidiEventInfo midiEventInfo) {
-        boolean result = false;
+        boolean result = true;
 
         String messageInfo = SysexToHexStringConvertor.convertToHexString(message.getData());
         midiEventInfo.setEventType(EventType.META);
@@ -66,72 +66,33 @@ public class MetaProcessor {
         byte[] data = message.getData();
 
         switch (type) {
-            case 0x00 -> handleSequencenumber(data, midiEventInfo);
-            case 0x01 -> {
-                handleText(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x02 -> {
-                handleCopyright(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x03 -> {
-                handleTrackname(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x04 -> {
-                handleInstrumentname(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x05 -> {
-                handleLyric(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x06 -> {
-                handleMarker(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x07 -> {
-                handleCuepoint(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x08 -> handleProgramname(data, midiEventInfo);
-            case 0x09 -> handleDevicename(data, midiEventInfo);
-            case 0x2F -> {
-                handleEndOfTrack(data, midiEventInfo);
-                result = false; // We don't want this in the events list, so KEEP this
-            }
-            case 0x51 -> {
-                handleTempo(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x54 -> {
-                handleSMPTEoffset(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x58 -> {
-                handleTimesignature(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
-            case 0x59 -> {
-                handleKeysignature(data, midiEventInfo);
-                result = false; // TODO remove this
-            }
+//            case 0x00 -> handleSequencenumber(data, midiEventInfo);
+            case 0x01 -> handleText(data, midiEventInfo);
+            case 0x02 -> handleCopyright(data, midiEventInfo);
+            case 0x03 -> handleTrackname(data, midiEventInfo);
+            case 0x04 -> handleInstrumentname(data, midiEventInfo);
+            case 0x05 -> handleLyric(data, midiEventInfo);
+            case 0x06 -> handleMarker(data, midiEventInfo);
+            case 0x07 -> handleCuepoint(data, midiEventInfo);
+//            case 0x08 -> handleProgramname(data, midiEventInfo);
+//            case 0x09 -> handleDevicename(data, midiEventInfo);
+            case 0x21 -> handleMIDIport(data, midiEventInfo);
+            case 0x2F -> result = false; // We don't want this in the events list, so KEEP this
+            case 0x51 -> handleTempo(data, midiEventInfo);
+            case 0x54 -> handleSMPTEoffset(data, midiEventInfo);
+            case 0x58 -> handleTimesignature(data, midiEventInfo);
+            case 0x59 -> handleKeysignature(data, midiEventInfo);
             case 0x7F -> {
                 handleSequencer(data, midiEventInfo);
-                result = false; // TODO remove this
+                result = false;
             }
-            default -> result = false;
+            default -> handleUnknown(type, midiEventInfo);
         }
 
         String typeString = String.format("%02X", type & 0xFF);
         midiEventInfo.setMessage("FF " + typeString + " " + messageInfo);
 
         return result;
-    }
-
-    private static void handleSequencenumber(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("SEQUENCENUMBER");
     }
 
     private static void handleText(byte[] data, MidiEventInfo midiEventInfo) {
@@ -189,16 +150,17 @@ public class MetaProcessor {
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
-    private static void handleProgramname(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("PROGRAMNAME");
-    }
+    private static void handleMIDIport(byte[] data, MidiEventInfo midiEventInfo) {
+        midiEventInfo.setColor(getColor("meta", "midi port"));
 
-    private static void handleDevicename(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("DEVICENAME");
+        midiEventInfo.setDescription("Midi Port");
+
+        int portNumber = data[0] & 0xFF;
+
+        midiEventInfo.setComment("" + portNumber);
     }
 
     private static void handleEndOfTrack(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("END OF TRACK");
     }
 
     private static void handleTempo(byte[] data, MidiEventInfo midiEventInfo) {
@@ -303,7 +265,13 @@ public class MetaProcessor {
         midiEventInfo.setComment(vendorId);
     }
 
-    // Helper Methods
+    private static void handleUnknown(int type, MidiEventInfo midiEventInfo) {
+        midiEventInfo.setColor(getColor("meta", "unknown"));
+        midiEventInfo.setDescription("Unknown META event");
+        midiEventInfo.setComment(String.format("%X2", type));
+    }
+
+        // Helper Methods
     private static String getMusicalKeyName(int sharpsFlats, boolean isMinor) {
         if (!isMinor) {
             switch (sharpsFlats) {
