@@ -1,5 +1,6 @@
 package creative.scenes.midi.util;
 
+import creative.scenes.voice.components.MultiChannelMidiReceiver;
 import custom.components.voice.ChannelIndicator;
 import custom.dialog.DialogFactory;
 import eventhandlers.IThreadEventHandler;
@@ -12,8 +13,8 @@ import java.util.Map;
 public class MidiDemo {
     private static Worker worker;
     private static boolean isPlaying = false;
-    public static void playDemo(IThreadEventHandler successHandler, IThreadEventHandler interruptedHandler, Map<Integer, ChannelIndicator> midiChannelIndicators) {
-        worker = new Worker(ApplicationInfo.getInstance().getMidiOutputDevice(), midiChannelIndicators);
+    public static void playDemo(IThreadEventHandler successHandler, IThreadEventHandler interruptedHandler, MultiChannelMidiReceiver multiChannelMidiReceiver) {
+        worker = new Worker(ApplicationInfo.getInstance().getMidiOutputDevice(), multiChannelMidiReceiver);
         worker.setOnSucceededHandler(successHandler);
         worker.setOnInterruptedHandler(interruptedHandler);
         if (worker.readyToRun()) {
@@ -37,7 +38,7 @@ public class MidiDemo {
             isPlaying = false;
             for (ChannelIndicator channelIndicator : channelIndicators.values()) {
                 if (channelIndicator != null) {
-                    channelIndicator.updateLight(false);
+                    channelIndicator.setActive(false);
                 }
             }
 /*            if (channelIndicator != null) {

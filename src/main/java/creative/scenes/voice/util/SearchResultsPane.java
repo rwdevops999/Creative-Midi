@@ -7,8 +7,11 @@ import entity.voice.Patch;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
@@ -67,15 +70,41 @@ public class SearchResultsPane extends AnchorPane {
 
         table.setId("VoicesTable");
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        table.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            DirectSingleton.getInstance().setSelectedPatch(newValue);
-            // TODO - normal click is channel 0
-            // TODO - shift click is channel 1
-            // TODO - control click is channel 2
-            if (ApplicationInfo.getInstance().getMidiOutputDevice() != null && newValue != null) {
-                getVoiceSearchResultsPane().getSpeakerPane().sendAsMidi(0, newValue);
+        table.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            if (event.getButton() != MouseButton.PRIMARY) return; // Alleen linksklikken
+
+            // Look for the clicked tableRow
+            Node target = (Node) event.getTarget();
+            while (target != null && !(target instanceof TableRow)) {
+                target = target.getParent();
+            }
+
+            if (target instanceof TableRow) {
+                TableRow<?> row = (TableRow<?>) target;
+                if (!row.isEmpty()) {
+
+                    Patch item = (Patch) row.getItem();
+                    boolean isAlreadySelected = row.isSelected();
+
+                    int channel = 0;
+
+                    // Scenario 1: CTRL is ingedrukt
+                    if (event.isControlDown()) {
+                        if (isAlreadySelected) {
+                            event.consume(); // Voorkomt deselectie!
+                        }
+
+                        channel = 2;
+                    } else if (event.isShiftDown()) {
+                        channel = 1;
+                        event.consume();
+                    }
+
+                    getVoiceSearchResultsPane().getSpeakerPane().sendAsMidi(channel, item);
+                }
             }
         });
+
         table.getColumns().addAll(patchColumn, bankColumn, msbColumn, lsbColumn, pcColumn);
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

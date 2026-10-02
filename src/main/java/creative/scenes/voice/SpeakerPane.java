@@ -5,6 +5,7 @@ import creative.scenes.base.BaseClosePane;
 import creative.scenes.midi.data.ByteType;
 import creative.scenes.midi.util.MidiDemo;
 import creative.scenes.midi.util.MidiWriter;
+import creative.scenes.voice.components.MultiChannelMidiReceiver;
 import custom.components.voice.ChannelIndicator;
 import custom.dialog.DialogFactory;
 import entity.midi.Midi;
@@ -45,8 +46,8 @@ public class SpeakerPane extends HBox {
         setId("SpeakerPane");
 
         setSpacing(10);
-        setAlignment(Pos.BASELINE_LEFT);
-        setPadding(new Insets(2));
+        setAlignment(Pos.CENTER_LEFT);
+        setPadding(new Insets(0, 0, 2, 0));
     }
 
     private VoiceSearchResultsPane parent;
@@ -79,45 +80,47 @@ public class SpeakerPane extends HBox {
         Map<Integer, ChannelIndicator> ledMap = new HashMap<>();
 
         // TODO I need a ChannelIndicator with different lights and pass them as a list
-        ledMap.put(0, new ChannelIndicator(getColor("voice", "ledRed", "on"), getColor("voice", "ledRed", "off")));
-        ledMap.put(1, new ChannelIndicator(getColor("voice", "ledGreen", "on"), getColor("voice", "ledGreen", "off")));
-        ledMap.put(2, new ChannelIndicator(getColor("voice", "ledBlue", "on"), getColor("voice", "ledBlue", "off")));
+        ledMap.put(0, new ChannelIndicator("Ch 1:", getColor("voice", "ledRed", "on"), getColor("voice", "ledRed", "off")));
+        ledMap.put(1, new ChannelIndicator("Ch 2 (⇧):", getColor("voice", "ledGreen", "on"), getColor("voice", "ledGreen", "off")));
+        ledMap.put(2, new ChannelIndicator("Ch 3 (⌃):", getColor("voice", "ledBlue", "on"), getColor("voice", "ledBlue", "off")));
 
-        speaker = new ToggleButton();
-        speaker.setAlignment(Pos.CENTER);
-        speaker.setStyle("-fx-background-color: darkgray;");
+        try (MultiChannelMidiReceiver multiChannelMidiReceiver = new MultiChannelMidiReceiver(ledMap)) {
+            speaker = new ToggleButton();
+            speaker.setAlignment(Pos.CENTER);
+            speaker.setStyle("-fx-background-color: darkgray;");
 
-        Image icon = new Image(Objects.requireNonNull(VoiceSearchResultsPane.class.getClassLoader().getResourceAsStream("icons/speaker.png")));
-        ImageView imageView = new ImageView(icon);
-        imageView.setFitWidth(ICON_SIZE);
-        imageView.setFitHeight(ICON_SIZE);
-        speaker.setPrefSize(ICON_SIZE,ICON_SIZE);
-        speaker.setPadding(new Insets(1));
-        speaker.setGraphic(imageView);
-        speaker.setOnAction((e) -> {
-            if (speaker.isSelected()) {
-                Base base = (Base) ApplicationInfo.getInstance().getSpa();
-                BaseClosePane closePane = base.getClosePane();
+            Image icon = new Image(Objects.requireNonNull(VoiceSearchResultsPane.class.getClassLoader().getResourceAsStream("icons/speaker.png")));
+            ImageView imageView = new ImageView(icon);
+            imageView.setFitWidth(ICON_SIZE);
+            imageView.setFitHeight(ICON_SIZE);
+            speaker.setPrefSize(ICON_SIZE, ICON_SIZE);
+            speaker.setPadding(new Insets(1));
+            speaker.setGraphic(imageView);
+            speaker.setOnAction((e) -> {
+                if (speaker.isSelected()) {
+                    Base base = (Base) ApplicationInfo.getInstance().getSpa();
+                    BaseClosePane closePane = base.getClosePane();
 
-                Patch selectedPatch = getVoiceSearchResultsPane().getSearchResultsPane().getSelectedPatch();
-                if (selectedPatch == null) {
-                    selectedPatch = new Patch(null, "Live! Grand Piano", "0", "115", "0", "Yamaha");
-                }
+                    Patch selectedPatch = getVoiceSearchResultsPane().getSearchResultsPane().getSelectedPatch();
+                    if (selectedPatch == null) {
+                        selectedPatch = new Patch(null, "Live! Grand Piano", "0", "115", "0", "Yamaha");
+                    }
 
-                ApplicationInfo.getInstance().setSelectedPatch(selectedPatch);
-                if (sendAsMidi(0, selectedPatch)) {
-                    speaker.setStyle("-fx-background-color: #0096C9;");
-                    playDemoFile((ToggleButton)(e.getSource()), ledMap);
-                    closePane.setActionHandler(stopMidiHandler);
+                    ApplicationInfo.getInstance().setSelectedPatch(selectedPatch);
+                    if (sendAsMidi(0, selectedPatch)) {
+                        speaker.setStyle("-fx-background-color: #0096C9;");
+                        playDemoFile((ToggleButton) (e.getSource()), multiChannelMidiReceiver);
+                        closePane.setActionHandler(stopMidiHandler);
+                    } else {
+                        speaker.setSelected(false);
+                        closePane.setActionHandler(null);
+                    }
                 } else {
-                    speaker.setSelected(false);
-                    closePane.setActionHandler(null);
+                    stopDemoFile((ToggleButton) (e.getSource()), ledMap);
+                    speaker.setStyle("-fx-background-color: darkgray;");
                 }
-            } else {
-                stopDemoFile((ToggleButton)(e.getSource()), ledMap);
-                speaker.setStyle("-fx-background-color: darkgray;");
-            }
-        });
+            });
+        }
         getChildren().add(speaker);
 
         // Midi file name
@@ -145,9 +148,6 @@ public class SpeakerPane extends HBox {
 
         for (Integer channel : ledMap.keySet()) {
             ChannelIndicator channelIndicator = ledMap.get(channel);
-
-            Label channelLabel = new Label("Ch: " + channel);
-            getChildren().add(channelLabel);
 
             getChildren().add(channelIndicator);
         }
@@ -195,7 +195,7 @@ public class SpeakerPane extends HBox {
         }
     };
 
-    private void playDemoFile (ToggleButton button, Map<Integer, ChannelIndicator> midiChannelIndicators) {
+    private void playDemoFile (ToggleButton button, MultiChannelMidiReceiver multiChannelMidiReceiver) {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             DialogFactory.renderWarningDialog("No device selected");
@@ -203,7 +203,7 @@ public class SpeakerPane extends HBox {
         } else {
             Patch patch = ApplicationInfo.getInstance().getSelectedPatch();
             if (patch != null) {
-                MidiDemo.playDemo(anyHandler, anyHandler, midiChannelIndicators);
+                MidiDemo.playDemo(anyHandler, anyHandler, multiChannelMidiReceiver);
             }
         }
     }

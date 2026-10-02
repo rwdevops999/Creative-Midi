@@ -1,102 +1,54 @@
 package custom.components.voice;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.ShortMessage;
-import java.util.concurrent.atomic.AtomicInteger;
+public class ChannelIndicator extends HBox {
 
-import static util.ColorScheme.getColor;
+    public ChannelIndicator() {
+        super();
 
-public class ChannelIndicator extends VBox {
-    private Color ledOn;
-    private Color ledOff; // Donkerrood (uitstand)
-//    private final Color ledOn = getColor("voice", "ledRed", "on");
-//    private final Color ledOff = getColor("voice", "ledRed", "off");
-
-    private Circle light;
-
-    private Receiver keyboardReceiver;
-
-    public void setRealReceiver(Receiver receiver) {
-        this.keyboardReceiver = receiver;
+        this.setSpacing(10);
+        this.setAlignment(Pos.CENTER);
     }
 
-    public ChannelIndicator(Color ledOn, Color ledOff) {
-        this.ledOn = ledOn;
-        this.ledOff = ledOff;
+    private final BooleanProperty active = new SimpleBooleanProperty(false);
 
-        this.light = new Circle(5);
-        this.light.setFill(ledOff);
-        this.light.setStroke(Color.BLACK);
-        this.light.setStrokeWidth(1.0);
+    private Circle led;
+    private Color activeColor;
+    private Color inactiveColor = Color.DARKGRAY;
 
-        setAlignment(Pos.CENTER);
+    public ChannelIndicator(String labelText, Color ledOnColor, Color ledOffColor) {
+        this();
 
-        buildPane();
+        this.activeColor = ledOnColor;
+        this.inactiveColor = ledOffColor;
+
+        Label label = new Label(labelText);
+        label.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11px;");
+
+        led = new Circle(5); // Elegant LED size
+        led.setFill(inactiveColor);
+
+        active.addListener((obs, wasActive, isActive) ->
+                Platform.runLater(() -> led.setFill(isActive ? this.activeColor : this.inactiveColor))
+        );
+
+        this.getChildren().addAll(label, led);
     }
 
-    private void buildPane() {
-        getChildren().add(light);
+    public void setActive(boolean isActive) {
+        this.active.set(isActive);
     }
 
-    public void updateLight(boolean isPlaying) {
-        Platform.runLater(() -> {
-            light.setFill(isPlaying ? ledOn : ledOff);
-        });
-    }
-
-    private final AtomicInteger activeNotesCount = new AtomicInteger(0);
-
-    public Receiver getMidiReceiver(int midiChannel) {
-        return new Receiver() {
-            @Override
-            public void send(MidiMessage message, long timeStamp) {
-                if (keyboardReceiver != null) {
-                    keyboardReceiver.send(message, timeStamp);
-                }
-
-                try {
-                    if (message instanceof ShortMessage) {
-                        ShortMessage sm = (ShortMessage) message;
-
-                        if (sm.getChannel() == midiChannel) {
-
-                            // Note On (noot ingedrukt) -> Lampje AAN
-                            if (sm.getCommand() == ShortMessage.NOTE_ON && sm.getData2() > 0) {
-                                activeNotesCount.incrementAndGet();
-                                updateLight(true); // Gaat aan bij de eerste noot
-                            }
-                            else if (sm.getCommand() == ShortMessage.NOTE_OFF ||
-                                    (sm.getCommand() == ShortMessage.NOTE_ON && sm.getData2() == 0)) {
-
-                                if (activeNotesCount.get() > 0) {
-                                    activeNotesCount.decrementAndGet();
-                                }
-
-                                // Pas als er écht geen enkele noot meer klinkt, gaat het lampje uit
-                                if (activeNotesCount.get() == 0) {
-                                    updateLight(false);
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void close() {
-                if (keyboardReceiver != null) {
-                    keyboardReceiver.close();
-                }
-            }
-        };
+    public BooleanProperty activeProperty() {
+        return active;
     }
 }

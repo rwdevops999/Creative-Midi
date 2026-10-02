@@ -1,5 +1,6 @@
 package util;
 
+import creative.scenes.voice.components.MultiChannelMidiReceiver;
 import custom.components.voice.ChannelIndicator;
 import eventhandlers.IThreadEventHandler;
 import javafx.concurrent.Task;
@@ -27,7 +28,7 @@ public class Worker implements Runnable {
     public Worker() {
     }
 
-    public Worker (MidiDevice device, Map<Integer, ChannelIndicator> midiChannelIndicators) {
+    public Worker (MidiDevice device, MultiChannelMidiReceiver multiChannelMidiReceiver) {
         try {
             if (!device.isOpen()) {
                 device.open();
@@ -36,7 +37,7 @@ public class Worker implements Runnable {
             sequencer = MidiSystem.getSequencer(false);
             sequencer.open();
 
-            if (! midiChannelIndicators.isEmpty()) {
+/*            if (! midiChannelIndicators.isEmpty()) {
                 for (Integer channel : midiChannelIndicators.keySet()) {
                     ChannelIndicator midiChannelIndicator = midiChannelIndicators.get(channel);
 
@@ -50,17 +51,13 @@ public class Worker implements Runnable {
                     transmitter.setReceiver(receiver);
                 }
             }
-
-/*            Transmitter transmitter = sequencer.getTransmitter();
-            Receiver receiver = device.getReceiver();
-            if (midiChannelIndicator != null) {
-                midiChannelIndicator.setRealReceiver(receiver);
-                receiver = midiChannelIndicator.getMidiReceiver(midiChannel);
-            }
-
-
-            transmitter.setReceiver(receiver);
 */
+
+            Transmitter transmitter = sequencer.getTransmitter();
+            Receiver receiver = device.getReceiver();
+
+            transmitter.setReceiver(multiChannelMidiReceiver);
+
             midiFile = ApplicationInfo.getInstance().getMidiToTry();
             if (midiFile != null) {
                 Sequence sequence = MidiSystem.getSequence(midiFile);
