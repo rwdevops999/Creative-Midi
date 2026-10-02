@@ -111,6 +111,12 @@ public class MonitorPane extends VBox {
             case WARNING:
                 messages.add(new ColoredItem(text, ColorScheme.getColor("monitor", "message", "warning")));
                 break;
+            case ACTION:
+                System.out.println("MONITOR ACTION");
+                break;
+            case SONG_SELECT:
+                System.out.println("SONG SELECT");
+                break;
 /*            case ACTION:
                 executeAction(text);
                 break;

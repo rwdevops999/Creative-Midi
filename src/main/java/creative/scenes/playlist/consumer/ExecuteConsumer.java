@@ -43,7 +43,11 @@ public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiCon
                 service.valueProperty().addListener((observable, oldValue, newValue) -> {
                     // newValue = Shared Entity
                     if (newValue != null) {
-                        CommunicationModel.monitorInbound(newValue.getValue());
+                        switch (newValue.getType()) {
+                            case INCOMING -> CommunicationModel.monitorInbound(newValue.getValue());
+                            case OUTGOING -> CommunicationModel.monitorOutbound(newValue.getValue());
+                            default -> CommunicationModel.monitorInbound(newValue.getValue());
+                        }
                     }
                 });
             }
