@@ -107,8 +107,7 @@ public class FilterPane extends HBox {
     }
 
     private void updateFiltering() {
-// TODO
-//        parent.handleFiltering(selectedEvents, selectedChannel.get());
+        getEventDisplayPane().handleFiltering(selectedEvents, selectedChannel.get());
     }
 
     // ACCESSORS

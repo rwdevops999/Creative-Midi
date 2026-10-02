@@ -1,8 +1,11 @@
 package creative.scenes.eventlist;
 
+import creative.scenes.eventlist.parser.data.EventType;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -10,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sound.midi.Sequence;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Queue;
 
 import static util.ColorScheme.getColor;
@@ -38,6 +44,8 @@ public class EventsDisplayPane extends VBox {
 
     private TableView<MidiEventInfo> table;
     private boolean[] selectedEvents = {true, true, true, false};
+    private int selectedChannel = 0;
+
     private void buildPane() {
         logger.debug("[CM_EVENTS_DISPLAY_PANE] Building {}", getId());
 
@@ -61,12 +69,12 @@ public class EventsDisplayPane extends VBox {
     private void createEventColumns(TableView<MidiEventInfo> table) {
         TableColumn<MidiEventInfo, String> mbtColumn = new TableColumn<>("MBT");
         setColumnSize(mbtColumn, columnSizes[0]);
-        mbtColumn.setCellValueFactory(new PropertyValueFactory<>("mbt"));
+        mbtColumn.setCellValueFactory(new PropertyValueFactory<>("mbtPosition"));
         mbtColumn.setCellFactory(column -> {
             return createStringTableCell();
         });
         table.getColumns().add(mbtColumn);
-
+/*
         TableColumn<MidiEventInfo, Integer> channelColumn = new TableColumn<>("Ch");
         setColumnSize(channelColumn, columnSizes[1]);
         channelColumn.setCellValueFactory(new PropertyValueFactory<>("channel"));
@@ -113,7 +121,7 @@ public class EventsDisplayPane extends VBox {
         messageColumn.setCellFactory(column -> {
             return createStringTableCell();
         });
-        table.getColumns().add(messageColumn);
+        table.getColumns().add(messageColumn); */
     }
 
     private final BooleanProperty deleteMenuDisable = new SimpleBooleanProperty(true);
@@ -189,8 +197,55 @@ public class EventsDisplayPane extends VBox {
         };
     }
 
+    private List<MidiEventInfo> currentEvents = new ArrayList<>();
+    private Sequence currentSequence = null;
+
     public void setEventInfo(Sequence sequence, Queue<MidiEventInfo> events) {
-        // TODO
+        currentEvents = new ArrayList<>(events);
+        currentSequence = sequence;
+
+//        parent.getEventListPane().getFileSelectionPane().setEventInfo(sequence, events);
+
+        if (table != null) {
+            executeFiltering();
+        }
+    }
+
+    private void executeFiltering() {
+        List<MidiEventInfo> filteredEvents = new ArrayList<>(currentEvents);
+
+        if (! filteredEvents.isEmpty()) {
+            if (! selectedEvents[FilterPane.MIDI_EVENT]) {
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.MIDI)).toList();
+            }
+
+            if (! selectedEvents[FilterPane.SYSEX_EVENT]) {
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.SYSEX)).toList();
+            }
+
+            if (! selectedEvents[FilterPane.META_EVENT]) {
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.META)).toList();
+            }
+
+            if (selectedEvents[FilterPane.CHANNEL] && selectedChannel > 0) {
+                filteredEvents = filteredEvents.stream().filter(e -> ((e.getChannel() != null) && e.getChannel() == selectedChannel)).toList();
+            }
+
+            deleteMenuDisable.set(filteredEvents.isEmpty());
+
+            List<MidiEventInfo> sortedQueue = filteredEvents.stream()
+                    .sorted(Comparator.comparing(MidiEventInfo::getMbtPosition)).toList();
+
+            ObservableList<MidiEventInfo> data = FXCollections.observableList(sortedQueue);
+            table.setItems(data);
+            table.scrollTo(0);
+        }
+    }
+
+    public void handleFiltering(boolean[] selected, int channel) {
+        selectedEvents = selected;
+        selectedChannel = channel;
+        executeFiltering();
     }
 
     // ACCESSORS
