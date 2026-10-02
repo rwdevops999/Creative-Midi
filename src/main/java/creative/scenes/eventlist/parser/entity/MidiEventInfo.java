@@ -35,4 +35,7 @@ public class MidiEventInfo {
     @Getter
     @Setter
     private Color color;
+
+    @Getter
+    private String description;
 }

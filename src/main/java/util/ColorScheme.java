@@ -8,8 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ColorScheme {
-    public record ColorKey(String arg1, String arg2, String arg3) {}
+    public record ColorKey(String arg1, String arg2, String arg3) {
+        // Extra constructor die arg2 en arg3 op null zet
+        public ColorKey(String arg1) {
+            this(arg1, null, null);
+        }
 
+        public ColorKey(String arg1, String arg2) {
+            this(arg1, arg2, null);
+        }
+    }
     private static final Map<ColorKey, Color> colors = new HashMap<>();
 
     static {
@@ -50,11 +58,6 @@ public class ColorScheme {
         // sysex entries
         colors.put(new ColorKey("sysex", "entries", "full"), Color.RED);
 
-        // events
-        colors.put(new ColorKey("midi", null,null), Color.BLUE);
-        colors.put(new ColorKey("meta", null,null), Color.INDIGO);
-        colors.put(new ColorKey("sysex", null,null), Color.CRIMSON);
-
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);
         colors.put(new ColorKey("test", "green", null), Color.GREEN);
@@ -93,5 +96,11 @@ public class ColorScheme {
         }
 
         return getColor(key);
+    }
+
+    public static void registerColors(Map<ColorKey, Color> additionalColors) {
+        if (additionalColors != null) {
+            colors.putAll(additionalColors);
+        }
     }
 }
