@@ -1,6 +1,7 @@
 package creative.scenes.eventlist;
 
 import creative.scenes.eventlist.parser.*;
+import creative.scenes.eventlist.parser.processor.MidiFileProcessor;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class EventsPane extends BorderPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
 
         setPaneBackground(this);
         buildPane();
@@ -62,9 +63,8 @@ public class EventsPane extends BorderPane {
             MBTCalculator.setTimeSignature(MidifileHelper.getTimeSignature());
             getMidiInfoPane().setDuration(MidifileHelper.getDuration());
 
-// TODO     display events
-//            MidiFileProcessor.processMidi(sequence);
-//            getEventsDisplayPane().setEventInfo(sequence, MidiFileProcessor.getEvents());
+            MidiFileProcessor.processMidi(sequence);
+            getEventsDisplayPane().setEventInfo(sequence, MidiFileProcessor.getEvents());
       } catch (Exception e) {
             logger.error("[CM_EVENTS_PANE] Exception. CAUSE: {}", e.getMessage());
         }
