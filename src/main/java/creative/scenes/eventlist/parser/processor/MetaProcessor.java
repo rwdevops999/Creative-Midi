@@ -54,7 +54,10 @@ public class MetaProcessor {
             }
             case 0x04 -> handleInstrumentname(data, midiEventInfo);
             case 0x05 -> handleLyric(data, midiEventInfo);
-            case 0x06 -> handleMarker(data, midiEventInfo);
+            case 0x06 -> {
+                handleMarker(data, midiEventInfo);
+                result = true;
+            }
             case 0x07 -> handleCuepoint(data, midiEventInfo);
             case 0x08 -> handleProgramname(data, midiEventInfo);
             case 0x09 -> handleDevicename(data, midiEventInfo);
@@ -62,13 +65,19 @@ public class MetaProcessor {
                 handleEndOfTrack(data, midiEventInfo);
                 result = false; // We don't want this in the events list, so KEEP this
             }
-            case 0x51 -> handleTempo(data, midiEventInfo);
+            case 0x51 -> {
+                handleTempo(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             case 0x54 -> handleSMPTEoffset(data, midiEventInfo);
             case 0x58 -> {
                 handleTimesignature(data, midiEventInfo);
                 result = false; // TODO remove this
             }
-            case 0x59 -> handleKeysignature(data, midiEventInfo);
+            case 0x59 -> {
+                handleKeysignature(data, midiEventInfo);
+                return false; // TODO remove this
+            }
             case 0x7F -> handleSequencer(data, midiEventInfo);
             default -> result = false;
         }
@@ -113,7 +122,10 @@ public class MetaProcessor {
     }
 
     private static void handleMarker(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("MARKER");
+        midiEventInfo.setColor(getColor("meta", "marker"));
+
+        midiEventInfo.setDescription("Marker");
+        midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
     private static void handleCuepoint(byte[] data, MidiEventInfo midiEventInfo) {
@@ -133,7 +145,18 @@ public class MetaProcessor {
     }
 
     private static void handleTempo(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("TEMPO");
+        midiEventInfo.setColor(getColor("meta", "tempo"));
+
+        midiEventInfo.setDescription("Tempo");
+
+        int mspq = ((data[0] & 0xFF) << 16)
+                | ((data[1] & 0xFF) << 8)
+                | (data[2] & 0xFF);
+
+        double bpm = 60_000_000.0 / mspq;
+        int bpmDisplay = (int) Math.round(bpm);
+
+        midiEventInfo.setComment(String.format("%d bpm", bpmDisplay));
     }
 
     private static void handleSMPTEoffset(byte[] data, MidiEventInfo midiEventInfo) {
@@ -160,9 +183,43 @@ public class MetaProcessor {
 
     private static void handleKeysignature(byte[] data, MidiEventInfo midiEventInfo) {
         System.out.println("KEYSIGNATURE");
+        midiEventInfo.setColor(getColor("meta", "keysignature"));
+
+        midiEventInfo.setDescription("Key Signature");
+
+        int sharpsFlats = data[0];
+        int isMinor = data[1];
+
+        String scaleType = (isMinor == 1) ? "Minor" : "Major";
+        String keyName = getMusicalKeyName(sharpsFlats, isMinor == 1);
+
+        midiEventInfo.setComment(String.format("%s (%s)", keyName, scaleType));
     }
 
     private static void handleSequencer(byte[] data, MidiEventInfo midiEventInfo) {
         System.out.println("SEQUENCER");
+    }
+
+    // Helper Methods
+    private static String getMusicalKeyName(int sharpsFlats, boolean isMinor) {
+        if (!isMinor) {
+            switch (sharpsFlats) {
+                case -7: return "Cb"; case -6: return "Gb"; case -5: return "Db";
+                case -4: return "Ab"; case -3: return "Eb"; case -2: return "Bb";
+                case -1: return "F";  case 0: return "C";   case 1: return "G";
+                case 2: return "D";   case 3: return "A";   case 4: return "E";
+                case 5: return "B";   case 6: return "F#";  case 7: return "C#";
+                default: return "Unknown";
+            }
+        } else {
+            switch (sharpsFlats) {
+                case -7: return "Ab"; case -6: return "Eb"; case -5: return "Bb";
+                case -4: return "F";  case -3: return "C";  case -2: return "G";
+                case -1: return "D";  case 0: return "A";   case 1: return "E";
+                case 2: return "B";   case 3: return "F#";  case 4: return "C#";
+                case 5: return "G#";  case 6: return "D#";  case 7: return "A#";
+                default: return "Unknown";
+            }
+        }
     }
 }
