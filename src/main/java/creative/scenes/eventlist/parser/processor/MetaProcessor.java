@@ -56,6 +56,10 @@ public class MetaProcessor {
      * @return true, if the event should be visible, false if the event shouldn't be visible
      */
     public static boolean processMessage(MetaMessage message, MidiEventInfo midiEventInfo) {
+        if (message instanceof MetaMessage) { // TODO Remove this
+            return false;
+        }
+
         boolean result = true;
 
         String messageInfo = SysexToHexStringConvertor.convertToHexString(message.getData());
