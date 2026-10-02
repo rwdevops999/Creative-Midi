@@ -23,6 +23,6 @@ public class SysexProcessor {
         midiEventInfo.setEventType(EventType.SYSEX);
 
         // TODO
-        return true;
+        return false;
     }
 }

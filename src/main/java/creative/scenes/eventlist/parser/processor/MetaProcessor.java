@@ -38,7 +38,7 @@ public class MetaProcessor {
     public static boolean processMessage(MetaMessage message, MidiEventInfo midiEventInfo) {
         boolean result = false;
 
-        midiEventInfo.setMessage(SysexToHexStringConvertor.convertToHexString(message.getData()));
+        String messageInfo = SysexToHexStringConvertor.convertToHexString(message.getData());
         midiEventInfo.setEventType(EventType.META);
         midiEventInfo.setColor(getColor("meta"));
 
@@ -51,6 +51,7 @@ public class MetaProcessor {
             case 0x01 -> handleText(data, midiEventInfo);
             case 0x02 -> handleCopyright(data, midiEventInfo);
             case 0x03 -> {
+                messageInfo = "FF 03 " + messageInfo;
                 handleTrackname(data, midiEventInfo);
                 result = true;
             }
@@ -72,6 +73,8 @@ public class MetaProcessor {
             default -> result = false;
         }
 
+        midiEventInfo.setMessage(messageInfo);
+
         return result;
     }
 
@@ -84,11 +87,10 @@ public class MetaProcessor {
     }
 
     private static void handleTrackname(byte[] data, MidiEventInfo midiEventInfo) {
-        midiEventInfo.setColor(colors.get(new ColorScheme.ColorKey("meta", "trackname")));
+        midiEventInfo.setColor(getColor("meta", "trackname"));
 
         midiEventInfo.setDescription("Track Name");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
-        midiEventInfo.setColor(colors.get(new ColorScheme.ColorKey("meta", "trackname")));
     }
 
     private static void handleCopyright(byte[] data, MidiEventInfo midiEventInfo) {

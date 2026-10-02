@@ -31,7 +31,7 @@ public class EventlistPane extends BorderPane {
     }
 
     // ACCESSORS
-    public FileSelectionPane getFileSelectPane() {
+    public FileSelectionPane getFileSelectionPane() {
         return (FileSelectionPane) getTop();
     }
 

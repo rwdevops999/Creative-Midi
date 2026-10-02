@@ -35,13 +35,18 @@ public class MidiEventInfo {
     private EventType eventType;
 
     @Getter
-    @Setter
-    private Color color;
+    private long color;
+
+    public void setColor(Color color) {
+        this.color = colorToLong(color);
+    }
 
     @Setter
+    @Getter
     private String description;
 
     @Setter
+    @Getter
     private String comment;  // this can contain integers or strings
 
     private void stringifyData(int data1) {
@@ -55,6 +60,7 @@ public class MidiEventInfo {
     }
 
     @Setter
+    @Getter
     private int data2;
 
     @Setter
@@ -62,5 +68,22 @@ public class MidiEventInfo {
     private Integer channel = null;
 
     @Setter
+    @Getter
     private String message;
+
+    private long colorToLong(Color color) {
+        // Convert the 0.0-1.0 double values to 0-255 integers
+        long r = Math.round(color.getRed() * 255);
+        long g = Math.round(color.getGreen() * 255);
+        long b = Math.round(color.getBlue() * 255);
+        long a = Math.round(color.getOpacity() * 255);
+
+        // Shift bits to pack them into a single value (RGBA format)
+        return ((r << 24) | (g << 16) | (b << 8) | a)  & 0xFFFFFFFFL;
+    }
+
+    @Setter
+    @Getter
+    private String duration = null;
+
 }

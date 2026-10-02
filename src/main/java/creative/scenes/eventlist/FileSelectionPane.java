@@ -1,5 +1,6 @@
 package creative.scenes.eventlist;
 
+import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -13,7 +14,10 @@ import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.Util;
 
+import javax.sound.midi.Sequence;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -48,6 +52,9 @@ public class FileSelectionPane extends HBox {
 
     private final StringProperty fileName = new SimpleStringProperty("<no file>");
 
+    private LinkedList<MidiEventInfo> currentEvents = null;
+    private Sequence currentSequence = null;
+
     private File selectedFile = null;
     private void buildPane() {
         logger.debug("[CM_FILE_SELECTION_PANE] Building {}", getId());
@@ -75,6 +82,11 @@ public class FileSelectionPane extends HBox {
         getChildren().add(selectedFileLabel);
 
         logger.debug("[CM_FILE_SELECTION_PANE] Built {}", getId());
+    }
+
+    public void setEventInfo(Sequence sequence, Queue<MidiEventInfo> events) {
+        currentEvents = new LinkedList<>(events);
+        currentSequence = sequence;
     }
 
     // ACCESSORS

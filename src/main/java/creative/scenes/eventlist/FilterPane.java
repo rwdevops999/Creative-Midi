@@ -98,12 +98,28 @@ public class FilterPane extends HBox {
         });
         getChildren().add(sysexCheckBox);
 
-        // SYSEX Events hasn't a details button yet
-
         Button sysexButton = new Button("Details");
         sysexButton.setOnAction(event -> {
             // TODO Was never implemented
         });
+
+        // CHANNEL
+        Label channelLabel = new Label("Channel");
+        getChildren().add(channelLabel);
+
+        CheckBox channelCheckBox = new CheckBox();
+        channelCheckBox.setSelected(selectedEvents[CHANNEL]);
+        channelCheckBox.setOnAction(event -> {
+            selectedEvents[CHANNEL] = ! selectedEvents[CHANNEL];
+            updateFiltering();
+        });
+
+        Spinner<Integer> channelSpinner = new Spinner<>(0, 16, 0);
+        channelSpinner.getValueFactory().valueProperty().bindBidirectional(selectedChannel);
+        channelSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(this::updateFiltering);
+        });
+        getChildren().addAll(channelCheckBox, channelSpinner);
     }
 
     private void updateFiltering() {

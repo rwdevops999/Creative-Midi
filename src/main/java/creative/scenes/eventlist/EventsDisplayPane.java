@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class EventsDisplayPane extends VBox {
         buildPane();
     }
 
-    private int[] columnSizes = {10,4,15,4,15,8,53};
+    private int[] columnSizes = {10,4,15,15,10,15,30};
 
     private TableView<MidiEventInfo> table;
     private boolean[] selectedEvents = {true, true, true, false};
@@ -74,7 +75,7 @@ public class EventsDisplayPane extends VBox {
             return createStringTableCell();
         });
         table.getColumns().add(mbtColumn);
-/*
+
         TableColumn<MidiEventInfo, Integer> channelColumn = new TableColumn<>("Ch");
         setColumnSize(channelColumn, columnSizes[1]);
         channelColumn.setCellValueFactory(new PropertyValueFactory<>("channel"));
@@ -83,22 +84,22 @@ public class EventsDisplayPane extends VBox {
         });
         table.getColumns().add(channelColumn);
 
-        TableColumn<MidiEventInfo, String> kindColumn = new TableColumn<>("Kind");
+        TableColumn<MidiEventInfo, String> kindColumn = new TableColumn<>("Description");
         setColumnSize(kindColumn, columnSizes[2]);
-        kindColumn.setCellValueFactory(new PropertyValueFactory<>("kind"));
+        kindColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         kindColumn.setCellFactory(column -> {
             return createStringTableCell();
         });
         table.getColumns().add(kindColumn);
 
-        TableColumn<MidiEventInfo, Integer> data2Column = new TableColumn<>("Value");
+        TableColumn<MidiEventInfo, String> data2Column = new TableColumn<>("Comment");
         setColumnSize(data2Column, columnSizes[3]);
-        data2Column.setCellValueFactory(new PropertyValueFactory<>("data2"));
+        data2Column.setCellValueFactory(new PropertyValueFactory<>("comment"));
         data2Column.setCellFactory(column -> {
-            return createIntegerTableCell();
+            return createStringTableCell();
         });
         table.getColumns().add(data2Column);
-
+/*
         TableColumn<MidiEventInfo, String> dataColumn = new TableColumn<>("Data");
         setColumnSize(dataColumn, columnSizes[4]);
         dataColumn.setCellValueFactory(new PropertyValueFactory<>("data"));
@@ -157,9 +158,9 @@ public class EventsDisplayPane extends VBox {
                     MidiEventInfo eventInfo = getTableRow() != null ? getTableRow().getItem() : null;
 
                     if (eventInfo != null) {
-//TODO                        String hexColor = String.format("#%08X", eventInfo.getItemColor() & 0xFFFFFFFFL);
-//                        setText(item);
-//                        setStyle("-fx-text-fill: " + hexColor + ";");
+                        String hexColor = String.format("#%08X", eventInfo.getColor());
+                        setText(item);
+                        setStyle("-fx-text-fill: " + hexColor + ";");
                     } else {
                         setText(null);
                         setText(null);
@@ -204,7 +205,8 @@ public class EventsDisplayPane extends VBox {
         currentEvents = new ArrayList<>(events);
         currentSequence = sequence;
 
-//        parent.getEventListPane().getFileSelectionPane().setEventInfo(sequence, events);
+        // TODO I Think this is used to save the file
+        getEventsPane().getEventlistPane().getFileSelectionPane().setEventInfo(sequence, events);
 
         if (table != null) {
             executeFiltering();

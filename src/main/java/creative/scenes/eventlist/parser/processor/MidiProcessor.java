@@ -22,6 +22,6 @@ public class MidiProcessor {
     public static boolean processMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         midiEventInfo.setEventType(EventType.MIDI);
         // TODO
-        return true;
+        return false;
     }
 }
