@@ -16,6 +16,7 @@ import static util.ColorScheme.getColor;
 
 public class MetaProcessor {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
+    private static final Map<Integer, String> REGISTRY = new HashMap<>();
 
     static {
         colors.put(new ColorScheme.ColorKey("meta"), Color.INDIGO);
@@ -25,6 +26,26 @@ public class MetaProcessor {
 
 //       colors.put(new ColorScheme.ColorKey("meta", "", ""), Color.);
         ColorScheme.registerColors(colors);
+
+        // --- 1-Byte Standard IDs ---
+        REGISTRY.put(0x01, "Sequential Circuits");
+        REGISTRY.put(0x04, "Moog Music");
+        REGISTRY.put(0x06, "Lexicon");
+        REGISTRY.put(0x41, "Roland Corporation");
+        REGISTRY.put(0x42, "Korg Inc.");
+        REGISTRY.put(0x43, "Yamaha Corporation");
+        REGISTRY.put(0x47, "Akai Professional");
+
+        // --- 3-Byte Extended IDs (0x00XXXX) ---
+        REGISTRY.put(0x00000E, "Apple Inc.");
+        REGISTRY.put(0x000041, "Cakewalk / Twelve Tone Systems");
+        REGISTRY.put(0x00010B, "Propellerhead Software");
+        REGISTRY.put(0x00015B, "Steinberg Media Technologies");
+        REGISTRY.put(0x002011, "Gibson Guitar");
+        REGISTRY.put(0x00206B, "Arturia");
+
+        // --- Special IDs ---
+        REGISTRY.put(0x7D, "Educational / Research Use (Non-Commercial)");
     }
 
     /**
@@ -46,19 +67,34 @@ public class MetaProcessor {
 
         switch (type) {
             case 0x00 -> handleSequencenumber(data, midiEventInfo);
-            case 0x01 -> handleText(data, midiEventInfo);
-            case 0x02 -> handleCopyright(data, midiEventInfo);
+            case 0x01 -> {
+                handleText(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
+            case 0x02 -> {
+                handleCopyright(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             case 0x03 -> {
                 handleTrackname(data, midiEventInfo);
                 result = false; // TODO remove this
             }
-            case 0x04 -> handleInstrumentname(data, midiEventInfo);
-            case 0x05 -> handleLyric(data, midiEventInfo);
+            case 0x04 -> {
+                handleInstrumentname(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
+            case 0x05 -> {
+                handleLyric(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             case 0x06 -> {
                 handleMarker(data, midiEventInfo);
-                result = true;
+                result = false; // TODO remove this
             }
-            case 0x07 -> handleCuepoint(data, midiEventInfo);
+            case 0x07 -> {
+                handleCuepoint(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             case 0x08 -> handleProgramname(data, midiEventInfo);
             case 0x09 -> handleDevicename(data, midiEventInfo);
             case 0x2F -> {
@@ -79,9 +115,12 @@ public class MetaProcessor {
             }
             case 0x59 -> {
                 handleKeysignature(data, midiEventInfo);
-                return false; // TODO remove this
+                result = false; // TODO remove this
             }
-            case 0x7F -> handleSequencer(data, midiEventInfo);
+            case 0x7F -> {
+                handleSequencer(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             default -> result = false;
         }
 
@@ -96,7 +135,10 @@ public class MetaProcessor {
     }
 
     private static void handleText(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("TEXT");
+        midiEventInfo.setColor(getColor("meta", "text"));
+
+        midiEventInfo.setDescription("Text");
+        midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
     /**
@@ -113,15 +155,24 @@ public class MetaProcessor {
     }
 
     private static void handleCopyright(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("COPYRIGHT");
+        midiEventInfo.setColor(getColor("meta", "copyright"));
+
+        midiEventInfo.setDescription("Copyright");
+        midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
     private static void handleInstrumentname(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("INSTRUMENTNAME");
+        midiEventInfo.setColor(getColor("meta", "instrument"));
+
+        midiEventInfo.setDescription("Instrument");
+        midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
     private static void handleLyric(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("LYRIC");
+        midiEventInfo.setColor(getColor("meta", "lyric"));
+
+        midiEventInfo.setDescription("Lyric");
+        midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
     private static void handleMarker(byte[] data, MidiEventInfo midiEventInfo) {
@@ -132,7 +183,10 @@ public class MetaProcessor {
     }
 
     private static void handleCuepoint(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("CUEPOINT");
+        midiEventInfo.setColor(getColor("meta", "cue point"));
+
+        midiEventInfo.setDescription("Cue Point");
+        midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
 
     private static void handleProgramname(byte[] data, MidiEventInfo midiEventInfo) {
@@ -226,7 +280,27 @@ public class MetaProcessor {
     }
 
     private static void handleSequencer(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("SEQUENCER");
+        midiEventInfo.setColor(getColor("meta", "sequencer"));
+
+        midiEventInfo.setDescription("Sequencer Data");
+
+        int manufacturerId;
+
+        // Determine Manufacturer ID (Standard MIDI Sysex/Meta Rules)
+        if (data[0] != 0x00) {
+            // 1-byte Manufacturer ID
+            manufacturerId = data[0] & 0xFF;
+        } else if (data.length >= 3) {
+            // 3-byte Manufacturer ID (starts with 0x00)
+            manufacturerId = ((data[0] & 0xFF) << 16) | ((data[1] & 0xFF) << 8) | (data[2] & 0xFF);
+        } else {
+            // Malformed data
+            return;
+        }
+
+        // Process the data based on the specific software/hardware manufacturer
+        String vendorId = REGISTRY.getOrDefault(manufacturerId, "Unknown Manufacturer");
+        midiEventInfo.setComment(vendorId);
     }
 
     // Helper Methods
