@@ -79,7 +79,6 @@ public class SpeakerPane extends HBox {
 
         Map<Integer, ChannelIndicator> ledMap = new HashMap<>();
 
-        // TODO I need a ChannelIndicator with different lights and pass them as a list
         ledMap.put(0, new ChannelIndicator("Ch 1:", getColor("voice", "ledRed", "on"), getColor("voice", "ledRed", "off")));
         ledMap.put(1, new ChannelIndicator("Ch 2 (⇧):", getColor("voice", "ledGreen", "on"), getColor("voice", "ledGreen", "off")));
         ledMap.put(2, new ChannelIndicator("Ch 3 (⌃):", getColor("voice", "ledBlue", "on"), getColor("voice", "ledBlue", "off")));

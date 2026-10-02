@@ -2,6 +2,7 @@ package util;
 
 import communication.CommunicationModel;
 import creative.panes.MainPane;
+import creative.scenes.eventlist.parser.MBTCalculator;
 import creative.scenes.sysex.SysexContainer;
 import device.DeviceScanner;
 import org.slf4j.Logger;
@@ -68,8 +69,8 @@ public class Initializer {
         ApplicationInfo.getInstance().setVoiceFilenames(voiceFileNames);
 
         // 6. Load keyboard properties
-        // TODO Solve this to properties file
-        Path keyboardPath = Paths.get(propertiesDirectory, "keyboard.properties"); // Use your actual path
+        String propertiesFile = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.PROPERTIES_FILE, "keyboard.properties");
+        Path keyboardPath = Paths.get(propertiesDirectory, propertiesFile); // Use your actual path
         Properties keyboardProperties = propertyLoader.loadPropertiesFromPath(keyboardPath);
         PropertyContainer.setProperties(PropertyType.GeneralKeyboard, keyboardProperties);
 
@@ -82,5 +83,16 @@ public class Initializer {
 
         // 8. Load Sysex events
         SysexContainer.loadSysexEvents();
+
+        // 9. Load vendor properties
+        propertiesDirectory = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.PROPERTIES_PATH, "./properties");
+        String vendorFilename = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.VENDOR_FILE, "vendor.properties");
+        Path vendorPath = Paths.get(propertiesDirectory, vendorFilename); // Use your actual path
+        Properties vendorProps = propertyLoader.loadPropertiesFromPath(vendorPath);
+        PropertyContainer.setProperties(PropertyType.Vendor, vendorProps);
+
+
+        int targetPPQ = PropertyContainer.getPropertyAsInteger(PropertyType.Vendor, PropertyContainer.PPQ, 480);
+        MBTCalculator.setTargetPPQ(targetPPQ);
     }
 }

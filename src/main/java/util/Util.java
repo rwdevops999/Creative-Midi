@@ -55,6 +55,10 @@ public class Util {
         originator.prefWidthProperty().bind(parent.widthProperty().multiply(size / 100.0));
     }
 
+    public static void setPaneMinWidthAsPercentage(Pane originator, Pane parent, int size) {
+        originator.minWidthProperty().bind(parent.widthProperty().multiply(size / 100.0));
+    }
+
     public static void resizePaneWidth(Pane originator, Pane parent, int size) {
         originator.prefWidthProperty().bind(parent.widthProperty().multiply(size / 100.0));
         originator.minWidthProperty().bind(parent.widthProperty().multiply(size / 100.0));

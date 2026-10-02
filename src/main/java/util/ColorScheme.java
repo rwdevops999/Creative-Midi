@@ -50,6 +50,11 @@ public class ColorScheme {
         // sysex entries
         colors.put(new ColorKey("sysex", "entries", "full"), Color.RED);
 
+        // events
+        colors.put(new ColorKey("midi", null,null), Color.BLUE);
+        colors.put(new ColorKey("meta", null,null), Color.INDIGO);
+        colors.put(new ColorKey("sysex", null,null), Color.CRIMSON);
+
         // test colors
         colors.put(new ColorKey("test", "red", null), Color.RED);
         colors.put(new ColorKey("test", "green", null), Color.GREEN);

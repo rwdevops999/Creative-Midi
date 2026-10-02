@@ -4,5 +4,6 @@ public enum PropertyType {
     System,
     Path,
     GeneralKeyboard,
-    Keyboard;
+    Keyboard,
+    Vendor;
 }
