@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import util.ColorScheme;
 
 import javax.sound.midi.MetaMessage;
-import javax.sound.midi.ShortMessage;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -42,7 +41,6 @@ public class MetaProcessor {
         midiEventInfo.setEventType(EventType.META);
         midiEventInfo.setColor(getColor("meta"));
 
-        System.out.println("PROCESS THE EVENT");
         int type = message.getType();
         byte[] data = message.getData();
 
@@ -51,9 +49,8 @@ public class MetaProcessor {
             case 0x01 -> handleText(data, midiEventInfo);
             case 0x02 -> handleCopyright(data, midiEventInfo);
             case 0x03 -> {
-                messageInfo = "FF 03 " + messageInfo;
                 handleTrackname(data, midiEventInfo);
-                result = true;
+                result = false; // TODO remove this
             }
             case 0x04 -> handleInstrumentname(data, midiEventInfo);
             case 0x05 -> handleLyric(data, midiEventInfo);
@@ -63,17 +60,21 @@ public class MetaProcessor {
             case 0x09 -> handleDevicename(data, midiEventInfo);
             case 0x2F -> {
                 handleEndOfTrack(data, midiEventInfo);
-                result = false;
+                result = false; // We don't want this in the events list, so KEEP this
             }
             case 0x51 -> handleTempo(data, midiEventInfo);
             case 0x54 -> handleSMPTEoffset(data, midiEventInfo);
-            case 0x58 -> handleTimesignature(data, midiEventInfo);
+            case 0x58 -> {
+                handleTimesignature(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             case 0x59 -> handleKeysignature(data, midiEventInfo);
             case 0x7F -> handleSequencer(data, midiEventInfo);
             default -> result = false;
         }
 
-        midiEventInfo.setMessage(messageInfo);
+        String typeString = String.format("%02X", type & 0xFF);
+        midiEventInfo.setMessage("FF " + typeString + " " + messageInfo);
 
         return result;
     }
@@ -86,6 +87,12 @@ public class MetaProcessor {
         System.out.println("TEXT");
     }
 
+    /**
+     * The Text specifies the title of the track or sequence
+     *
+     * @param data
+     * @param midiEventInfo
+     */
     private static void handleTrackname(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "trackname"));
 
@@ -133,8 +140,22 @@ public class MetaProcessor {
         System.out.println("SMPTEOFFSET");
     }
 
+    /**
+     * Time signature is expressed as 4 numbers. nn and dd represent the "numerator" and "denominator" of the signature as notated on sheet music. The denominator is a negative power of 2: 2 = quarter note, 3 = eighth, etc.
+     *
+     * @param data
+     * @param midiEventInfo
+     */
     private static void handleTimesignature(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("TIMESIGNATURE");
+        midiEventInfo.setColor(getColor("meta", "timesignature"));
+
+        midiEventInfo.setDescription("Time Signature");
+
+        int numerator = data[0] & 0xFF;
+        int denominatorExponent = data[1] & 0xFF;
+        int denominator = 1 << denominatorExponent;
+
+        midiEventInfo.setComment(String.format("%d/%d", numerator, denominator));
     }
 
     private static void handleKeysignature(byte[] data, MidiEventInfo midiEventInfo) {
