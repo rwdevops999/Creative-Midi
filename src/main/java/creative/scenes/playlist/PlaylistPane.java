@@ -4,12 +4,16 @@ import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.playlist.consumer.*;
 import creative.scenes.playlist.statemachine.PlaylistStateMachine;
+import custom.components.SelectorPane;
 import entity.AEntity;
+import entity.device.DeviceInfo;
 import entity.playlist.Song;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
+import util.Registry;
 
 import java.util.function.BiConsumer;
 
@@ -20,6 +24,13 @@ public class PlaylistPane extends BorderPane {
         super();
 
         setId("PlaylistPane");
+
+        Registry.register("SelectSong", this, (node, data) -> {
+            PlaylistPane playlistPane = (PlaylistPane) node;
+            String songName = (String) data;
+
+            getPlaylistListPane().selectedSong(songName);
+        });
 
         if (! PlaylistContainer.isFileLoaded()) {
             PlaylistContainer.loadPlaylist();

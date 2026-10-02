@@ -53,4 +53,9 @@ public class CommunicationModel {
         typeProperty.setValue(CommunicationType.INCOMING);
         messageProperty.set(message);
     }
+
+    public static void monitorSongSelect (String message) {
+        typeProperty.setValue(CommunicationType.SONG_SELECT);
+        messageProperty.set(message);
+    }
 }

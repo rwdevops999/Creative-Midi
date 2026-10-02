@@ -70,6 +70,10 @@ public class PlaylistListPane extends VBox {
         return PlaylistContainer.getSong(songName);
     }
 
+    public void selectedSong(String name) {
+        playlistListView.getSelectionModel().select(name);
+    }
+
     // ACCESSORS
     public PlaylistPane getPlaylistPane() {
         return parent;

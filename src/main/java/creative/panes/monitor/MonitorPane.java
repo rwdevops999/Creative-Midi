@@ -2,6 +2,9 @@ package creative.panes.monitor;
 
 import communication.CommunicationModel;
 import creative.panes.monitor.data.CommunicationType;
+import creative.scenes.midi.util.MidiReset;
+import creative.scenes.playlist.PlaylistListPane;
+import creative.scenes.playlist.PlaylistPane;
 import custom.components.ColoredItem;
 import custom.components.ColoredListCell;
 import eventhandlers.MonitorExportHandler;
@@ -20,8 +23,10 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 import util.ColorScheme;
 import util.Constants;
+import util.Registry;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -115,7 +120,9 @@ public class MonitorPane extends VBox {
                 System.out.println("MONITOR ACTION");
                 break;
             case SONG_SELECT:
-                System.out.println("SONG SELECT");
+                MidiReset midiReset = new MidiReset();
+
+                Registry.publish("SelectSong", text);
                 break;
 /*            case ACTION:
                 executeAction(text);
