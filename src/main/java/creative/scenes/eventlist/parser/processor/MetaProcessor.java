@@ -69,7 +69,10 @@ public class MetaProcessor {
                 handleTempo(data, midiEventInfo);
                 result = false; // TODO remove this
             }
-            case 0x54 -> handleSMPTEoffset(data, midiEventInfo);
+            case 0x54 -> {
+                handleSMPTEoffset(data, midiEventInfo);
+                result = false; // TODO remove this
+            }
             case 0x58 -> {
                 handleTimesignature(data, midiEventInfo);
                 result = false; // TODO remove this
@@ -160,7 +163,34 @@ public class MetaProcessor {
     }
 
     private static void handleSMPTEoffset(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("SMPTEOFFSET");
+        midiEventInfo.setColor(getColor("meta", "smpte offset"));
+
+        midiEventInfo.setDescription("SMPTE Offset");
+
+        int firstByte = data[0] & 0xFF;
+        int minutes   = data[1] & 0xFF;
+        int seconds   = data[2] & 0xFF;
+        int frames    = data[3] & 0xFF;
+        int subFrames = data[4] & 0xFF;
+
+        // Extract Frame Rate from the top 2 bits (bits 5 and 6)
+        int fpsCode = (firstByte & 0x60) >> 5;
+        double fps = 24.0;
+        String fpsLabel = "24 FPS";
+
+        switch (fpsCode) {
+            case 0 -> { fps = 24.0; fpsLabel = "24 FPS"; }
+            case 1 -> { fps = 25.0; fpsLabel = "25 FPS"; }
+            case 2 -> { fps = 29.97; fpsLabel = "30 FPS (Drop Frame)"; }
+            case 3 -> { fps = 30.0; fpsLabel = "30 FPS (Non-Drop)"; }
+        }
+
+        // Extract Hours from the lower 5 bits
+        int hours = firstByte & 0x1F;
+
+        String smpte = String.format("%02d:%02d:%02d:%02d.%02d (%s)",
+                hours, minutes, seconds, frames, subFrames, fpsLabel);
+        midiEventInfo.setComment(smpte);
     }
 
     /**
@@ -182,7 +212,6 @@ public class MetaProcessor {
     }
 
     private static void handleKeysignature(byte[] data, MidiEventInfo midiEventInfo) {
-        System.out.println("KEYSIGNATURE");
         midiEventInfo.setColor(getColor("meta", "keysignature"));
 
         midiEventInfo.setDescription("Key Signature");
