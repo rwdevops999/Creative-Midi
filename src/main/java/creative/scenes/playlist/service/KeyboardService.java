@@ -68,8 +68,9 @@ public class KeyboardService extends Service<SharedEntity> {
             ByteBuffer srcBytes = mapSysexToBytes(srcSysex.getList().get(0));
 
             CommunicationInfo ci = new CommunicationInfo(mapping.getReceive());
+            String name = dstSysex.getList().size() > 1 ? "part of " : "";
             for (SysexContent content : dstSysex.getList()) {
-                CommunicationInfo sysexCi = new CommunicationInfo("part of " + dstSysex.getName());
+                CommunicationInfo sysexCi = new CommunicationInfo(name + dstSysex.getName());
                 sysexCi.setData(content.getData());
 
                 ci.getReplies().add(sysexCi);
@@ -132,11 +133,11 @@ public class KeyboardService extends Service<SharedEntity> {
                             });
                             sysexWriter.sendSysex(communicationInfo.getData());
                         }
-                    } else {
-                        SharedEntity sharedEntity = checkSongHandler.apply(SysexToHexStringConvertor.convertToHexString(msg.getMessage()));
-                        if (sharedEntity != null) {
-                            Platform.runLater(() -> updateValue(sharedEntity));
-                        }
+                    }
+                } else {
+                    SharedEntity sharedEntity = checkSongHandler.apply(SysexToHexStringConvertor.convertToHexString(msg.getMessage()));
+                    if (sharedEntity != null) {
+                        Platform.runLater(() -> updateValue(sharedEntity));
                     }
                 }
             }

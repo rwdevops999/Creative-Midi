@@ -27,12 +27,15 @@ public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiCon
         } else {
             Service<SharedEntity> service = ApplicationInfo.getInstance().getKeyboardService();
             if (service != null) {
+                CommunicationModel.setStatus("Playing the playlist");
+
                 service.cancel();
 
                 actionsPane.renameActionButtonName("Execute");
 
                 ApplicationInfo.getInstance().setKeyboardService(null);
             } else {
+                CommunicationModel.setStatus("Stopped playing the playlist");
                 actionsPane.renameActionButtonName("Stop");
 
                 service = new KeyboardService();
