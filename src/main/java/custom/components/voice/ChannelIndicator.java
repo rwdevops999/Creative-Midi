@@ -14,12 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static util.ColorScheme.getColor;
 
 public class ChannelIndicator extends VBox {
-//    private final Color ledOn = Color.RED;
-//    private final Color ledOff = Color.web("#4A0000"); // Donkerrood (uitstand)
-    private final Color ledOn = getColor("voice", "led", "on");
-    private final Color ledOff = getColor("voice", "led", "off");
+    private Color ledOn;
+    private Color ledOff; // Donkerrood (uitstand)
+//    private final Color ledOn = getColor("voice", "ledRed", "on");
+//    private final Color ledOff = getColor("voice", "ledRed", "off");
 
-    private final Circle redLight;
+    private Circle light;
 
     private Receiver keyboardReceiver;
 
@@ -27,11 +27,14 @@ public class ChannelIndicator extends VBox {
         this.keyboardReceiver = receiver;
     }
 
-    public ChannelIndicator() {
-        this.redLight = new Circle(5);
-        this.redLight.setFill(ledOff);
-        this.redLight.setStroke(Color.BLACK);
-        this.redLight.setStrokeWidth(1.0);
+    public ChannelIndicator(Color ledOn, Color ledOff) {
+        this.ledOn = ledOn;
+        this.ledOff = ledOff;
+
+        this.light = new Circle(5);
+        this.light.setFill(ledOff);
+        this.light.setStroke(Color.BLACK);
+        this.light.setStrokeWidth(1.0);
 
         setAlignment(Pos.CENTER);
 
@@ -39,12 +42,12 @@ public class ChannelIndicator extends VBox {
     }
 
     private void buildPane() {
-        getChildren().add(redLight);
+        getChildren().add(light);
     }
 
     public void updateLight(boolean isPlaying) {
         Platform.runLater(() -> {
-            redLight.setFill(isPlaying ? ledOn : ledOff);
+            light.setFill(isPlaying ? ledOn : ledOff);
         });
     }
 
@@ -62,7 +65,6 @@ public class ChannelIndicator extends VBox {
                     if (message instanceof ShortMessage) {
                         ShortMessage sm = (ShortMessage) message;
 
-                        // Controleer of het kanaal van het bericht matcht met midiChannel (bijv. 0)
                         if (sm.getChannel() == midiChannel) {
 
                             // Note On (noot ingedrukt) -> Lampje AAN

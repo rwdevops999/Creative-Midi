@@ -69,6 +69,9 @@ public class SearchResultsPane extends AnchorPane {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         table.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 //            DirectSingleton.getInstance().setSelectedPatch(newValue);
+            // TODO - normal click is channel 0
+            // TODO - shift click is channel 1
+            // TODO - control click is channel 2
             if (ApplicationInfo.getInstance().getMidiOutputDevice() != null && newValue != null) {
                 getVoiceSearchResultsPane().getSpeakerPane().sendAsMidi(0, newValue);
             }

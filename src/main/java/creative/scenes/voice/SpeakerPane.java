@@ -30,7 +30,7 @@ import util.Util;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.ShortMessage;
 import java.io.File;
-import java.util.Objects;
+import java.util.*;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -76,7 +76,12 @@ public class SpeakerPane extends HBox {
     private void buildPane() {
         logger.debug("[CM_SPEAKER_PANE] Building {}", getId());
 
-        ChannelIndicator midiChannelIndicator = new ChannelIndicator();
+        Map<Integer, ChannelIndicator> ledMap = new HashMap<>();
+
+        // TODO I need a ChannelIndicator with different lights and pass them as a list
+        ledMap.put(0, new ChannelIndicator(getColor("voice", "ledRed", "on"), getColor("voice", "ledRed", "off")));
+        ledMap.put(1, new ChannelIndicator(getColor("voice", "ledGreen", "on"), getColor("voice", "ledGreen", "off")));
+        ledMap.put(2, new ChannelIndicator(getColor("voice", "ledBlue", "on"), getColor("voice", "ledBlue", "off")));
 
         speaker = new ToggleButton();
         speaker.setAlignment(Pos.CENTER);
@@ -102,14 +107,14 @@ public class SpeakerPane extends HBox {
                 ApplicationInfo.getInstance().setSelectedPatch(selectedPatch);
                 if (sendAsMidi(0, selectedPatch)) {
                     speaker.setStyle("-fx-background-color: #0096C9;");
-                    playDemoFile((ToggleButton)(e.getSource()), midiChannelIndicator);
+                    playDemoFile((ToggleButton)(e.getSource()), ledMap);
                     closePane.setActionHandler(stopMidiHandler);
                 } else {
                     speaker.setSelected(false);
                     closePane.setActionHandler(null);
                 }
             } else {
-                stopDemoFile((ToggleButton)(e.getSource()), midiChannelIndicator);
+                stopDemoFile((ToggleButton)(e.getSource()), ledMap);
                 speaker.setStyle("-fx-background-color: darkgray;");
             }
         });
@@ -138,7 +143,14 @@ public class SpeakerPane extends HBox {
         });
         getChildren().add(uploadButton);
 
-        getChildren().add(midiChannelIndicator);
+        for (Integer channel : ledMap.keySet()) {
+            ChannelIndicator channelIndicator = ledMap.get(channel);
+
+            Label channelLabel = new Label("Ch: " + channel);
+            getChildren().add(channelLabel);
+
+            getChildren().add(channelIndicator);
+        }
 
         logger.debug("[CM_SPEAKER_PANE] Building {}", getId());
     }
@@ -183,7 +195,7 @@ public class SpeakerPane extends HBox {
         }
     };
 
-    private void playDemoFile (ToggleButton button, ChannelIndicator midiChannelIndicator) {
+    private void playDemoFile (ToggleButton button, Map<Integer, ChannelIndicator> midiChannelIndicators) {
         MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
         if (outputDevice == null) {
             DialogFactory.renderWarningDialog("No device selected");
@@ -191,13 +203,13 @@ public class SpeakerPane extends HBox {
         } else {
             Patch patch = ApplicationInfo.getInstance().getSelectedPatch();
             if (patch != null) {
-                MidiDemo.playDemo(anyHandler, anyHandler, midiChannelIndicator, 0);
+                MidiDemo.playDemo(anyHandler, anyHandler, midiChannelIndicators);
             }
         }
     }
 
-    private void stopDemoFile (ToggleButton button, ChannelIndicator midiChannelIndicator) {
-        MidiDemo.stopDemo(midiChannelIndicator);
+    private void stopDemoFile (ToggleButton button, Map<Integer, ChannelIndicator> midiChannelIndicators) {
+        MidiDemo.stopDemo(midiChannelIndicators);
         button.setSelected(false);
     }
 

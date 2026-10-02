@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 @Setter
 public class Worker implements Runnable {
@@ -25,7 +27,7 @@ public class Worker implements Runnable {
     public Worker() {
     }
 
-    public Worker (MidiDevice device, ChannelIndicator midiChannelIndicator, int midiChannel) {
+    public Worker (MidiDevice device, Map<Integer, ChannelIndicator> midiChannelIndicators) {
         try {
             if (!device.isOpen()) {
                 device.open();
@@ -34,15 +36,31 @@ public class Worker implements Runnable {
             sequencer = MidiSystem.getSequencer(false);
             sequencer.open();
 
-            Transmitter transmitter = sequencer.getTransmitter();
+            if (! midiChannelIndicators.isEmpty()) {
+                for (Integer channel : midiChannelIndicators.keySet()) {
+                    ChannelIndicator midiChannelIndicator = midiChannelIndicators.get(channel);
+
+                    Transmitter transmitter = sequencer.getTransmitter();
+                    Receiver receiver = device.getReceiver();
+                    if (midiChannelIndicator != null) {
+                        midiChannelIndicator.setRealReceiver(receiver);
+                        receiver = midiChannelIndicator.getMidiReceiver(channel);
+                    }
+
+                    transmitter.setReceiver(receiver);
+                }
+            }
+
+/*            Transmitter transmitter = sequencer.getTransmitter();
             Receiver receiver = device.getReceiver();
             if (midiChannelIndicator != null) {
                 midiChannelIndicator.setRealReceiver(receiver);
                 receiver = midiChannelIndicator.getMidiReceiver(midiChannel);
             }
 
-            transmitter.setReceiver(receiver);
 
+            transmitter.setReceiver(receiver);
+*/
             midiFile = ApplicationInfo.getInstance().getMidiToTry();
             if (midiFile != null) {
                 Sequence sequence = MidiSystem.getSequence(midiFile);
