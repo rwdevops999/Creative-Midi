@@ -68,7 +68,8 @@ public class MidiProcessor {
             default -> handleUnknownMidiMessage(message, midiEventInfo);
         };
 
-        return result;
+//        return result;
+        return false; // TODO remove this because at development time I don't want to see MIDI messages
     }
 
     private static boolean handleChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {

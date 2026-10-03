@@ -56,10 +56,6 @@ public class MetaProcessor {
      * @return true, if the event should be visible, false if the event shouldn't be visible
      */
     public static boolean processMessage(MetaMessage message, MidiEventInfo midiEventInfo) {
-        if (message instanceof MetaMessage) { // TODO Remove this
-            return false;
-        }
-
         boolean result = true;
 
         String messageInfo = SysexToHexStringConvertor.convertToHexString(message.getData());
@@ -96,7 +92,8 @@ public class MetaProcessor {
         String typeString = String.format("%02X", type & 0xFF);
         midiEventInfo.setMessage("FF " + typeString + " " + messageInfo);
 
-        return result;
+//        return result;
+        return false; // TODO remove this because at development time I don't want to see META messages
     }
 
     private static void handleText(byte[] data, MidiEventInfo midiEventInfo) {
