@@ -28,7 +28,12 @@ public class MidiProcessor {
     static {
         colors.put(new ColorScheme.ColorKey("midi"), Color.BLUE);
 
-        colors.put(new ColorScheme.ColorKey("midi", "note"), Color.CHARTREUSE);
+        colors.put(new ColorScheme.ColorKey("midi", "note"), Color.WHITE);
+
+        colors.put(new ColorScheme.ColorKey("midi", "bank select msb"), Color.GOLD);
+        colors.put(new ColorScheme.ColorKey("midi", "bank select lsb"), Color.GOLD);
+        colors.put(new ColorScheme.ColorKey("midi", "program change"), Color.GOLD);
+        colors.put(new ColorScheme.ColorKey("midi", "pitch bend"), Color.MEDIUMSPRINGGREEN);
 
         ColorScheme.registerColors(colors);
 
