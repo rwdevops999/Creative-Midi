@@ -819,7 +819,8 @@ public class MidiProcessor {
 
         midiEventInfo.setData2((msb << 7) | lsb);
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleUnknownChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
