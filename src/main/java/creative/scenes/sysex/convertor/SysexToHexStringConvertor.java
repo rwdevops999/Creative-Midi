@@ -9,4 +9,13 @@ public class SysexToHexStringConvertor {
 
         return sb.toString().trim().toUpperCase();
     }
+
+    public static StringBuilder convertToHexStringbuilder(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : data) {
+            sb.append(String.format("%02X ", b));
+        }
+
+        return sb;
+    }
 }

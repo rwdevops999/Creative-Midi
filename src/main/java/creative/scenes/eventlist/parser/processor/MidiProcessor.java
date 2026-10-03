@@ -789,7 +789,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "unknown"));
         midiEventInfo.setChannel(message.getChannel()+1);
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN (1)");
 
         return result;
     }
@@ -901,7 +901,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "unknown"));
         midiEventInfo.setChannel(message.getChannel() + 1);
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN (2)");
 
         return result;
     }
@@ -911,7 +911,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "unknown"));
         midiEventInfo.setChannel(message.getChannel() + 1);
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN (3)");
 
         return result;
     }
@@ -988,7 +988,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "unknown"));
         midiEventInfo.setChannel(message.getChannel() + 1);
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN (4)");
 
         return result;
     }
@@ -1078,7 +1078,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "unknown"));
         midiEventInfo.setChannel(message.getChannel() + 1);
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN (5)");
 
         return result;
     }
@@ -1088,7 +1088,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "unknown"));
         midiEventInfo.setChannel(message.getChannel() + 1);
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN (6)");
 
         return result;
     }
