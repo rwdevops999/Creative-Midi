@@ -243,7 +243,6 @@ public class MidiProcessor {
         byte[] rawbytes = message.getMessage();
 
         int data2 = rawbytes[2] & 0xFF;
-
         midiEventInfo.setData2(data2);
 
 //        return result;
@@ -260,6 +259,7 @@ public class MidiProcessor {
         byte[] rawbytes = message.getMessage();
 
         int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
 
 //        return result;
         return false;
@@ -280,13 +280,33 @@ public class MidiProcessor {
     private static boolean handleMainVolume(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "main volume"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Main Volume");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handlePanpot(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "panpot"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Panpot");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleExpression (ShortMessage message, MidiEventInfo midiEventInfo) {
