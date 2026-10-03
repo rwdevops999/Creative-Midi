@@ -44,7 +44,7 @@ public class DialogFactory {
         boolean returnValue = false;
         logger.debug("[CM_DIALOG_FACTORY] Render a CONFIRMATION dialog");
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, null, ButtonType.YES, ButtonType.NO);
         alert.setHeaderText(header);
         alert.setContentText(message);
 
@@ -52,7 +52,7 @@ public class DialogFactory {
 
         alert.initStyle(StageStyle.UNDECORATED);
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if (result.isPresent() && result.get() == ButtonType.YES) {
             returnValue = true;
         }
 

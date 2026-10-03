@@ -1,19 +1,24 @@
 package creative.scenes.eventlist;
 
+import creative.scenes.base.Base;
+import creative.scenes.base.BaseClosePane;
 import creative.scenes.eventlist.parser.data.EventType;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import custom.dialog.DialogFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ApplicationInfo;
 
-import javax.sound.midi.Sequence;
+import javax.sound.midi.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -131,10 +136,41 @@ public class EventsDisplayPane extends VBox {
         MenuItem deleteEvent = new MenuItem("Delete");
         deleteEvent.disableProperty().bindBidirectional(deleteMenuDisable);
         deleteEvent.setOnAction(e -> {
-            // TODO
+            List<MidiEventInfo> selectedEvents = table.getSelectionModel().getSelectedItems();
+
+            for (MidiEventInfo selectedEvent : selectedEvents) {
+                deleteEvent(selectedEvent, currentSequence);
+            }
+
+            getEventsPane().getEventlistPane().getFileSelectionPane().updateSequence(currentSequence);
+            executeFiltering();
+
+            ApplicationInfo.getInstance().setMidiChanged(true);
+
+            setFileHasChangedCallback();
         });
         contextMenu.getItems().add(deleteEvent);
         table.setContextMenu(contextMenu);
+    }
+
+    private EventHandler handler = (EventHandler) event -> {
+        if (ApplicationInfo.getInstance().isMidiChanged()) {
+            if (DialogFactory.renderConfirmationDialog("Midi Changed", "Midi has changed. Save?")) {
+                getEventsPane().getEventlistPane().getFileSelectionPane().handleSaveFile();
+
+                ApplicationInfo.getInstance().setMidiChanged(false);
+            }
+        }
+    };
+
+    private void setFileHasChangedCallback() {
+        Base base = (Base)ApplicationInfo.getInstance().getSpa();
+        BaseClosePane closePane = base.getClosePane();
+
+        closePane.setActionHandler(handler);
+
+        // Also activate the save button above
+        getEventsPane().getEventlistPane().getFileSelectionPane().fileHasChanged();
     }
 
     private void setColumnSize(TableColumn column, int size) {
@@ -248,6 +284,65 @@ public class EventsDisplayPane extends VBox {
         selectedEvents = selected;
         selectedChannel = channel;
         executeFiltering();
+    }
+
+    public void deleteEvent(MidiEventInfo eventInfoToDelete, Sequence activeSequence) {
+        currentEvents.remove(eventInfoToDelete);
+
+        MidiEvent targetEvent = eventInfoToDelete.getOriginalEvent();
+        if (targetEvent == null || targetEvent.getMessage() == null) return;
+
+        // 1. Calculate the exact start-tick (bijv. 10 * 4 = 40)
+        long startTick = eventInfoToDelete.getTick() * 4;
+        long endTickWindow = startTick + 5; // window of 5 ticks for LSB and PC
+
+        MidiMessage targetMsg = targetEvent.getMessage();
+        int targetChannel = -1;
+
+        // 2. Find out the read MIDI-channel of the selected event
+        if (targetMsg instanceof ShortMessage) {
+            targetChannel = ((ShortMessage) targetMsg).getChannel();
+        }
+
+        // If it is not ShortMessage (so we don't have a channel), stop
+        if (targetChannel == -1) return;
+
+        // 3. Loop through all tracks of the sequence
+        for (Track track : activeSequence.getTracks()) {
+            java.util.List<MidiEvent> eventsToRemove = new java.util.ArrayList<>();
+
+            for (int i = 0; i < track.size(); i++) {
+                MidiEvent currentEvent = track.get(i);
+                long currentTick = currentEvent.getTick();
+
+                // Check A: Does the event fall inside the window
+                if (currentTick >= startTick && currentTick <= endTickWindow) {
+                    MidiMessage currentMsg = currentEvent.getMessage();
+
+                    if (currentMsg instanceof ShortMessage) {
+                        ShortMessage currentSm = (ShortMessage) currentMsg;
+
+                        // CRUCIAL CHECK: The event must exactly match with the selected MIDI-channel!
+                        if (currentSm.getChannel() == targetChannel) {
+                            int cmd = currentSm.getCommand();
+
+                            boolean isMSB = (cmd == ShortMessage.CONTROL_CHANGE && currentSm.getData1() == 0);
+                            boolean isLSB = (cmd == ShortMessage.CONTROL_CHANGE && currentSm.getData1() == 32);
+                            boolean isPC = (cmd == ShortMessage.PROGRAM_CHANGE);
+
+                            if (isMSB || isLSB || isPC) {
+                                eventsToRemove.add(currentEvent);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // STAP B: Erase now ONLY the selected channel-events
+            for (MidiEvent eventToDelete : eventsToRemove) {
+                track.remove(eventToDelete);
+            }
+        }
     }
 
     // ACCESSORS

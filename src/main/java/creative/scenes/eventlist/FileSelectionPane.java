@@ -1,6 +1,8 @@
 package creative.scenes.eventlist;
 
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -81,12 +83,32 @@ public class FileSelectionPane extends HBox {
         selectedFileLabel.textProperty().bind(fileName);
         getChildren().add(selectedFileLabel);
 
+        Button fileSaveButton = new Button("Save");
+        fileSaveButton.disableProperty().bind(saveDisable);
+        fileSaveButton.setOnAction(e -> {
+            handleSaveFile();
+        });
+        getChildren().add(fileSaveButton);
+
         logger.debug("[CM_FILE_SELECTION_PANE] Built {}", getId());
     }
 
     public void setEventInfo(Sequence sequence, Queue<MidiEventInfo> events) {
         currentEvents = new LinkedList<>(events);
         currentSequence = sequence;
+    }
+
+    public void updateSequence(Sequence sequence) {
+        currentSequence = sequence;
+    }
+
+    public void handleSaveFile() {
+        // TODO
+    }
+
+    private final BooleanProperty saveDisable = new SimpleBooleanProperty(true);
+    public void fileHasChanged() {
+        saveDisable.set(false);
     }
 
     // ACCESSORS

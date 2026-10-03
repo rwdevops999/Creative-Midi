@@ -130,4 +130,9 @@ public class ApplicationInfo {
      * Keeping track of the keyboard (play) service
      */
     private Service<SharedEntity> keyboardService;
+
+    /**
+     * The midi events list has changed (and so also the midi file)
+     */
+    private boolean midiChanged = false;
 }
