@@ -289,6 +289,15 @@ public class MidiProcessor {
     private static boolean handleDataEntryMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.setColor(getColor("midi", "data entry msb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Data entry MSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
         return result;
     }
 
@@ -572,11 +581,29 @@ public class MidiProcessor {
     private static boolean handleNRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.setColor(getColor("midi", "nprn lsb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("NPRN LSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
         return result;
     }
 
     private static boolean handleNRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "nrpn msb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("NRPN MSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
 
         return result;
     }
