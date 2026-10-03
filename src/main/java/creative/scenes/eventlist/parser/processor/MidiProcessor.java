@@ -28,13 +28,21 @@ public class MidiProcessor {
         midiEventInfo.setMessage(SysexToHexStringConvertor.convertToHexString(message.getMessage()));
 
         int status = message.getStatus() & 0xF0;
-        int channelOS = message.getStatus() & 0x0F;
+/*        int channelOS = message.getStatus() & 0x0F;
         int channelOM = message.getChannel();
         System.out.println(String.format("%2X (BASE = %2X, OS = %2d, OM = %2d)", message.getStatus(), status, channelOS, channelOM));
-
+*/
         switch (status) {
-            case 0x80,0x90,0xA0,0xB0,0xC0,0xD0,0xE0 -> handleChannelMessage(message, midiEventInfo);
-            case 0xF0 -> handleSystemMessage(message, midiEventInfo);
+            case
+                    0x80,
+                    0x90,
+                    0xA0,
+                    0xB0,
+                    0xC0,
+                    0xD0,
+                    0xE0 -> handleChannelMessage(message, midiEventInfo);
+            case
+                    0xF0 -> handleSystemMessage(message, midiEventInfo);
             default -> handleUnknownMidiMessage(message, midiEventInfo);
         }
 
@@ -73,7 +81,307 @@ public class MidiProcessor {
     }
 
     private static void handleControlOrModeChange(ShortMessage message, MidiEventInfo midiEventInfo) {
-        System.out.println("Control Or Mode Change");
+        byte[] rawbytes = message.getMessage();
+
+        int byte1 = rawbytes[1] & 0xFF;
+        int byte2 = rawbytes[2] & 0xFF;
+
+        switch (byte1) {
+            case
+                    0x00,
+                    0x01,
+                    0x05,
+                    0x06,
+                    0x07,
+                    0x0A,
+                    0x0B,
+                    0x10,
+                    0x20,
+                    0x26,
+                    0x40,
+                    0x41,
+                    0x42,
+                    0x43,
+                    0x47,
+                    0x48,
+                    0x49,
+                    0x4A,
+                    0x4B,
+                    0x4C,
+                    0x4D,
+                    0x4E,
+                    0x50,
+                    0x51,
+                    0x52,
+                    0x54,
+                    0x5B,
+                    0x5D,
+                    0x5E,
+                    0x60,
+                    0x61,
+                    0x62,
+                    0x63,
+                    0x64,
+                    0x65 -> handleControlChangeMessage(message, midiEventInfo);
+            case
+                    0x78,
+                    0x79,
+                    0x7A,
+                    0x7B,
+                    0x7C,
+                    0x7D,
+                    0x7E,
+                    0x7F -> handleModeChangeMessage(message, midiEventInfo);
+            default -> handleUnknownControlOrModeMessage(message, midiEventInfo);
+        }
+    }
+
+    private static void handleControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        byte[] rawbytes = message.getMessage();
+
+        int byte1 = rawbytes[1] & 0xFF;
+
+        switch (byte1) {
+            case 0x00 -> handleBankSelectMSB(message, midiEventInfo);
+            case 0x01 -> handleModulation(message, midiEventInfo);
+            case 0x05 -> handlePortamento(message, midiEventInfo);
+            case 0x06 -> handleDataEntryMSB(message, midiEventInfo);
+            case 0x07 -> handleMainVolume(message, midiEventInfo);
+            case 0x0A -> handlePanpot(message, midiEventInfo);
+            case 0x0B -> handleExpression(message, midiEventInfo);
+            case 0x10 -> handleGeneralPurposeController(message, midiEventInfo);
+            case 0x20 -> handleBankSelectLSB(message, midiEventInfo);
+            case 0x26 -> handleDataEntryLSB(message, midiEventInfo);
+            case 0x40 -> handleSustainDamper(message, midiEventInfo);
+            case 0x41 -> handlePortamento(message, midiEventInfo);
+            case 0x42 -> handleSostenuto(message, midiEventInfo);
+            case 0x43 -> handleSoftPedal(message, midiEventInfo);
+            case 0x47 -> handleResonance(message, midiEventInfo);
+            case 0x48 -> handleReleaseTime(message, midiEventInfo);
+            case 0x49 -> handleAttackTime(message, midiEventInfo);
+            case 0x4A -> handleCutoff(message, midiEventInfo);
+            case 0x4B -> handleDecayTime(message, midiEventInfo);
+            case 0x4C -> handleVibratoRange(message, midiEventInfo);
+            case 0x4D -> handleVibratoDepth(message, midiEventInfo);
+            case 0x4E -> handleVibratoDelay(message, midiEventInfo);
+            case 0x50 -> handleArticulation1(message, midiEventInfo);
+            case 0x51 -> handleArticulation2(message, midiEventInfo);
+            case 0x52 -> handleArticulation3(message, midiEventInfo);
+            case 0x54 -> handlePortamentoControl(message, midiEventInfo);
+            case 0x5B -> handleReverbSendLevel(message, midiEventInfo);
+            case 0x5D -> handleChorusSendLevel(message, midiEventInfo);
+            case 0x5E -> handleVariationSendLevel(message, midiEventInfo);
+
+            case 0x60 -> handleRPNIncrement(message, midiEventInfo);
+            case 0x61 -> handleRPNDecrement(message, midiEventInfo);
+            case 0x62 -> handleNRPNLsb(message, midiEventInfo);
+            case 0x63 -> handleNRPNMsb(message, midiEventInfo);
+            case 0x64 -> handleRPNLsb(message, midiEventInfo);
+            case 0x65 -> handleRPNMsb(message, midiEventInfo);
+            default -> handleUnknownControlChangeMessage(message, midiEventInfo);
+        }
+    }
+
+    private static void handleBankSelectMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleModulation(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleDataEntryMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleMainVolume(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handlePanpot(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleExpression (ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleGeneralPurposeController(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleBankSelectLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleDataEntryLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleSustainDamper(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleVibratoRange(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleArticulation1(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleArticulation2(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleSostenuto(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleSoftPedal(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleResonance(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleReleaseTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleAttackTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleCutoff(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleDecayTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleVibratoDepth(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleVibratoDelay(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleChorusSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleRPNIncrement(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleArticulation3(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handlePortamentoControl(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleReverbSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleVariationSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleRPNDecrement(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleNRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleNRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleUnknownControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        byte[] rawbytes = message.getMessage();
+
+        int byte1 = rawbytes[1] & 0xFF;
+
+        switch (byte1) {
+            case 0x78 -> handleAllSoundOff(message, midiEventInfo);
+            case 0x79 -> handleResetAllControllers(message, midiEventInfo);
+            case 0x7A -> handleLocalControl(message, midiEventInfo);
+            case 0x7B -> handleAllNoteOff(message, midiEventInfo);
+            case 0x7C -> handleOmniOff(message, midiEventInfo);
+            case 0x7D -> handleOmniOn(message, midiEventInfo);
+            case 0x7E -> handleMono(message, midiEventInfo);
+            case 0x7F -> handlePoly(message, midiEventInfo);
+            default -> handleUnknownModeChangeMessage(message, midiEventInfo);
+        }
+    }
+
+    private static void handleAllSoundOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleLocalControl(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleOmniOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleOmniOn(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleMono(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handlePoly(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleAllNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleAllNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleResetAllControllers(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleUnknownModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+
+    }
+
+    private static void handleUnknownControlOrModeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        System.out.println("Unknown Control Or Mode Change Message");
     }
 
     private static void handleProgramChange(ShortMessage message, MidiEventInfo midiEventInfo) {
