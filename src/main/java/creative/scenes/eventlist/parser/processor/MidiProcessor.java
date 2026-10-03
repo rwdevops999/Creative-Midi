@@ -428,7 +428,17 @@ public class MidiProcessor {
     private static boolean handleReverbSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "reverb send level"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Reverb send level");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleVariationSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
