@@ -148,4 +148,10 @@ public class MS2SParser {
 //        return patches.stream().filter(p -> (p.getMsb() == inPatch.getMsb() && p.getLsb() == inPatch.getLsb() && p.getPc() == inPatch.getPc())).findFirst().orElse(inPatch);
         return patches.stream().filter(p -> (p.getMsb() == inPatch.getMsb() && p.getLsb() == inPatch.getLsb() && p.getPc() == inPatch.getPc())).findFirst().orElse(null);
     }
+
+    public Patch findPatch(int msb, int lsb, int pc) {
+        List<Patch> patches = findPatches(rootGroups);
+
+        return patches.stream().filter(p -> (p.getMsb() == msb && p.getLsb() == lsb && p.getPc() == pc)).findFirst().orElse(null);
+    }
 }

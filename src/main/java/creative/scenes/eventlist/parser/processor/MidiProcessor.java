@@ -4,7 +4,10 @@ import creative.scenes.eventlist.parser.data.EventType;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.eventlist.parser.processor.matcher.MidiNoteMatcher;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
+import creative.scenes.voice.provider.InstrumentProvider;
+import entity.voice.Patch;
 import javafx.scene.paint.Color;
+import util.ApplicationInfo;
 import util.ColorScheme;
 import util.Util;
 import util.properties.PropertyContainer;
@@ -21,13 +24,23 @@ import static util.Util.calcNote;
 public class MidiProcessor {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
 
+    private static final int[] currentMSB = new int[16];
+    private static final int[] currentLSB = new int[16];
+
     static {
         colors.put(new ColorScheme.ColorKey("midi"), Color.BLUE);
 
         colors.put(new ColorScheme.ColorKey("midi", "note"), Color.CHARTREUSE);
 
         ColorScheme.registerColors(colors);
+
+        // Default MIDI bank is usually 0/0
+        java.util.Arrays.fill(currentMSB, 0);
+        java.util.Arrays.fill(currentLSB, 0);
     }
+
+    private static int getMSB(int channel) { return currentMSB[channel]; }
+    private static int getLSB(int channel) { return currentLSB[channel]; }
 
     public static boolean processMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
@@ -245,6 +258,8 @@ public class MidiProcessor {
         int data2 = rawbytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
+        currentMSB[message.getChannel()] = data2;
+
 //        return result;
         return  false;
     }
@@ -323,6 +338,17 @@ public class MidiProcessor {
 
     private static boolean handleBankSelectLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "bank select lsb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Bank Select LSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+        currentLSB[message.getChannel()] = data2;
 
         return result;
     }
@@ -605,8 +631,25 @@ public class MidiProcessor {
     }
 
     private static boolean handleProgramChange(ShortMessage message, MidiEventInfo midiEventInfo) {
-        System.out.println("Program Change");
-        return true;
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "program change"));
+        midiEventInfo.setChannel(message.getChannel() + 1);
+        midiEventInfo.setDescription("Program change");
+
+        byte[] rawbytes = message.getMessage();
+        int byte1 = rawbytes[1] & 0xFF;
+
+        midiEventInfo.setData2(byte1);
+
+        int msb = getMSB(message.getChannel());
+        int lsb = getLSB(message.getChannel());
+        String voice = searchVoice(msb, lsb, byte1);
+
+        midiEventInfo.setComment(voice);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleChannelAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -681,5 +724,20 @@ public class MidiProcessor {
         System.out.println("Unknown midi message");
 
         return result;
+    }
+
+    private static String searchVoice(int msb, int lsb, int pc) {
+        String voice = "Unknown voice";
+
+        InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
+
+        if (instrumentProvider != null) {
+            Patch patch = instrumentProvider.findPatch(msb, lsb, pc);
+            if (patch != null) {
+                voice = patch.getPatch();
+            }
+        }
+
+        return voice;
     }
 }

@@ -12,4 +12,7 @@ public interface InstrumentProvider {
     default Patch findLinkedPatch(Patch patch) {
         return patch;
     };
+    default Patch findPatch(int msb, int lsb, int pc) {
+        return null;
+    }
 }

@@ -2,6 +2,7 @@ package creative.scenes.voice.provider;
 
 import creative.scenes.voice.util.MS2SParser;
 import entity.voice.Group;
+import entity.voice.Patch;
 
 import java.io.File;
 import java.util.List;
@@ -27,4 +28,9 @@ public class YamahaMS2SProvider implements InstrumentProvider {
     public List<Group> getGroups() {
         return parser.getRootGroups();
     }
+
+    public Patch findPatch(int msb, int lsb, int pc) {
+        return parser.findPatch(msb, lsb, pc);
+    }
+
 }

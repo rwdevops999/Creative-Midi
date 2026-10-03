@@ -39,4 +39,8 @@ public class CakewalkInsProvider implements InstrumentProvider {
     public Patch findLinkedPatch(Patch patch) {
         return linkedParser.findPatch(patch);
     }
+
+    public Patch findPatch(int msb, int lsb, int pc) {
+        return linkedParser.findPatch(msb, lsb, pc);
+    }
 }
