@@ -550,6 +550,15 @@ public class MidiProcessor {
     private static boolean handleVariationSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.setColor(getColor("midi", "variation send level"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Variation send level");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
         return result;
     }
 
