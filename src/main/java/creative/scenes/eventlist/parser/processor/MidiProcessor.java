@@ -566,7 +566,19 @@ public class MidiProcessor {
     private static boolean handlePortamentoControl(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "portamento control"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Portamento control");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+
+        int baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, 0);
+        midiEventInfo.setComment(calcNote(data2, baseOctave).getName());
+
+//        return result;
+        return false;
     }
 
     private static boolean handleReverbSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {

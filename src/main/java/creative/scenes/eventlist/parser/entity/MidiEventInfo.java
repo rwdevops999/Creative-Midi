@@ -70,7 +70,7 @@ public class MidiEventInfo {
 
     @Setter
     @Getter
-    private int data2;
+    private Integer data2 = null;
 
     @Setter
     @Getter
