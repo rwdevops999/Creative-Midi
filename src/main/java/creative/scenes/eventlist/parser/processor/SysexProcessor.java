@@ -74,6 +74,7 @@ public class SysexProcessor {
             case "10" -> handleXGParameterChange(sysex, midiEventInfo);
             case "20" -> handleXGDumpRequest(sysex, midiEventInfo);
             case "30" -> handleXGParameterRequest(sysex, midiEventInfo);
+            case "7E" -> handleStyle(sysex, midiEventInfo);
             default -> handleUnknownYamahaMessage(sysex, midiEventInfo);
         };
         return  result;
@@ -181,7 +182,7 @@ public class SysexProcessor {
     private static boolean handleXGParameterChange(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "xg parameter change"));
+        midiEventInfo.setColor(getColor("sysex", "yamaha", "xg parameter change"));
         midiEventInfo.setDescription("XG parameter change");
 
         // Skip 1 byte
@@ -192,6 +193,12 @@ public class SysexProcessor {
         result = switch (address) {
             case "00 00" -> handleXGParameterChange0000(sysex, midiEventInfo);
             case "02 01" -> handleEffect1(sysex, midiEventInfo);
+            case
+                    "03 00",
+                    "03 02" -> handleEffect2(sysex, midiEventInfo);
+            case
+                "04 00" -> handleVocalHarmony(sysex, midiEventInfo);
+            case "0A 02" -> handleXGMultiPart(address, midiEventInfo);
             case
                     "08 00",
                     "08 01",
@@ -223,9 +230,43 @@ public class SysexProcessor {
         result = switch (selector) {
             case "00" -> handleReverb(midiEventInfo);
             case "20" -> handleChorus(midiEventInfo);
-            case "40" -> handleVariation(midiEventInfo);
-            default -> handleUnknownEffect(midiEventInfo);
+            case "40", "5A" -> handleVariation(midiEventInfo);
+            default -> handleUnknownEffect1(midiEventInfo);
         };
+
+        return result;
+    }
+
+    // F0 43 10 -- 03 nn
+    private static boolean handleEffect2(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        System.out.println("Sysex");
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        result = switch (selector) {
+            case "00", "02", "03", "0C", "0B" -> handleInsertion(midiEventInfo);
+            default -> handleUnknownEffect2(midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 43 10 -- 04 nn
+    private static boolean handleVocalHarmony(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "vocal harmony"));
+        midiEventInfo.setDescription("Vocal Harmony");
+
+        return result;
+    }
+
+    // F0 43 10 -- 03 nn 00
+    private static boolean handleInsertion(MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "insertion effect"));
+        midiEventInfo.setDescription("Insertion effect");
 
         return result;
     }
@@ -264,14 +305,45 @@ public class SysexProcessor {
     }
 
     // F0 43 10 -- 02 01 ??
-    private static boolean handleUnknownEffect(MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownEffect1(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
-        midiEventInfo.setDescription("Unknown effect");
+        midiEventInfo.setDescription("Unknown effect1");
 
         return result;
     }
+
+    // F0 43 10 -- 03 nn ??
+    private static boolean handleUnknownEffect2(MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown effect1");
+
+        return result;
+    }
+
+    // F0 43 10 -- 0A nn
+    private static boolean handleXGMultiPart(String address, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        StringBuilder newAddress = new StringBuilder(address);
+
+        ByteHelper.getAndStrip(newAddress, 1);
+
+        String selector = ByteHelper.getAndStrip(newAddress, 1);
+
+        midiEventInfo.setColor(getColor("sysex", "partmode"));
+        midiEventInfo.setDescription("XG Multipart part mode");
+
+        int receiveChannel = Integer.parseInt(selector, 16);
+        midiEventInfo.setComment("receive channel: " + receiveChannel);
+
+//        return result;
+        return false;
+    }
+
     // F0 43 10 -- 08 nn
     private static boolean handleMultiPartMessage(String address, MidiEventInfo midiEventInfo) {
         boolean result = true;
@@ -349,6 +421,16 @@ public class SysexProcessor {
 
     // F0 43 30
     private static boolean handleXGParameterRequest (StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "vendor", "xg parameter request"));
+        midiEventInfo.setDescription("XG parameter request");
+
+        return result;
+    }
+
+    // F0 43 7E
+    private static boolean handleStyle (StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.setColor(getColor("sysex", "vendor", "xg parameter request"));
