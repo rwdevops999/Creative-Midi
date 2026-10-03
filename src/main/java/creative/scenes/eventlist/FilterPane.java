@@ -102,6 +102,7 @@ public class FilterPane extends HBox {
         sysexButton.setOnAction(event -> {
             // TODO Was never implemented
         });
+        getChildren().add(sysexButton);
 
         // CHANNEL
         Label channelLabel = new Label("Channel");
@@ -120,6 +121,13 @@ public class FilterPane extends HBox {
             Platform.runLater(this::updateFiltering);
         });
         getChildren().addAll(channelCheckBox, channelSpinner);
+
+        Button channelButton = new Button("Details");
+        channelButton.setOnAction(event -> {
+            // TODO Was never implemented
+        });
+        getChildren().add(channelButton);
+
     }
 
     private void updateFiltering() {

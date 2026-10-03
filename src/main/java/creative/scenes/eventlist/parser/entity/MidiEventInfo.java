@@ -11,16 +11,23 @@ import javax.sound.midi.MidiEvent;
 public class MidiEventInfo {
 
     // the event tick converted (to targetPPQ)
+    @Getter
+    @Setter
     private long tick;
 
     // the MBT Position
     @Getter
+    @Setter
     private String mbtPosition;
 
     // The track id it belongs to
+    @Getter
+    @Setter
     private int trackId;
 
     // The original event
+    @Getter
+    @Setter
     private MidiEvent originalEvent;
 
     public MidiEventInfo(long tick, MbtPosition mbtPosition, int trackId, MidiEvent originalEvent) {
@@ -34,11 +41,12 @@ public class MidiEventInfo {
     @Getter
     private EventType eventType;
 
+    @Setter
     @Getter
-    private long color;
+    private long colorAsLong;
 
     public void setColor(Color color) {
-        this.color = colorToLong(color);
+        this.colorAsLong = colorToLong(color);
     }
 
     @Setter
@@ -53,6 +61,7 @@ public class MidiEventInfo {
         comment = ""+data1;
     }
 
+    @Getter
     private int data1;
     public void setData1(int data1) {
         this.data1 = data1;

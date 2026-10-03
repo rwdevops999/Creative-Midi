@@ -2,6 +2,7 @@ package creative.scenes.eventlist.parser;
 
 import creative.scenes.eventlist.parser.entity.MbtPosition;
 import creative.scenes.eventlist.parser.entity.TimeSignature;
+import creative.scenes.eventlist.parser.processor.MidiFileProcessor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,14 +54,14 @@ public class MBTCalculator {
         // the gives the correct MBT position
         return new MbtPosition(measure, beat, tick);
     }
-/*
+
     public static double convertToSeconds(long ticks) {
 //        double secondsPerTick = 60.0 / (MidiFileProcessor.getBPM() * ppq);
-        double secondsPerTick1 = 60.0 / (MidiFileProcessor.getBPM() * targetPPQ);
+        double secondsPerTick1 = 60.0 / (MidifileHelper.getBPM() * targetPPQ);
 
         return ticks * secondsPerTick1;
     }
-
+/*
 //    public static long convertTick(long tick) {
 //        return (Math.round(tick * ppqScalingFactor));
 //    } */

@@ -99,12 +99,12 @@ public class EventsDisplayPane extends VBox {
             return createStringTableCell();
         });
         table.getColumns().add(data2Column);
-/*
-        TableColumn<MidiEventInfo, String> dataColumn = new TableColumn<>("Data");
+
+        TableColumn<MidiEventInfo, Integer> dataColumn = new TableColumn<>("Value");
         setColumnSize(dataColumn, columnSizes[4]);
-        dataColumn.setCellValueFactory(new PropertyValueFactory<>("data"));
+        dataColumn.setCellValueFactory(new PropertyValueFactory<>("data2"));
         dataColumn.setCellFactory(column -> {
-            return createStringTableCell();
+            return createIntegerTableCell();
         });
         table.getColumns().add(dataColumn);
 
@@ -122,7 +122,7 @@ public class EventsDisplayPane extends VBox {
         messageColumn.setCellFactory(column -> {
             return createStringTableCell();
         });
-        table.getColumns().add(messageColumn); */
+        table.getColumns().add(messageColumn);
     }
 
     private final BooleanProperty deleteMenuDisable = new SimpleBooleanProperty(true);
@@ -158,7 +158,7 @@ public class EventsDisplayPane extends VBox {
                     MidiEventInfo eventInfo = getTableRow() != null ? getTableRow().getItem() : null;
 
                     if (eventInfo != null) {
-                        String hexColor = String.format("#%08X", eventInfo.getColor());
+                        String hexColor = String.format("#%08X", eventInfo.getColorAsLong());
                         setText(item);
                         setStyle("-fx-text-fill: " + hexColor + ";");
                     } else {
@@ -186,9 +186,9 @@ public class EventsDisplayPane extends VBox {
                     MidiEventInfo eventInfo = getTableRow() != null ? getTableRow().getItem() : null;
 
                     if (eventInfo != null) {
-//TODO                        String hexColor = String.format("#%08X", eventInfo.getItemColor() & 0xFFFFFFFFL);
-//                        setText(item.toString());
-//                        setStyle("-fx-text-fill: " + hexColor + ";");
+                        String hexColor = String.format("#%08X", eventInfo.getColorAsLong());
+                        setText(item.toString());
+                        setStyle("-fx-text-fill: " + hexColor + ";");
                     } else {
                         setText(null);
                         setStyle("-fx-text-fill: black;");

@@ -2,9 +2,13 @@ package creative.scenes.eventlist.parser.processor;
 
 import creative.scenes.eventlist.parser.data.EventType;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import creative.scenes.eventlist.parser.processor.matcher.MidiNoteMatcher;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
 import javafx.scene.paint.Color;
 import util.ColorScheme;
+import util.Util;
+import util.properties.PropertyContainer;
+import util.properties.PropertyType;
 
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
@@ -12,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static util.ColorScheme.getColor;
+import static util.Util.calcNote;
 
 public class MidiProcessor {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
@@ -23,16 +28,15 @@ public class MidiProcessor {
     }
 
     public static boolean processMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
         midiEventInfo.setEventType(EventType.MIDI);
         midiEventInfo.setColor(getColor("midi"));
         midiEventInfo.setMessage(SysexToHexStringConvertor.convertToHexString(message.getMessage()));
 
         int status = message.getStatus() & 0xF0;
-/*        int channelOS = message.getStatus() & 0x0F;
-        int channelOM = message.getChannel();
-        System.out.println(String.format("%2X (BASE = %2X, OS = %2d, OM = %2d)", message.getStatus(), status, channelOS, channelOM));
-*/
-        switch (status) {
+
+        result = switch (status) {
             case
                     0x80,
                     0x90,
@@ -44,12 +48,14 @@ public class MidiProcessor {
             case
                     0xF0 -> handleSystemMessage(message, midiEventInfo);
             default -> handleUnknownMidiMessage(message, midiEventInfo);
-        }
+        };
 
-        return true;
+        return result;
     }
 
-    private static void handleChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
         byte[] rawBytes = message.getMessage();
 
         int command = rawBytes[0] & 0xF0;
@@ -60,7 +66,7 @@ public class MidiProcessor {
             data2 = rawBytes[2] & 0xFF;
         }
 
-        switch (command) {
+        result = switch (command) {
             case 0x80 -> handleNoteOff(message, midiEventInfo);
             case 0x90 -> handleNoteOn(message, midiEventInfo);
             case 0xB0 -> handleControlOrModeChange(message, midiEventInfo);
@@ -69,18 +75,55 @@ public class MidiProcessor {
             case 0xA0 -> handlePolyAfterTouch(message, midiEventInfo);
             case 0xE0 -> handlePitchBend(message, midiEventInfo);
             default -> handleUnknownChannelMessage(message, midiEventInfo);
-        }
+        };
+
+        return result;
     }
 
-    private static void handleNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
-        System.out.println("Note On");
+    private static MidiNoteMatcher midiNoteMatcher = new MidiNoteMatcher();
+    private static boolean handleNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "note on"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Note");
+
+        int data1 = message.getData1();
+        int data2 = message.getData2();
+
+        int baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, 0);
+
+        midiEventInfo.setComment(calcNote(data1, baseOctave).getName());
+        midiEventInfo.setData2(data2);
+
+        result = midiNoteMatcher.processEvent(message, midiEventInfo);
+
+        return result;
     }
 
-    private static void handleNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
-        System.out.println("Note Off");
+    private static boolean handleNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "note off"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Note");
+
+        int data1 = message.getData1();
+        int data2 = message.getData2();
+
+        int baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, 0);
+
+        midiEventInfo.setComment(calcNote(data1, baseOctave).getName());
+        midiEventInfo.setData2(data2);
+
+        result = midiNoteMatcher.processEvent(message, midiEventInfo);
+
+        return result;
     }
 
-    private static void handleControlOrModeChange(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleControlOrModeChange(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
         byte[] rawbytes = message.getMessage();
 
         int byte1 = rawbytes[1] & 0xFF;
@@ -133,7 +176,9 @@ public class MidiProcessor {
                     0x7E,
                     0x7F -> handleModeChangeMessage(message, midiEventInfo);
             default -> handleUnknownControlOrModeMessage(message, midiEventInfo);
-        }
+        };
+
+        return result;
     }
 
     private static void handleControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -384,27 +429,32 @@ public class MidiProcessor {
         System.out.println("Unknown Control Or Mode Change Message");
     }
 
-    private static void handleProgramChange(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleProgramChange(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Program Change");
+        return false;
     }
 
-    private static void handleChannelAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleChannelAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Channel After Touch");
+        return false;
     }
 
-    private static void handlePolyAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePolyAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("PolyAfter Touch");
+        return false;
     }
 
-    private static void handlePitchBend(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePitchBend(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Pitch Bend");
+        return false;
     }
 
-    private static void handleUnknownChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Unknown Channel Message");
+        return false;
     }
 
-    private static void handleSystemMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleSystemMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         byte[] rawBytes = message.getMessage();
 
         int command = rawBytes[0] & 0xFF;
@@ -417,7 +467,9 @@ public class MidiProcessor {
             case 0xFE -> handleActiveSense(message, midiEventInfo);
             case 0xFF -> handleSystemReset(message, midiEventInfo);
             default -> handleUnknownSystemMessage(message, midiEventInfo);
-        }
+        };
+
+        return false;
     }
 
     private static void handleMIDIClock(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -448,7 +500,9 @@ public class MidiProcessor {
         System.out.println("Unknown System Message");
     }
 
-    private static void handleUnknownMidiMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownMidiMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Unknown midi message");
+
+        return false;
     }
 }
