@@ -150,6 +150,7 @@ public class MidiProcessor {
             case
                     0x00,
                     0x01,
+                    0x02,
                     0x05,
                     0x06,
                     0x07,
@@ -208,6 +209,7 @@ public class MidiProcessor {
         result = switch (byte1) {
             case 0x00 -> handleBankSelectMSB(message, midiEventInfo);
             case 0x01 -> handleModulation(message, midiEventInfo);
+            case 0x02 -> handleBreath(message, midiEventInfo);
             case 0x05 -> handlePortamento(message, midiEventInfo);
             case 0x06 -> handleDataEntryMSB(message, midiEventInfo);
             case 0x07 -> handleMainVolume(message, midiEventInfo);
@@ -270,6 +272,22 @@ public class MidiProcessor {
         midiEventInfo.setColor(getColor("midi", "modulation"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Modulation");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
+    }
+
+    private static boolean handleBreath(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "breath"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Breath");
 
         byte[] rawbytes = message.getMessage();
 
