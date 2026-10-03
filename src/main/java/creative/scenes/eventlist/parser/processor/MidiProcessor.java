@@ -720,7 +720,12 @@ public class MidiProcessor {
     private static boolean handleAllNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "all note off"));
+        midiEventInfo.setChannel(message.getChannel() + 1);
+        midiEventInfo.setDescription("All note off");
+
+//        return result;
+        return false;
     }
 
     private static boolean handleResetAllControllers(ShortMessage message, MidiEventInfo midiEventInfo) {

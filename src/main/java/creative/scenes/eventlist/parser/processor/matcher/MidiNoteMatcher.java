@@ -43,8 +43,6 @@ public class MidiNoteMatcher {
 
                 copyEvents(noteOnEvent, midiEventInfo);
                 return true;
-            } else {
-                logger.error("[CM_MIDI_NOTE_MATCHER] Orphaned Note Off detected (No matching Note On)");
             }
         }
 
