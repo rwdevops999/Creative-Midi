@@ -20,7 +20,7 @@ public class SysexProcessor {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
 
     static {
-        colors.put(new ColorScheme.ColorKey("sysex"), Color.CRIMSON);
+        colors.put(new ColorScheme.ColorKey("sysex"), Color.IVORY);
 
         ColorScheme.registerColors(colors);
     }
@@ -198,7 +198,8 @@ public class SysexProcessor {
                     "03 02" -> handleEffect2(sysex, midiEventInfo);
             case
                 "04 00" -> handleVocalHarmony(sysex, midiEventInfo);
-            case "0A 02" -> handleXGMultiPart(address, midiEventInfo);
+            case "0A 00",
+                 "0A 02" -> handleXGMultiPart(address, midiEventInfo);
             case
                     "08 00",
                     "08 01",
@@ -215,6 +216,10 @@ public class SysexProcessor {
                     "08 0C",
                     "08 0D",
                     "08 0E" -> handleMultiPartMessage(address, midiEventInfo);
+            case "30 23",
+                 "30 2A",
+                 "30 2C",
+                 "30 2E" -> handleDrumSetup(address, midiEventInfo);
             default -> handleUnknownXGParameterChange(midiEventInfo);
         };
 
@@ -364,6 +369,22 @@ public class SysexProcessor {
         return false;
     }
 
+    // F0 43 10 -- 3n rr
+    private static boolean handleDrumSetup(String address, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        StringBuilder newAddress = new StringBuilder(address);
+
+        ByteHelper.getAndStrip(newAddress, 1);
+
+        String selector = ByteHelper.getAndStrip(newAddress, 1);
+
+        midiEventInfo.setColor(getColor("sysex", "drum setup"));
+        midiEventInfo.setDescription("drim setup");
+
+        return result;
+    }
+
     // F0 43 10 -- 00 00
     private static boolean handleXGParameterChange0000(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
@@ -433,8 +454,61 @@ public class SysexProcessor {
     private static boolean handleStyle (StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "xg parameter request"));
-        midiEventInfo.setDescription("XG parameter request");
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        result = switch (selector) {
+            case "00" -> handleSectionControl(sysex, midiEventInfo);
+            default -> handleUnknownStyle(sysex, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 43 7E 00
+    private static boolean handleSectionControl (StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        String section = ByteHelper.getAndStrip(sysex, 1);
+        String onoff = ByteHelper.getAndStrip(sysex, 1);
+
+        String sectionName = switch(section) {
+            case "00" -> "INTRO 1";
+            case "01" -> "INTRO 2";
+            case "02" -> "INTRO 3";
+            case "03" -> "INTRO 4";
+            case "08" -> "MAIN A";
+            case "09" -> "MAIN B";
+            case "0A" -> "MAIN C";
+            case "0B" -> "MAIN D";
+            case "10" -> "FILL IN AA";
+            case "11" -> "FILL IN BB";
+            case "12" -> "FILL IN CC";
+            case "13" -> "FILL IN DD";
+            case "18" -> "BREAK FILL";
+            case "20" -> "ENDING 1";
+            case "21" -> "ENDING 2";
+            case "22" -> "ENDING 3";
+            case "23" -> "ENDING 4";
+            default -> "INVALID";
+        };
+
+        String status = switch(onoff) {
+            case "00" -> "OFF";
+            case "7F" -> "ON";
+            default -> "INVALID";
+        };
+
+
+        midiEventInfo.setComment(sectionName + " : " + status);
+
+            return result;
+    }
+
+    // F0 43 7E ??
+    private static boolean handleUnknownStyle (StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "style", "unknown"));
+        midiEventInfo.setDescription("UNKNOWN STYLE");
 
         return result;
     }
