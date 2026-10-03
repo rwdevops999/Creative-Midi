@@ -210,7 +210,7 @@ public class MidiProcessor {
             case 0x00 -> handleBankSelectMSB(message, midiEventInfo);
             case 0x01 -> handleModulation(message, midiEventInfo);
             case 0x02 -> handleBreath(message, midiEventInfo);
-            case 0x05 -> handlePortamento(message, midiEventInfo);
+            case 0x05 -> handlePortamentoTime(message, midiEventInfo);
             case 0x06 -> handleDataEntryMSB(message, midiEventInfo);
             case 0x07 -> handleMainVolume(message, midiEventInfo);
             case 0x0A -> handlePanpot(message, midiEventInfo);
@@ -298,10 +298,20 @@ public class MidiProcessor {
         return false;
     }
 
-    private static boolean handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePortamentoTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "portamento time"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Portamento time");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleDataEntryMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -419,6 +429,23 @@ public class MidiProcessor {
 
         int data2 = rawbytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
+    }
+
+    private static boolean handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "portamento"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Portamento");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setComment(data2 < 64 ? "OFF" : "ON");
+//        midiEventInfo.setData2(data2);
 
 //        return result;
         return false;
