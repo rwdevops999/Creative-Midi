@@ -327,7 +327,17 @@ public class MidiProcessor {
     private static boolean handleExpression (ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "expression"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Expression");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleGeneralPurposeController(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -409,25 +419,65 @@ public class MidiProcessor {
     private static boolean handleResonance(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "resonance"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Resonance");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2];
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleReleaseTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "release time"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Release time");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2];
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleAttackTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "attack time"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Attack time");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2];
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleCutoff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "cutoff time"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Cutoff");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2];
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleDecayTime(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -664,7 +714,6 @@ public class MidiProcessor {
     }
 
     private static boolean handlePitchBend(ShortMessage message, MidiEventInfo midiEventInfo) {
-        System.out.println("Pitch Bend");
         boolean result = true;
 
         midiEventInfo.setColor(getColor("midi", "pitch bend"));
