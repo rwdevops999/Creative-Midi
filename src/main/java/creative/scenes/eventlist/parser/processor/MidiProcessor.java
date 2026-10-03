@@ -702,7 +702,12 @@ public class MidiProcessor {
     private static boolean handleAllSoundOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "all sound off"));
+        midiEventInfo.setChannel(message.getChannel() + 1);
+        midiEventInfo.setDescription("All sound off");
+
+//        return result;
+        return false;
     }
 
     private static boolean handleLocalControl(ShortMessage message, MidiEventInfo midiEventInfo) {
