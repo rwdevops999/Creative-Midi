@@ -12,11 +12,17 @@ import lombok.Setter;
 public class MBTCalculator {
     private final static int BEAT_UNIT = 4;
     @Setter
+    private static int ppq = 480;
+    private static int beatsPerMeasure = 4;     // Upper position of Time Signature
+    private static int beatValue = 4;           // Lower position of Time Signature
+
     @Getter
     private static int targetPPQ = 480;
-    private static int ppq = 480;
-    private static int beat = 4;
-    private static int beatsPerMeasure = 4;
+
+    public static void setTargetPPQ(int targetPPQ) {
+        MBTCalculator.targetPPQ = targetPPQ;
+        ppqScalingFactor = (double)targetPPQ / ppq;
+    }
 
     private static double ppqScalingFactor = 1.0;
 
@@ -31,27 +37,32 @@ public class MBTCalculator {
     }
 
     public static void setTimeSignature(TimeSignature timeSignature) {
-        MBTCalculator.beat = timeSignature.getBeatsPerMeasure();
-        MBTCalculator.beatsPerMeasure = timeSignature.getBeatValue();
+        MBTCalculator.beatsPerMeasure = timeSignature.getBeatsPerMeasure();
+        MBTCalculator.beatValue = timeSignature.getBeatValue();
     }
 
     public static MbtPosition calculateMBT(long absoluteTick) {
-        long correctedTick = absoluteTick * 4;
+        // 1. Scale the absolute tick dynamically based on PPQ-ratio
+        long correctedTick = (long) (absoluteTick * ppqScalingFactor);
 
-        // How many ticks are there in 1 complete measure
-        long ticksPerMeasure = targetPPQ * beatsPerMeasure;
+        // 2. Calculate how many ticks there go in one (beat)
+        // By /4 measure = targetPPQ. By /8 measure = targetPPQ / 2
+        long ticksPerBeat = (targetPPQ * 4) / beatValue;
 
-        // calculate the measure
+        // 3. How many ticks go in one complete measure?
+        long ticksPerMeasure = ticksPerBeat * beatsPerMeasure;
+
+        // 4. Calulate the measure (based on calculation done in 1)
         long measure = (correctedTick / ticksPerMeasure) + 1;
         long remainder = correctedTick % ticksPerMeasure;
 
-        // calculate the beat inside the measure
-        long beat = (remainder / targetPPQ) + 1;
+        // 5. Calculate the beat inside this measure (based on calculation done in 1)
+        long beat = (remainder / ticksPerBeat) + 1;
 
-        // calculate the remaining ticks
-        long tick = remainder % targetPPQ;
+        // 6. Calculate the remaining ticks inside this beat
+        long tick = remainder % ticksPerBeat;
 
-        // the gives the correct MBT position
+        // 7. And this is the MBT position
         return new MbtPosition(measure, beat, tick);
     }
 

@@ -350,7 +350,8 @@ public class MidiProcessor {
 
         currentLSB[message.getChannel()] = data2;
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleDataEntryLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -602,10 +603,6 @@ public class MidiProcessor {
         return result;
     }
 
-    private static void handleAllNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
-
-    }
-
     private static boolean handleResetAllControllers(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
@@ -654,30 +651,50 @@ public class MidiProcessor {
 
     private static boolean handleChannelAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Channel After Touch");
-        return false;
+        boolean result = true;
+
+        return result;
     }
 
     private static boolean handlePolyAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("PolyAfter Touch");
-        return false;
+        boolean result = true;
+
+        return result;
     }
 
     private static boolean handlePitchBend(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Pitch Bend");
-        return false;
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("midi", "pitch bend"));
+        midiEventInfo.setChannel(message.getChannel() + 1);
+        midiEventInfo.setDescription("Pitch bend");
+
+        byte[] rawbytes = message.getMessage();
+        int lsb = rawbytes[1] & 0xFF;
+        int msb = rawbytes[2] & 0xFF;
+
+        midiEventInfo.setData2((msb << 7) | lsb);
+
+        return result;
     }
 
     private static boolean handleUnknownChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Unknown Channel Message");
-        return false;
+        boolean result = true;
+
+        return result;
     }
 
     private static boolean handleSystemMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
         byte[] rawBytes = message.getMessage();
 
         int command = rawBytes[0] & 0xFF;
 
-        switch (command) {
+        result = switch (command) {
             case 0xF8 -> handleMIDIClock(message, midiEventInfo);
             case 0xFA -> handleStart(message, midiEventInfo);
             case 0xFB -> handleContinue(message, midiEventInfo);
@@ -687,35 +704,56 @@ public class MidiProcessor {
             default -> handleUnknownSystemMessage(message, midiEventInfo);
         };
 
-        return false;
+        return result;
     }
 
-    private static void handleMIDIClock(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleMIDIClock(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("MIDIClock");
+        boolean result = true;
+
+        return result;
     }
 
-    private static void handleStart(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleStart(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Start");
+        boolean result = true;
+
+        return result;
     }
 
-    private static void handleContinue(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleContinue(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Continue");
+        boolean result = true;
+
+        return result;
     }
 
-    private static void handleStop(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleStop(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Stop");
+        boolean result = true;
+
+        return result;
     }
 
-    private static void handleActiveSense(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleActiveSense(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("ActiveSense");
+        boolean result = true;
+
+        return result;
     }
 
-    private static void handleSystemReset(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleSystemReset(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("System Reset");
+        boolean result = true;
+
+        return result;
     }
 
-    private static void handleUnknownSystemMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownSystemMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Unknown System Message");
+        boolean result = true;
+
+        return result;
     }
 
     private static boolean handleUnknownMidiMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
