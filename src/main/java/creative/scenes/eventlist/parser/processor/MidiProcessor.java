@@ -24,6 +24,8 @@ public class MidiProcessor {
     static {
         colors.put(new ColorScheme.ColorKey("midi"), Color.BLUE);
 
+        colors.put(new ColorScheme.ColorKey("midi", "note"), Color.CHARTREUSE);
+
         ColorScheme.registerColors(colors);
     }
 
@@ -84,7 +86,7 @@ public class MidiProcessor {
     private static boolean handleNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("midi", "note on"));
+        midiEventInfo.setColor(getColor("midi", "note"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Note");
 
@@ -98,13 +100,14 @@ public class MidiProcessor {
 
         result = midiNoteMatcher.processEvent(message, midiEventInfo);
 
-        return result;
+        return false;
+//        return result;
     }
 
     private static boolean handleNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("midi", "note off"));
+        midiEventInfo.setColor(getColor("midi", "note"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Note");
 
@@ -118,18 +121,19 @@ public class MidiProcessor {
 
         result = midiNoteMatcher.processEvent(message, midiEventInfo);
 
-        return result;
+        return false;
+//        return result;
     }
 
     private static boolean handleControlOrModeChange(ShortMessage message, MidiEventInfo midiEventInfo) {
-        boolean result = false;
+        boolean result = true;
 
         byte[] rawbytes = message.getMessage();
 
         int byte1 = rawbytes[1] & 0xFF;
         int byte2 = rawbytes[2] & 0xFF;
 
-        switch (byte1) {
+        result = switch (byte1) {
             case
                     0x00,
                     0x01,
@@ -181,12 +185,14 @@ public class MidiProcessor {
         return result;
     }
 
-    private static void handleControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
         byte[] rawbytes = message.getMessage();
 
         int byte1 = rawbytes[1] & 0xFF;
 
-        switch (byte1) {
+        result = switch (byte1) {
             case 0x00 -> handleBankSelectMSB(message, midiEventInfo);
             case 0x01 -> handleModulation(message, midiEventInfo);
             case 0x05 -> handlePortamento(message, midiEventInfo);
@@ -216,7 +222,6 @@ public class MidiProcessor {
             case 0x5B -> handleReverbSendLevel(message, midiEventInfo);
             case 0x5D -> handleChorusSendLevel(message, midiEventInfo);
             case 0x5E -> handleVariationSendLevel(message, midiEventInfo);
-
             case 0x60 -> handleRPNIncrement(message, midiEventInfo);
             case 0x61 -> handleRPNDecrement(message, midiEventInfo);
             case 0x62 -> handleNRPNLsb(message, midiEventInfo);
@@ -224,155 +229,249 @@ public class MidiProcessor {
             case 0x64 -> handleRPNLsb(message, midiEventInfo);
             case 0x65 -> handleRPNMsb(message, midiEventInfo);
             default -> handleUnknownControlChangeMessage(message, midiEventInfo);
-        }
+        };
+
+        return result;
     }
 
-    private static void handleBankSelectMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleBankSelectMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+        midiEventInfo.setColor(getColor("midi", "bank select msb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Bank select MSB");
 
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return  false;
     }
 
-    private static void handleModulation(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleModulation(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleDataEntryMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleDataEntryMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleMainVolume(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleMainVolume(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handlePanpot(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePanpot(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleExpression (ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleExpression (ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleGeneralPurposeController(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleGeneralPurposeController(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleBankSelectLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleBankSelectLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleDataEntryLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleDataEntryLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleSustainDamper(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleSustainDamper(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        midiEventInfo.setColor(getColor("midi", "sustain damper"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Sustain Damper");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
-    private static void handleVibratoRange(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleVibratoRange(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleArticulation1(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleArticulation1(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleArticulation2(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleArticulation2(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleSostenuto(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleSostenuto(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleSoftPedal(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleSoftPedal(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleResonance(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleResonance(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleReleaseTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleReleaseTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleAttackTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleAttackTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleCutoff(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleCutoff(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleDecayTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleDecayTime(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleVibratoDepth(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleVibratoDepth(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleVibratoDelay(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleVibratoDelay(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleChorusSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleChorusSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleRPNIncrement(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleRPNIncrement(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleArticulation3(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleArticulation3(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handlePortamentoControl(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePortamentoControl(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleReverbSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleReverbSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleVariationSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleVariationSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleRPNDecrement(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleRPNDecrement(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleNRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleNRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleNRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleNRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleUnknownControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
         byte[] rawbytes = message.getMessage();
 
         int byte1 = rawbytes[1] & 0xFF;
 
-        switch (byte1) {
+        result = switch (byte1) {
             case 0x78 -> handleAllSoundOff(message, midiEventInfo);
             case 0x79 -> handleResetAllControllers(message, midiEventInfo);
             case 0x7A -> handleLocalControl(message, midiEventInfo);
@@ -382,56 +481,84 @@ public class MidiProcessor {
             case 0x7E -> handleMono(message, midiEventInfo);
             case 0x7F -> handlePoly(message, midiEventInfo);
             default -> handleUnknownModeChangeMessage(message, midiEventInfo);
-        }
+        };
+
+        return result;
     }
 
-    private static void handleAllSoundOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleAllSoundOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleLocalControl(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleLocalControl(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleOmniOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleOmniOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleOmniOn(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleOmniOn(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleMono(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleMono(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handlePoly(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePoly(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleAllNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleAllNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
     private static void handleAllNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
 
     }
 
-    private static void handleResetAllControllers(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleResetAllControllers(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        midiEventInfo.setColor(getColor("midi", "reset all controllers"));
+        midiEventInfo.setChannel(message.getChannel() + 1);
+        midiEventInfo.setDescription("Reset all controllers");
+
+        return false;
+//        return result;
     }
 
-    private static void handleUnknownModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
 
+        return result;
     }
 
-    private static void handleUnknownControlOrModeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownControlOrModeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
         System.out.println("Unknown Control Or Mode Change Message");
+
+        return result;
     }
 
     private static boolean handleProgramChange(ShortMessage message, MidiEventInfo midiEventInfo) {
         System.out.println("Program Change");
-        return false;
+        return true;
     }
 
     private static boolean handleChannelAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -501,8 +628,10 @@ public class MidiProcessor {
     }
 
     private static boolean handleUnknownMidiMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
         System.out.println("Unknown midi message");
 
-        return false;
+        return result;
     }
 }
