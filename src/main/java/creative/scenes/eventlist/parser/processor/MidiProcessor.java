@@ -309,7 +309,7 @@ public class MidiProcessor {
 
         midiEventInfo.setColor(getColor("midi", "sustain damper"));
         midiEventInfo.setChannel(message.getChannel()+1);
-        midiEventInfo.setDescription("Sustain Damper");
+        midiEventInfo.setDescription("Sustain damper");
 
         byte[] rawbytes = message.getMessage();
 
@@ -395,7 +395,16 @@ public class MidiProcessor {
     private static boolean handleChorusSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "chorus send level"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Chorus send level");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+        return false;
     }
 
     private static boolean handleRPNIncrement(ShortMessage message, MidiEventInfo midiEventInfo) {
