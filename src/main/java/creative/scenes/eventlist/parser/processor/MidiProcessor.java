@@ -253,7 +253,16 @@ public class MidiProcessor {
     private static boolean handleModulation(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "modulation"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Modulation");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+
+//        return result;
+        return false;
     }
 
     private static boolean handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
