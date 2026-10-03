@@ -274,9 +274,12 @@ public class EventsDisplayPane extends VBox {
             List<MidiEventInfo> sortedQueue = filteredEvents.stream()
                     .sorted(Comparator.comparing(MidiEventInfo::getMbtPosition)).toList();
 
-            ObservableList<MidiEventInfo> data = FXCollections.observableList(sortedQueue);
+            ObservableList<MidiEventInfo> data = FXCollections.observableArrayList(sortedQueue);
+            table.getItems().clear();
             table.setItems(data);
             table.scrollTo(0);
+        } else {
+            table.getItems().clear();
         }
     }
 
