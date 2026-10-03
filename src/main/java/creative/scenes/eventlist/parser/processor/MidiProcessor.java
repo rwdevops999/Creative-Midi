@@ -559,7 +559,8 @@ public class MidiProcessor {
         int data2 = rawbytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleRPNDecrement(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -583,13 +584,33 @@ public class MidiProcessor {
     private static boolean handleRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "rpn lsb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("RPN LSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "rpn msb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("RPN MSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleUnknownControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
