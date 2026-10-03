@@ -54,7 +54,7 @@ public class SysexProcessor {
             case "7F" -> handleUniversalRealTimeMessage(sysex, midiEventInfo);
             case "7E" -> handleUniversalNonRealTimeMessage(sysex, midiEventInfo);
             case "43" -> handleYamahaMessage(sysex, midiEventInfo);
-            default -> handleUnknownVendorMessage(selector, midiEventInfo);
+            default -> handleUnknownUniversalMessage(selector, midiEventInfo);
         };
 
         return result;
@@ -65,7 +65,6 @@ public class SysexProcessor {
         boolean result = false;
 
         midiEventInfo.setColor(getColor("sysex", "vendor"));
-        midiEventInfo.setDescription("Yamaha");
 
         String selector = ByteHelper.getAndStrip(sysex, 1);
 
@@ -84,8 +83,8 @@ public class SysexProcessor {
     private static boolean handleUnknownYamahaMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "yamaha", "unknown"));
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("UNKNOWN VENDOR MESSAGE");
         midiEventInfo.setComment(sysex.toString());
 
         return result;
@@ -94,6 +93,8 @@ public class SysexProcessor {
     // FO 7F
     private static boolean handleUniversalRealTimeMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        // TODO
 
         return result;
     }
@@ -122,44 +123,40 @@ public class SysexProcessor {
     private static boolean handleScaleOctaveTuning(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "unrt", "scale octave tuning"));
+        midiEventInfo.setColor(getColor("sysex", "universal", "tuning"));
         midiEventInfo.setDescription("Scale/Octave tuning");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 7E 09 01
     private static boolean handleGM1SystemOn(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "unrt", "gm1 system on"));
+        midiEventInfo.setColor(getColor("sysex", "universal", "gm1 system on"));
         midiEventInfo.setDescription("GM1 system on");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 7E 09 02
     private static boolean handleGeneralMidiSystemOff(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "unrt", "general midi system off"));
+        midiEventInfo.setColor(getColor("sysex", "universal", "general midi off"));
         midiEventInfo.setDescription("General MIDI system off");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 7E 09 03
     private static boolean handleGM2SystemOn(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "unrt", "gm2 system on"));
+        midiEventInfo.setColor(getColor("sysex", "universal", "gm2 system on"));
         midiEventInfo.setDescription("GM2 system on");
 
-//        return result;
-        return false;
+        return result;
     }
 
     private static boolean handleUnknownUniversaleNonRealTimeMessage(MidiEventInfo midiEventInfo) {
@@ -182,8 +179,7 @@ public class SysexProcessor {
     private static boolean handleXGParameterChange(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "yamaha", "xg parameter change"));
-        midiEventInfo.setDescription("XG parameter change");
+        midiEventInfo.setColor(getColor("sysex", "vendor", "xg parameter change"));
 
         // Skip 1 byte
         ByteHelper.getAndStrip(sysex, 1);
@@ -230,7 +226,6 @@ public class SysexProcessor {
     private static boolean handleEffect1(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        System.out.println("Sysex");
         String selector = ByteHelper.getAndStrip(sysex, 1);
         result = switch (selector) {
             case "00" -> handleReverb(midiEventInfo);
@@ -246,7 +241,6 @@ public class SysexProcessor {
     private static boolean handleEffect2(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        System.out.println("Sysex");
         String selector = ByteHelper.getAndStrip(sysex, 1);
         result = switch (selector) {
             case "00", "02", "03", "0C", "0B" -> handleInsertion(midiEventInfo);
@@ -270,7 +264,7 @@ public class SysexProcessor {
     private static boolean handleInsertion(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "insertion effect"));
+        midiEventInfo.setColor(getColor("sysex", "effect", "insertion"));
         midiEventInfo.setDescription("Insertion effect");
 
         return result;
@@ -280,33 +274,30 @@ public class SysexProcessor {
     private static boolean handleReverb(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "reverb effect"));
+        midiEventInfo.setColor(getColor("sysex", "effect", "reverb"));
         midiEventInfo.setDescription("Reverb effect");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 43 10 -- 02 01 20
     private static boolean handleChorus(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "chorus effect"));
+        midiEventInfo.setColor(getColor("sysex", "effect", "chorus"));
         midiEventInfo.setDescription("Chorus effect");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 43 10 -- 02 01 40
     private static boolean handleVariation(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "variation effect"));
+        midiEventInfo.setColor(getColor("sysex", "effect", "variation"));
         midiEventInfo.setDescription("Variation effect");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 43 10 -- 02 01 ??
@@ -314,7 +305,7 @@ public class SysexProcessor {
         boolean result = true;
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
-        midiEventInfo.setDescription("Unknown effect1");
+        midiEventInfo.setDescription("UNKNOWN effect1");
 
         return result;
     }
@@ -324,7 +315,7 @@ public class SysexProcessor {
         boolean result = true;
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
-        midiEventInfo.setDescription("Unknown effect1");
+        midiEventInfo.setDescription("UNKNOWN effect2");
 
         return result;
     }
@@ -339,14 +330,13 @@ public class SysexProcessor {
 
         String selector = ByteHelper.getAndStrip(newAddress, 1);
 
-        midiEventInfo.setColor(getColor("sysex", "partmode"));
+        midiEventInfo.setColor(getColor("sysex", "xg multipart"));
         midiEventInfo.setDescription("XG Multipart part mode");
 
         int receiveChannel = Integer.parseInt(selector, 16);
         midiEventInfo.setComment("receive channel: " + receiveChannel);
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 43 10 -- 08 nn
@@ -359,14 +349,13 @@ public class SysexProcessor {
 
         String selector = ByteHelper.getAndStrip(newAddress, 1);
 
-        midiEventInfo.setColor(getColor("sysex", "partmode"));
+        midiEventInfo.setColor(getColor("sysex","xg multipart"));
         midiEventInfo.setDescription("XG Multipart part mode");
 
         int receiveChannel = Integer.parseInt(selector, 16);
         midiEventInfo.setComment("receive channel: " + receiveChannel);
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 43 10 -- 3n rr
@@ -380,7 +369,7 @@ public class SysexProcessor {
         String selector = ByteHelper.getAndStrip(newAddress, 1);
 
         midiEventInfo.setColor(getColor("sysex", "drum setup"));
-        midiEventInfo.setDescription("drim setup");
+        midiEventInfo.setDescription("Drum setup");
 
         return result;
     }
@@ -402,7 +391,7 @@ public class SysexProcessor {
     private static boolean handleUnknowXGParamemeterChange(String address, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setColor(getColor("sysex","unknown"));
         midiEventInfo.setDescription("XG parameter change unknown");
         midiEventInfo.setComment(address + " UNKNOWN");
 
@@ -413,19 +402,18 @@ public class SysexProcessor {
     private static boolean handleXGSystemOn(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "xg system on"));
+        midiEventInfo.setColor(getColor("sysex","xg system on"));
         midiEventInfo.setDescription("XG system on");
 
-//        return result;
-        return false;
+        return result;
     }
 
     // F0 43 10 -- ?? ??
     private static boolean handleUnknownXGParameterChange(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "unknown"));
-        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setColor(getColor("sysex","unknown"));
+        midiEventInfo.setDescription("XG parameter change");
 
         return result;
     }
@@ -434,7 +422,7 @@ public class SysexProcessor {
     private static boolean handleXGDumpRequest (StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "xg dump request"));
+        midiEventInfo.setColor(getColor("sysex", "vendor", "XG dump request"));
         midiEventInfo.setDescription("XG dump request");
 
         return result;
@@ -444,7 +432,7 @@ public class SysexProcessor {
     private static boolean handleXGParameterRequest (StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "xg parameter request"));
+        midiEventInfo.setColor(getColor("sysex", "vendor", "XG parameter request"));
         midiEventInfo.setDescription("XG parameter request");
 
         return result;
@@ -466,6 +454,9 @@ public class SysexProcessor {
     // F0 43 7E 00
     private static boolean handleSectionControl (StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "vendor", "section control"));
+        midiEventInfo.setDescription("Section control");
 
         String section = ByteHelper.getAndStrip(sysex, 1);
         String onoff = ByteHelper.getAndStrip(sysex, 1);
@@ -497,17 +488,16 @@ public class SysexProcessor {
             default -> "INVALID";
         };
 
-
         midiEventInfo.setComment(sectionName + " : " + status);
 
-            return result;
+        return result;
     }
 
     // F0 43 7E ??
     private static boolean handleUnknownStyle (StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "style", "unknown"));
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
         midiEventInfo.setDescription("UNKNOWN STYLE");
 
         return result;
@@ -516,7 +506,7 @@ public class SysexProcessor {
     private static boolean handleUnknownVendorMessage(String vendorId, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        midiEventInfo.setColor(getColor("sysex", "vendor", "unknown"));
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
         midiEventInfo.setDescription("UNKNOWN VENDOR");
         midiEventInfo.setComment(vendorId);
 
@@ -528,8 +518,18 @@ public class SysexProcessor {
         boolean result = true;
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
-        midiEventInfo.setDescription("UNKNOWN");
-        midiEventInfo.setComment(selector + "= UNKNOWN");
+        midiEventInfo.setDescription("UNKNOWN SYSEX");
+        midiEventInfo.setComment(selector);
+
+        return result;
+    }
+
+    private static boolean handleUnknownUniversalMessage(String sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("UNKNOWN UNIVERSAL MESSAGE");
+        midiEventInfo.setComment(sysex);
 
         return result;
     }
