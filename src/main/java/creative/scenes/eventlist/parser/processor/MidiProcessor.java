@@ -298,7 +298,8 @@ public class MidiProcessor {
         int data2 = rawbytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleMainVolume(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -376,7 +377,17 @@ public class MidiProcessor {
     private static boolean handleDataEntryLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        return result;
+        midiEventInfo.setColor(getColor("midi", "data entry lsb"));
+        midiEventInfo.setChannel(message.getChannel()+1);
+        midiEventInfo.setDescription("Data entry LSB");
+
+        byte[] rawbytes = message.getMessage();
+
+        int data2 = rawbytes[2] & 0xFF;
+        midiEventInfo.setData2(data2);
+
+//        return result;
+        return false;
     }
 
     private static boolean handleSustainDamper(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -590,7 +601,8 @@ public class MidiProcessor {
         int data2 = rawbytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleNRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
@@ -605,7 +617,8 @@ public class MidiProcessor {
         int data2 = rawbytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
