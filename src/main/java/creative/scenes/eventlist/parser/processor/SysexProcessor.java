@@ -39,7 +39,7 @@ public class SysexProcessor {
             case "F0 7F" -> handleUniversalRealTimeMessage(sysex, midiEventInfo);
             case "F0 7E" -> handleUniversalNonRealTimeMessage(sysex, midiEventInfo);
             case "F0 43" -> handleVendorMessage(sysex, midiEventInfo);
-            default -> handleUnknownSysex(midiEventInfo);
+            default -> handleUnknownSysex(selector, midiEventInfo);
         };
 
         return result;
@@ -167,7 +167,8 @@ public class SysexProcessor {
         midiEventInfo.setColor(getColor("sysex", "vendor", "xg system on"));
         midiEventInfo.setDescription("XG system on");
 
-        return result;
+//        return result;
+        return false;
     }
 
     private static boolean handleUnknownXGParameterChange(MidiEventInfo midiEventInfo) {
@@ -206,8 +207,12 @@ public class SysexProcessor {
         return result;
     }
 
-    private static boolean handleUnknownSysex(MidiEventInfo midiEventInfo) {
+    private static boolean handleUnknownSysex(String selector, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("UNKNOWN");
+        midiEventInfo.setComment(selector + "= UNKNOWN");
 
         return result;
     }
