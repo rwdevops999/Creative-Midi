@@ -37,7 +37,10 @@ public class FilterDialog extends Dialog<List<String>> {
         setTitle("Filtering");
         setHeaderText("Determine the events to be shown or hidden");
 
-        setupDialog(availableEvents, hiddenEvents);
+        List<String> allEvents = new ArrayList<>(availableEvents);
+        allEvents.addAll(hiddenEvents);
+
+        setupDialog(availableEvents, hiddenEvents, allEvents);
         buildDialogContent();
     }
 
@@ -56,11 +59,11 @@ public class FilterDialog extends Dialog<List<String>> {
     private BooleanProperty addDisabled = new SimpleBooleanProperty(true);
     private BooleanProperty removeDisabled = new SimpleBooleanProperty(true);
 
-    private void setupDialog(List<String> availableEvents, List<String> hiddenEvents) {
+    private void setupDialog(List<String> availableEvents, List<String> hiddenEvents, List<String> allEvents) {
         visibleEventKeys = availableEvents;
         hiddenEventKeys = hiddenEvents;
 
-        groups = visibleEventKeys.stream().map(e -> toPascalCase(e.split("_")[0])).distinct().toList();
+        groups = allEvents.stream().map(e -> toPascalCase(e.split("_")[0])).distinct().toList();
 
         visibleEventKeys = visibleEventKeys.stream().map(e -> {
             String value = e.replaceFirst("_", "@#").split("@#")[1];
@@ -98,8 +101,7 @@ public class FilterDialog extends Dialog<List<String>> {
     }
 
     private TabPane buildContent() {
-        TabPane tabPane = buildPane(groups);
-        return tabPane;
+        return buildPane(groups);
     }
 
     private TabPane buildPane(List<String> groups) {
