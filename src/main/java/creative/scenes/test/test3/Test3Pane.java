@@ -16,10 +16,7 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static util.Util.setPaneBackground;
 
@@ -110,6 +107,17 @@ public class Test3Pane extends VBox {
         hiddenEventsListView = lookup(pane, "listview");
 
         Button getResult = new Button("Get Result");
+        getResult.setOnAction(e -> {
+            System.out.println("GETTING THE RESULT");
+
+            List<String> hidden = hiddenEventsProperty.get();
+
+            hidden = hidden.stream().map(s -> group.toUpperCase() + "_" + s.toUpperCase().replace(" ", "_")).toList();
+
+            System.out.println("HIDE THESE");
+            hidden.forEach(System.out::println);
+        });
+
         hBox.getChildren().add(getResult);
 
         return hBox;
@@ -157,7 +165,7 @@ public class Test3Pane extends VBox {
 
         addSelected.setOnAction(e -> {
             if (! availableEventsListView.getSelectionModel().getSelectedIndices().isEmpty()) {
-                hiddenEventKeys = moveSelected (visibleEventsProperty, hiddenEventsProperty, new ArrayList<>(availableEventsListView.getSelectionModel().getSelectedItems()));
+                moveSelected (visibleEventsProperty, hiddenEventsProperty, new ArrayList<>(availableEventsListView.getSelectionModel().getSelectedItems()));
             }
         });
 
@@ -167,7 +175,7 @@ public class Test3Pane extends VBox {
         addAll.disableProperty().bind(addDisabled);
         addAll.setStyle(flatButtonStyle);
         addAll.setOnAction(e -> {
-            hiddenEventKeys = moveSelected (visibleEventsProperty, hiddenEventsProperty, visibleEventKeys);
+            moveSelected (visibleEventsProperty, hiddenEventsProperty, visibleEventsProperty.get());
         });
         vBox.getChildren().add(addAll);
 
@@ -175,7 +183,7 @@ public class Test3Pane extends VBox {
         removeAll.disableProperty().bind(removeDisabled);
         removeAll.setStyle(flatButtonStyle);
         removeAll.setOnAction(e -> {
-            visibleEventKeys = moveSelected (hiddenEventsProperty, visibleEventsProperty, visibleEventKeys);
+            moveSelected (hiddenEventsProperty, visibleEventsProperty, hiddenEventsProperty.get());
         });
         vBox.getChildren().add(removeAll);
 
@@ -184,7 +192,7 @@ public class Test3Pane extends VBox {
         removeSelected.setStyle(flatButtonStyle);
         removeSelected.setOnAction(e -> {
             if (! hiddenEventsListView.getSelectionModel().getSelectedIndices().isEmpty()) {
-                visibleEventKeys = moveSelected (hiddenEventsProperty, visibleEventsProperty, new ArrayList<>(hiddenEventsListView.getSelectionModel().getSelectedItems()));
+                moveSelected (hiddenEventsProperty, visibleEventsProperty, new ArrayList<>(hiddenEventsListView.getSelectionModel().getSelectedItems()));
             }
         });
         vBox.getChildren().add(removeSelected);
@@ -220,18 +228,15 @@ public class Test3Pane extends VBox {
                 .orElse(null);
     }
 
-    private List<String> moveSelected (ListProperty<String> from, ListProperty<String> to, List<String> selected) {
+    private void moveSelected (ListProperty<String> from, ListProperty<String> to, List<String> selected) {
         to.get().addAll(selected);
         from.get().removeAll(selected);
 
         updateDisables();
-
-        return to.get();
     }
 
     private void updateDisables() {
         addDisabled.set(visibleEventsProperty.get().isEmpty());
         removeDisabled.set(hiddenEventsProperty.get().isEmpty());
-
     }
 }
