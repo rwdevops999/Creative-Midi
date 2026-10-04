@@ -92,8 +92,7 @@ public class MetaProcessor {
         String typeString = String.format("%02X", type & 0xFF);
         midiEventInfo.setMessage("FF " + typeString + " " + messageInfo);
 
-//        return result;
-        return false; // TODO remove this because at development time I don't want to see META messages
+        return result;
     }
 
     private static void handleText(byte[] data, MidiEventInfo midiEventInfo) {
