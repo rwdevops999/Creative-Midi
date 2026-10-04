@@ -241,7 +241,6 @@ public class EventsDisplayPane extends VBox {
         currentEvents = new ArrayList<>(events);
         currentSequence = sequence;
 
-        // TODO I Think this is used to save the file
         getEventsPane().getEventlistPane().getFileSelectionPane().setEventInfo(sequence, events);
 
         if (table != null) {

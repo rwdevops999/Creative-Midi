@@ -1,6 +1,7 @@
 package creative.scenes.eventlist;
 
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import creative.scenes.eventlist.util.MidiFileWriter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,10 +12,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
+import org.apache.commons.io.FilenameUtils;
+import org.controlsfx.control.Notifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.Util;
+import util.properties.PropertyContainer;
+import util.properties.PropertyType;
 
 import javax.sound.midi.Sequence;
 import java.io.File;
@@ -104,6 +110,29 @@ public class FileSelectionPane extends HBox {
 
     public void handleSaveFile() {
         // TODO
+        if (selectedFile != null) {
+            String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi");
+            String newFilename = FilenameUtils.removeExtension(selectedFile.getName()) + ".mid";
+
+            String newMidiFilename = midiPath + "/" + newFilename;
+
+            fileName.set(newFilename);
+
+            File file = new File(newMidiFilename);
+            try {
+                MidiFileWriter writer = new MidiFileWriter();
+                writer.writeMidi(currentSequence, file);
+                Notifications.create()
+                        .title("File Saved")
+                        .text("Saving the midi file to '" +  newMidiFilename + "'")
+                        .hideAfter(Duration.seconds(3)) // Automatically hides after 5 seconds
+                        .position(Pos.TOP_LEFT)     // Set corner position on screen
+                        .showInformation();
+                ApplicationInfo.getInstance().setMidiChanged(false);
+            } catch (Exception e) {
+                logger.error("[CM_FILE_SELECTION_PANE] Exception. CAUSE {}", e.getMessage());
+            }
+        }
     }
 
     private final BooleanProperty saveDisable = new SimpleBooleanProperty(true);

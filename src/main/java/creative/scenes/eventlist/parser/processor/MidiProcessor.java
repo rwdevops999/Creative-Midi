@@ -930,6 +930,9 @@ public class MidiProcessor {
 
         int msb = getMSB(message.getChannel());
         int lsb = getLSB(message.getChannel());
+        if ((msb == 0) && (lsb == 0) && (byte1 == 0)) {
+            System.out.println("STOP HERE");
+        }
         String voice = searchVoice(msb, lsb, byte1);
 
         midiEventInfo.setComment(voice);
@@ -1099,7 +1102,7 @@ public class MidiProcessor {
         InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
 
         if (instrumentProvider != null) {
-            Patch patch = instrumentProvider.findPatch(msb, lsb, pc);
+            Patch patch = instrumentProvider.findPatch(msb, lsb, pc+1);
             if (patch != null) {
                 voice = patch.getPatch();
             }
