@@ -27,15 +27,12 @@ public class StyleMerger {
     }
 
     public void merge(String originalStylePath, String newMidiPath, String newStylePath) {
-        System.out.println("MERGE style : " + originalStylePath);
-        System.out.println("MERGE midi  : " + newMidiPath);
-        System.out.println("MERGE result: " + newStylePath);
-/*        try {
+        try {
             mergeStyleWithMidi(originalStylePath, newMidiPath, newStylePath);
             System.out.println("Stijl succesvol gegenereerd met gecontroleerde markers!");
         } catch (Exception e) {
             logger.error("[CM_STYLE_MERGER] Exception. CAUSE {}", e.getMessage());
-        } */
+        }
     }
 
     private static void mergeStyleWithMidi(String origStylePath, String newMidiPath, String outStylePath) throws Exception {
