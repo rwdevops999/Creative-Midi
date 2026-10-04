@@ -129,11 +129,11 @@ public class EventsDisplayPane extends VBox {
         table.getColumns().add(messageColumn);
     }
 
-    private final BooleanProperty deleteMenuDisable = new SimpleBooleanProperty(true);
+    private final BooleanProperty contextMenuItemDisable = new SimpleBooleanProperty(true);
     private void createContextMenu(TableView<MidiEventInfo> table) {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem deleteEvent = new MenuItem("Delete");
-        deleteEvent.disableProperty().bindBidirectional(deleteMenuDisable);
+        deleteEvent.disableProperty().bindBidirectional(contextMenuItemDisable);
         deleteEvent.setOnAction(e -> {
             List<MidiEventInfo> selectedEvents = table.getSelectionModel().getSelectedItems();
 
@@ -149,6 +149,17 @@ public class EventsDisplayPane extends VBox {
             setFileHasChangedCallback();
         });
         contextMenu.getItems().add(deleteEvent);
+
+        SeparatorMenuItem sep = new SeparatorMenuItem();
+        contextMenu.getItems().add(sep);
+
+        MenuItem infoEvent = new MenuItem("Info");
+        infoEvent.disableProperty().bindBidirectional(contextMenuItemDisable);
+        infoEvent.setOnAction(e -> {
+        });
+        contextMenu.getItems().add(infoEvent);
+
+
         table.setContextMenu(contextMenu);
     }
 
@@ -271,7 +282,7 @@ public class EventsDisplayPane extends VBox {
                 }
             }
 
-            deleteMenuDisable.set(filteredEvents.isEmpty());
+            contextMenuItemDisable.set(filteredEvents.isEmpty());
 
             List<MidiEventInfo> sortedQueue = filteredEvents.stream()
                     .sorted(Comparator.comparing(MidiEventInfo::getMbtPosition)).toList();
