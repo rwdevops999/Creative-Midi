@@ -5,8 +5,13 @@ import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.eventlist.parser.processor.helper.ByteHelper;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
 import entity.midi.Midi;
+import entity.midi.NoteEntity;
+import javafx.beans.property.IntegerProperty;
 import javafx.scene.paint.Color;
 import util.ColorScheme;
+import util.Util;
+import util.properties.PropertyContainer;
+import util.properties.PropertyType;
 
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.SysexMessage;
@@ -90,11 +95,312 @@ public class SysexProcessor {
         return result;
     }
 
-    // FO 7F
+    // FO 7F --
     private static boolean handleUniversalRealTimeMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
-        // TODO
+        midiEventInfo.setColor(getColor("sysex", "universal real time"));
+
+        ByteHelper.getAndStrip(sysex, 1);
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+
+        result = switch(selector) {
+            case "04" -> handleMasterMessage(sysex, midiEventInfo);
+            case "09" -> handleChannelMessage(sysex, midiEventInfo);
+            case "0A" -> handleInstrumentControl(sysex, midiEventInfo);
+            default -> handleUnknownUniversalRealTimeMessage(sysex, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 7F -- 04
+    private static boolean handleMasterMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+
+        result = switch (selector) {
+            case "01" -> handleMasterVolume(sysex, midiEventInfo);
+            case "03" -> handleMasterFineTuning(sysex, midiEventInfo);
+            case "04" -> handleMasterCoarseTuning(sysex, midiEventInfo);
+            case "05" -> handleEffectParameter(sysex, midiEventInfo);
+            default -> handleUnknownMasterMessage(sysex, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 7F -- 04 01
+    private static boolean handleMasterVolume(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "master volume"));
+        midiEventInfo.setDescription("Master volume");
+
+        String szLSB = ByteHelper.getAndStrip(sysex, 1);
+        String szMSB = ByteHelper.getAndStrip(sysex, 1);
+
+        int lsb = Integer.parseInt(szLSB, 16);
+        int msb = Integer.parseInt(szMSB, 16);
+
+        midiEventInfo.setData2((msb << 7) | lsb);
+
+        return result;
+    }
+
+    // F0 7F -- 04 03
+    private static boolean handleMasterFineTuning(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "master fine tuning"));
+        midiEventInfo.setDescription("Master fine tuning");
+
+        String szLSB = ByteHelper.getAndStrip(sysex, 1);
+        String szMSB = ByteHelper.getAndStrip(sysex, 1);
+
+        int lsb = Integer.parseInt(szLSB, 16);
+        int msb = Integer.parseInt(szMSB, 16);
+
+        midiEventInfo.setData2((msb << 7) | lsb);
+
+        return result;
+    }
+
+    // F0 7F -- 04 04
+    private static boolean handleMasterCoarseTuning(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "master coarse tuning"));
+        midiEventInfo.setDescription("Master coarse tuning");
+
+        ByteHelper.getAndStrip(sysex, 1);
+        String szMSB = ByteHelper.getAndStrip(sysex, 1);
+
+        int msb = Integer.parseInt(szMSB, 16);
+
+        midiEventInfo.setData2(msb << 7);
+
+        return result;
+    }
+
+    // F0 7F -- 04 05 -- -- -- --
+    private static boolean handleEffectParameter(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "parameter"));
+        midiEventInfo.setDescription("Effect parameter");
+
+        ByteHelper.getAndStrip(sysex, 4);
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+
+        result = switch(selector) {
+            case "01" -> handleReverbParameter(sysex, midiEventInfo);
+            case "02" -> handleChorusParameter(sysex, midiEventInfo);
+            default -> handleUnknownEffectParameter(sysex, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 7F -- 04 05 -- -- -- -- 01
+    private static boolean handleReverbParameter(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "parameter"));
+        midiEventInfo.setDescription("Reverb parameter");
+
+        String pp = ByteHelper.getAndStrip(sysex, 1);
+        String vv = ByteHelper.getAndStrip(sysex, 1);
+
+        if (pp.equals("00")) {
+            String type = switch(vv) {
+                case "00" -> "RoomS";
+                case "01" -> "RoomM";
+                case "02" -> "RoomL";
+                case "03" -> "HallM";
+                case "04" -> "HallL";
+                case "08" -> "GMPlate";
+                default -> "Invalid";
+            };
+            midiEventInfo.setComment("Reverb type: " + type);
+
+        } else if (pp.equals("01")) {
+            midiEventInfo.setComment("Reverb time: " + Integer.parseInt(vv, 16));
+        }
+
+        return result;
+    }
+
+    // F0 7F -- 04 05 -- -- -- -- 02
+    private static boolean handleChorusParameter(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "parameter"));
+        midiEventInfo.setDescription("Chorus parameter");
+
+        String pp = ByteHelper.getAndStrip(sysex, 1);
+        String vv = ByteHelper.getAndStrip(sysex, 1);
+
+        if (pp.equals("00")) {
+            String type = switch(vv) {
+                case "00" -> "GM Chorus 1";
+                case "01" -> "GM Chorus 2";
+                case "02" -> "GM Chorus 3";
+                case "03" -> "GM Chorus 4";
+                case "04" -> "FB Chorus";
+                case "05" -> "GM Flanger";
+                default -> "Invalid";
+            };
+            midiEventInfo.setComment("Reverb type: " + type);
+
+        } else if (pp.equals("01")) {
+            midiEventInfo.setComment("Mod rate: " + Integer.parseInt(vv, 16));
+        } else if (pp.equals("02")) {
+            midiEventInfo.setComment("Mod depth: " + Integer.parseInt(vv, 16));
+        } else if (pp.equals("03")) {
+            midiEventInfo.setComment("Feedback: " + Integer.parseInt(vv, 16));
+        } else if (pp.equals("04")) {
+            midiEventInfo.setComment("Send to reverb: " + Integer.parseInt(vv, 16));
+        } else {
+            midiEventInfo.setComment("Invalid: " + Integer.parseInt(vv, 16));
+        }
+
+        return result;
+    }
+
+    // F0 7F -- 04 05 -- -- -- -- ??
+    private static boolean handleUnknownEffectParameter(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("UNKNOWN effect parameter");
+
+        return result;
+    }
+
+    // F0 7F -- 04 ??
+    private static boolean handleUnknownMasterMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown master message");
+
+        return result;
+    }
+
+    // F0 7F -- 09
+    private static boolean handleChannelMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "channel message"));
+        midiEventInfo.setDescription("Channel message");
+
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+
+        result = switch(selector) {
+            case "01" -> handleChannelPressure(sysex, midiEventInfo);
+            case "03" -> handleControlChange(sysex, midiEventInfo);
+            default -> handleUnknowChannelMessage(sysex, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 7F -- 01
+    private static boolean handleChannelPressure(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setDescription("Aftertouch");
+
+        int channel = Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16);
+        String pp = ByteHelper.getAndStrip(sysex, 1);
+        int rr = Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16);
+
+        String parameter = switch (pp) {
+            case "00" -> "Pitch control";
+            case "01" -> "Filter cutoff";
+            case "02" -> "Amplitude";
+            case "03" -> "Pitch depth";
+            case "04" -> "Filter depth";
+            case "05" -> "Amplitude depth";
+            default -> "Invalid";
+        };
+
+        midiEventInfo.setComment("Channel: " + channel + ", " + parameter);
+        midiEventInfo.setData2(rr);
+
+        return result;
+    }
+
+    // F0 7F -- 03
+    private static boolean handleControlChange(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setDescription("control Change");
+
+        int channel = Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16);
+        String pp = ByteHelper.getAndStrip(sysex, 1);
+        int rr = Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16);
+
+        String parameter = switch (pp) {
+            case "00" -> "Pitch control";
+            case "01" -> "Filter cutoff";
+            case "02" -> "Amplitude";
+            case "03" -> "Pitch depth";
+            case "04" -> "Filter depth";
+            case "05" -> "Amplitude depth";
+            default -> "Invalid";
+        };
+
+        midiEventInfo.setComment("Channel: " + channel + ", " + parameter);
+        midiEventInfo.setData2(rr);
+
+        return result;
+    }
+
+    // F0 7F -- ??
+    private static boolean handleUnknowChannelMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown channel message");
+
+        return result;
+    }
+    // F0 7F -- 0A
+    private static boolean handleInstrumentControl(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        ByteHelper.getAndStrip(sysex, 1);
+
+        int channel = Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16);
+        int baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, 0);
+        NoteEntity note = Util.calcNote(Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16), baseOctave);
+
+        String cc = ByteHelper.getAndStrip(sysex, 1);
+        int vv = Integer.parseInt(ByteHelper.getAndStrip(sysex, 1), 16);
+
+        String control = switch(cc) {
+            case "07" -> "Volume";
+            case "0A" -> "Pan";
+            case "5B" -> "Reverb send level";
+            case "5D" -> "Chorus send level";
+            default -> "Invalid";
+        };
+
+        midiEventInfo.setComment("channel: " + channel + ", note: " + note.getName() + ", " + control);
+        midiEventInfo.setData2(vv);
+
+        return result;
+    }
+
+    // F0 7F -- ??
+    private static boolean handleUnknownUniversalRealTimeMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = false;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("UNKNOWN Universal real time");
 
         return result;
     }
