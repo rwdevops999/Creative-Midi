@@ -30,7 +30,7 @@ public class SysexProcessor {
     public static boolean processMessage(SysexMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.setEventKey(new EventKey(EventKey.KEY_SYSEX));
+        midiEventInfo.setEventKey(new EventKey(EventKey.SYSEX));
         midiEventInfo.setColor(getColor("sysex"));
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
         midiEventInfo.setMessage(sysex.toString());

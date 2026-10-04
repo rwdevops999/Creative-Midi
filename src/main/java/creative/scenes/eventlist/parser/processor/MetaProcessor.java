@@ -59,7 +59,7 @@ public class MetaProcessor {
         boolean result = true;
 
         String messageInfo = SysexToHexStringConvertor.convertToHexString(message.getData());
-        midiEventInfo.setEventKey(new EventKey(EventKey.KEY_META));
+        midiEventInfo.setEventKey(new EventKey(EventKey.META));
         midiEventInfo.setColor(getColor("meta"));
 
         int type = message.getType();

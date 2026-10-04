@@ -252,15 +252,15 @@ public class EventsDisplayPane extends VBox {
 
         if (! filteredEvents.isEmpty()) {
             if (! selectedEvents[FilterPane.MIDI_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.KEY_MIDI)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.MIDI)).toList();
             }
 
             if (! selectedEvents[FilterPane.SYSEX_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.KEY_SYSEX)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.SYSEX)).toList();
             }
 
             if (! selectedEvents[FilterPane.META_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.KEY_META)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.META)).toList();
             }
 
             if (selectedEvents[FilterPane.CHANNEL]) {

@@ -8,9 +8,9 @@ public class EventKey {
     private List<Integer> values = new ArrayList<>();
 
     // General keys
-    public static int KEY_MIDI=0;
-    public static int KEY_META=1;
-    public static int KEY_SYSEX=2;
+    public static int MIDI=0;
+    public static int META=1;
+    public static int SYSEX=2;
 
     // midi keys
 

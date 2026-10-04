@@ -48,7 +48,7 @@ public class MidiProcessor {
     public static boolean processMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.setEventKey(new EventKey(EventKey.KEY_MIDI));
+        midiEventInfo.setEventKey(new EventKey(EventKey.MIDI));
         midiEventInfo.setColor(getColor("midi"));
         midiEventInfo.setMessage(SysexToHexStringConvertor.convertToHexString(message.getMessage()));
 
