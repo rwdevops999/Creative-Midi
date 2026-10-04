@@ -16,6 +16,7 @@ import javax.sound.midi.ShortMessage;
 import java.util.HashMap;
 import java.util.Map;
 
+import static creative.scenes.eventlist.data.EventKey.*;
 import static util.ColorScheme.getColor;
 import static util.Util.calcNote;
 
@@ -48,7 +49,6 @@ public class MidiProcessor {
     public static boolean processMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.setEventKey(new EventKey(EventKey.MIDI));
         midiEventInfo.setColor(getColor("midi"));
         midiEventInfo.setMessage(SysexToHexStringConvertor.convertToHexString(message.getMessage()));
 
@@ -74,6 +74,7 @@ public class MidiProcessor {
     private static boolean handleChannelMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
+        midiEventInfo.getEventKey().addValue(MIDI_CHANNEL_MESSAGE);
         byte[] rawBytes = message.getMessage();
 
         int command = rawBytes[0] & 0xF0;
@@ -96,6 +97,8 @@ public class MidiProcessor {
     private static boolean handleNoteOn(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
+        midiEventInfo.getEventKey().addValue(MIDI_NOTE_ON);
+
         midiEventInfo.setColor(getColor("midi", "note"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Note");
@@ -116,6 +119,8 @@ public class MidiProcessor {
     private static boolean handleNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
+        midiEventInfo.getEventKey().addValue(MIDI_NOTE_OFF);
+
         midiEventInfo.setColor(getColor("midi", "note"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Note");
@@ -135,6 +140,8 @@ public class MidiProcessor {
 
     private static boolean handleControlOrModeChange(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
+
+        midiEventInfo.getEventKey().addValue(MIDI_CONTROL_MODE_CHANGE);
 
         byte[] rawbytes = message.getMessage();
 
@@ -196,6 +203,8 @@ public class MidiProcessor {
     private static boolean handleControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
+        midiEventInfo.getEventKey().addValue(MIDI_CONTROL_CHANGE);
+
         byte[] rawbytes = message.getMessage();
 
         int byte1 = rawbytes[1] & 0xFF;
@@ -246,6 +255,8 @@ public class MidiProcessor {
     private static boolean handleBankSelectMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_BANK_SELECT_MSB);
+
         midiEventInfo.setColor(getColor("midi", "bank select msb"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Bank select MSB");
@@ -263,6 +274,8 @@ public class MidiProcessor {
     private static boolean handleModulation(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_MODULATION);
+
         midiEventInfo.setColor(getColor("midi", "modulation"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Modulation");
@@ -277,6 +290,8 @@ public class MidiProcessor {
 
     private static boolean handleBreath(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_BREATH);
 
         midiEventInfo.setColor(getColor("midi", "breath"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -293,6 +308,8 @@ public class MidiProcessor {
     private static boolean handlePortamentoTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_PORTAMENTO_TIME);
+
         midiEventInfo.setColor(getColor("midi", "portamento time"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Portamento time");
@@ -307,6 +324,8 @@ public class MidiProcessor {
 
     private static boolean handleDataEntryMSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_DATA_ENTRY_MSB);
 
         midiEventInfo.setColor(getColor("midi", "data entry msb"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -323,6 +342,8 @@ public class MidiProcessor {
     private static boolean handleMainVolume(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_MAIN_VOLUME);
+
         midiEventInfo.setColor(getColor("midi", "main volume"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Main Volume");
@@ -337,6 +358,8 @@ public class MidiProcessor {
 
     private static boolean handlePanpot(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_PANPOT);
 
         midiEventInfo.setColor(getColor("midi", "panpot"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -362,6 +385,8 @@ public class MidiProcessor {
     private static boolean handleExpression (ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_EXPRESSION);
+
         midiEventInfo.setColor(getColor("midi", "expression"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Expression");
@@ -377,6 +402,8 @@ public class MidiProcessor {
     private static boolean handleGeneralPurposeController(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_GENERAL_PURPOSE);
+
         midiEventInfo.setColor(getColor("midi", "general purpose controller"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("General purpose controller");
@@ -391,6 +418,8 @@ public class MidiProcessor {
 
     private static boolean handleBankSelectLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_BANK_SELECT_LSB);
 
         midiEventInfo.setColor(getColor("midi", "bank select lsb"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -409,6 +438,8 @@ public class MidiProcessor {
     private static boolean handleDataEntryLSB(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_DATA_ENTRY_LSB);
+
         midiEventInfo.setColor(getColor("midi", "data entry lsb"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Data entry LSB");
@@ -423,6 +454,8 @@ public class MidiProcessor {
 
     private static boolean handleSustainDamper(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_SUSTAIN_DAMPER);
 
         midiEventInfo.setColor(getColor("midi", "sustain damper"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -439,6 +472,8 @@ public class MidiProcessor {
     private static boolean handlePortamento(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_PORTAMENTO);
+
         midiEventInfo.setColor(getColor("midi", "portamento"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Portamento");
@@ -453,6 +488,8 @@ public class MidiProcessor {
 
     private static boolean handleVibratoRate(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_VIBRATO_RATE);
 
         midiEventInfo.setColor(getColor("midi", "vibrato rate"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -469,6 +506,8 @@ public class MidiProcessor {
     private static boolean handleArticulation1(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_ARTICULATION_1);
+
         midiEventInfo.setColor(getColor("midi", "articulation1"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Articulation 1");
@@ -483,6 +522,8 @@ public class MidiProcessor {
 
     private static boolean handleArticulation2(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_ARTICULATION_2);
 
         midiEventInfo.setColor(getColor("midi", "articulation2"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -499,6 +540,8 @@ public class MidiProcessor {
     private static boolean handleSostenuto(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_SOSTENUTO);
+
         midiEventInfo.setColor(getColor("midi", "sostenuto"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Sostenuto");
@@ -513,6 +556,8 @@ public class MidiProcessor {
 
     private static boolean handleSoftPedal(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_SOFT_PEDAL);
 
         midiEventInfo.setColor(getColor("midi", "soft pedal"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -529,6 +574,8 @@ public class MidiProcessor {
     private static boolean handleResonance(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_RESONANCE);
+
         midiEventInfo.setColor(getColor("midi", "resonance"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Resonance");
@@ -543,6 +590,8 @@ public class MidiProcessor {
 
     private static boolean handleReleaseTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_RELEASE_TIME);
 
         midiEventInfo.setColor(getColor("midi", "release time"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -559,6 +608,8 @@ public class MidiProcessor {
     private static boolean handleAttackTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_ATTACK_TIME);
+
         midiEventInfo.setColor(getColor("midi", "attack time"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Attack time");
@@ -573,6 +624,8 @@ public class MidiProcessor {
 
     private static boolean handleCutoff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_CUTOFF);
 
         midiEventInfo.setColor(getColor("midi", "cutoff"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -589,6 +642,8 @@ public class MidiProcessor {
     private static boolean handleDecayTime(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_DECAY_TIME);
+
         midiEventInfo.setColor(getColor("midi", "decay time"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Decay time");
@@ -602,6 +657,8 @@ public class MidiProcessor {
 
     private static boolean handleVibratoDepth(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_VIBRATO_DEPTH);
 
         midiEventInfo.setColor(getColor("midi", "vibrato depth"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -617,6 +674,8 @@ public class MidiProcessor {
     private static boolean handleVibratoDelay(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_VIBRATO_DELAY);
+
         midiEventInfo.setColor(getColor("midi", "vibrato delay"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Vibrato delay");
@@ -630,6 +689,8 @@ public class MidiProcessor {
 
     private static boolean handleChorusSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_CHORUS_SEND_LEVEL);
 
         midiEventInfo.setColor(getColor("midi", "chorus send level"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -646,6 +707,8 @@ public class MidiProcessor {
     private static boolean handleRPNIncrement(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_RPN_INCREMENT);
+
         midiEventInfo.setColor(getColor("midi", "rpn increment"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("RPN increment");
@@ -655,6 +718,8 @@ public class MidiProcessor {
 
     private static boolean handleArticulation3(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_ARTICULATION_3);
 
         midiEventInfo.setColor(getColor("midi", "articulation3"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -669,6 +734,8 @@ public class MidiProcessor {
 
     private static boolean handlePortamentoControl(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_PORTAMENTO_CONTROL);
 
         midiEventInfo.setColor(getColor("midi", "portamento control"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -687,6 +754,8 @@ public class MidiProcessor {
     private static boolean handleReverbSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_REVERB_SEND_LEVEL);
+
         midiEventInfo.setColor(getColor("midi", "reverb send level"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Reverb send level");
@@ -701,6 +770,8 @@ public class MidiProcessor {
 
     private static boolean handleVariationSendLevel(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_VARIATION_SEND_LEVEL);
 
         midiEventInfo.setColor(getColor("midi", "variation send level"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -717,6 +788,8 @@ public class MidiProcessor {
     private static boolean handleRPNDecrement(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_RPN_DECREMENT);
+
         midiEventInfo.setColor(getColor("midi", "rpn decrement"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("RPN decrement");
@@ -726,6 +799,8 @@ public class MidiProcessor {
 
     private static boolean handleNRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_NRPN_LSB);
 
         midiEventInfo.setColor(getColor("midi", "nrpn lsb"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -742,6 +817,8 @@ public class MidiProcessor {
     private static boolean handleNRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_NRPN_MSB);
+
         midiEventInfo.setColor(getColor("midi", "nrpn msb"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("NRPN MSB");
@@ -757,6 +834,8 @@ public class MidiProcessor {
     private static boolean handleRPNLsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_RPN_LSB);
+
         midiEventInfo.setColor(getColor("midi", "rpn lsb"));
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("RPN LSB");
@@ -771,6 +850,8 @@ public class MidiProcessor {
 
     private static boolean handleRPNMsb(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_RPN_MSB);
 
         midiEventInfo.setColor(getColor("midi", "rpn msb"));
         midiEventInfo.setChannel(message.getChannel()+1);
@@ -797,6 +878,8 @@ public class MidiProcessor {
     private static boolean handleModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
+        midiEventInfo.getEventKey().addValue(MIDI_MODE_CHANGE);
+
         byte[] rawbytes = message.getMessage();
 
         int byte1 = rawbytes[1] & 0xFF;
@@ -819,6 +902,8 @@ public class MidiProcessor {
     private static boolean handleAllSoundOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_ALL_SOUND_OFF);
+
         midiEventInfo.setColor(getColor("midi", "all sound off"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("All sound off");
@@ -828,6 +913,8 @@ public class MidiProcessor {
 
     private static boolean handleLocalControl(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_LOCAL_CONTROL);
 
         midiEventInfo.setColor(getColor("midi", "local control"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -839,6 +926,8 @@ public class MidiProcessor {
     private static boolean handleOmniOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_OMNI_OFF);
+
         midiEventInfo.setColor(getColor("midi", "omni off"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Omni off");
@@ -848,6 +937,8 @@ public class MidiProcessor {
 
     private static boolean handleOmniOn(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_OMNI_ON);
 
         midiEventInfo.setColor(getColor("midi", "omni on"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -859,6 +950,8 @@ public class MidiProcessor {
     private static boolean handleMono(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_MONO);
+
         midiEventInfo.setColor(getColor("midi", "mono"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Mono");
@@ -868,6 +961,8 @@ public class MidiProcessor {
 
     private static boolean handlePoly(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_POLY);
 
         midiEventInfo.setColor(getColor("midi", "poly"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -879,6 +974,8 @@ public class MidiProcessor {
     private static boolean handleAllNoteOff(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_ALL_NOTE_OFF);
+
         midiEventInfo.setColor(getColor("midi", "all note off"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("All note off");
@@ -888,6 +985,8 @@ public class MidiProcessor {
 
     private static boolean handleResetAllControllers(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_RESET_ALL_CONTROLLERS);
 
         midiEventInfo.setColor(getColor("midi", "reset all controllers"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -919,6 +1018,8 @@ public class MidiProcessor {
     private static boolean handleProgramChange(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_PROGRAM_CHANGE);
+
         midiEventInfo.setColor(getColor("midi", "program change"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Program change");
@@ -943,6 +1044,8 @@ public class MidiProcessor {
     private static boolean handleChannelAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_CHANNEL_AFTERTOUCH);
+
         midiEventInfo.setColor(getColor("midi", "channel after touch"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Channel aftertouch");
@@ -956,6 +1059,8 @@ public class MidiProcessor {
 
     private static boolean handlePolyAfterTouch(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_KEY_AFTERTOUCH);
 
         midiEventInfo.setColor(getColor("midi", "polyphonic after touch"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -972,6 +1077,8 @@ public class MidiProcessor {
 
     private static boolean handlePitchBend(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_PITCH_BEND);
 
         midiEventInfo.setColor(getColor("midi", "pitch bend"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -1019,6 +1126,8 @@ public class MidiProcessor {
     private static boolean handleMIDIClock(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_CLOCK);
+
         midiEventInfo.setColor(getColor("midi", "clock"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("clock");
@@ -1028,6 +1137,8 @@ public class MidiProcessor {
 
     private static boolean handleStart(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_START);
 
         midiEventInfo.setColor(getColor("midi", "start"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -1039,6 +1150,8 @@ public class MidiProcessor {
     private static boolean handleContinue(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_CONTINUE);
+
         midiEventInfo.setColor(getColor("midi", "continue"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Continue");
@@ -1048,6 +1161,8 @@ public class MidiProcessor {
 
     private static boolean handleStop(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_STOP);
 
         midiEventInfo.setColor(getColor("midi", "stop"));
         midiEventInfo.setChannel(message.getChannel() + 1);
@@ -1059,6 +1174,8 @@ public class MidiProcessor {
     private static boolean handleActiveSense(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
+        midiEventInfo.getEventKey().addValue(MIDI_ACTIVE_SENSE);
+
         midiEventInfo.setColor(getColor("midi", "active sense"));
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Active sense");
@@ -1068,6 +1185,8 @@ public class MidiProcessor {
 
     private static boolean handleSystemReset(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(MIDI_SYSTEM_RESET);
 
         midiEventInfo.setColor(getColor("midi", "system reset"));
         midiEventInfo.setChannel(message.getChannel() + 1);

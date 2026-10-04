@@ -1,5 +1,6 @@
 package creative.scenes.eventlist.parser.processor;
 
+import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.MBTCalculator;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import org.slf4j.Logger;
@@ -36,9 +37,13 @@ public class MidiFileProcessor {
 
                 if (message instanceof ShortMessage midiMessage) {
                     // The message is a MIDI
-//                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
+                    midiEventInfo.setEventKey(new EventKey(EventKey.MIDI));
+
+                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
                 } else if (message instanceof MetaMessage metaMessage) {
                     // The message is a META
+                    midiEventInfo.setEventKey(new EventKey(EventKey.META));
+
                     isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
                 } else if (message instanceof SysexMessage sysexMessage) {
                     // The message is a SYSEX
