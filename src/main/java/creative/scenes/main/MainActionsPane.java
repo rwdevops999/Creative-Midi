@@ -2,6 +2,7 @@ package creative.scenes.main;
 
 import creative.scenes.IScene;
 import creative.scenes.eventlist.EventlistScene;
+import creative.scenes.merge.MergeScene;
 import creative.scenes.midi.MidiScene;
 import creative.scenes.playlist.PlaylistScene;
 import creative.scenes.sysex.SysexScene;
@@ -59,6 +60,7 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, SIZE, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 3, 0);
         add(new ActionButton(ownerScene, SIZE, "sysexButton", "Generate SysEx", "sysex-generator", new SysexGenScene()), 4, 0);
         add(new ActionButton(ownerScene, SIZE, "eventlistButton", "midi event list", "event-list", new EventlistScene()), 5, 0);
+        add(new ActionButton(ownerScene, SIZE, "mergeButton", "merge style", "merge", new MergeScene()), 6, 0);
 
 /*        add(new ActionButton(ownerScene,"sysexButton", "handle sysex", "sysex_out", new SysExScene()), 1, 0);
         add(new ActionButton(ownerScene, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 2, 0);
