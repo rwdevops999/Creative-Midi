@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static creative.scenes.eventlist.data.EventKey.*;
 import static util.ColorScheme.getColor;
 
 public class MetaProcessor {
@@ -97,7 +98,7 @@ public class MetaProcessor {
 
     private static void handleText(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "text"));
-
+        midiEventInfo.getEventKey().addValue(META_TEXT);
         midiEventInfo.setDescription("Text");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
     }
@@ -110,6 +111,7 @@ public class MetaProcessor {
      */
     private static void handleTrackname(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "trackname"));
+        midiEventInfo.getEventKey().addValue(META_TRACKNAME);
 
         midiEventInfo.setDescription("Track Name");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -117,6 +119,7 @@ public class MetaProcessor {
 
     private static void handleCopyright(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "copyright"));
+        midiEventInfo.getEventKey().addValue(META_COPYRIGHT);
 
         midiEventInfo.setDescription("Copyright");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -124,6 +127,7 @@ public class MetaProcessor {
 
     private static void handleInstrumentname(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "instrument"));
+        midiEventInfo.getEventKey().addValue(META_INSTRUMENTNAME);
 
         midiEventInfo.setDescription("Instrument");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -131,6 +135,7 @@ public class MetaProcessor {
 
     private static void handleLyric(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "lyric"));
+        midiEventInfo.getEventKey().addValue(META_LYRIC);
 
         midiEventInfo.setDescription("Lyric");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -138,6 +143,7 @@ public class MetaProcessor {
 
     private static void handleMarker(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "marker"));
+        midiEventInfo.getEventKey().addValue(META_MARKER);
 
         midiEventInfo.setDescription("Marker");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -145,6 +151,7 @@ public class MetaProcessor {
 
     private static void handleCuepoint(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "cue point"));
+        midiEventInfo.getEventKey().addValue(META_CUEPOINT);
 
         midiEventInfo.setDescription("Cue Point");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -152,6 +159,7 @@ public class MetaProcessor {
 
     private static void handleMIDIport(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "midi port"));
+        midiEventInfo.getEventKey().addValue(META_MIDIPORT);
 
         midiEventInfo.setDescription("Midi Port");
 
@@ -165,6 +173,7 @@ public class MetaProcessor {
 
     private static void handleTempo(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "tempo"));
+        midiEventInfo.getEventKey().addValue(META_TEMPO);
 
         midiEventInfo.setDescription("Tempo");
 
@@ -180,6 +189,7 @@ public class MetaProcessor {
 
     private static void handleSMPTEoffset(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "smpte offset"));
+        midiEventInfo.getEventKey().addValue(META_SMPTE_OFFET);
 
         midiEventInfo.setDescription("SMPTE Offset");
 
@@ -217,6 +227,7 @@ public class MetaProcessor {
      */
     private static void handleTimesignature(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "timesignature"));
+        midiEventInfo.getEventKey().addValue(META_TIME_SIGNATURE);
 
         midiEventInfo.setDescription("Time Signature");
 
@@ -229,6 +240,7 @@ public class MetaProcessor {
 
     private static void handleKeysignature(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "keysignature"));
+        midiEventInfo.getEventKey().addValue(META_KEY_SIGNATURE);
 
         midiEventInfo.setDescription("Key Signature");
 
@@ -243,6 +255,7 @@ public class MetaProcessor {
 
     private static void handleSequencer(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "sequencer"));
+        midiEventInfo.getEventKey().addValue(META_SEQUENCER);
 
         midiEventInfo.setDescription("Sequencer Data");
 
