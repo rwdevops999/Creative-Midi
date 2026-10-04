@@ -1,6 +1,5 @@
-package custom.dialog;
+package creative.scenes.eventlist.dialog;
 
-import entity.playlist.Mapping;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -56,8 +55,8 @@ public class FilterDialog extends Dialog<List<String>> {
             FXCollections.observableArrayList(hiddenEventKeys)
     );
 
-    private BooleanProperty addDisabled = new SimpleBooleanProperty(true);
-    private BooleanProperty removeDisabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty addDisabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty removeDisabled = new SimpleBooleanProperty(true);
 
     private void setupDialog(List<String> availableEvents, List<String> hiddenEvents, List<String> allEvents) {
         visibleEventKeys = availableEvents;
@@ -110,7 +109,7 @@ public class FilterDialog extends Dialog<List<String>> {
         for (String group : groups) {
             Tab tab = new Tab(group);
             tab.setDisable(!group.equals(selectedGroup));
-            tab.setContent(buildContentPane(group));
+            tab.setContent(buildContentPane());
             tab.setClosable(false);
             tabPane.getTabs().add(tab);
         }
@@ -121,7 +120,7 @@ public class FilterDialog extends Dialog<List<String>> {
     private ListView<String> availableEventsListView;
     private ListView<String> hiddenEventsListView;
 
-    private HBox buildContentPane(String group) {
+    private HBox buildContentPane() {
         HBox hBox = new HBox();
 
         // Setup HBOX
@@ -130,26 +129,12 @@ public class FilterDialog extends Dialog<List<String>> {
         // build the visible list
         Pane pane = buildListPane("visible", visibleEventsProperty   );
         hBox.getChildren().add(pane);
-        availableEventsListView = lookup(pane, "listview");
+        availableEventsListView = lookup(pane);
         hBox.getChildren().add(buildButtonsPane());
         pane = buildListPane("hidden", hiddenEventsProperty   );
         hBox.getChildren().add(pane);
-        hiddenEventsListView = lookup(pane, "listview");
+        hiddenEventsListView = lookup(pane);
 
-/*        Button getResult = new Button("Get Result");
-        getResult.setOnAction(e -> {
-            System.out.println("GETTING THE RESULT");
-
-            List<String> hidden = hiddenEventsProperty.get();
-
-            hidden = hidden.stream().map(s -> group.toUpperCase() + "_" + s.toUpperCase().replace(" ", "_")).toList();
-
-            System.out.println("HIDE THESE");
-            hidden.forEach(System.out::println);
-        });
-
-        hBox.getChildren().add(getResult);
-*/
         return hBox;
     }
 
@@ -179,14 +164,14 @@ public class FilterDialog extends Dialog<List<String>> {
         vBox.setAlignment(Pos.CENTER);
 
         String flatButtonStyle =
-                "-fx-background-color: #a9a9a9; " + // Grijze achtergrond (of 'transparent')
-                        "-fx-background-radius: 0; " +       // Rechte hoeken (gebruik bijv. 4px voor licht afgerond)
-                        "-fx-text-fill: #333333; " +         // Tekstkleur
-                        "-fx-font-size: 14px; " +            // Lettergrootte
-                        "-fx-font-weight: bold; " +          // Dikgedrukte tekst
+                "-fx-background-color: #a9a9a9; " +     // Gray background (or 'transparent')
+                        "-fx-background-radius: 0; " +  // Square hooks
+                        "-fx-text-fill: #333333; " +    // Text color
+                        "-fx-font-size: 14px; " +       // Size of characters
+                        "-fx-font-weight: bold; " +     // Bold text
                         "-fx-cursor: hand;";
 
-        Button addSelected = new Button("\u003E");
+        Button addSelected = new Button(">");
         addSelected.disableProperty().bind(addDisabled);
         addSelected.setStyle(flatButtonStyle);
 
@@ -198,23 +183,19 @@ public class FilterDialog extends Dialog<List<String>> {
 
         vBox.getChildren().add(addSelected);
 
-        Button addAll = new Button("\u00BB"); // >>
+        Button addAll = new Button("»"); // >>
         addAll.disableProperty().bind(addDisabled);
         addAll.setStyle(flatButtonStyle);
-        addAll.setOnAction(e -> {
-            moveSelected (visibleEventsProperty, hiddenEventsProperty, visibleEventsProperty.get());
-        });
+        addAll.setOnAction(e -> moveSelected (visibleEventsProperty, hiddenEventsProperty, visibleEventsProperty.get()));
         vBox.getChildren().add(addAll);
 
-        Button removeAll = new Button("\u00AB"); // <<
+        Button removeAll = new Button("«"); // <<
         removeAll.disableProperty().bind(removeDisabled);
         removeAll.setStyle(flatButtonStyle);
-        removeAll.setOnAction(e -> {
-            moveSelected (hiddenEventsProperty, visibleEventsProperty, hiddenEventsProperty.get());
-        });
+        removeAll.setOnAction(e -> moveSelected (hiddenEventsProperty, visibleEventsProperty, hiddenEventsProperty.get()));
         vBox.getChildren().add(removeAll);
 
-        Button removeSelected = new Button("\u003C"); // <
+        Button removeSelected = new Button("<"); // <
         removeSelected.disableProperty().bind(removeDisabled);
         removeSelected.setStyle(flatButtonStyle);
         removeSelected.setOnAction(e -> {
@@ -259,7 +240,7 @@ public class FilterDialog extends Dialog<List<String>> {
         removeDisabled.set(hiddenEventsProperty.get().isEmpty());
     }
 
-    private ListView<String> lookup(Pane pane, String id) {
+    private ListView<String> lookup(Pane pane) {
         return pane.getChildren().stream()
                 .filter(node -> "listview".equals(node.getId()))
                 .map(node -> (ListView<String>) node)

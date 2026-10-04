@@ -1,9 +1,7 @@
 package creative.scenes.eventlist;
 
 import creative.scenes.eventlist.data.EventKey;
-import creative.scenes.sysex.SysexContainer;
-import custom.dialog.FilterDialog;
-import entity.sysex.Sysex;
+import creative.scenes.eventlist.dialog.FilterDialog;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,8 +12,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import jdk.jfr.EventType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +26,11 @@ public class FilterPane extends HBox {
     public static int SYSEX_EVENT = 2;
     public static int CHANNEL = 3;
 
-    private ObjectProperty<Integer> selectedChannel = new SimpleObjectProperty<>(0);
+    private final ObjectProperty<Integer> selectedChannel = new SimpleObjectProperty<>(0);
 
     // TODO Each time this is initialised
-    private static List<String> visibleEvents = null;
-    private static List<String> hiddenEvents = null;
+    private static final List<String> visibleEvents;
+    private static final List<String> hiddenEvents;
 
     static {
         visibleEvents = new ArrayList<>();
@@ -87,9 +83,7 @@ public class FilterPane extends HBox {
         getChildren().add(midiCheckBox);
 
         Button midiButton = new Button("Details");
-        midiButton.setOnAction(event -> {
-            handleFilterDialog(EventKey.MIDI);
-        });
+        midiButton.setOnAction(event -> handleFilterDialog(EventKey.MIDI));
         getChildren().add(midiButton);
 
         // META
@@ -105,9 +99,7 @@ public class FilterPane extends HBox {
         getChildren().add(metaCheckBox);
 
         Button metaButton = new Button("Details");
-        metaButton.setOnAction(event -> {
-            handleFilterDialog(EventKey.META);
-        });
+        metaButton.setOnAction(event -> handleFilterDialog(EventKey.META));
         getChildren().add(metaButton);
 
         // SYSEX
@@ -123,9 +115,7 @@ public class FilterPane extends HBox {
         getChildren().add(sysexCheckBox);
 
         Button sysexButton = new Button("Details");
-        sysexButton.setOnAction(event -> {
-            handleFilterDialog(EventKey.SYSEX);
-        });
+        sysexButton.setOnAction(event -> handleFilterDialog(EventKey.SYSEX));
         getChildren().add(sysexButton);
 
         // CHANNEL
@@ -141,9 +131,7 @@ public class FilterPane extends HBox {
 
         Spinner<Integer> channelSpinner = new Spinner<>(0, 16, 0);
         channelSpinner.getValueFactory().valueProperty().bindBidirectional(selectedChannel);
-        channelSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(this::updateFiltering);
-        });
+        channelSpinner.valueProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(this::updateFiltering));
         getChildren().addAll(channelCheckBox, channelSpinner);
 
         Button channelButton = new Button("Details");

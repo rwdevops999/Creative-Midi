@@ -23,8 +23,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 
 public class EventsDisplayPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(EventsDisplayPane.class);
@@ -45,7 +43,7 @@ public class EventsDisplayPane extends VBox {
         buildPane();
     }
 
-    private int[] columnSizes = {10,4,15,15,10,15,30};
+    private final int[] columnSizes = {10,4,15,15,10,15,30};
 
     private TableView<MidiEventInfo> table;
     private boolean[] selectedEvents = {true, true, true, false};
@@ -75,57 +73,43 @@ public class EventsDisplayPane extends VBox {
         TableColumn<MidiEventInfo, String> mbtColumn = new TableColumn<>("MBT");
         setColumnSize(mbtColumn, columnSizes[0]);
         mbtColumn.setCellValueFactory(new PropertyValueFactory<>("mbtPosition"));
-        mbtColumn.setCellFactory(column -> {
-            return createStringTableCell();
-        });
+        mbtColumn.setCellFactory(column -> createStringTableCell());
         table.getColumns().add(mbtColumn);
 
         TableColumn<MidiEventInfo, Integer> channelColumn = new TableColumn<>("Ch");
         setColumnSize(channelColumn, columnSizes[1]);
         channelColumn.setCellValueFactory(new PropertyValueFactory<>("channel"));
-        channelColumn.setCellFactory(column -> {
-            return createIntegerTableCell();
-        });
+        channelColumn.setCellFactory(column -> createIntegerTableCell());
         table.getColumns().add(channelColumn);
 
         TableColumn<MidiEventInfo, String> kindColumn = new TableColumn<>("Description");
         setColumnSize(kindColumn, columnSizes[2]);
         kindColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        kindColumn.setCellFactory(column -> {
-            return createStringTableCell();
-        });
+        kindColumn.setCellFactory(column -> createStringTableCell());
         table.getColumns().add(kindColumn);
 
         TableColumn<MidiEventInfo, String> data2Column = new TableColumn<>("Comment");
         setColumnSize(data2Column, columnSizes[3]);
         data2Column.setCellValueFactory(new PropertyValueFactory<>("comment"));
-        data2Column.setCellFactory(column -> {
-            return createStringTableCell();
-        });
+        data2Column.setCellFactory(column -> createStringTableCell());
         table.getColumns().add(data2Column);
 
         TableColumn<MidiEventInfo, Integer> dataColumn = new TableColumn<>("Value");
         setColumnSize(dataColumn, columnSizes[4]);
         dataColumn.setCellValueFactory(new PropertyValueFactory<>("data2"));
-        dataColumn.setCellFactory(column -> {
-            return createIntegerTableCell();
-        });
+        dataColumn.setCellFactory(column -> createIntegerTableCell());
         table.getColumns().add(dataColumn);
 
         TableColumn<MidiEventInfo, String> durationColumn = new TableColumn<>("Duration");
         setColumnSize(durationColumn, columnSizes[5]);
         durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
-        durationColumn.setCellFactory(column -> {
-            return createStringTableCell();
-        });
+        durationColumn.setCellFactory(column -> createStringTableCell());
         table.getColumns().add(durationColumn);
 
         TableColumn<MidiEventInfo, String> messageColumn = new TableColumn<>("Message");
         setColumnSize(messageColumn, columnSizes[6]);
         messageColumn.setCellValueFactory(new PropertyValueFactory<>("message"));
-        messageColumn.setCellFactory(column -> {
-            return createStringTableCell();
-        });
+        messageColumn.setCellFactory(column -> createStringTableCell());
         table.getColumns().add(messageColumn);
     }
 
@@ -163,7 +147,7 @@ public class EventsDisplayPane extends VBox {
         table.setContextMenu(contextMenu);
     }
 
-    private EventHandler handler = (EventHandler) event -> {
+    private final EventHandler handler = event -> {
         if (ApplicationInfo.getInstance().isMidiChanged()) {
             if (DialogFactory.renderConfirmationDialog("Midi Changed", "Midi has changed. Save?")) {
                 getEventsPane().getEventlistPane().getFileSelectionPane().handleSaveFile();
@@ -190,7 +174,7 @@ public class EventsDisplayPane extends VBox {
     }
 
     private TableCell<MidiEventInfo, String> createStringTableCell() {
-        return new TableCell<MidiEventInfo, String>() {
+        return new TableCell<>() {
             // Create a single label reuse instance per cell container
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -337,8 +321,7 @@ public class EventsDisplayPane extends VBox {
                 if (currentTick >= startTick && currentTick <= endTickWindow) {
                     MidiMessage currentMsg = currentEvent.getMessage();
 
-                    if (currentMsg instanceof ShortMessage) {
-                        ShortMessage currentSm = (ShortMessage) currentMsg;
+                    if (currentMsg instanceof ShortMessage currentSm) {
 
                         // CRUCIAL CHECK: The event must exactly match with the selected MIDI-channel!
                         if (currentSm.getChannel() == targetChannel) {
