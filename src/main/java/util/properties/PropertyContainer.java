@@ -23,6 +23,7 @@ public class PropertyContainer {
     public static String SYSEX_EVENTS_FILE = "sysex.events.file";
     public static String PLAYLIST_PATH = "playlist.path";
     public static String PLAYLIST_FILE = "playlist.file";
+    public static String STYLE_PATH = "style.path";
 
     // KEYBOARD KEYS
     public static String DEFAULT_KEYBOARD = "default.voice.file";
