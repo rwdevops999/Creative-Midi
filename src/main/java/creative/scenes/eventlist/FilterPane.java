@@ -1,5 +1,9 @@
 package creative.scenes.eventlist;
 
+import creative.scenes.eventlist.data.EventKey;
+import creative.scenes.sysex.SysexContainer;
+import custom.dialog.FilterDialog;
+import entity.sysex.Sysex;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -11,6 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import jdk.jfr.EventType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -22,6 +31,19 @@ public class FilterPane extends HBox {
     public static int CHANNEL = 3;
 
     private ObjectProperty<Integer> selectedChannel = new SimpleObjectProperty<>(0);
+
+    // TODO Each time this is initialised
+    private static List<String> visibleEvents = null;
+    private static List<String> hiddenEvents = null;
+
+    static {
+        visibleEvents = new ArrayList<>();
+        visibleEvents.addAll(EventKey.getEvents(EventKey.META));
+        visibleEvents.addAll(EventKey.getEvents(EventKey.MIDI));
+        visibleEvents.addAll(EventKey.getEvents(EventKey.SYSEX));
+
+        hiddenEvents = new ArrayList<>();
+    }
 
     public FilterPane() {
         super();
@@ -66,7 +88,7 @@ public class FilterPane extends HBox {
 
         Button midiButton = new Button("Details");
         midiButton.setOnAction(event -> {
-            // TODO Was never implemented
+            handleFilterDialog(EventKey.MIDI);
         });
         getChildren().add(midiButton);
 
@@ -84,7 +106,7 @@ public class FilterPane extends HBox {
 
         Button metaButton = new Button("Details");
         metaButton.setOnAction(event -> {
-            // TODO Was never implemented
+            handleFilterDialog(EventKey.META);
         });
         getChildren().add(metaButton);
 
@@ -102,7 +124,7 @@ public class FilterPane extends HBox {
 
         Button sysexButton = new Button("Details");
         sysexButton.setOnAction(event -> {
-            // TODO Was never implemented
+            handleFilterDialog(EventKey.SYSEX);
         });
         getChildren().add(sysexButton);
 
@@ -134,6 +156,16 @@ public class FilterPane extends HBox {
 
     private void updateFiltering() {
         getEventDisplayPane().handleFiltering(selectedEvents, selectedChannel.get());
+    }
+
+    private void handleFilterDialog(String selectedGroup) {
+        FilterDialog filterDialog = new FilterDialog(selectedGroup, visibleEvents, hiddenEvents);
+
+        Optional<List<String>> events = filterDialog.showAndWait();
+
+        events.ifPresent(list -> {
+            System.out.println("There is something present");
+        });
     }
 
     // ACCESSORS
