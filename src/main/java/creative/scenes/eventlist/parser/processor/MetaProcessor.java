@@ -1,6 +1,6 @@
 package creative.scenes.eventlist.parser.processor;
 
-import creative.scenes.eventlist.parser.data.EventType;
+import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
 import javafx.scene.paint.Color;
@@ -59,7 +59,7 @@ public class MetaProcessor {
         boolean result = true;
 
         String messageInfo = SysexToHexStringConvertor.convertToHexString(message.getData());
-        midiEventInfo.setEventType(EventType.META);
+        midiEventInfo.setEventKey(new EventKey(EventKey.KEY_META));
         midiEventInfo.setColor(getColor("meta"));
 
         int type = message.getType();

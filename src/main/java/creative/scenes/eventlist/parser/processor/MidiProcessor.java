@@ -1,6 +1,6 @@
 package creative.scenes.eventlist.parser.processor;
 
-import creative.scenes.eventlist.parser.data.EventType;
+import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.eventlist.parser.processor.matcher.MidiNoteMatcher;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
@@ -48,7 +48,7 @@ public class MidiProcessor {
     public static boolean processMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.setEventType(EventType.MIDI);
+        midiEventInfo.setEventKey(new EventKey(EventKey.KEY_MIDI));
         midiEventInfo.setColor(getColor("midi"));
         midiEventInfo.setMessage(SysexToHexStringConvertor.convertToHexString(message.getMessage()));
 

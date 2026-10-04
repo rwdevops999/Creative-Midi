@@ -1,7 +1,6 @@
 package creative.scenes.eventlist.parser.entity;
 
-import creative.scenes.eventlist.parser.MBTCalculator;
-import creative.scenes.eventlist.parser.data.EventType;
+import creative.scenes.eventlist.data.EventKey;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +8,10 @@ import lombok.Setter;
 import javax.sound.midi.MidiEvent;
 
 public class MidiEventInfo {
+
+    @Getter
+    @Setter
+    private EventKey eventKey;
 
     // the event tick converted (to targetPPQ)
     @Getter
@@ -36,10 +39,6 @@ public class MidiEventInfo {
         this.trackId = trackId;
         this.originalEvent = originalEvent;
     }
-
-    @Setter
-    @Getter
-    private EventType eventType;
 
     @Setter
     @Getter

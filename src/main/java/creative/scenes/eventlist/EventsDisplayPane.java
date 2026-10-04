@@ -2,7 +2,7 @@ package creative.scenes.eventlist;
 
 import creative.scenes.base.Base;
 import creative.scenes.base.BaseClosePane;
-import creative.scenes.eventlist.parser.data.EventType;
+import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import custom.dialog.DialogFactory;
 import javafx.beans.property.BooleanProperty;
@@ -13,7 +13,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
@@ -253,15 +252,15 @@ public class EventsDisplayPane extends VBox {
 
         if (! filteredEvents.isEmpty()) {
             if (! selectedEvents[FilterPane.MIDI_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.MIDI)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.KEY_MIDI)).toList();
             }
 
             if (! selectedEvents[FilterPane.SYSEX_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.SYSEX)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.KEY_SYSEX)).toList();
             }
 
             if (! selectedEvents[FilterPane.META_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.META)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.KEY_META)).toList();
             }
 
             if (selectedEvents[FilterPane.CHANNEL]) {

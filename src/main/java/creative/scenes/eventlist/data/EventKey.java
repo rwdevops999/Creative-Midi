@@ -1,6 +1,12 @@
 package creative.scenes.eventlist.data;
 
-public record EventKey(Integer value1, Integer value2, Integer value3) {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class EventKey {
+    private List<Integer> values = new ArrayList<>();
+
     // General keys
     public static int KEY_MIDI=0;
     public static int KEY_META=1;
@@ -12,18 +18,17 @@ public record EventKey(Integer value1, Integer value2, Integer value3) {
 
     // sysex keys
 
-    public EventKey(Integer value1) {
-        this(value1, null, null);
-    }
-
-    public EventKey(Integer value1, Integer value2) {
-        this(value1, value2, null);
+    public EventKey(Integer ...values) {
+        Collections.addAll(this.values, values);
     }
 
     public boolean hasValue(Integer target) {
-        // use Objects.equals to prevent NullPointerExceptions if the values are null
-        return java.util.Objects.equals(value1, target) ||
-                java.util.Objects.equals(value2, target) ||
-                java.util.Objects.equals(value3, target);
+        return this.values.contains(target);
+    }
+
+    public void addValue(int value) {
+        if (! hasValue(value)) {
+            this.values.add(value);
+        }
     }
 }

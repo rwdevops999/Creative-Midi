@@ -1,21 +1,17 @@
 package creative.scenes.eventlist.parser.processor;
 
-import creative.scenes.eventlist.parser.data.EventType;
+import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.eventlist.parser.processor.helper.ByteHelper;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
-import entity.midi.Midi;
 import entity.midi.NoteEntity;
-import javafx.beans.property.IntegerProperty;
 import javafx.scene.paint.Color;
 import util.ColorScheme;
 import util.Util;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
-import javax.sound.midi.MetaMessage;
 import javax.sound.midi.SysexMessage;
-import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +30,7 @@ public class SysexProcessor {
     public static boolean processMessage(SysexMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.setEventType(EventType.SYSEX);
+        midiEventInfo.setEventKey(new EventKey(EventKey.KEY_SYSEX));
         midiEventInfo.setColor(getColor("sysex"));
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
         midiEventInfo.setMessage(sysex.toString());
