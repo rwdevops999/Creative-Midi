@@ -77,6 +77,14 @@ public class EventKey {
         }
     }
 
+    public String getFirstElement() {
+        return this.values.get(0);
+    }
+
+    public String getLastElement() {
+        return this.values.get(this.values.size() - 1);
+    }
+
     public static List<String> getEvents(String type) {
         return keys.stream().filter(k -> (k.startsWith(type) && !k.equals(type))).toList();
     }

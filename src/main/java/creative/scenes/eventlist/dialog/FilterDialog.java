@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static util.Util.setPaneBackground;
+import static util.Util.toPascalCase;
 
 public class FilterDialog extends Dialog<List<String>> {
     public FilterDialog() {
@@ -206,26 +207,6 @@ public class FilterDialog extends Dialog<List<String>> {
         vBox.getChildren().add(removeSelected);
 
         return vBox;
-    }
-
-    private String toPascalCase(String input) {
-        if (input == null || input.isEmpty()) {
-            return "";
-        }
-
-        // Split by underscores, spaces, or hyphens
-        String[] words = input.split("[_\\s-]+");
-        StringBuilder pascalCaseString = new StringBuilder();
-
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                // Capitalize first letter, lowercase the rest
-                pascalCaseString.append(" ").append(Character.toUpperCase(word.charAt(0)))
-                        .append(word.substring(1).toLowerCase());
-            }
-        }
-
-        return pascalCaseString.toString().trim();
     }
 
     private void moveSelected (ListProperty<String> from, ListProperty<String> to, List<String> selected) {
