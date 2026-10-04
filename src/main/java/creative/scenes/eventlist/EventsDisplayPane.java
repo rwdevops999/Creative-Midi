@@ -265,8 +265,12 @@ public class EventsDisplayPane extends VBox {
                 filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventType().equals(EventType.META)).toList();
             }
 
-            if (selectedEvents[FilterPane.CHANNEL] && selectedChannel > 0) {
-                filteredEvents = filteredEvents.stream().filter(e -> ((e.getChannel() != null) && e.getChannel() == selectedChannel)).toList();
+            if (selectedEvents[FilterPane.CHANNEL]) {
+                if  (selectedChannel > 0) {
+                    filteredEvents = filteredEvents.stream().filter(e -> ((e.getChannel() != null) && e.getChannel() == selectedChannel)).toList();
+                } else {
+                    filteredEvents = filteredEvents.stream().filter(e -> e.getChannel() == null).toList();
+                }
             }
 
             deleteMenuDisable.set(filteredEvents.isEmpty());
@@ -279,7 +283,9 @@ public class EventsDisplayPane extends VBox {
             table.setItems(data);
             table.scrollTo(0);
         } else {
-            table.getItems().clear();
+            if (table != null) {
+                table.getItems().clear();
+            }
         }
     }
 

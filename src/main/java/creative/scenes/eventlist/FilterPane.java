@@ -21,7 +21,7 @@ public class FilterPane extends HBox {
     public static int SYSEX_EVENT = 2;
     public static int CHANNEL = 3;
 
-    private ObjectProperty<Integer> selectedChannel = new SimpleObjectProperty<>(MIDI_EVENT);
+    private ObjectProperty<Integer> selectedChannel = new SimpleObjectProperty<>(0);
 
     public FilterPane() {
         super();
@@ -42,6 +42,8 @@ public class FilterPane extends HBox {
 
         showPaneBorder(this, getColor("border", "red"));
         buildPane();
+
+        updateFiltering();
     }
 
     public void buildPane() {
