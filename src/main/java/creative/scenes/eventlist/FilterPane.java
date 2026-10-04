@@ -159,12 +159,16 @@ public class FilterPane extends HBox {
     }
 
     private void handleFilterDialog(String selectedGroup) {
-        FilterDialog filterDialog = new FilterDialog(selectedGroup, visibleEvents, hiddenEvents);
+        List<String> visible = visibleEvents.stream().filter(s -> s.startsWith(selectedGroup)).toList();
+        List<String> hidden = hiddenEvents.stream().filter(s -> s.startsWith(selectedGroup)).toList();
+
+        FilterDialog filterDialog = new FilterDialog(selectedGroup, visible, hidden);
 
         Optional<List<String>> events = filterDialog.showAndWait();
 
         events.ifPresent(list -> {
-            System.out.println("There is something present");
+            visibleEvents.removeAll(list);
+            hiddenEvents.addAll(list);
         });
     }
 

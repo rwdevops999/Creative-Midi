@@ -16,7 +16,6 @@ import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static util.Util.setPaneBackground;
 
@@ -31,7 +30,7 @@ public class FilterDialog extends Dialog<List<String>> {
     public FilterDialog(String group, List<String> availableEvents, List<String> hiddenEvents) {
         this();
 
-        selectedGroup =toPascalCase(group);
+        selectedGroup = toPascalCase(group);
 
         setPaneBackground(getDialogPane());
 
@@ -108,6 +107,7 @@ public class FilterDialog extends Dialog<List<String>> {
 
         for (String group : groups) {
             Tab tab = new Tab(group);
+            tab.setDisable(!group.equals(selectedGroup));
             tab.setContent(buildContentPane(group));
             tab.setClosable(false);
             tabPane.getTabs().add(tab);
