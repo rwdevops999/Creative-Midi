@@ -58,7 +58,7 @@ public class FilterPane extends HBox {
 
         selectedEvents = selected;
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
         buildPane();
 
         updateFiltering();
