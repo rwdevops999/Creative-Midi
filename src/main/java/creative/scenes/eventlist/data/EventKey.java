@@ -1,47 +1,74 @@
 package creative.scenes.eventlist.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import entity.sysex.Sysex;
+
+import java.util.*;
 
 public class EventKey {
-    private List<Integer> values = new ArrayList<>();
+    private static List<String> keys = new ArrayList<>();
+
+    private List<String> values = new ArrayList<>();
 
     // General keys
-    public static int MIDI                  =-1;
-    public static int META                  =-2;
-    public static int SYSEX                 =-3;
+    public static String MIDI                  ="MIDI";
+    public static String META                  ="META";
+    public static String SYSEX                 ="SYSEX";
 
     // midi keys
 
     // meta keys
-    public static int META_TEXT             =1;
-    public static int META_COPYRIGHT        =2;
-    public static int META_TRACKNAME        =3;
-    public static int META_INSTRUMENTNAME   =4;
-    public static int META_LYRIC            =5;
-    public static int META_MARKER           =6;
-    public static int META_CUEPOINT         =7;
-    public static int META_MIDIPORT         =8;
-    public static int META_TEMPO            =9;
-    public static int META_SMPTE_OFFET      =10;
-    public static int META_TIME_SIGNATURE   =11;
-    public static int META_KEY_SIGNATURE    =12;
-    public static int META_SEQUENCER        =13;
+    public static String META_TEXT             ="META_TEXT";
+    public static String META_COPYRIGHT        ="META_COPYRIGHT";
+    public static String META_TRACK_NAME        ="META_TRACK_NAME";
+    public static String META_INSTRUMENT_NAME   ="META_INSTRUMENT_NAME";
+    public static String META_LYRIC            ="META_LYRIC";
+    public static String META_MARKER           ="META_MARKER";
+    public static String META_CUE_POINT         ="META_CUE_POINT";
+    public static String META_MIDI_PORT         ="META_MIDI_PORT";
+    public static String META_TEMPO            ="META_TEMPO";
+    public static String META_SMPTE_OFFET      ="META_SMPTE_OFFET";
+    public static String META_TIME_SIGNATURE   ="META_TIME_SIGNATURE";
+    public static String META_KEY_SIGNATURE    ="META_KEY_SIGNATURE";
+    public static String META_SEQUENCER        ="META_SEQUENCER";
 
     // sysex keys
 
-    public EventKey(Integer ...values) {
+
+    static {
+        keys.add(MIDI);
+        keys.add(META);
+        keys.add(SYSEX);
+
+        keys.add(META_TEXT);
+        keys.add(META_COPYRIGHT);
+        keys.add(META_TRACK_NAME);
+        keys.add(META_INSTRUMENT_NAME);
+        keys.add(META_LYRIC);
+        keys.add(META_MARKER);
+        keys.add(META_CUE_POINT);
+        keys.add(META_MIDI_PORT);
+        keys.add(META_TEMPO);
+        keys.add(META_SMPTE_OFFET);
+        keys.add(META_TIME_SIGNATURE);
+        keys.add(META_KEY_SIGNATURE);
+        keys.add(META_SEQUENCER);
+    }
+
+    public EventKey(String ...values) {
         Collections.addAll(this.values, values);
     }
 
-    public boolean hasValue(Integer target) {
+    public boolean hasValue(String target) {
         return this.values.contains(target);
     }
 
-    public void addValue(int value) {
+    public void addValue(String value) {
         if (! hasValue(value)) {
             this.values.add(value);
         }
+    }
+
+    public static List<String> getEvents(String type) {
+        return keys.stream().filter(k -> (k.startsWith(type) && !k.equals(type))).toList();
     }
 }

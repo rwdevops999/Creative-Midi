@@ -111,7 +111,7 @@ public class MetaProcessor {
      */
     private static void handleTrackname(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "trackname"));
-        midiEventInfo.getEventKey().addValue(META_TRACKNAME);
+        midiEventInfo.getEventKey().addValue(META_TRACK_NAME);
 
         midiEventInfo.setDescription("Track Name");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -127,7 +127,7 @@ public class MetaProcessor {
 
     private static void handleInstrumentname(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "instrument"));
-        midiEventInfo.getEventKey().addValue(META_INSTRUMENTNAME);
+        midiEventInfo.getEventKey().addValue(META_INSTRUMENT_NAME);
 
         midiEventInfo.setDescription("Instrument");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -151,7 +151,7 @@ public class MetaProcessor {
 
     private static void handleCuepoint(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "cue point"));
-        midiEventInfo.getEventKey().addValue(META_CUEPOINT);
+        midiEventInfo.getEventKey().addValue(META_CUE_POINT);
 
         midiEventInfo.setDescription("Cue Point");
         midiEventInfo.setComment(new String(data, StandardCharsets.ISO_8859_1));
@@ -159,7 +159,7 @@ public class MetaProcessor {
 
     private static void handleMIDIport(byte[] data, MidiEventInfo midiEventInfo) {
         midiEventInfo.setColor(getColor("meta", "midi port"));
-        midiEventInfo.getEventKey().addValue(META_MIDIPORT);
+        midiEventInfo.getEventKey().addValue(META_MIDI_PORT);
 
         midiEventInfo.setDescription("Midi Port");
 
