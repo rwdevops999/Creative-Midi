@@ -3,7 +3,9 @@ package creative.scenes.eventlist;
 import creative.scenes.base.Base;
 import creative.scenes.base.BaseClosePane;
 import creative.scenes.eventlist.data.EventKey;
+import creative.scenes.eventlist.dialog.EventDetailDialog;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import creative.scenes.voice.dialog.VoiceDetailDialog;
 import custom.dialog.DialogFactory;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -140,6 +142,10 @@ public class EventsDisplayPane extends VBox {
         MenuItem infoEvent = new MenuItem("Info");
         infoEvent.disableProperty().bindBidirectional(contextMenuItemDisable);
         infoEvent.setOnAction(e -> {
+            List<MidiEventInfo> selectedEvents = table.getSelectionModel().getSelectedItems();
+
+            EventDetailDialog dialog = new EventDetailDialog(selectedEvents.get(0));
+            dialog.showAndWait();
         });
         contextMenu.getItems().add(infoEvent);
 
