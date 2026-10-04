@@ -139,11 +139,10 @@ public class FilterPane extends HBox {
             // TODO Was never implemented
         });
         getChildren().add(channelButton);
-
     }
 
     private void updateFiltering() {
-        getEventDisplayPane().handleFiltering(selectedEvents, selectedChannel.get());
+        getEventDisplayPane().handleFiltering(selectedEvents, selectedChannel.get(), hiddenEvents);
     }
 
     private void handleFilterDialog(String selectedGroup) {
@@ -156,7 +155,9 @@ public class FilterPane extends HBox {
 
         events.ifPresent(list -> {
             visibleEvents.removeAll(list);
+            hiddenEvents.clear();
             hiddenEvents.addAll(list);
+            updateFiltering();
         });
     }
 

@@ -149,7 +149,6 @@ public class EventsDisplayPane extends VBox {
         });
         contextMenu.getItems().add(infoEvent);
 
-
         table.setContextMenu(contextMenu);
     }
 
@@ -272,6 +271,12 @@ public class EventsDisplayPane extends VBox {
                 }
             }
 
+            if (! hiddenEvents.isEmpty()) {
+                for (String hiddenEvent : hiddenEvents) {
+                    filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(hiddenEvent)).toList();
+                }
+            }
+
             contextMenuItemDisable.set(filteredEvents.isEmpty());
 
             List<MidiEventInfo> sortedQueue = filteredEvents.stream()
@@ -288,9 +293,12 @@ public class EventsDisplayPane extends VBox {
         }
     }
 
-    public void handleFiltering(boolean[] selected, int channel) {
+    private static List<String> hiddenEvents = new ArrayList<>();
+    public void handleFiltering(boolean[] selected, int channel, List<String> hiddenEvents) {
         selectedEvents = selected;
         selectedChannel = channel;
+        EventsDisplayPane.hiddenEvents = hiddenEvents;
+
         executeFiltering();
     }
 
