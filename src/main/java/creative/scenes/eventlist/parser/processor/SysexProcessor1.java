@@ -19,11 +19,20 @@ import static util.ColorScheme.getColor;
 
 public class SysexProcessor1 {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
+    private static final Map<String, String> REGISTRY = new HashMap<>();
 
     static {
         colors.put(new ColorScheme.ColorKey("sysex"), Color.IVORY);
 
         ColorScheme.registerColors(colors);
+
+        REGISTRY.put("01", "Sequential Circuits");
+        REGISTRY.put("04", "Moog Music");
+        REGISTRY.put("06", "Lexicon");
+        REGISTRY.put("41", "Roland Corporation");
+        REGISTRY.put("42", "Korg Inc.");
+        REGISTRY.put("43", "Yamaha Corporation");
+        REGISTRY.put("47", "Akai Professional");
     }
 
     //
@@ -54,7 +63,9 @@ public class SysexProcessor1 {
 
         result = switch(selector) {
             case "7E" -> handleUniversalNonRealTimeMessage(sysex, midiEventInfo);
-            case "43" -> handleVendorMessage(selector, sysex, midiEventInfo);
+            case
+                    "41",
+                    "43" -> handleVendorMessage(selector, sysex, midiEventInfo);
             default -> handleUnknownSysexMessage("F0 " + selector, midiEventInfo);
         };
 
@@ -230,8 +241,13 @@ public class SysexProcessor1 {
         boolean result = true;
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
-        midiEventInfo.setDescription("Unknown vendor");
-        midiEventInfo.setComment(vendorId);
+        midiEventInfo.setDescription("Vendor not handled");
+
+        String vendor = REGISTRY.get(vendorId);
+        if (vendor == null) {
+            vendor = "UNKNOWN";
+        }
+        midiEventInfo.setComment(vendor);
 
         return result;
     }

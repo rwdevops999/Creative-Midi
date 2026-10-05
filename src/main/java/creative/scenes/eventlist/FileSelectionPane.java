@@ -78,7 +78,7 @@ public class FileSelectionPane extends HBox {
             selectedFile = fileChooser.showOpenDialog(ApplicationInfo.getInstance().getPrimaryStage());
 
             if (selectedFile != null) {
-                fileName.set(selectedFile.getName());
+                fileName.set(FilenameUtils.removeExtension(selectedFile.getName()));
 
                 getEventlistPane().getEventsPane().processFile(selectedFile);
             }

@@ -18,6 +18,10 @@ public class MidiFileProcessor {
     private static Queue<MidiEventInfo> events = new LinkedList<>();
 
     public static void processMidi(Sequence sequence) {
+        int midiEvents = 0;
+        int metaEvents = 0;
+        int sysexEvents = 0;
+
         events = new LinkedList<>();
 
         // Track doesn't keep the tracknumber, so we do it ourselves
@@ -42,16 +46,27 @@ public class MidiFileProcessor {
                     midiEventInfo.setEventKey(new EventKey(MIDI));
 
 //                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
+                    if (isProcessed) {
+                        midiEvents++;
+                    }
+
                 } else if (message instanceof MetaMessage metaMessage) {
                     // The message is a META
                     midiEventInfo.setEventKey(new EventKey(META));
 
 //                    isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
+                    if (isProcessed) {
+                        metaEvents++;
+                    }
                 } else if (message instanceof SysexMessage sysexMessage) {
                     // The message is a SYSEX
                     midiEventInfo.setEventKey(new EventKey(SYSEX));
 
                     isProcessed = SysexProcessor1.processMessage(sysexMessage, midiEventInfo);
+                    if (isProcessed) {
+                        sysexEvents++;
+                    }
+
                 } else {
                     logger.error("[CM_MIDI_FILE_PROCESSOR] ERROR: Unknown message type: " + message.getClass().getName());
                 }
@@ -61,6 +76,11 @@ public class MidiFileProcessor {
                 }
             }
         }
+
+
+        System.out.println("MIDI EVENTS  = " + midiEvents);
+        System.out.println("META EVENTS  = " + metaEvents);
+        System.out.println("SYSEX EVENTS = " + sysexEvents);
     }
 
     public static Queue<MidiEventInfo> getEvents() {
