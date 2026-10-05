@@ -309,16 +309,16 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(71,20), "GtTremelo1");
         VARIATION_REGISTRY.put(new DataBlock(70,19), "GtTremelo2");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(119,0), "VibeRotor");
+        VARIATION_REGISTRY.put(new DataBlock(71,0), "AutoPan2");
+        VARIATION_REGISTRY.put(new DataBlock(71,1), "AutoPan3");
+        VARIATION_REGISTRY.put(new DataBlock(71,21), "EPAutoPan");
+        VARIATION_REGISTRY.put(new DataBlock(121,1), "TempoAtPan2");
+        VARIATION_REGISTRY.put(new DataBlock(80,16), "PitchChange1");
+        VARIATION_REGISTRY.put(new DataBlock(80,0), "PitchChange2");
+        VARIATION_REGISTRY.put(new DataBlock(80,1), "PitchChange3");
+        VARIATION_REGISTRY.put(new DataBlock(85,0), "VoiceCancel");
+        VARIATION_REGISTRY.put(new DataBlock(88,0), "Ambience");
 
         VARIATION_REGISTRY.put(new DataBlock(,), "");
         VARIATION_REGISTRY.put(new DataBlock(,), "");
