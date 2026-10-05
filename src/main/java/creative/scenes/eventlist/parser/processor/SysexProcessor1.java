@@ -6,15 +6,10 @@ import creative.scenes.eventlist.parser.processor.data.ReverbTypes;
 import creative.scenes.eventlist.parser.processor.data.VariationTypes;
 import creative.scenes.eventlist.parser.processor.helper.ByteHelper;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
-import entity.midi.NoteEntity;
 import javafx.scene.paint.Color;
 import util.ColorScheme;
-import util.Util;
-import util.properties.PropertyContainer;
-import util.properties.PropertyType;
 
 import javax.sound.midi.SysexMessage;
-import javax.sound.sampled.ReverbType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -143,6 +138,7 @@ public class SysexProcessor1 {
         result = switch (selector) {
             case "00 00" -> handleSetupMessage(sysex, midiEventInfo);
             case "02 01" -> handleEffect1(sysex, midiEventInfo);
+            case "03 00" -> handleEffect2(sysex, midiEventInfo);
             case
                     "08 00",
                     "08 02",
@@ -190,7 +186,28 @@ public class SysexProcessor1 {
                     "02" ->handleReverbParameter(sysex, midiEventInfo);
             case "20" -> handleChorus(sysex, midiEventInfo);
             case "40" -> handleVariation(sysex, midiEventInfo);
+            case
+                    "5A" -> handleVariationParameterConnection(sysex, midiEventInfo);
             default -> handleUnknownEffect1("FO 43 10 --02 01 " + selector, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 43 10 -- 03 00
+    private static boolean handleEffect2(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_EFFECT2_MESSAGE);
+        midiEventInfo.setDescription("XG effect 2");
+
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        result = switch(selector) {
+            case "00" -> handleInsertion(sysex, midiEventInfo);
+            case
+                    "0B",
+                    "0C" -> handleInsertionParameter(selector, midiEventInfo);
+            default -> handleUnknownEffect2("FO 43 10 -- 03 00 " + selector, midiEventInfo);
         };
 
         return result;
@@ -208,6 +225,24 @@ public class SysexProcessor1 {
 
         String reverbType = ReverbTypes.getReverbType(msb, lsb);
         midiEventInfo.setComment(reverbType);
+
+        return result;
+    }
+
+    // F0 43 10 -- 03 00 00 ...
+    private static boolean handleInsertion(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_INSERTION);
+        midiEventInfo.setDescription("XG insertion");
+
+        int msb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+        int lsb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+
+        // We can use Variation type here because of the manual Insertion Block is the
+        // same as Variation Block
+        String insertionType = VariationTypes.getVariationType(msb, lsb);
+        midiEventInfo.setComment(insertionType);
 
         return result;
     }
@@ -249,10 +284,45 @@ public class SysexProcessor1 {
         boolean result = true;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_REVERB_PARAMETER);
-        midiEventInfo.setDescription("XG reverb parameter");
+        midiEventInfo.setDescription("XG insertion parameter");
+
+
+        return result;
+    }
+
+    // F0 43 10 -- 03 00 {0C}  ...
+    private static boolean handleInsertionParameter(String parameterId, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_INSERTION_PARAMETER);
+        midiEventInfo.setDescription("XG insertion parameter");
+
+        result = switch (parameterId) {
+            case "0B" -> {
+                midiEventInfo.setComment(parameterId);
+                yield true;
+            }
+            case "0C" -> {
+                midiEventInfo.getEventKey().addValue(SYSEX_XG_INSERTION_EFFECT_PART);
+                midiEventInfo.setComment("Insertion effect part");
+                yield true;
+                }
+
+            default -> handleUnknownInsertionParameter("F0 43 10 -- 30 00 " + parameterId, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 43 10 -- 02 01 {5A}  ...
+    private static boolean handleVariationParameterConnection(StringBuilder selector, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_VARIATION_PARAMETER_CONNECTION);
+        midiEventInfo.setDescription("XG variation connection");
 
         String address = ByteHelper.getAndStrip(selector, 1);
-        midiEventInfo.setComment(address);
+        midiEventInfo.setComment("Insertion system");
 
         return result;
     }
@@ -407,6 +477,26 @@ public class SysexProcessor1 {
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
         midiEventInfo.setDescription("Unknown effect1 message");
+        midiEventInfo.setComment(sysex);
+
+        return result;
+    }
+
+    private static boolean handleUnknownEffect2(String sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown effect2 message");
+        midiEventInfo.setComment(sysex);
+
+        return result;
+    }
+
+    private static boolean handleUnknownInsertionParameter(String sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown insertion parameter");
         midiEventInfo.setComment(sysex);
 
         return result;
