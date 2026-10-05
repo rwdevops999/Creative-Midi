@@ -48,7 +48,7 @@ public class EventsDisplayPane extends VBox {
         buildPane();
     }
 
-    private final int[] columnSizes = {10,4,15,15,10,15,30};
+    private final int[] columnSizes = {10,4,24,13,7,10,32};
 
     private TableView<MidiEventInfo> table;
     private boolean[] selectedEvents = {true, true, true, false};

@@ -1,6 +1,9 @@
 package creative.scenes.eventlist.parser.processor;
 
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import creative.scenes.eventlist.parser.processor.data.ChorusTypes;
+import creative.scenes.eventlist.parser.processor.data.ReverbTypes;
+import creative.scenes.eventlist.parser.processor.data.VariationTypes;
 import creative.scenes.eventlist.parser.processor.helper.ByteHelper;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
 import entity.midi.NoteEntity;
@@ -11,6 +14,7 @@ import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 
 import javax.sound.midi.SysexMessage;
+import javax.sound.sampled.ReverbType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -138,6 +142,17 @@ public class SysexProcessor1 {
         String selector = ByteHelper.getAndStrip(sysex, 2);
         result = switch (selector) {
             case "00 00" -> handleSetupMessage(sysex, midiEventInfo);
+            case "02 01" -> handleEffect1(sysex, midiEventInfo);
+            case
+                    "08 00",
+                    "08 02",
+                    "08 03",
+                    "08 09",
+                    "08 0A",
+                    "08 0B",
+                    "08 0C",
+                    "08 0D",
+                    "08 0E" -> handleMultipart(sysex, midiEventInfo);
             default -> handleUnknownXGParameterChange("F0 43 10 -- " + selector, midiEventInfo);
         };
 
@@ -157,6 +172,100 @@ public class SysexProcessor1 {
             case "7E" -> handleXGSystemOn(sysex, midiEventInfo);
             default -> handleUnknownSetupMessage("F0 43 10 -- 00 00 " + selector, midiEventInfo);
         };
+
+        return result;
+    }
+
+    // F0 43 10 -- 02 01
+    private static boolean handleEffect1(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_EFFECT1_MESSAGE);
+        midiEventInfo.setDescription("XG effect 1");
+
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        result = switch(selector) {
+            case "00" -> handleReverb(sysex, midiEventInfo);
+            case
+                    "02" ->handleReverbParameter(sysex, midiEventInfo);
+            case "20" -> handleChorus(sysex, midiEventInfo);
+            case "40" -> handleVariation(sysex, midiEventInfo);
+            default -> handleUnknownEffect1("FO 43 10 --02 01 " + selector, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 43 10 -- 02 01 00 ...
+    private static boolean handleReverb(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_REVERB);
+        midiEventInfo.setDescription("XG reverb");
+
+        int msb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+        int lsb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+
+        String reverbType = ReverbTypes.getReverbType(msb, lsb);
+        midiEventInfo.setComment(reverbType);
+
+        return result;
+    }
+
+    // F0 43 10 -- 02 01 20 ...
+    private static boolean handleChorus(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_CHORUS);
+        midiEventInfo.setDescription("XG chorus");
+
+        int msb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+        int lsb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+
+        String chorusType = ChorusTypes.getChorusType(msb, lsb);
+        midiEventInfo.setComment(chorusType);
+
+        return result;
+    }
+
+    // F0 43 10 -- 02 01 40 ...
+    private static boolean handleVariation(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_VARIATION);
+        midiEventInfo.setDescription("XG variation");
+
+        int msb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+        int lsb = Integer.parseInt(ByteHelper.getAndStrip(sysex,1), 16);
+
+        String variationType = VariationTypes.getVariationType(msb, lsb);
+        midiEventInfo.setComment(variationType);
+
+        return result;
+    }
+
+    // F0 43 10 -- 02 01 {02}  ...
+    private static boolean handleReverbParameter(StringBuilder selector, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_REVERB_PARAMETER);
+        midiEventInfo.setDescription("XG reverb parameter");
+
+        String address = ByteHelper.getAndStrip(selector, 1);
+        midiEventInfo.setComment(address);
+
+        return result;
+    }
+
+    // F0 43 10 -- 08 00
+    private static boolean handleMultipart(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_MULTIPART);
+        midiEventInfo.setDescription("XG multipart");
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        midiEventInfo.setComment(selector);
+
 
         return result;
     }
@@ -288,6 +397,16 @@ public class SysexProcessor1 {
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
         midiEventInfo.setDescription("Unknown setup message");
+        midiEventInfo.setComment(sysex);
+
+        return result;
+    }
+
+    private static boolean handleUnknownEffect1(String sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown effect1 message");
         midiEventInfo.setComment(sysex);
 
         return result;
