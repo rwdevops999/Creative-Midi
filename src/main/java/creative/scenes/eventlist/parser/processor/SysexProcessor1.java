@@ -42,8 +42,6 @@ public class SysexProcessor1 {
 
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
 
-        System.out.println("SYSEX = " + sysex.toString());
-
         if (sysex.toString().startsWith(stopSysEx)) {
             System.out.println("STOP HERE");
         }
@@ -90,7 +88,6 @@ public class SysexProcessor1 {
         ByteHelper.getAndStrip(sysex, 1);
 
         String selector = ByteHelper.getAndStrip(sysex, 1);
-        System.out.println("Handling Selector: " + selector);
 
         result = switch (selector) {
             case "09" -> handleGMMessage(sysex, midiEventInfo);
@@ -467,7 +464,6 @@ public class SysexProcessor1 {
         midiEventInfo.getEventKey().addValue(SYSEX_GM_MESSAGE);
 
         String selector = ByteHelper.getAndStrip(sysex, 1);
-        System.out.println("Handling Selector: " + selector);
 
         result = switch (selector) {
             case "01" -> handleGM1SystemOn(midiEventInfo);
