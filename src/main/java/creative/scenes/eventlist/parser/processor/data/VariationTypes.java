@@ -216,27 +216,27 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(65,9), "Chorus8");
         VARIATION_REGISTRY.put(new DataBlock(65,16), "ChorusFast");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(65,17), "ChorusLite");
+        VARIATION_REGISTRY.put(new DataBlock(65,3), "GMChorus1");
+        VARIATION_REGISTRY.put(new DataBlock(65,4), "GMChorus2");
+        VARIATION_REGISTRY.put(new DataBlock(65,5), "GMChorus3");
+        VARIATION_REGISTRY.put(new DataBlock(65,6), "GMChorus4");
+        VARIATION_REGISTRY.put(new DataBlock(65,7), "FeedBkChorus");
+        VARIATION_REGISTRY.put(new DataBlock(66,0), "Celeste1");
+        VARIATION_REGISTRY.put(new DataBlock(66,2), "Celeste2");
+        VARIATION_REGISTRY.put(new DataBlock(68,0), "Symphone2");
+        VARIATION_REGISTRY.put(new DataBlock(87,0), "EnsDetune1");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(87,16), "EnsDetune2");
+        VARIATION_REGISTRY.put(new DataBlock(65,9), "AmbiChorus");
+        VARIATION_REGISTRY.put(new DataBlock(66,9), "AmbiCeleste");
+        VARIATION_REGISTRY.put(new DataBlock(68,9), "AmbiSympho");
+        VARIATION_REGISTRY.put(new DataBlock(67,16), "Flanger2");
+        VARIATION_REGISTRY.put(new DataBlock(67,17), "Flanger2");
+        VARIATION_REGISTRY.put(new DataBlock(67,1), "Flanger4");
+        VARIATION_REGISTRY.put(new DataBlock(67,0), "Flanger5");
+        VARIATION_REGISTRY.put(new DataBlock(67,7), "GMFlanger");
+        VARIATION_REGISTRY.put(new DataBlock(110,0), "DynFlanger");
 
         VARIATION_REGISTRY.put(new DataBlock(,), "");
         VARIATION_REGISTRY.put(new DataBlock(,), "");
