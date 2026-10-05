@@ -298,16 +298,16 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(71,22), "RotarySp7");
         VARIATION_REGISTRY.put(new DataBlock(86,0), "2WayRotarySp");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(69,1), "Dist+RotSp");
+        VARIATION_REGISTRY.put(new DataBlock(86,1), "Dist+2RotSp");
+        VARIATION_REGISTRY.put(new DataBlock(69,2), "OD+RotSp");
+        VARIATION_REGISTRY.put(new DataBlock(86,2), "OD+2RotSp");
+        VARIATION_REGISTRY.put(new DataBlock(69,3), "Amp+RotSp");
+        VARIATION_REGISTRY.put(new DataBlock(86,3), "Amp+2RotSp");
+        VARIATION_REGISTRY.put(new DataBlock(71,19), "Tremelo2");
+        VARIATION_REGISTRY.put(new DataBlock(70,0), "Tremelo3");
+        VARIATION_REGISTRY.put(new DataBlock(71,20), "GtTremelo1");
+        VARIATION_REGISTRY.put(new DataBlock(70,19), "GtTremelo2");
 
         VARIATION_REGISTRY.put(new DataBlock(,), "");
         VARIATION_REGISTRY.put(new DataBlock(,), "");
