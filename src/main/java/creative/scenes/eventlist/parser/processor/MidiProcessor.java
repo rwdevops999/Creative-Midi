@@ -1,6 +1,5 @@
 package creative.scenes.eventlist.parser.processor;
 
-import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.eventlist.parser.processor.matcher.MidiNoteMatcher;
 import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
@@ -16,7 +15,8 @@ import javax.sound.midi.ShortMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-import static creative.scenes.eventlist.data.EventKey.*;
+import static creative.scenes.eventlist.data.EventKeyValue.*;
+
 import static util.ColorScheme.getColor;
 import static util.Util.calcNote;
 

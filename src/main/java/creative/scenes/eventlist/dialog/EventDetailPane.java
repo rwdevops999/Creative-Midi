@@ -1,5 +1,6 @@
 package creative.scenes.eventlist.dialog;
 
+import creative.scenes.eventlist.data.EventKeyValue;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import entity.voice.Patch;
 import javafx.geometry.HPos;
@@ -39,8 +40,8 @@ public class EventDetailPane extends GridPane {
     }
 
     private void buildPane(MidiEventInfo eventInfo) {
-        String kind = makeReadable(eventInfo.getEventKey().getFirstElement(), null);
-        String type = makeReadable(eventInfo.getEventKey().getLastElement(), eventInfo.getEventKey().getFirstElement());
+        String kind = makeReadable(eventInfo.getEventKey().getFirstElement().name(), null);
+        String type = makeReadable(eventInfo.getEventKey().getLastElement().name(), eventInfo.getEventKey().getFirstElement().name());
         String comment = eventInfo.getComment();
         String message = eventInfo.getMessage();
 

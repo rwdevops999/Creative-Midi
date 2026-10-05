@@ -10,6 +10,8 @@ import javax.sound.midi.*;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static creative.scenes.eventlist.data.EventKeyValue.*;
+
 public class MidiFileProcessor {
     private static final Logger logger = LoggerFactory.getLogger(MidiFileProcessor.class);
 
@@ -37,15 +39,16 @@ public class MidiFileProcessor {
 
                 if (message instanceof ShortMessage midiMessage) {
                     // The message is a MIDI
-                    midiEventInfo.setEventKey(new EventKey(EventKey.MIDI));
+                    midiEventInfo.setEventKey(new EventKey(MIDI));
 
                     isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
                 } else if (message instanceof MetaMessage metaMessage) {
                     // The message is a META
-                    midiEventInfo.setEventKey(new EventKey(EventKey.META));
+                    midiEventInfo.setEventKey(new EventKey(META));
 
                     isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
                 } else if (message instanceof SysexMessage sysexMessage) {
+                    midiEventInfo.setEventKey(new EventKey(SYSEX));
                     // The message is a SYSEX
 //                    isProcessed = SysexProcessor.processMessage(sysexMessage, midiEventInfo);
                 } else {

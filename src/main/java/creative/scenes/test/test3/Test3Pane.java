@@ -2,6 +2,7 @@ package creative.scenes.test.test3;
 
 import communication.CommunicationModel;
 import creative.scenes.eventlist.data.EventKey;
+import creative.scenes.eventlist.data.EventKeyValue;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static creative.scenes.eventlist.data.EventKeyValue.META;
 import static util.Util.setPaneBackground;
 
 public class Test3Pane extends VBox {
@@ -32,14 +34,14 @@ public class Test3Pane extends VBox {
         runTest();
     }
 
-    private List<String> visibleEventKeys = new ArrayList<>();
-    private List<String> hiddenEventKeys = new ArrayList<>();
+    private List<EventKeyValue> visibleEventKeys = new ArrayList<>();
+    private List<EventKeyValue> hiddenEventKeys = new ArrayList<>();
 
-    private final ListProperty<String> visibleEventsProperty = new SimpleListProperty<>(
+    private final ListProperty<EventKeyValue> visibleEventsProperty = new SimpleListProperty<>(
             FXCollections.observableArrayList(visibleEventKeys)
     );
 
-    private final ListProperty<String> hiddenEventsProperty = new SimpleListProperty<>(
+    private final ListProperty<EventKeyValue> hiddenEventsProperty = new SimpleListProperty<>(
             FXCollections.observableArrayList(hiddenEventKeys)
     );
 
@@ -51,14 +53,10 @@ public class Test3Pane extends VBox {
         setPaneBackground(this);
 
         visibleEventKeys.clear();
-        visibleEventKeys.addAll(EventKey.getEvents(EventKey.META));
+        visibleEventKeys.addAll(EventKey.getEvents(META));
 
-        groups = visibleEventKeys.stream().map(e -> toPascalCase(e.split("_")[0])).distinct().toList();
+        groups = visibleEventKeys.stream().map(e -> toPascalCase(e.name().split("_")[0])).distinct().toList();
 
-        visibleEventKeys = visibleEventKeys.stream().map(e -> {
-            String value = e.replaceFirst("_", "@#").split("@#")[1];
-            return toPascalCase(value);
-        }).toList();
         visibleEventsProperty.set(FXCollections.observableArrayList(visibleEventKeys));
 
         updateDisables();
@@ -88,8 +86,8 @@ public class Test3Pane extends VBox {
         return tabPane;
     }
 
-    private ListView<String> availableEventsListView;
-    private ListView<String> hiddenEventsListView;
+    private ListView<EventKeyValue> availableEventsListView;
+    private ListView<EventKeyValue> hiddenEventsListView;
 
     private HBox buildContentPane(String group) {
         HBox hBox = new HBox();
@@ -110,9 +108,9 @@ public class Test3Pane extends VBox {
         getResult.setOnAction(e -> {
             System.out.println("GETTING THE RESULT");
 
-            List<String> hidden = hiddenEventsProperty.get();
+            List<EventKeyValue> hidden = hiddenEventsProperty.get();
 
-            hidden = hidden.stream().map(s -> group.toUpperCase() + "_" + s.toUpperCase().replace(" ", "_")).toList();
+//            hidden = hidden.stream().map(s -> group.toUpperCase() + "_" + s.toUpperCase().replace(" ", "_")).toList();
 
             System.out.println("HIDE THESE");
             hidden.forEach(System.out::println);
@@ -123,7 +121,7 @@ public class Test3Pane extends VBox {
         return hBox;
     }
 
-    private VBox buildListPane(String label, ListProperty<String> listProperty) {
+    private VBox buildListPane(String label, ListProperty<EventKeyValue> listProperty) {
         VBox vBox = new VBox();
 
         // setup VBOX
@@ -132,10 +130,23 @@ public class Test3Pane extends VBox {
         Label lbl = new Label(label);
         vBox.getChildren().add(lbl);
 
-        ListView<String> listView = new ListView<>();
+        ListView<EventKeyValue> listView = new ListView<>();
         listView.setId("listview");
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listView.itemsProperty().bind(listProperty);
+        listView.setCellFactory(lv -> new ListCell<EventKeyValue>() {
+            @Override
+            protected void updateItem(EventKeyValue item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    String value = item.name().replaceFirst("_", "@#").split("@#")[1];
+                    setText(toPascalCase(value));
+                }
+            }
+        });
         vBox.getChildren().add(listView);
 
         return vBox;
@@ -220,15 +231,14 @@ public class Test3Pane extends VBox {
         return pascalCaseString.toString().trim();
     }
 
-    private ListView<String> lookup(Pane pane, String id) {
+    private ListView<EventKeyValue> lookup(Pane pane, String id) {
         return pane.getChildren().stream()
                 .filter(node -> "listview".equals(node.getId()))
-                .map(node -> (ListView<String>) node)
-                .findFirst()
-                .orElse(null);
+                .map(node -> (ListView<EventKeyValue>) node)
+                .findFirst().orElse(null);
     }
 
-    private void moveSelected (ListProperty<String> from, ListProperty<String> to, List<String> selected) {
+    private void moveSelected (ListProperty<EventKeyValue> from, ListProperty<EventKeyValue> to, List<EventKeyValue> selected) {
         to.get().addAll(selected);
         from.get().removeAll(selected);
 

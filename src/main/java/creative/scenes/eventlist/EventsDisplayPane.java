@@ -3,6 +3,7 @@ package creative.scenes.eventlist;
 import creative.scenes.base.Base;
 import creative.scenes.base.BaseClosePane;
 import creative.scenes.eventlist.data.EventKey;
+import creative.scenes.eventlist.data.EventKeyValue;
 import creative.scenes.eventlist.dialog.EventDetailDialog;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import creative.scenes.voice.dialog.VoiceDetailDialog;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
+
+import static creative.scenes.eventlist.data.EventKeyValue.*;
 
 
 public class EventsDisplayPane extends VBox {
@@ -252,15 +255,15 @@ public class EventsDisplayPane extends VBox {
 
         if (! filteredEvents.isEmpty()) {
             if (! selectedEvents[FilterPane.MIDI_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.MIDI)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(MIDI)).toList();
             }
 
             if (! selectedEvents[FilterPane.SYSEX_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.SYSEX)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(SYSEX)).toList();
             }
 
             if (! selectedEvents[FilterPane.META_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(EventKey.META)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(META)).toList();
             }
 
             if (selectedEvents[FilterPane.CHANNEL]) {
@@ -272,7 +275,7 @@ public class EventsDisplayPane extends VBox {
             }
 
             if (! hiddenEvents.isEmpty()) {
-                for (String hiddenEvent : hiddenEvents) {
+                for (EventKeyValue hiddenEvent : hiddenEvents) {
                     filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(hiddenEvent)).toList();
                 }
             }
@@ -293,8 +296,8 @@ public class EventsDisplayPane extends VBox {
         }
     }
 
-    private static List<String> hiddenEvents = new ArrayList<>();
-    public void handleFiltering(boolean[] selected, int channel, List<String> hiddenEvents) {
+    private static List<EventKeyValue> hiddenEvents = new ArrayList<>();
+    public void handleFiltering(boolean[] selected, int channel, List<EventKeyValue> hiddenEvents) {
         selectedEvents = selected;
         selectedChannel = channel;
         EventsDisplayPane.hiddenEvents = hiddenEvents;

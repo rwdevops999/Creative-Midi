@@ -15,6 +15,7 @@ import javax.sound.midi.SysexMessage;
 import java.util.HashMap;
 import java.util.Map;
 
+import static creative.scenes.eventlist.data.EventKeyValue.SYSEX;
 import static util.ColorScheme.getColor;
 
 public class SysexProcessor {
@@ -30,7 +31,6 @@ public class SysexProcessor {
     public static boolean processMessage(SysexMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.setEventKey(new EventKey(EventKey.SYSEX));
         midiEventInfo.setColor(getColor("sysex"));
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
         midiEventInfo.setMessage(sysex.toString());
