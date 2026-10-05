@@ -41,16 +41,17 @@ public class MidiFileProcessor {
                     // The message is a MIDI
                     midiEventInfo.setEventKey(new EventKey(MIDI));
 
-                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
+//                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
                 } else if (message instanceof MetaMessage metaMessage) {
                     // The message is a META
                     midiEventInfo.setEventKey(new EventKey(META));
 
-                    isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
+//                    isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
                 } else if (message instanceof SysexMessage sysexMessage) {
-                    midiEventInfo.setEventKey(new EventKey(SYSEX));
                     // The message is a SYSEX
-//                    isProcessed = SysexProcessor.processMessage(sysexMessage, midiEventInfo);
+                    midiEventInfo.setEventKey(new EventKey(SYSEX));
+
+                    isProcessed = SysexProcessor1.processMessage(sysexMessage, midiEventInfo);
                 } else {
                     logger.error("[CM_MIDI_FILE_PROCESSOR] ERROR: Unknown message type: " + message.getClass().getName());
                 }
