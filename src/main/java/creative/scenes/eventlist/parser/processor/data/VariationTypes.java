@@ -170,7 +170,6 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(75,8), "StAmpSim3");
         VARIATION_REGISTRY.put(new DataBlock(75,24), "StAmpSim4");
         VARIATION_REGISTRY.put(new DataBlock(75,25), "StAmpSim5");
-
         VARIATION_REGISTRY.put(new DataBlock(75,26), "StAmpSim6");
         VARIATION_REGISTRY.put(new DataBlock(95,16), "Dist+Delay1");
         VARIATION_REGISTRY.put(new DataBlock(95,0), "Dist+Delay2");
@@ -181,7 +180,6 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(96,17), "Cmp+OD+Dly1");
         VARIATION_REGISTRY.put(new DataBlock(96,1), "Cmp+OD+Dly2");
         VARIATION_REGISTRY.put(new DataBlock(98,3), "VDistS+Dly");
-
         VARIATION_REGISTRY.put(new DataBlock(103,0), "VDistH+TDly1");
         VARIATION_REGISTRY.put(new DataBlock(103,17), "VDistH+TDly2");
         VARIATION_REGISTRY.put(new DataBlock(103,1), "VDistS+TDly1");
@@ -193,7 +191,6 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(101,0), "Cmp+Dst+TDly");
         VARIATION_REGISTRY.put(new DataBlock(101,1), "Cmp+OD+TDly1");
         VARIATION_REGISTRY.put(new DataBlock(101,16), "Cmp+OD+TDly2");
-
         VARIATION_REGISTRY.put(new DataBlock(101,17), "Cmp+OD+TDly3");
         VARIATION_REGISTRY.put(new DataBlock(101,18), "Cmp+OD+TDly4");
         VARIATION_REGISTRY.put(new DataBlock(101,19), "Cmp+OD+TDly5");
@@ -204,7 +201,6 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(76,16), "EQDisco");
         VARIATION_REGISTRY.put(new DataBlock(77,0), "2BandEQ");
         VARIATION_REGISTRY.put(new DataBlock(76,18), "St3BAndEQ");
-
         VARIATION_REGISTRY.put(new DataBlock(81,16), "HmEnhance1");
         VARIATION_REGISTRY.put(new DataBlock(81,0), "HmEnhance2");
         VARIATION_REGISTRY.put(new DataBlock(115,0), "Isolator");
@@ -215,7 +211,6 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(65,1), "Chorus7");
         VARIATION_REGISTRY.put(new DataBlock(65,9), "Chorus8");
         VARIATION_REGISTRY.put(new DataBlock(65,16), "ChorusFast");
-
         VARIATION_REGISTRY.put(new DataBlock(65,17), "ChorusLite");
         VARIATION_REGISTRY.put(new DataBlock(65,3), "GMChorus1");
         VARIATION_REGISTRY.put(new DataBlock(65,4), "GMChorus2");
@@ -224,9 +219,8 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(65,7), "FeedBkChorus");
         VARIATION_REGISTRY.put(new DataBlock(66,0), "Celeste1");
         VARIATION_REGISTRY.put(new DataBlock(66,2), "Celeste2");
-        VARIATION_REGISTRY.put(new DataBlock(68,0), "Symphone2");
+        VARIATION_REGISTRY.put(new DataBlock(68,0), "Symphonic2");
         VARIATION_REGISTRY.put(new DataBlock(87,0), "EnsDetune1");
-
         VARIATION_REGISTRY.put(new DataBlock(87,16), "EnsDetune2");
         VARIATION_REGISTRY.put(new DataBlock(65,9), "AmbiChorus");
         VARIATION_REGISTRY.put(new DataBlock(66,9), "AmbiCeleste");
@@ -237,9 +231,17 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(67,0), "Flanger5");
         VARIATION_REGISTRY.put(new DataBlock(67,7), "GMFlanger");
         VARIATION_REGISTRY.put(new DataBlock(110,0), "DynFlanger");
-
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(67,9), "AmbiFlanger");
+        VARIATION_REGISTRY.put(new DataBlock(72,8), "Phaser2");
+        VARIATION_REGISTRY.put(new DataBlock(72,19), "Phaser3");
+        VARIATION_REGISTRY.put(new DataBlock(108,16), "TempoPhaser2");
+        VARIATION_REGISTRY.put(new DataBlock(72,18), "EPPhaser2");
+        VARIATION_REGISTRY.put(new DataBlock(72,16), "EPPhaser3");
+        VARIATION_REGISTRY.put(new DataBlock(111,0), "DynPhaser");
+        VARIATION_REGISTRY.put(new DataBlock(78,0), "AutoWah2");
+        VARIATION_REGISTRY.put(new DataBlock(78,1), "AtWah+Dist2");
+        VARIATION_REGISTRY.put(new DataBlock(78,21), "AtWah+DistHd");
+        VARIATION_REGISTRY.put(new DataBlock(78,23), "AtWah+DistHv");
 
         // NoEffect
         VARIATION_REGISTRY.put(new DataBlock(0,0), "No Effect");
