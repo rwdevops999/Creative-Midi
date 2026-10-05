@@ -20,7 +20,7 @@ public class SysexProcessor1 {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
     private static final Map<String, String> REGISTRY = new HashMap<>();
 
-    static String stopSysEx = "F0 43 10 4C 30 23";
+    static String stopSysEx = "F0 43 10 4C 0A 00";
 
     static {
         colors.put(new ColorScheme.ColorKey("sysex"), Color.IVORY);
@@ -148,12 +148,7 @@ public class SysexProcessor1 {
             case
                     "03 00",
                     "03 02" -> handleEffect2(sysex, midiEventInfo);
-            case "04 00" -> {
-                // TODO Another datalist
-                midiEventInfo.setComment("TODO: FO 43 10 4C 04 00");
-                System.out.println("THIS IS FO 43 10 4C 04 00");
-                yield true;
-            }
+            case "04 00" -> handleVocalHamony(sysex, midiEventInfo);
             case
                     "08 00",
                     "08 02",
@@ -163,14 +158,9 @@ public class SysexProcessor1 {
                     "08 0B",
                     "08 0C",
                     "08 0D",
-                    "08 0E" -> handleMultipart(sysex, midiEventInfo);
-            case "0A 00",
-                 "0A 02" -> {
-                // TODO Another datalist
-                midiEventInfo.setComment("TODO: FO 43 10 4C " + selector);
-                System.out.println("THIS IS FO 43 10 4C 0A 00");
-                yield true;
-            }
+                    "08 0E",
+                    "0A 00",
+                    "0A 02" -> handleMultipart(sysex, midiEventInfo);
             case "30 23",
                  "30 2A",
                  "30 2C",
@@ -304,6 +294,34 @@ public class SysexProcessor1 {
                     "0B",
                     "0C" -> handleInsertionParameter(selector, midiEventInfo);
             default -> handleUnknownEffect2("FO 43 10 -- 03 00 " + selector, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // F0 43 10 -- 04 00
+    private static boolean handleVocalHamony(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_VOCAL_HARMONY_MESSAGE);
+        midiEventInfo.setDescription("Vocal harmony");
+
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        result = switch(selector) {
+            case "0C" -> {
+                midiEventInfo.getEventKey().addValue(SYSEX_VOCAL_HARMONY_PART);
+                midiEventInfo.setDescription("Vocal harmony part");
+
+                String status = ByteHelper.getAndStrip(sysex, 1);
+                if ("40".equals(status)) {
+                    midiEventInfo.setDescription("ON");
+                } else {
+                    midiEventInfo.setDescription("OFF");
+                }
+
+                yield true;
+            }
+            default -> handleUnknownVocalHarmonyMessage("FO 43 10 -- 04 00 " + selector, midiEventInfo);
         };
 
         return result;
@@ -605,6 +623,16 @@ public class SysexProcessor1 {
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
         midiEventInfo.setDescription("Unknown style message");
+        midiEventInfo.setComment(sysex);
+
+        return result;
+    }
+
+    private static boolean handleUnknownVocalHarmonyMessage(String sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown vocal harmony message");
         midiEventInfo.setComment(sysex);
 
         return result;
