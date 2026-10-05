@@ -265,16 +265,16 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(82,23), "TcWah+DistHv");
         VARIATION_REGISTRY.put(new DataBlock(82,25), "TcWah+DistLt");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(82,17), "TcWah+OD1");
+        VARIATION_REGISTRY.put(new DataBlock(82,2), "TcWah+OD2");
+        VARIATION_REGISTRY.put(new DataBlock(82,22), "TcWah+ODHd");
+        VARIATION_REGISTRY.put(new DataBlock(82,24), "TcWah+ODHv");
+        VARIATION_REGISTRY.put(new DataBlock(82,26), "TcWah+ODLt");
+        VARIATION_REGISTRY.put(new DataBlock(97,16), "Wah+Dst+Dly1");
+        VARIATION_REGISTRY.put(new DataBlock(97,0), "Wah+Dst+Dly2");
+        VARIATION_REGISTRY.put(new DataBlock(102,0), "Wah+Dst+TDly");
+        VARIATION_REGISTRY.put(new DataBlock(97,17), "Wah+OD+Dly1");
+        VARIATION_REGISTRY.put(new DataBlock(97,1), "Wah+OD+Dly2");
 
         VARIATION_REGISTRY.put(new DataBlock(,), "");
         VARIATION_REGISTRY.put(new DataBlock(,), "");
