@@ -205,16 +205,16 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(77,0), "2BandEQ");
         VARIATION_REGISTRY.put(new DataBlock(76,18), "St3BAndEQ");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(81,16), "HmEnhance1");
+        VARIATION_REGISTRY.put(new DataBlock(81,0), "HmEnhance2");
+        VARIATION_REGISTRY.put(new DataBlock(115,0), "Isolator");
+        VARIATION_REGISTRY.put(new DataBlock(66,16), "Chorus3");
+        VARIATION_REGISTRY.put(new DataBlock(66,1), "Chorus4");
+        VARIATION_REGISTRY.put(new DataBlock(65,2), "Chorus5");
+        VARIATION_REGISTRY.put(new DataBlock(65,0), "Chorus6");
+        VARIATION_REGISTRY.put(new DataBlock(65,1), "Chorus7");
+        VARIATION_REGISTRY.put(new DataBlock(65,9), "Chorus8");
+        VARIATION_REGISTRY.put(new DataBlock(65,16), "ChorusFast");
 
         VARIATION_REGISTRY.put(new DataBlock(,), "");
         VARIATION_REGISTRY.put(new DataBlock(,), "");
