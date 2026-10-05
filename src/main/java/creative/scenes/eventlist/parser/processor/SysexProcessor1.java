@@ -20,6 +20,8 @@ public class SysexProcessor1 {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
     private static final Map<String, String> REGISTRY = new HashMap<>();
 
+    static String stopSysEx = "F0 43 10 4C 30 23";
+
     static {
         colors.put(new ColorScheme.ColorKey("sysex"), Color.IVORY);
 
@@ -39,6 +41,13 @@ public class SysexProcessor1 {
         boolean result = true;
 
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
+
+        System.out.println("SYSEX = " + sysex.toString());
+
+        if (sysex.toString().startsWith(stopSysEx)) {
+            System.out.println("STOP HERE");
+        }
+
         midiEventInfo.setMessage(sysex.toString());
 
         String selector = ByteHelper.getAndStrip(sysex, 1);
@@ -118,6 +127,7 @@ public class SysexProcessor1 {
 
         result = switch(selector) {
             case "10" -> handleXGParameterChange(sysex, midiEventInfo);
+            case "7E" -> handleStyleMessage(sysex, midiEventInfo);
             default -> handleUnknownYamahaMessage("F0 43 " + selector, midiEventInfo);
         };
 
@@ -138,7 +148,15 @@ public class SysexProcessor1 {
         result = switch (selector) {
             case "00 00" -> handleSetupMessage(sysex, midiEventInfo);
             case "02 01" -> handleEffect1(sysex, midiEventInfo);
-            case "03 00" -> handleEffect2(sysex, midiEventInfo);
+            case
+                    "03 00",
+                    "03 02" -> handleEffect2(sysex, midiEventInfo);
+            case "04 00" -> {
+                // TODO Another datalist
+                midiEventInfo.setComment("TODO: FO 43 10 4C 04 00");
+                System.out.println("THIS IS FO 43 10 4C 04 00");
+                yield true;
+            }
             case
                     "08 00",
                     "08 02",
@@ -149,8 +167,87 @@ public class SysexProcessor1 {
                     "08 0C",
                     "08 0D",
                     "08 0E" -> handleMultipart(sysex, midiEventInfo);
+            case "0A 00",
+                 "0A 02" -> {
+                // TODO Another datalist
+                midiEventInfo.setComment("TODO: FO 43 10 4C " + selector);
+                System.out.println("THIS IS FO 43 10 4C 0A 00");
+                yield true;
+            }
+            case "30 23",
+                 "30 2A",
+                 "30 2C",
+                 "30 2E" -> handleDrumSetup(sysex, midiEventInfo);
             default -> handleUnknownXGParameterChange("F0 43 10 -- " + selector, midiEventInfo);
         };
+
+        return result;
+    }
+
+    // F0 43 10 -- 30 23 ...
+    private static boolean handleDrumSetup(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_DRUM_SETUP);
+        midiEventInfo.setDescription("XG drum setup");
+
+        return result;
+    }
+
+    // F0 43 7E ...
+    private static boolean handleStyleMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_XG_STYLE_MESSAGE);
+        midiEventInfo.setDescription("XG Style message");
+
+        String selector = ByteHelper.getAndStrip(sysex, 1);
+        result = switch (selector) {
+            case "00" -> handleSectionControl(sysex, midiEventInfo);
+            default -> handleUnknownStyleMessage("F0 43 7E " + selector, midiEventInfo);
+        };
+
+        return result;
+    }
+
+    // FO 43 7E 00 ...
+    private static boolean handleSectionControl(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_SECTION_CONTROL);
+        midiEventInfo.setDescription("Section control");
+
+        String ss = ByteHelper.getAndStrip(sysex, 1);
+        String section = switch (ss) {
+            case "00" -> "INTRO 1";
+            case "01" -> "INTRO 2";
+            case "02" -> "INTRO 3";
+            case "03" -> "INTRO 4";
+            case "08" -> "MAIN A";
+            case "09" -> "MAIN B";
+            case "0A" -> "MAIN C";
+            case "0B" -> "MAIN D";
+            case "10" -> "FILL IN AA";
+            case "11" -> "FILL IN BB";
+            case "12" -> "FILL IN CC";
+            case "13" -> "FILL IN DD";
+            case "18" -> "BREAK FILL";
+            case "20" -> "ENDING 1";
+            case "21" -> "ENDING 2";
+            case "22" -> "ENDING 3";
+            case "23" -> "ENDING 4";
+
+            default -> "INVALID section";
+        };
+
+        String dd = ByteHelper.getAndStrip(sysex, 1);
+        String status = switch(dd) {
+            case "00" -> "OFF";
+            case "7F" -> "ON";
+            default -> "INVALID";
+        };
+
+        midiEventInfo.setComment(section + " -> " + status);
 
         return result;
     }
@@ -205,6 +302,8 @@ public class SysexProcessor1 {
         result = switch(selector) {
             case "00" -> handleInsertion(sysex, midiEventInfo);
             case
+                    "02",
+                    "03",
                     "0B",
                     "0C" -> handleInsertionParameter(selector, midiEventInfo);
             default -> handleUnknownEffect2("FO 43 10 -- 03 00 " + selector, midiEventInfo);
@@ -290,7 +389,7 @@ public class SysexProcessor1 {
         return result;
     }
 
-    // F0 43 10 -- 03 00 {0C}  ...
+    // F0 43 10 -- 03 00 {02,03,0B,0C}  ...
     private static boolean handleInsertionParameter(String parameterId, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
@@ -298,7 +397,10 @@ public class SysexProcessor1 {
         midiEventInfo.setDescription("XG insertion parameter");
 
         result = switch (parameterId) {
-            case "0B" -> {
+            case
+                    "02",
+                    "03",
+                    "0B" -> {
                 midiEventInfo.setComment(parameterId);
                 yield true;
             }
@@ -497,6 +599,16 @@ public class SysexProcessor1 {
 
         midiEventInfo.setColor(getColor("sysex", "unknown"));
         midiEventInfo.setDescription("Unknown insertion parameter");
+        midiEventInfo.setComment(sysex);
+
+        return result;
+    }
+
+    private static boolean handleUnknownStyleMessage(String sysex, MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.setColor(getColor("sysex", "unknown"));
+        midiEventInfo.setDescription("Unknown style message");
         midiEventInfo.setComment(sysex);
 
         return result;
