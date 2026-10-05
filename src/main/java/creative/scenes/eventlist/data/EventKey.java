@@ -5,7 +5,7 @@ import java.util.*;
 public class EventKey {
     private static List<EventKeyValue> keys = new ArrayList<>();
 
-    private static List<EventKeyValue> values = new ArrayList<>();
+    private List<EventKeyValue> values = new ArrayList<>();
 
     static {
         keys.addAll(Arrays.asList(EventKeyValue.values()));
@@ -17,6 +17,10 @@ public class EventKey {
 
     public boolean hasValue(EventKeyValue target) {
         return this.values.contains(target);
+    }
+
+    public boolean is(EventKeyValue target) {
+        return this.values.get(this.values.size() - 1).equals(target);
     }
 
     public void addValue(EventKeyValue value) {

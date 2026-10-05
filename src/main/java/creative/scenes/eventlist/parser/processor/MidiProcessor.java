@@ -1031,9 +1031,6 @@ public class MidiProcessor {
 
         int msb = getMSB(message.getChannel());
         int lsb = getLSB(message.getChannel());
-        if ((msb == 0) && (lsb == 0) && (byte1 == 0)) {
-            System.out.println("STOP HERE");
-        }
         String voice = searchVoice(msb, lsb, byte1);
 
         midiEventInfo.setComment(voice);

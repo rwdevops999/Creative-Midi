@@ -276,7 +276,8 @@ public class EventsDisplayPane extends VBox {
 
             if (! hiddenEvents.isEmpty()) {
                 for (EventKeyValue hiddenEvent : hiddenEvents) {
-                    filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(hiddenEvent)).toList();
+//                    filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(hiddenEvent)).toList();
+                    filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().is(hiddenEvent)).toList();
                 }
             }
 

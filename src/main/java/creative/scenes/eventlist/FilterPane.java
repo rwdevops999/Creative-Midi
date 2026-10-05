@@ -148,19 +148,19 @@ public class FilterPane extends HBox {
     }
 
     private void handleFilterDialog(EventKeyValue selectedGroup) {
-//        List<EventKeyValue> visible = visibleEvents.stream().filter(s -> s.startsWith(selectedGroup)).sorted().toList();
-//        List<EventKeyValue> hidden = hiddenEvents.stream().filter(s -> s.startsWith(selectedGroup)).sorted().toList();
+        List<EventKeyValue> visible = visibleEvents.stream().filter(s -> s.name().startsWith(selectedGroup.name())).sorted().toList();
+        List<EventKeyValue> hidden = hiddenEvents.stream().filter(s -> s.name().startsWith(selectedGroup.name())).sorted().toList();
 
-//        FilterDialog filterDialog = new FilterDialog(selectedGroup.name(), visible, hidden);
+        FilterDialog filterDialog = new FilterDialog(selectedGroup.name(), visible, hidden);
 
-//        Optional<List<String>> events = filterDialog.showAndWait();
+        Optional<List<EventKeyValue>> events = filterDialog.showAndWait();
 
-/*        events.ifPresent(list -> {
+        events.ifPresent(list -> {
             visibleEvents.removeAll(list);
             hiddenEvents.clear();
             hiddenEvents.addAll(list);
             updateFiltering();
-        }); */
+        });
     }
 
     // ACCESSORS

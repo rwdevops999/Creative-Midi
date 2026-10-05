@@ -1,5 +1,6 @@
 package creative.scenes.eventlist.dialog;
 
+import creative.scenes.eventlist.data.EventKeyValue;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,12 +15,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static util.Util.setPaneBackground;
 import static util.Util.toPascalCase;
 
-public class FilterDialog extends Dialog<List<String>> {
+public class FilterDialog extends Dialog<List<EventKeyValue>> {
     public FilterDialog() {
         super();
 
@@ -27,7 +29,7 @@ public class FilterDialog extends Dialog<List<String>> {
     }
 
     private String selectedGroup;
-    public FilterDialog(String group, List<String> availableEvents, List<String> hiddenEvents) {
+    public FilterDialog(String group, List<EventKeyValue> availableEvents, List<EventKeyValue> hiddenEvents) {
         this();
 
         selectedGroup = toPascalCase(group);
@@ -37,44 +39,35 @@ public class FilterDialog extends Dialog<List<String>> {
         setTitle("Filtering");
         setHeaderText("Determine the events to be shown or hidden");
 
-        List<String> allEvents = new ArrayList<>(availableEvents);
+        List<EventKeyValue> allEvents = new ArrayList<>(availableEvents);
         allEvents.addAll(hiddenEvents);
 
         setupDialog(availableEvents, hiddenEvents, allEvents);
         buildDialogContent();
     }
 
-    private List<String> visibleEventKeys = new ArrayList<>();
-    private List<String> hiddenEventKeys = new ArrayList<>();
+    private List<EventKeyValue> visibleEventKeys = new ArrayList<>();
+    private List<EventKeyValue> hiddenEventKeys = new ArrayList<>();
 
     private List<String> groups;
 
-    private final ListProperty<String> visibleEventsProperty = new SimpleListProperty<>(
+    private final ListProperty<EventKeyValue> visibleEventsProperty = new SimpleListProperty<>(
             FXCollections.observableArrayList(visibleEventKeys)
     );
-    private final ListProperty<String> hiddenEventsProperty = new SimpleListProperty<>(
+    private final ListProperty<EventKeyValue> hiddenEventsProperty = new SimpleListProperty<>(
             FXCollections.observableArrayList(hiddenEventKeys)
     );
 
     private final BooleanProperty addDisabled = new SimpleBooleanProperty(true);
     private final BooleanProperty removeDisabled = new SimpleBooleanProperty(true);
 
-    private void setupDialog(List<String> availableEvents, List<String> hiddenEvents, List<String> allEvents) {
-        visibleEventKeys = availableEvents;
-        hiddenEventKeys = hiddenEvents;
+    private void setupDialog(List<EventKeyValue> availableEvents, List<EventKeyValue> hiddenEvents, List<EventKeyValue> allEvents) {
+        visibleEventKeys = availableEvents.stream().sorted(Comparator.comparing(EventKeyValue::name)).toList();
+        hiddenEventKeys = hiddenEvents.stream().sorted(Comparator.comparing(EventKeyValue::name)).toList();
 
-        groups = allEvents.stream().map(e -> toPascalCase(e.split("_")[0])).distinct().toList();
+        groups = allEvents.stream().map(e -> toPascalCase(e.name().split("_")[0])).distinct().toList();
 
-        visibleEventKeys = visibleEventKeys.stream().map(e -> {
-            String value = e.replaceFirst("_", "@#").split("@#")[1];
-            return toPascalCase(value);
-        }).toList();
         visibleEventsProperty.set(FXCollections.observableArrayList(visibleEventKeys));
-
-        hiddenEventKeys = hiddenEventKeys.stream().map(e -> {
-            String value = e.replaceFirst("_", "@#").split("@#")[1];
-            return toPascalCase(value);
-        }).toList();
         hiddenEventsProperty.set(FXCollections.observableArrayList(hiddenEventKeys));
 
         updateDisables();
@@ -92,8 +85,8 @@ public class FilterDialog extends Dialog<List<String>> {
 
         setResultConverter(dialogButton -> {
             if (dialogButton == useButtonType) {
-                List<String> hidden = hiddenEventsProperty.get();
-                return hidden.stream().map(s -> selectedGroup.toUpperCase() + "_" + s.toUpperCase().replace(" ", "_")).toList();
+                List<EventKeyValue> hidden = hiddenEventsProperty.get();
+                return hidden;
             }
 
             return null; // return null when we cancel
@@ -118,8 +111,8 @@ public class FilterDialog extends Dialog<List<String>> {
         return tabPane;
     }
 
-    private ListView<String> availableEventsListView;
-    private ListView<String> hiddenEventsListView;
+    private ListView<EventKeyValue> availableEventsListView;
+    private ListView<EventKeyValue> hiddenEventsListView;
 
     private HBox buildContentPane() {
         HBox hBox = new HBox();
@@ -139,7 +132,7 @@ public class FilterDialog extends Dialog<List<String>> {
         return hBox;
     }
 
-    private VBox buildListPane(String label, ListProperty<String> listProperty) {
+    private VBox buildListPane(String label, ListProperty<EventKeyValue> listProperty) {
         VBox vBox = new VBox();
 
         // setup VBOX
@@ -148,10 +141,23 @@ public class FilterDialog extends Dialog<List<String>> {
         Label lbl = new Label(label);
         vBox.getChildren().add(lbl);
 
-        ListView<String> listView = new ListView<>();
+        ListView<EventKeyValue> listView = new ListView<>();
         listView.setId("listview");
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listView.itemsProperty().bind(listProperty);
+        listView.setCellFactory(lv -> new ListCell<EventKeyValue>() {
+            @Override
+            protected void updateItem(EventKeyValue item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    String value = item.name().replaceFirst("_", "@#").split("@#")[1];
+                    setText(toPascalCase(value));
+                }
+            }
+        });
         vBox.getChildren().add(listView);
 
         return vBox;
@@ -209,9 +215,16 @@ public class FilterDialog extends Dialog<List<String>> {
         return vBox;
     }
 
-    private void moveSelected (ListProperty<String> from, ListProperty<String> to, List<String> selected) {
+    private void moveSelected (ListProperty<EventKeyValue> from, ListProperty<EventKeyValue> to, List<EventKeyValue> selected) {
         to.get().addAll(selected);
         from.get().removeAll(selected);
+
+        updateDisables();
+    }
+
+    private void moveSingle (EventKeyValue which, ListProperty<EventKeyValue> from, ListProperty<EventKeyValue> to) {
+        to.get().add(which);
+        from.get().remove(which);
 
         updateDisables();
     }
@@ -221,10 +234,10 @@ public class FilterDialog extends Dialog<List<String>> {
         removeDisabled.set(hiddenEventsProperty.get().isEmpty());
     }
 
-    private ListView<String> lookup(Pane pane) {
+    private ListView<EventKeyValue> lookup(Pane pane) {
         return pane.getChildren().stream()
                 .filter(node -> "listview".equals(node.getId()))
-                .map(node -> (ListView<String>) node)
+                .map(node -> (ListView<EventKeyValue>) node)
                 .findFirst()
                 .orElse(null);
     }
