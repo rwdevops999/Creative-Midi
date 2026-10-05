@@ -320,12 +320,11 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(85,0), "VoiceCancel");
         VARIATION_REGISTRY.put(new DataBlock(88,0), "Ambience");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(93,0), "TalkingMod");
+        VARIATION_REGISTRY.put(new DataBlock(94,0), "Lo-Fi");
+        VARIATION_REGISTRY.put(new DataBlock(109,0), "DynFilter");
+        VARIATION_REGISTRY.put(new DataBlock(112,0), "DynRingMod");
+        VARIATION_REGISTRY.put(new DataBlock(113,0), "RingMod");
 
         // NoEffect
         VARIATION_REGISTRY.put(new DataBlock(0,0), "No Effect");
