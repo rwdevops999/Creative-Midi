@@ -62,7 +62,7 @@ public class MidiFileProcessor {
                     // The message is a SYSEX
                     midiEventInfo.setEventKey(new EventKey(SYSEX));
 
-                    isProcessed = SysexProcessor1.processMessage(sysexMessage, midiEventInfo);
+                    isProcessed = SysexProcessor.processMessage(sysexMessage, midiEventInfo);
                     if (isProcessed) {
                         sysexEvents++;
                     }
