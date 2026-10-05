@@ -287,16 +287,16 @@ public class VariationTypes {
         VARIATION_REGISTRY.put(new DataBlock(122,22), "PWah+ODHd");
         VARIATION_REGISTRY.put(new DataBlock(122,24), "PWah+ODHv");
 
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
-        VARIATION_REGISTRY.put(new DataBlock(,), "");
+        VARIATION_REGISTRY.put(new DataBlock(122,26), "PWah+ODLt");
+        VARIATION_REGISTRY.put(new DataBlock(99,0), "DualRotSp1");
+        VARIATION_REGISTRY.put(new DataBlock(99,1), "DualRotSp2");
+        VARIATION_REGISTRY.put(new DataBlock(71,17), "RotarySp2");
+        VARIATION_REGISTRY.put(new DataBlock(71,18), "RotarySp3");
+        VARIATION_REGISTRY.put(new DataBlock(70,17), "RotarySp4");
+        VARIATION_REGISTRY.put(new DataBlock(66,18), "RotarySp5");
+        VARIATION_REGISTRY.put(new DataBlock(69,0), "RotarySp6");
+        VARIATION_REGISTRY.put(new DataBlock(71,22), "RotarySp7");
+        VARIATION_REGISTRY.put(new DataBlock(86,0), "2WayRotarySp");
 
         VARIATION_REGISTRY.put(new DataBlock(,), "");
         VARIATION_REGISTRY.put(new DataBlock(,), "");
