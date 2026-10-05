@@ -179,7 +179,7 @@ public class SysexProcessor1 {
         return result;
     }
 
-    // F0 XN 09 ...
+    // F0 7E XN 09 ...
     private static boolean handleGMMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
@@ -190,18 +190,29 @@ public class SysexProcessor1 {
 
         result = switch (selector) {
             case "01" -> handleGM1SystemOn(midiEventInfo);
+            case "02" -> handleGeneralMidSystemOff(midiEventInfo);
             default -> handleUnknownGMMessage("F7 F0 SN 09 " + selector, midiEventInfo);
         };
 
         return result;
     }
 
-    // F0 XN 09 01
+    //  F0 7E XN 09 01 ...
     private static boolean handleGM1SystemOn(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.getEventKey().addValue(SYSEX_GM1_SYSTEM_ON);
         midiEventInfo.setDescription("GM1 system on");
+
+        return result;
+    }
+
+    //  F0 7E XN 09 02 ...
+    private static boolean handleGeneralMidSystemOff(MidiEventInfo midiEventInfo) {
+        boolean result = true;
+
+        midiEventInfo.getEventKey().addValue(SYSEX_GENERAL_MIDI_OFF);
+        midiEventInfo.setDescription("General MIDI off");
 
         return result;
     }
