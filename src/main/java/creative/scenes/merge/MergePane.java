@@ -2,6 +2,7 @@ package creative.scenes.merge;
 
 import creative.scenes.merge.util.StyleMerger;
 import creative.scenes.merge.util.YamahaStyleMerger;
+import creative.scenes.sysex.util.SysexWriter;
 import custom.components.ActionButton;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -79,7 +80,7 @@ public class MergePane extends GridPane {
             File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
             YamahaStyleUploader y = new YamahaStyleUploader();
             try {
-                y.uploadStyle(file);
+                y.uploadStyle(file, new SysexWriter());
             } catch (Exception e) {
                 System.out.println("EXCEPTION");
             }

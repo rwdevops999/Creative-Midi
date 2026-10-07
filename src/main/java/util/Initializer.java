@@ -50,7 +50,7 @@ public class Initializer {
         boolean autoSelectDevice = PropertyContainer.getPropertyAsBoolean(PropertyType.System, PropertyContainer.AUTO_SELECT_DEVICE, false);
         String defaultDeviceName = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.DEVICE_NAME, "Digital Keyboard");
 
-        DeviceScanner task = new DeviceScanner(autoSelectDevice, defaultDeviceName, data -> {
+/*        DeviceScanner task = new DeviceScanner(autoSelectDevice, defaultDeviceName, data -> {
             Registry.publish("DeviceSelector", data);
         });
 
@@ -61,7 +61,7 @@ public class Initializer {
         Thread thread = new Thread(task);
         thread.start();
         ApplicationInfo.getInstance().setDeviceScannerThread(thread);
-
+*/
         // 5. Loading the voices (keyboard files)
         // loading the voices
         String voicesDirectory = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.VOICES_PATH, "./voices");

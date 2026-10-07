@@ -7,6 +7,7 @@ import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
 import org.slf4j.helpers.MessageFormatter;
 import util.ApplicationInfo;
+import vendor.yamaha.TrackedReceiver;
 
 import javax.sound.midi.*;
 import java.util.HexFormat;
@@ -62,17 +63,17 @@ public class SysexWriter {
         }
     }
 
-    public void sendSysex(MidiDevice outputDevice, byte[] data) {
+    public void sendSysex(TrackedReceiver receiver, MidiDevice outputDevice, byte[] data) {
         try {
-            Receiver receiver = outputDevice.getReceiver();
-
             SysexMessage message = new SysexMessage();
             message.setMessage(data, data.length);
 
+            // Hergebruik de centrale, openstaande receiver!
             receiver.send(message, -1);
 
-            CommunicationModel.monitorOutbound("[" + outputDevice.getDeviceInfo().getName() + "]: " + SysexToHexStringConvertor.convertToHexString(message.getMessage()));
-        } catch (MidiUnavailableException | InvalidMidiDataException e) {
+            CommunicationModel.monitorOutbound("[" + receiver.getOriginDevice().getDeviceInfo().getName() + "]: " +
+                    SysexToHexStringConvertor.convertToHexString(message.getMessage()));
+        } catch (InvalidMidiDataException e) {
             DialogFactory.renderErrorDialog(e.getMessage());
         }
     }
