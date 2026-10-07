@@ -67,10 +67,15 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
 
         groups = allEvents.stream().map(e -> toPascalCase(e.name().split("_")[0])).distinct().toList();
 
-        visibleEventsProperty.set(FXCollections.observableArrayList(visibleEventKeys));
+        visibleEventsProperty.set(FXCollections.observableArrayList(removeParentMessages(visibleEventKeys)));
         hiddenEventsProperty.set(FXCollections.observableArrayList(hiddenEventKeys));
 
         updateDisables();
+    }
+
+    private List<EventKeyValue> removeParentMessages(List<EventKeyValue> events) {
+        // TODO add here a checkbox check
+        return events.stream().filter(ekv -> ! ekv.name().contains("_MESSAGE")).toList();
     }
 
     private void buildDialogContent() {

@@ -1,18 +1,20 @@
 package creative.scenes.merge;
 
 import creative.scenes.merge.util.StyleMerger;
-import creative.scenes.midi.MidiPane;
+import creative.scenes.merge.util.YamahaStyleMerger;
+import custom.components.ActionButton;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
+import vendor.yamaha.YamahaStyleUploader;
 
 import java.io.File;
 
@@ -66,6 +69,22 @@ public class MergePane extends GridPane {
 
     private BooleanProperty dsDisabled = new SimpleBooleanProperty(true);
     private BooleanProperty dsVisible = new SimpleBooleanProperty(false);
+    private BooleanProperty dsDisabledUpload = new SimpleBooleanProperty(false);
+
+    private EventHandler<ActionEvent> uploadHandler = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent event) {
+
+            System.out.println("UPLOADING: " + dsNewStyleFilename.get());
+            File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
+            YamahaStyleUploader y = new YamahaStyleUploader();
+            try {
+                y.uploadStyle(file);
+            } catch (Exception e) {
+                System.out.println("EXCEPTION");
+            }
+        }
+    };
 
     private void buildPane() {
         logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");
@@ -127,8 +146,13 @@ public class MergePane extends GridPane {
         Button mergeButton = new Button("Merge");
         mergeButton.disableProperty().bind(dsDisabled);
         mergeButton.setOnAction(event -> {
-            StyleMerger styleMerger = new StyleMerger();
-            styleMerger.merge(dsStyleFilename.get(), dsMidiFilename.get(), dsNewStyleFilename.get());
+            YamahaStyleMerger styleMerger = new YamahaStyleMerger();
+            try {
+                styleMerger.mergeStyleAndMidi(new File(dsStyleFilename.get()), new File(dsMidiFilename.get()), new File(dsNewStyleFilename.get()));
+            } catch (Exception e) {
+                System.out.println("MERGE EXCEPTION");
+            }
+            dsDisabledUpload.set(false);
         });
         add (mergeButton, 0, row);
 
@@ -140,6 +164,10 @@ public class MergePane extends GridPane {
         mergeFilenameValue.textProperty().bind(dsNewStyleFilename);
         mergeFilenameValue.visibleProperty().bind(dsVisible);
         add (mergeFilenameValue, 2, row, 8, 1);
+
+        ActionButton uploadButton = new ActionButton(24, "uploadButton", "upload to keyboard", "upload", uploadHandler);
+        uploadButton.disableProperty().bind(dsDisabledUpload);
+        add(uploadButton, 8, row);
 
         // Row 3 (Instruction label)
         row++;

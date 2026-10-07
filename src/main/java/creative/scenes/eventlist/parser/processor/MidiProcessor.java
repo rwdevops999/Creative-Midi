@@ -141,7 +141,7 @@ public class MidiProcessor {
     private static boolean handleControlOrModeChange(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.getEventKey().addValue(MIDI_CONTROL_MODE_CHANGE);
+        midiEventInfo.getEventKey().addValue(MIDI_CONTROL_MODE_CHANGE_MESSAGE);
 
         byte[] rawbytes = message.getMessage();
 
@@ -203,7 +203,7 @@ public class MidiProcessor {
     private static boolean handleControlChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.getEventKey().addValue(MIDI_CONTROL_CHANGE);
+        midiEventInfo.getEventKey().addValue(MIDI_CONTROL_CHANGE_MESSAGE);
 
         byte[] rawbytes = message.getMessage();
 
@@ -878,7 +878,7 @@ public class MidiProcessor {
     private static boolean handleModeChangeMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
 
-        midiEventInfo.getEventKey().addValue(MIDI_MODE_CHANGE);
+        midiEventInfo.getEventKey().addValue(MIDI_MODE_CHANGE_MESSAGE);
 
         byte[] rawbytes = message.getMessage();
 
@@ -1102,6 +1102,8 @@ public class MidiProcessor {
 
     private static boolean handleSystemMessage(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result;
+
+        midiEventInfo.getEventKey().addValue(MIDI_SYSTEM_MESSAGE);
 
         byte[] rawBytes = message.getMessage();
 

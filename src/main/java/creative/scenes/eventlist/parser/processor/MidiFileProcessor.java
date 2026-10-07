@@ -45,7 +45,7 @@ public class MidiFileProcessor {
                     // The message is a MIDI
                     midiEventInfo.setEventKey(new EventKey(MIDI));
 
-//                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
+                    isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
                     if (isProcessed) {
                         midiEvents++;
                     }
@@ -54,7 +54,7 @@ public class MidiFileProcessor {
                     // The message is a META
                     midiEventInfo.setEventKey(new EventKey(META));
 
-//                    isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
+                    isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
                     if (isProcessed) {
                         metaEvents++;
                     }

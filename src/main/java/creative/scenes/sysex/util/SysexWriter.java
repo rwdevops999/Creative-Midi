@@ -1,6 +1,7 @@
 package creative.scenes.sysex.util;
 
 import communication.CommunicationModel;
+import creative.scenes.sysex.convertor.SysexToHexStringConvertor;
 import custom.dialog.DialogFactory;
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
@@ -53,9 +54,26 @@ public class SysexWriter {
                 message.setMessage(data, data.length);
 
                 receiver.send(message, -1);
+
+                CommunicationModel.monitorOutbound(SysexToHexStringConvertor.convertToHexString(message.getData()));
             } catch (MidiUnavailableException | InvalidMidiDataException e) {
                 DialogFactory.renderErrorDialog(e.getMessage());
             }
+        }
+    }
+
+    public void sendSysex(MidiDevice outputDevice, byte[] data) {
+        try {
+            Receiver receiver = outputDevice.getReceiver();
+
+            SysexMessage message = new SysexMessage();
+            message.setMessage(data, data.length);
+
+            receiver.send(message, -1);
+
+            CommunicationModel.monitorOutbound("[" + outputDevice.getDeviceInfo().getName() + "]: " + SysexToHexStringConvertor.convertToHexString(message.getMessage()));
+        } catch (MidiUnavailableException | InvalidMidiDataException e) {
+            DialogFactory.renderErrorDialog(e.getMessage());
         }
     }
 }

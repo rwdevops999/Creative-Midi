@@ -17,3 +17,5 @@ target/
 
 /logs
 *.log
+
+/style/*.sty
