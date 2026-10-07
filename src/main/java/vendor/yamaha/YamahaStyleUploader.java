@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class YamahaStyleUploader {
     private SysexWriter writer = new SysexWriter();
+    private volatile boolean psrReadyForStreaming = false;
 
     // Unique Sub-ID for Yamaha File Protocol (F0 43 50 ...)
     private static final byte[] YAMAHA_HEADER = {(byte) 0x43, (byte) 0x50, (byte) 0x00};
@@ -39,138 +40,103 @@ public class YamahaStyleUploader {
         return packet;
     }
 
+    // We maken een binaire vlag om de binnengekomen File Handle in op te slaan
     private volatile byte[] psrFileHandle = null;
 
     public void uploadStyle(File file, SysexWriter writer) throws Exception {
-        logToDisk("=== START GEAVANCEERDE MSD SESSION ===");
+        logToDisk("=== START GEAVANCEERDE MULTI-PORT MSD SESSION ===");
 
-        if (!file.exists()) {
-            logToDisk("FOUT: Bestand bestaat niet!");
-            return;
-        }
-
+        if (!file.exists()) return;
         int fileSize = (int) file.length();
         byte[] fileBytes = new byte[fileSize];
-        try (FileInputStream fis = new FileInputStream(file)) {
-            fis.read(fileBytes);
-        }
-        logToDisk("Bestand binair ingelezen. Grootte: " + fileSize + " bytes.");
+        try (FileInputStream fis = new FileInputStream(file)) { fis.read(fileBytes); }
 
-        // 1. Doe de 7-bit codering vooraf en bereken de ENCODED size bytes (392 bytes -> 0x01 0x88)
+        // Bereken de gecodeerde streamgrootte (392 bytes -> 0x01 0x88)
         byte[] encodedBytes = encode7to8Yamaha(fileBytes);
         int encodedSize = encodedBytes.length;
-        byte sizeHex2 = (byte) ((encodedSize >> 8) & 0xFF); // 0x01
-        byte sizeHex3 = (byte) (encodedSize & 0xFF);        // 0x88
-        logToDisk("7-bit codering voltooid. Gecodeerde grootte: " + encodedSize + " bytes.");
+        byte sizeHex2 = (byte) ((encodedSize >> 8) & 0xFF);
+        byte sizeHex3 = (byte) (encodedSize & 0xFF);
 
         // =========================================================================
-        // LOKALE HARDWARE-BYPASS: Zoek direct naar Port 2 (Digital Keyboard-2)
+        // HARDWARE BYPASS: Open BEIDE fysieke output poorten onafhankelijk van elkaar!
         // =========================================================================
-        logToDisk("START: Output device handmatig scannen voor Port 2 Bulk");
-        MidiDevice outputDevice = null;
+        MidiDevice outputDevice1 = null;
+        MidiDevice outputDevice2 = null;
 
         for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
             try {
                 MidiDevice dev = MidiSystem.getMidiDevice(info);
                 String portName = info.getName().toLowerCase();
 
-                // We zoeken strictly naar 'digital keyboard' én het cijfer '2'
-                if (portName.contains("digital keyboard") && portName.contains("2") && dev.getMaxReceivers() != 0) {
-                    outputDevice = dev;
-                    logToDisk("HARDWARE MATCH: Direct verbonden met Port 2: " + info.getName());
-                    break;
+                if (portName.contains("digital keyboard") && dev.getMaxReceivers() != 0) {
+                    if (portName.contains("2")) {
+                        outputDevice2 = dev; // Bulk-poort
+                    } else {
+                        outputDevice1 = dev; // Live/Systeem-poort
+                    }
                 }
-            } catch (MidiUnavailableException e) {
-                logToDisk("Fout tijdens hardware poortinspectie: " + e.getMessage());
-            }
+            } catch (Exception e) {}
         }
 
-        // Ultieme veiligheids-fallback (pakt het standaardapparaat als de '2' niet wordt gevonden)
-        if (outputDevice == null) {
-            logToDisk("WAARSCHUWING: Port 2 niet direct gevonden via scan. Fallback naar standaard device.");
-            outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
-        }
+        // Open beide poorten live op hardware-niveau
+        if (outputDevice1 != null && !outputDevice1.isOpen()) outputDevice1.open();
+        if (outputDevice2 != null && !outputDevice2.isOpen()) outputDevice2.open();
 
-        // Open het apparaat op hardware-niveau
-        if (!outputDevice.isOpen()) {
-            logToDisk("Fysieke output poort openen...");
-            outputDevice.open();
-        }
+        // Maak twee gescheiden logische receivers aan
+        TrackedReceiver receiverPort1 = new TrackedReceiver(outputDevice1);
+        TrackedReceiver receiverPort2 = new TrackedReceiver(outputDevice2);
 
-        TrackedReceiver centralReceiver = null;
-        try {
-            centralReceiver = new TrackedReceiver(outputDevice);
-        } catch (Exception e) {
-            logToDisk("FATALE EXCEPTION BIJ AANMAAK RECEIVER: " + e.getMessage());
-            return;
-        }
-
-        String activeDeviceName = centralReceiver.getDeviceName();
-        logToDisk("GEFORCEERDE RUN SUCCESVOL GEKOPPELD AAN: " + activeDeviceName);
+        logToDisk("Multi-poort activering succesvol. Port 1: " + receiverPort1.getDeviceName() + " | Port 2: " + receiverPort2.getDeviceName());
 
         // =========================================================================
-        // INITIALISATIE: Dwing de Steinberg-driver in de actieve Schrijfstand
+        // INITIALISATIE OP PORT 1: Dwing de PSR-SX600 nu grafisch in TRANSFER MODE!
         // =========================================================================
-        // =========================================================================
-        // INITIALISATIE: MSD-Handshake mét Geforceerde Hardware-Pauzes
-        // =========================================================================
-        logToDisk("Initialiseren: Universal Device Identity Request afvuren");
+        logToDisk("Initialiseren OP PORT 1: Universal Device Identity Request");
         byte[] universalIdentityRequest = { (byte)0xF0, 0x7E, 0x7F, 0x06, 0x01, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, universalIdentityRequest);
-        Thread.sleep(400); // Geef de USB-bus de tijd om de identiteitsvraag te verwerken
+        writer.sendSysex(receiverPort1, receiverPort1.getOriginDevice(), universalIdentityRequest);
+        Thread.sleep(300);
 
-        logToDisk("Initialiseren: VAM Manager openen");
+        logToDisk("Initialiseren OP PORT 1: VAM Manager openen");
         byte[] msdOpenVam = { (byte)0xF0, 0x43, 0x50, 0x00, 0x00, 0x00, 0x02, 0x01, 0x02, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, msdOpenVam);
-        Thread.sleep(400); // Wacht tot de VAM-omgeving stabiel is geladen
+        writer.sendSysex(receiverPort1, receiverPort1.getOriginDevice(), msdOpenVam);
+        Thread.sleep(200);
 
-        logToDisk("Initialiseren: 60-byte Security Key injecteren");
+        logToDisk("Initialiseren OP PORT 1: 60-byte Security Key injecteren");
         byte[] msdSecurityKey = {
                 (byte)0xF0, 0x43, 0x50, 0x00, 0x00, 0x02, 0x02, 0x33, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x1B,
                 0x78, 0x17, 0x3F, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x7F, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x27, 0x08, 0x00, 0x00, 0x02, 0x00, 0x04, 0x7F,
                 0x7F, 0x7F, 0x7F, (byte)0xF7
         };
-        writer.sendSysex(centralReceiver, outputDevice, msdSecurityKey);
-        Thread.sleep(500); // CRUCIALE PAUZE: Het keyboard verifieert nu de sleutel in het RAM!
+        writer.sendSysex(receiverPort1, receiverPort1.getOriginDevice(), msdSecurityKey);
+        Thread.sleep(300);
 
-        logToDisk("Initialiseren: Handshake Bevestiging 1");
+        logToDisk("Initialiseren OP PORT 1: Bevestigingen sturen");
         byte[] msdConfirm1 = { (byte)0xF0, 0x43, 0x50, 0x00, 0x00, 0x01, 0x02, 0x00, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, msdConfirm1);
-        Thread.sleep(400);
-
-        logToDisk("Initialiseren: Handshake Bevestiging 2");
-        byte[] msdConfirm2 = { (byte)0xF0, 0x43, 0x50, 0x00, 0x00, 0x01, 0x02, 0x01, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, msdConfirm2);
-
-        // =========================================================================
-        // HIER SCHAKELT DE PSR NU IN VOLLEDIGE RUST OOM NAAR FILE TRANSFER MODE
-        // =========================================================================
-        System.out.println("Wachten tot het keyboard grafisch omschakelt naar Transfer Mode...");
-        logToDisk("Geforceerde rustpauze voor hardware-initialisatie van het scherm");
-        Thread.sleep(2000); // 2 full seconden rust, exact de tijd die MSD nodig heeft om de boom te laden!
-
-        logToDisk("USER Drive selecteren");
-        byte[] msdSelectUser = { (byte)0xF0, 0x43, 0x50, 0x00, 0x05, 0x0B, 0x01, 0x42, 0x00, 0x00, 0x05, 0x00, 0x55, 0x53, 0x45, 0x52, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, msdSelectUser);
-        Thread.sleep(400);
-
-        logToDisk("USER Drive selecteren");
-        byte[] msdSelectUser2 = { (byte)0xF0, 0x43, 0x50, 0x00, 0x05, 0x0B, 0x01, 0x42, 0x00, 0x00, 0x05, 0x00, 0x55, 0x53, 0x45, 0x52, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, msdSelectUser2);
+        writer.sendSysex(receiverPort1, receiverPort1.getOriginDevice(), msdConfirm1);
         Thread.sleep(200);
 
+        byte[] msdConfirm2 = { (byte)0xF0, 0x43, 0x50, 0x00, 0x00, 0x01, 0x02, 0x01, (byte)0xF7 };
+        writer.sendSysex(receiverPort1, receiverPort1.getOriginDevice(), msdConfirm2);
+
+        // HIER SCHAKELT HET KEYBOARD NU GRAFISCH IN VOLLEDIGE RUST OOM NAAR FILE TRANSFER MODE!
+        System.out.println("Wachten op grafische omschakeling van het display...");
+        Thread.sleep(1500);
+
         // =========================================================================
-        // STAP 3: File Creation Header (Gecorrigeerd naar pure MSD Pad-Syntaxis)
+        // VANAF HIER GAAN WE OVER OP PORT 2 (BULK-POORT IS NU DOOR PORT 1 UNLOCKED!)
         // =========================================================================
-        logToDisk("STAP 3: File Header schrijven");
+        logToDisk("Bestandsoverdracht OP PORT 2: USER Drive openen");
+        byte[] msdSelectUser = { (byte)0xF0, 0x43, 0x50, 0x00, 0x05, 0x0B, 0x01, 0x42, 0x00, 0x00, 0x05, 0x00, 0x55, 0x53, 0x45, 0x52, (byte)0xF7 };
+        writer.sendSysex(receiverPort2, receiverPort2.getOriginDevice(), msdSelectUser);
+        Thread.sleep(300);
+
+        logToDisk("Bestandsoverdracht OP PORT 2: STYLE folder openen (Stap 3)");
         byte[] createCmd = { 0x00, 0x05, 0x05 };
         byte[] timestampBytes = "2020 1 1 0 0 0".getBytes(StandardCharsets.US_ASCII);
-
-        // Pure, zuivere MSD-opbouw die je in MusicSoft Downloader hebt gezien!
-        String targetPathOnKeyboard = "USER:STYLE/aaa.sty";
+        String targetPathOnKeyboard = "aaa.sty";
         byte[] nameBytes = (targetPathOnKeyboard + "\0").getBytes(StandardCharsets.US_ASCII);
-        byte nameLen = (byte) (nameBytes.length & 0xFF); // Wordt exact 19 bytes (0x13)
+        byte nameLen = (byte) (nameBytes.length & 0xFF);
 
         int headerPayloadLen = 2 + timestampBytes.length + 7 + nameBytes.length;
         byte[] headerPayload = new byte[headerPayloadLen];
@@ -179,78 +145,77 @@ public class YamahaStyleUploader {
         headerPayload[hIdx++] = 0x00;
         System.arraycopy(timestampBytes, 0, headerPayload, hIdx, timestampBytes.length);
         hIdx += timestampBytes.length;
-        headerPayload[hIdx++] = 0x03;
-        headerPayload[hIdx++] = 0x01;
-        headerPayload[hIdx++] = sizeHex2; // 0x01
-        headerPayload[hIdx++] = sizeHex3; // 0x88
+        headerPayload[hIdx++] = 0x11; // STYLE folder index 17
+        headerPayload[hIdx++] = 0x03; // Style bestandstype vlag
+        headerPayload[hIdx++] = sizeHex2;
+        headerPayload[hIdx++] = sizeHex3;
         headerPayload[hIdx++] = 0x00;
-        headerPayload[hIdx++] = nameLen;  // Wordt nu netjes 0x13
+        headerPayload[hIdx++] = nameLen;
         headerPayload[hIdx++] = 0x00;
         System.arraycopy(nameBytes, 0, headerPayload, hIdx, nameBytes.length);
 
-        writer.sendSysex(centralReceiver, outputDevice, buildSysExPacket(createCmd, headerPayload));
-        Thread.sleep(250);
+        // Let op: buildSysExPacket gebruikt nu receiverPort2!
+        writer.sendSysex(receiverPort2, receiverPort2.getOriginDevice(), buildSysExPacket(createCmd, headerPayload));
+        Thread.sleep(400);
 
-        // STAP 4: Streaming (392 bytes verdeeld over 128-byte chunks)
+        // =========================================================================
+        // STAP 4: Streaming loop over PORT 2 (Met de handmatig gecorrigeerde indexen)
+        // =========================================================================
         byte[] streamCmd = { 0x00, 0x05, 0x06 };
         int chunkSize = 128;
         int packetCount = 0;
         int bytesSent = 0;
 
-        logToDisk("STAP 4: Start streaming chunks...");
+        logToDisk("Bestandsoverdracht OP PORT 2: Chunks streamen...");
         while (bytesSent < encodedSize) {
             int currentChunkSize = Math.min(chunkSize, encodedSize - bytesSent);
             byte[] chunkPayload = new byte[6 + currentChunkSize];
+
             chunkPayload[0] = (byte) 0x01;
             chunkPayload[1] = (byte) 0x02;
             chunkPayload[2] = (byte) ((packetCount >> 7) & 0x7F);
             chunkPayload[3] = (byte) (packetCount & 0x7F);
             chunkPayload[4] = (byte) ((currentChunkSize >> 7) & 0x7F);
             chunkPayload[5] = (byte) (currentChunkSize & 0x7F);
+
             for (int i = 0; i < currentChunkSize; i++) {
                 chunkPayload[6 + i] = encodedBytes[bytesSent + i];
             }
-            writer.sendSysex(centralReceiver, outputDevice, buildSysExPacket(streamCmd, chunkPayload));
+
+            writer.sendSysex(receiverPort2, receiverPort2.getOriginDevice(), buildSysExPacket(streamCmd, chunkPayload));
             bytesSent += currentChunkSize;
             packetCount++;
             Thread.sleep(150);
         }
 
-        // =========================================================================
-        // STAP 5: Bestandsbuffer sluiten op het keyboard (Laat deze exact zo staan!)
-        // =========================================================================
-        logToDisk("STAP 5: Bestandsbuffer sluiten op het keyboard");
+        // STAP 5: Bestandsbuffer sluiten op PORT 2
+        logToDisk("Bestandsoverdracht OP PORT 2: Buffer sluiten");
         byte[] closeCmd = { 0x00, 0x05, 0x07 };
         byte[] closePayload = { 0x02, sizeHex2, sizeHex3 };
-        writer.sendSysex(centralReceiver, outputDevice, buildSysExPacket(closeCmd, closePayload));
+        writer.sendSysex(receiverPort2, receiverPort2.getOriginDevice(), buildSysExPacket(closeCmd, closePayload));
         Thread.sleep(400);
 
-        // =========================================================================
-        // NIEUW: STAP 5B - EXECUTE FLASH WRITE (Het officiële kopieer-bevel!)
-        // =========================================================================
-        logToDisk("STAP 5B: PSR de opdracht geven om de file DEFINITIEF te kopiëren naar flash");
+        // STAP 5B: Execute Flash Write bevel op PORT 2
+        logToDisk("Bestandsoverdracht OP PORT 2: Flash write commit bevel");
         byte[] executeWriteCmd = { 0x00, 0x05, 0x08 };
-
-        // Payload 0x02 geeft aan dat de staging-file naar de actieve USER-drive gemigreerd moet worden
         byte[] executePayload = { 0x02 };
-        writer.sendSysex(centralReceiver, outputDevice, buildSysExPacket(executeWriteCmd, executePayload));
-
-        logToDisk("Wachten tot de PSR klaar is met fysiek kopiëren naar flash...");
-        Thread.sleep(1500); // Ruime pauze zodat de controller de FAT-tabel kan beschrijven!
+        writer.sendSysex(receiverPort2, receiverPort2.getOriginDevice(), buildSysExPacket(executeWriteCmd, executePayload));
+        Thread.sleep(1000);
 
         // =========================================================================
-        // AFSLUITING: VAM-sessie beëindigen (Dit sluit de binaire poort-enveloppe)
+        // AFSLUITING OP PORT 1: Sluit de VAM-sessie af om de transfermodus te beëindigen
         // =========================================================================
-        logToDisk("AFSLUITING: VAM-sessie beëindigen");
+        logToDisk("AFSLUITING OP PORT 1: VAM-sessie sluiten");
         byte[] msdCloseVam = { (byte)0xF0, 0x43, 0x50, 0x00, 0x00, 0x01, 0x02, 0x00, (byte)0xF7 };
-        writer.sendSysex(centralReceiver, outputDevice, msdCloseVam);
-        Thread.sleep(600);
+        writer.sendSysex(receiverPort1, receiverPort1.getOriginDevice(), msdCloseVam);
+        Thread.sleep(500);
 
-        // Poorten handmatig sluiten
-        logToDisk("FINISH: USB-MIDI drivers flushen en poorten sluiten");
-        centralReceiver.close();
-        outputDevice.close();
-        logToDisk("TRANSMISSIE EN FLUSH VOLLEDIG MET SUCCES AFGEROND!");    }
+        receiverPort1.close();
+        receiverPort2.close();
+        if (outputDevice1.isOpen()) outputDevice1.close();
+        if (outputDevice2.isOpen()) outputDevice2.close();
+        logToDisk("MULTI-PORT TRANSMISSIE EN FLUSH VOLLEDIG MET SUCCES AFGEROND!");
+    }
 
     /**
      * Converteert binaire 8-bit bytes naar Yamaha's 7-bit MIDI-safe formaat (7-to-8 packing).
