@@ -9,6 +9,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -31,6 +32,8 @@ public class EventDetailPane extends GridPane {
         RowConstraints rowConstraint = new RowConstraints();
         rowConstraint.setValignment(VPos.CENTER);
         getRowConstraints().add(rowConstraint);
+
+        setVgap(5);
     }
 
     public EventDetailPane(MidiEventInfo eventInfo) {
@@ -40,10 +43,21 @@ public class EventDetailPane extends GridPane {
     }
 
     private void buildPane(MidiEventInfo eventInfo) {
-        String kind = makeReadable(eventInfo.getEventKey().getFirstElement().name(), null);
-        String type = makeReadable(eventInfo.getEventKey().getLastElement().name(), eventInfo.getEventKey().getFirstElement().name());
+        String firstElement = eventInfo.getEventKey().getFirstElement().name();
+        String kind = makeReadable(firstElement, null);
+        String type = makeReadable(eventInfo.getEventKey().getLastElement().name(), firstElement);
         String comment = eventInfo.getComment();
         String message = eventInfo.getMessage();
+
+        StringBuilder path = new StringBuilder();
+        for (EventKeyValue ekv : eventInfo.getEventKey().getValues()) {
+            String readable = makeReadable(ekv.name(), firstElement);
+            if (! kind.equals(readable) && ! type.equals(readable)) {
+                path.append("/").append(readable);
+            }
+        }
+
+        String eventPath = path.toString().replaceFirst("/", "");
 
         int row = 0;
         // ROW 0 (Type)
@@ -72,18 +86,39 @@ public class EventDetailPane extends GridPane {
         commentValueLabel.setStyle("-fx-font-weight: bold;");
         add(commentValueLabel, 4, row, 12, 1);
 
-        // ROW 2 (SEPARATOR)
+        // ROW 2 (Path)
+        row++;
+        Label pathLabel = new Label("Path");
+        add(pathLabel, 1, row);
+
+        TextField pathValue = new TextField(eventPath);
+        pathValue.setTextFormatter(new TextFormatter<>(change -> {
+            // Allow programmatic initial text setup, but block user edits
+            if (change.isContentChange()) {
+                return null;
+            }
+            return change;
+        }));
+        add(pathValue, 4, row, 12, 1);
+
+        // ROW 3 (SEPARATOR)
         row++;
         Label separator = new Label(" ");
         add(separator, 1, row, 16, 1);
 
-        // ROW 3 (Message)
+        // ROW 4 (Message)
         row += 2;
         Label messageLabel = new Label("Message:");
         add(messageLabel, 1, row, 3, 1);
 
         TextField messageValue = new TextField(message);
-        messageValue.setEditable(false);
+        messageValue.setTextFormatter(new TextFormatter<>(change -> {
+            // Allow programmatic initial text setup, but block user edits
+            if (change.isContentChange()) {
+                return null;
+            }
+            return change;
+        }));
         add(messageValue, 4, row, 12, 1);
     }
 

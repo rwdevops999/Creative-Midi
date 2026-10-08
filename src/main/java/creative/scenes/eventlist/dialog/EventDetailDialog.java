@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 public class EventDetailDialog extends Dialog<Void> {
     private static final Logger logger = LoggerFactory.getLogger(EventDetailDialog.class);
 
+    private static final int DIALOG_WIDTH = 600;
+
     public EventDetailDialog() {
         super();
 
@@ -23,9 +25,9 @@ public class EventDetailDialog extends Dialog<Void> {
     public EventDetailDialog(MidiEventInfo eventInfo) {
         this();
 
-        getDialogPane().setMinWidth(400);
-        getDialogPane().setPrefWidth(400);
-        getDialogPane().setMaxWidth(400);
+        getDialogPane().setMinWidth(DIALOG_WIDTH);
+        getDialogPane().setPrefWidth(DIALOG_WIDTH);
+        getDialogPane().setMaxWidth(DIALOG_WIDTH);
 
         getDialogPane().setPadding(new Insets(5));
 

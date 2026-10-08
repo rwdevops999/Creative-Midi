@@ -6,6 +6,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -60,6 +61,7 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
 
     private final BooleanProperty addDisabled = new SimpleBooleanProperty(true);
     private final BooleanProperty removeDisabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty dsParentFiltering = new SimpleBooleanProperty(false);
 
     private void setupDialog(List<EventKeyValue> availableEvents, List<EventKeyValue> hiddenEvents, List<EventKeyValue> allEvents) {
         visibleEventKeys = availableEvents.stream().sorted(Comparator.comparing(EventKeyValue::name)).toList();
@@ -67,15 +69,30 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
 
         groups = allEvents.stream().map(e -> toPascalCase(e.name().split("_")[0])).distinct().toList();
 
-        visibleEventsProperty.set(FXCollections.observableArrayList(removeParentMessages(visibleEventKeys)));
-        hiddenEventsProperty.set(FXCollections.observableArrayList(hiddenEventKeys));
+        handleEvents();
 
         updateDisables();
     }
 
+    private void handleEvents() {
+        visibleEventsProperty.set(FXCollections.observableArrayList(removeParentMessages(visibleEventKeys)));
+        hiddenEventsProperty.set(FXCollections.observableArrayList(hiddenEventKeys));
+    }
+
+    private void updateEvents() {
+        List<EventKeyValue> events = new ArrayList<>(visibleEventKeys);
+        List<EventKeyValue> currentHidden = new ArrayList<>(hiddenEventsProperty.get());
+        events.removeAll(currentHidden);
+
+        visibleEventsProperty.set(FXCollections.observableArrayList(removeParentMessages(events)));
+    }
+
     private List<EventKeyValue> removeParentMessages(List<EventKeyValue> events) {
-        // TODO add here a checkbox check
-        return events.stream().filter(ekv -> ! ekv.name().contains("_MESSAGE")).toList();
+        if (dsParentFiltering.get()) {
+            return events;
+        }
+
+        return events.stream().filter(ekv -> !ekv.name().contains("_MESSAGE")).toList();
     }
 
     private void buildDialogContent() {
@@ -126,18 +143,18 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
         hBox.setSpacing(5);
 
         // build the visible list
-        Pane pane = buildListPane("visible", visibleEventsProperty   );
+        Pane pane = buildListPane("visible", visibleEventsProperty, true);
         hBox.getChildren().add(pane);
         availableEventsListView = lookup(pane);
         hBox.getChildren().add(buildButtonsPane());
-        pane = buildListPane("hidden", hiddenEventsProperty   );
+        pane = buildListPane("hidden", hiddenEventsProperty, false);
         hBox.getChildren().add(pane);
         hiddenEventsListView = lookup(pane);
 
         return hBox;
     }
 
-    private VBox buildListPane(String label, ListProperty<EventKeyValue> listProperty) {
+    private VBox buildListPane(String label, ListProperty<EventKeyValue> listProperty, boolean parentFiltering) {
         VBox vBox = new VBox();
 
         // setup VBOX
@@ -164,6 +181,16 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
             }
         });
         vBox.getChildren().add(listView);
+
+        if (parentFiltering) {
+            CheckBox checkbox = new CheckBox("Filter on parents");
+            checkbox.selectedProperty().bindBidirectional(dsParentFiltering);
+            vBox.getChildren().add(checkbox);
+
+            dsParentFiltering.addListener((observable, oldValue, newValue) -> {
+                updateEvents();
+            });
+        }
 
         return vBox;
     }
@@ -224,6 +251,8 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
         to.get().addAll(selected);
         from.get().removeAll(selected);
 
+        sortList(to);
+
         updateDisables();
     }
 
@@ -231,7 +260,14 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
         to.get().add(which);
         from.get().remove(which);
 
+        sortList(to);
+
         updateDisables();
+    }
+
+    private void sortList(ListProperty<EventKeyValue> list) {
+        SortedList<EventKeyValue> sortedOnName = new SortedList<>(list.get(), Comparator.comparing(EventKeyValue::name));
+        list.set(FXCollections.observableArrayList(sortedOnName));
     }
 
     private void updateDisables() {

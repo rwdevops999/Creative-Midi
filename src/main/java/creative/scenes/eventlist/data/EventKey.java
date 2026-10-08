@@ -1,10 +1,13 @@
 package creative.scenes.eventlist.data;
 
+import lombok.Getter;
+
 import java.util.*;
 
 public class EventKey {
     private static List<EventKeyValue> keys = new ArrayList<>();
 
+    @Getter
     private List<EventKeyValue> values = new ArrayList<>();
 
     static {

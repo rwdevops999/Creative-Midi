@@ -1,8 +1,6 @@
 package creative.scenes.merge;
 
-import creative.scenes.merge.util.StyleMerger;
 import creative.scenes.merge.util.YamahaStyleMerger;
-import creative.scenes.sysex.util.SysexWriter;
 import custom.components.ActionButton;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
-import vendor.yamaha.YamahaStyleUploader;
+import vendor.yamaha.YamahaTest;
 
 import java.io.File;
 
@@ -77,12 +75,23 @@ public class MergePane extends GridPane {
         public void handle(ActionEvent event) {
 
             System.out.println("UPLOADING: " + dsNewStyleFilename.get());
-            File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
-            YamahaStyleUploader y = new YamahaStyleUploader();
+//            File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
+//            YamahaStyleTransfer.sendStyleFile(file.toPath(), ApplicationInfo.getInstance().getMidiOutputDevice(), );
+
             try {
-                y.uploadStyle(file, new SysexWriter());
+                YamahaTest.YamahaTransferHandshake();
+//                YamahaTest.usbTest();
+//                YamahaTest.identityTest();
+//                YamahaTest.sysexTest();
+//                YamahaTest.YamahaNoteTest();
+//                YamahaTest.sequenceTest();
+//                YamahaTest.syexTest();
+//                YamahaTest.sendTest();
+//                YamahaTest.ListMidiDevices();
+//                YamahaTest.send();
             } catch (Exception e) {
-                System.out.println("EXCEPTION");
+                System.out.println("EXCEPTION: " + e.getMessage());
+
             }
         }
     };

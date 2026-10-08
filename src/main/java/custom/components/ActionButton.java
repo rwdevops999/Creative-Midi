@@ -76,7 +76,7 @@ public class ActionButton extends Button {
         setTooltip(tooltipField);
         setGraphic(imageView);
         setOnAction(handler);
-        setStyle("-fx-background-color: yellow; -fx-padding: 1;");
+        setStyle("-fx-background-color: transparent; -fx-padding: 1;");
 
         logger.debug("[CM_UTIL] Created icon button {}", name);
     }

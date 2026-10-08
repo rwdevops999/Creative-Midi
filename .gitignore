@@ -19,3 +19,4 @@ target/
 *.log
 
 /style/*.sty
+export/*.txt
