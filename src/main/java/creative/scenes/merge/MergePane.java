@@ -24,13 +24,10 @@ import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
-import vendor.yamaha.StyleTransfer;
 import vendor.yamaha.YamahaStyleUploader;
-import vendor.yamaha.YamahaTest;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
