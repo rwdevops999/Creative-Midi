@@ -32,25 +32,15 @@ public class Registry {
     }
 
     public static void publish(String name, Object data, Boolean deviceSet) {
-        System.out.println("PUBLISH NAME = " + name + " -> " + deviceSet);
-
-/*        if ("DeviceSelector".equals(name)) {
-            System.out.println("PUBLISH NAME = " + name + " -> " + deviceSet);
-        } else {
-            System.out.println("PUBLISH NAME = " + name + " -> " + deviceSet);
-        }
-*/
         List<Node> nodes = nodeRegistry.get(name);
         List<BiConsumer<Node, Object>> consumers = consumerRegistry.get(name);
 
         if (nodes != null && consumers != null) {
-            // Loop by index to ensure Node 1 goes to Consumer 1, Node 2 to Consumer 2, etc.
             int size = Math.min(nodes.size(), consumers.size());
             for (int i = 0; i < size; i++) {
                 Node node = nodes.get(i);
                 BiConsumer<Node, Object> consumer = consumers.get(i);
 
-                System.out.println("PUBLISH TO " + node.getId());
                 consumer.accept(node, data);
             }
         }

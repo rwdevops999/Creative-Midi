@@ -75,14 +75,15 @@ public final class YamahaStyleUploader implements AutoCloseable {
 
     public YamahaStyleUploader(String deviceName) throws MidiUnavailableException {
         MidiDevice out = null, in = null;
-        for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
+/*        for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
             MidiDevice d = MidiSystem.getMidiDevice(info);
             if (!info.getName().contains(deviceName)) continue;
             if (d.getMaxReceivers() != 0 && out == null) out = d;
             if (d.getMaxTransmitters() != 0 && in == null) in = d;
         }
-
+*/
         out = ApplicationInfo.getInstance().getMidiOutputDevice();
+        in = ApplicationInfo.getInstance().getMidiInputDevice();
 
         if (out == null || in == null) throw new MidiUnavailableException("Missing MIDI input/output for " + deviceName);
 

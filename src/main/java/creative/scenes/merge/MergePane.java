@@ -97,53 +97,48 @@ public class MergePane extends GridPane {
             NameDialog nameDialog = new NameDialog("song");
             Optional<String> songName = nameDialog.showAndWait();
 
-            if (songName.isPresent() && (! dsDeviceFiles.get().isEmpty())) {
-                if (dsDeviceFiles.get().contains(songName.get())) {
-                    System.out.println("File Exists");
-                    if (DialogFactory.renderConfirmationDialog("File exists!", "Overwrite?")) {
-                        System.out.println("Overwriting " + songName.get());
+            if (songName.isPresent()) {
+                if (! dsDeviceFiles.get().isEmpty()) {
+                    if (dsDeviceFiles.get().contains(songName.get())) {
+                        if (! DialogFactory.renderConfirmationDialog("Style file exists!", "Overwrite?")) {
+                            System.out.println("Do Nothing");
+                            return;
+                        }
                     }
                 }
+
+                doUpload(songName.get());
+                return;
             }
 
-//            System.out.println("UPLOADING: " + dsNewStyleFilename.get());
-            // TODO Render a name dialog
-//            File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
-//            YamahaStyleTransfer.sendStyleFile(file.toPath(), ApplicationInfo.getInstance().getMidiOutputDevice(), );
+            System.out.println("Do Nothing");
+        }
+    };
 
-//            StyleTransfer st = new StyleTransfer();
-            try {
-                // Here we can retrieve de keyboard style files
-//                YamahaStyleUploader yamaha = new YamahaStyleUploader();
-//                List<String> styles = yamaha.getStyleFiles();
+    private void doUpload(String songName) {
+        System.out.println("Do UPLOAD: " + songName);
+//        try {
+            if (ApplicationInfo.getInstance().getMidiOutputDevice() ==  null ||
+                ApplicationInfo.getInstance().getMidiInputDevice() == null) {
+                DialogFactory.renderErrorDialog("No device selected");
+            } else {
+                System.out.println("EXECUTE REAL UPLOAD: " + songName);
+            }
 
-
-
-  /*              Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAB.sty");
+            /*
+//            Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAB.sty");
 
                 try (YamahaStyleUploader uploader =
                              new YamahaStyleUploader()) {
 
-                    uploader.upload(styleFile);
-                }
+//                    uploader.upload(Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\\\send\\WRAB.sty"), "");
+                } catch (Exception e) {
 
-                System.out.println("Loaded"); */
-//                st.firstTest();
-//                YamahaTest.YamahaTransferHandshake();
-//                YamahaTest.usbTest();
-//                YamahaTest.identityTest();
-//                YamahaTest.sysexTest();
-//                YamahaTest.YamahaNoteTest();
-//                YamahaTest.sequenceTest();
-//                YamahaTest.syexTest();
-//                YamahaTest.sendTest();
-//                YamahaTest.ListMidiDevices();
-//                YamahaTest.send();
-            } catch (Exception e) {
-                System.out.println("EXCEPTION: " + e.getMessage());
-            }
-        }
-    };
+                }
+        } catch (Exception e) {
+            System.out.println("EXCEPTION: " + e.getMessage());
+        }  */
+    }
 
     private void buildPane() {
         logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");
