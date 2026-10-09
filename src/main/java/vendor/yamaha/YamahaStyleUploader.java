@@ -29,7 +29,6 @@ public final class YamahaStyleUploader implements AutoCloseable {
     private final BlockingQueue<byte[]> midiHandshake = new LinkedBlockingQueue<>();
 
     private final Transmitter incoming;
-    private final int timeoutMs;
 
     public YamahaStyleUploader() throws MidiUnavailableException {
         this("Digital Keyboard-1", 5000);
@@ -75,7 +74,6 @@ public final class YamahaStyleUploader implements AutoCloseable {
     }
 
     public YamahaStyleUploader(String deviceName, int timeoutMs) throws MidiUnavailableException {
-        this.timeoutMs = timeoutMs;
         MidiDevice out = null, in = null;
         for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
             MidiDevice d = MidiSystem.getMidiDevice(info);
@@ -83,6 +81,7 @@ public final class YamahaStyleUploader implements AutoCloseable {
             if (d.getMaxReceivers() != 0 && out == null) out = d;
             if (d.getMaxTransmitters() != 0 && in == null) in = d;
         }
+
         out = ApplicationInfo.getInstance().getMidiOutputDevice();
 
         if (out == null || in == null) throw new MidiUnavailableException("Missing MIDI input/output for " + deviceName);
@@ -350,7 +349,7 @@ public final class YamahaStyleUploader implements AutoCloseable {
     }
     /** List filenames (not folders) from USER:\\STYLE. */
     public synchronized List<String> getStyleFiles() throws Exception {
-        end();
+//        end();
         begin();
         try {
             driveAndIdentity();

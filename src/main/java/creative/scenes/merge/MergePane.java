@@ -2,10 +2,9 @@ package creative.scenes.merge;
 
 import creative.scenes.merge.util.YamahaStyleMerger;
 import custom.components.ActionButton;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -13,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -28,6 +28,7 @@ import vendor.yamaha.YamahaStyleUploader;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -35,6 +36,23 @@ import static util.Util.setPaneBackground;
 
 public class MergePane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(MergePane.class);
+
+    private static YamahaStyleUploader yamaha;
+    private static final ObjectProperty<ObservableList<String>> dsDeviceFiles =
+            new SimpleObjectProperty<>(FXCollections.observableArrayList());
+
+    static {
+         try {
+             yamaha = new YamahaStyleUploader();
+             if (ApplicationInfo.getInstance().getMidiOutputDevice() != null) {
+                 List<String> styles = yamaha.getStyleFiles().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
+                 dsDeviceFiles.set(FXCollections.observableArrayList(styles));
+             }
+
+         } catch (Exception e) {
+             logger.error("[CM_MERGE_PANE]: Exception. CAUSE: " + e.getMessage());
+         }
+    }
 
     public MergePane() {
         super();
@@ -204,7 +222,23 @@ public class MergePane extends GridPane {
         row++;
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
-        add (textArea, 0, row, 10, 5);
+        // Set the height to fit exactly 5 rows of text
+        textArea.setPrefRowCount(5);
+        add (textArea, 0, row, 10, 1);
+
+        // Files on device
+        row++;
+        Label deviceLabel = new Label("Device files");
+        add (deviceLabel, 0, row);
+
+        double ROW_HEIGHT = 24.0;
+        int VISIBLE_ROWS = 7;
+
+        row++;
+        ListView<String> deviceFiles = new ListView<>();
+        deviceFiles.itemsProperty().bind(dsDeviceFiles);
+        deviceFiles.setPrefHeight((VISIBLE_ROWS * ROW_HEIGHT) + 2);
+        add (deviceFiles, 0, row, 10, 1);
 
         // listeners
         dsStyleFilename.addListener((observable, oldValue, newValue) -> {
