@@ -1,10 +1,13 @@
 package creative.scenes.voice.util;
 
+import creative.scenes.voice.VoiceContainer;
 import creative.scenes.voice.VoiceSearchResultsPane;
 import creative.scenes.voice.dialog.VoiceDetailDialog;
 import creative.scenes.voice.provider.InstrumentProvider;
 import entity.voice.Patch;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -13,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +59,40 @@ public class SearchResultsPane extends AnchorPane {
 
         patchColumn = new TableColumn<>("Patch");
         patchColumn.setCellValueFactory(new PropertyValueFactory<>("patch"));
+        patchColumn.setCellFactory(column -> {
+            return new TableCell<Patch, String>() {
+                // We maken één keer het icoon aan per cel voor betere prestaties
+                // Je kunt hier een ImageView (voor een PNG) of een Label met een FontIcon (bijv. FontAwesome) gebruiken
+                private final Label starIcon = new Label("★");
+                {
+                    starIcon.setTextFill(Color.GOLD); // Of Color.YELLOW, maar GOLD oogt vaak mooier
+                    starIcon.setStyle("-fx-font-size: 12px; -fx-text-fill: #FFD700; -fx-font-weight: bold;");
+                }
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(item);
+
+                        // Haal het Patch object van de huidige rij op
+                        Patch currentPatch = getTableView().getItems().get(getIndex());
+
+                        // Controleer of dit item een favoriet is
+                        if (VoiceContainer.isFavorite(currentPatch)) { // Pas dit aan naar jouw eigen 'isFavorite' methode of check
+                            // Zorg dat het icoon RECHTS van de tekst komt te staan
+                            setContentDisplay(ContentDisplay.RIGHT);
+                            setGraphic(starIcon);
+                        } else {
+                            setGraphic(null); // Verwijder de ster als het geen favoriet is
+                        }
+                    }
+                }
+            };
+        });
 
         TableColumn<Patch, Integer> bankColumn  = new TableColumn<>("Bank");
         bankColumn.setCellValueFactory(new PropertyValueFactory<>("bank"));
@@ -70,41 +108,6 @@ public class SearchResultsPane extends AnchorPane {
 
         table.setId("VoicesTable");
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        table.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-            if (event.getButton() != MouseButton.PRIMARY) return; // Alleen linksklikken
-
-            // Look for the clicked tableRow
-            Node target = (Node) event.getTarget();
-            while (target != null && !(target instanceof TableRow)) {
-                target = target.getParent();
-            }
-
-            if (target instanceof TableRow) {
-                TableRow<?> row = (TableRow<?>) target;
-                if (!row.isEmpty()) {
-
-                    Patch item = (Patch) row.getItem();
-                    boolean isAlreadySelected = row.isSelected();
-
-                    int channel = 0;
-
-                    // Scenario 1: CTRL is ingedrukt
-                    if (event.isControlDown()) {
-                        if (isAlreadySelected) {
-                            event.consume(); // Voorkomt deselectie!
-                        }
-
-                        channel = 2;
-                    } else if (event.isShiftDown()) {
-                        channel = 1;
-                        event.consume();
-                    }
-
-                    getVoiceSearchResultsPane().getSpeakerPane().sendAsMidi(channel, item);
-                }
-            }
-        });
-
         table.getColumns().addAll(patchColumn, bankColumn, msbColumn, lsbColumn, pcColumn);
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -164,9 +167,6 @@ public class SearchResultsPane extends AnchorPane {
 //            sendAsMidi(2, patch);
         });
 
-        // Separator
-        SeparatorMenuItem separator1 = new SeparatorMenuItem();
-
         // MenuItem (Details)
         MenuItem details = new MenuItem("Show details");
         details.setOnAction(event -> {
@@ -181,7 +181,31 @@ public class SearchResultsPane extends AnchorPane {
             dialog.showAndWait();
         });
 
-        contextMenu.getItems().addAll(right1, right2, left, separator1, details);
+        // MenuItem (Favorites)
+        MenuItem favorites = new MenuItem("Add as favorite");
+
+        contextMenu.getItems().addAll(right1, left, new SeparatorMenuItem(), details, new SeparatorMenuItem(), favorites);
+
+        contextMenu.setOnShowing(event -> {
+            Patch selectedPatch = table.getSelectionModel().getSelectedItem();
+
+            if (selectedPatch != null) {
+                // Controleer of de Patch in de externe ObservableSet staat
+                if (VoiceContainer.getFavorites().contains(selectedPatch)) {
+                    favorites.setText("Remove from Favorites");
+                    favorites.setOnAction(e -> {
+                        VoiceContainer.getFavorites().remove(selectedPatch);
+                        table.refresh(); // Update de ster direct
+                    });
+                } else {
+                    favorites.setText("Add to Favorites");
+                    favorites.setOnAction(e -> {
+                        VoiceContainer.getFavorites().add(selectedPatch);
+                        table.refresh(); // Update de ster direct
+                    });
+                }
+            }
+        });
 
         table.setContextMenu(contextMenu);
     }
