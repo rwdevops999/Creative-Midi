@@ -88,7 +88,7 @@ public class MergePane extends GridPane {
 //                YamahaStyleUploader yamaha = new YamahaStyleUploader();
 //                List<String> styles = yamaha.getStyleFiles();
 
-                Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAA.sty");
+                Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAB.sty");
 
                 try (YamahaStyleUploader uploader =
                              new YamahaStyleUploader()) {

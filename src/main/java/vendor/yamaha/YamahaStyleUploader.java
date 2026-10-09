@@ -280,9 +280,18 @@ public final class YamahaStyleUploader implements AutoCloseable {
         byte[] expected2 = {
                 (byte) 0xF0,
                 0x43, 0x50, 0x00,
-                0x00, 0x00, 0x02, 0X02
+                0x00, 0x02, 0x02
         };
-        sendAndWaitForResponse("F0 43 50 00 00 02 01 F7", expected2, 1000);
+
+        byte[] response2 = sendAndWaitForResponse(
+                "F0 43 50 00 00 02 01 F7",
+                expected2,
+                1000
+        );
+
+        if (response2 == null) {
+            throw new IOException("Timeout waiting for device information");
+        }
 
         byte[] expected3 = {
                 (byte) 0xF0,0x43,0x50,0x00,0x00,0x01,0x02,0x00
@@ -431,6 +440,10 @@ public final class YamahaStyleUploader implements AutoCloseable {
 //        byte[] create = YamahaStyleUploadPackets.buildCreateRequest(destinationName);
         byte[] setup = YamahaStyleUploadPackets.buildTransferRequest(destinationName, data.length);
 
+        System.out.println("Source file: " + styleFile.toAbsolutePath());
+        System.out.println("File size: " + data.length);
+        System.out.println("Packet count: " + packets.size());
+
         // Preflight listing is a separate session, using your working code.
 /*        for (String existing : getStyleFiles()) {
             if (existing.equalsIgnoreCase(destinationName))
@@ -470,14 +483,35 @@ public final class YamahaStyleUploader implements AutoCloseable {
 */
             midiHandshake.clear();
             send(setup);
+
             // The reference capture shows 03 00 as transfer-ready ACK.
             awaitOneOf(10000, new byte[] {(byte)0xF0,0x43,0x50,0x00,0x03,0x00,(byte)0xF7});
 
             for (int i = 0; i < packets.size(); i++) {
                 midiHandshake.clear();
                 send(packets.get(i));
-                awaitOneOf(10000, new byte[] {(byte)0xF0,0x43,0x50,0x00,0x03,0x00,(byte)0xF7});
-                System.out.printf("Style upload: %d/%d packets%n", i + 1, packets.size());
+                byte[] ack = awaitOneOf(
+                        10000,
+                        new byte[] {
+                                (byte) 0xF0, 0x43, 0x50, 0x00,
+                                0x03, 0x00, (byte) 0xF7
+                        }
+                );
+
+                if (ack == null) {
+                    throw new IOException(
+                            "No ACK for style packet " +
+                                    (i + 1) + "/" + packets.size()
+                    );
+                }
+
+                System.out.printf(
+                        "Style upload: %d/%d packets%n",
+                        i + 1, packets.size()
+                );
+
+//                awaitOneOf(10000, new byte[] {(byte)0xF0,0x43,0x50,0x00,0x03,0x00,(byte)0xF7});
+//                System.out.printf("Style upload: %d/%d packets%n", i + 1, packets.size());
             }
 
             // Captured end-of-data request, then 03 03 completion indication.
