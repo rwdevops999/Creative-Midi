@@ -139,7 +139,7 @@ public class MonitorPane extends VBox {
 //                new MidiReset().reset();
                 stopClockStream();
 
-                Registry.publish("SelectSong", text);
+                Registry.publish("SelectSong", text, false);
                 executeAction(Constants.MONITOR_ACTION_CLEAR);
 
                 Song song = PlaylistContainer.getSong(text);

@@ -31,7 +31,7 @@ public final class YamahaStyleUploader implements AutoCloseable {
     private final Transmitter incoming;
 
     public YamahaStyleUploader() throws MidiUnavailableException {
-        this("Digital Keyboard-1", 5000);
+        this("Digital Keyboard-1");
     }
 
     private static String createUniqueStyleName(Path styleFile) {
@@ -73,7 +73,7 @@ public final class YamahaStyleUploader implements AutoCloseable {
         return sb.toString().trim();
     }
 
-    public YamahaStyleUploader(String deviceName, int timeoutMs) throws MidiUnavailableException {
+    public YamahaStyleUploader(String deviceName) throws MidiUnavailableException {
         MidiDevice out = null, in = null;
         for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
             MidiDevice d = MidiSystem.getMidiDevice(info);

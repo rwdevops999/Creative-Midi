@@ -43,7 +43,7 @@ public class KeyboardHandler<T extends ActionEvent> implements EventHandler<T> {
         InstrumentProvider instrumentProvider = InstrumentProviderFactory.getProvider(dirPath + "/" + keyboard + extension);
         ApplicationInfo.getInstance().setInstrumentProvider(instrumentProvider);
 
-        Registry.publish("VoiceGroupSelector", null);
+        Registry.publish("VoiceGroupSelector", null, false);
 
         // Restart Device Polling task
         String propertyPath = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.PROPERTIES_PATH, "./properties");
@@ -75,7 +75,7 @@ public class KeyboardHandler<T extends ActionEvent> implements EventHandler<T> {
             }
 
             DeviceScanner task = new DeviceScanner(false, defaultDeviceName, data -> {
-                Registry.publish("DeviceSelector", data);
+                Registry.publish("DeviceSelector", data, ApplicationInfo.getInstance().getMidiOutputDevice() != null);
             });
 
             task.setOnSucceeded(e -> {

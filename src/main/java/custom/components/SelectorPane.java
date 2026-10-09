@@ -110,7 +110,12 @@ public class SelectorPane extends HBox {
                 ApplicationInfo.getInstance().setSelectedDevice(selectedDevice);
             } else {
                 if (! selectedDevice.isEmpty()) {
-                    deviceInfo.deselectDevice(selectedDevice);
+                    ApplicationInfo.getInstance().setMidiOutputDevice(null);
+                    if (! deviceInfo.deselectDevice(selectedDevice)) {
+                        ApplicationInfo.getInstance().setMidiInputDevice(null);
+                        ApplicationInfo.getInstance().setMidiOutputDevice(null);
+                    }
+
                     selectedDevice = "";
                     ApplicationInfo.getInstance().setSelectedDevice(selectedDevice);
 
@@ -150,6 +155,11 @@ public class SelectorPane extends HBox {
                         .position(Pos.TOP_LEFT)     // Set corner position on screen
                         .showInformation();
 
+                if (! deviceInfo.deselectDevice(selectedDevice)) {
+                    ApplicationInfo.getInstance().setMidiInputDevice(null);
+                    ApplicationInfo.getInstance().setMidiOutputDevice(null);
+                }
+                
                 selectedDevice = "";
                 ApplicationInfo.getInstance().setSelectedDevice(selectedDevice);
             }

@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
+import util.Registry;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiUnavailableException;
@@ -50,6 +51,7 @@ public class DeviceInfo {
             if (device.getMaxReceivers() != 0) {
                 if (! device.isOpen()) {
                     device.open();
+                    System.out.println("SET AI_MidiOutputDevice -> " + device.getDeviceInfo().getName());
                     ApplicationInfo.getInstance().setMidiOutputDevice(device);
                 }
             }
@@ -64,7 +66,8 @@ public class DeviceInfo {
         handleDevice(devs.get(1));
     }
 
-    public void deselectDevice(String deviceName) {
+    public boolean deselectDevice(String deviceName) {
+        boolean deselected = false;
         List<MidiDevice> devs = devices.get(deviceName);
 
         if (devs != null) {
@@ -72,13 +75,17 @@ public class DeviceInfo {
             if (device != null && device.isOpen()) {
                 device.close();
                 ApplicationInfo.getInstance().setMidiInputDevice(null);
+                deselected = true;
             }
 
             device = devs.get(1);
             if (device != null && device.isOpen()) {
                 device.close();
                 ApplicationInfo.getInstance().setMidiOutputDevice(null);
+                deselected = true;
             }
         }
+
+        return deselected;
     }
 }

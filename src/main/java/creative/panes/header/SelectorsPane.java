@@ -41,10 +41,13 @@ public class SelectorsPane extends VBox {
         getChildren().addAll(keyboardSelectorPane, deviceSelectorPane);
 
         Registry.register("DeviceSelector", deviceSelectorPane, (node, data) -> {
-            SelectorPane selectorPane = (SelectorPane)node;
-            DeviceInfo di = (DeviceInfo) data;
+            if (node instanceof SelectorPane selectorPane) {
+                if (data != null) {
+                    DeviceInfo di = (DeviceInfo) data;
 
-            selectorPane.updateComboData(di);
+                    selectorPane.updateComboData(di);
+                }
+            }
         });
 
         logger.debug("[CM_SELECTORS_PANE] Built {}", getId());

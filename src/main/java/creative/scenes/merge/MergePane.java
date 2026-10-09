@@ -2,6 +2,7 @@ package creative.scenes.merge;
 
 import creative.scenes.merge.util.YamahaStyleMerger;
 import custom.components.ActionButton;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,12 +23,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
+import util.Registry;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 import vendor.yamaha.YamahaStyleUploader;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static util.ColorScheme.getColor;
@@ -44,11 +47,6 @@ public class MergePane extends GridPane {
     static {
          try {
              yamaha = new YamahaStyleUploader();
-             if (ApplicationInfo.getInstance().getMidiOutputDevice() != null) {
-                 List<String> styles = yamaha.getStyleFiles().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
-                 dsDeviceFiles.set(FXCollections.observableArrayList(styles));
-             }
-
          } catch (Exception e) {
              logger.error("[CM_MERGE_PANE]: Exception. CAUSE: " + e.getMessage());
          }
@@ -130,8 +128,38 @@ public class MergePane extends GridPane {
         }
     };
 
+    private String selectedDevice = "";
+
     private void buildPane() {
         logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");
+
+        Registry.register("DeviceSelector", this, (node, data) -> {
+            if (node instanceof MergePane) {
+                if (ApplicationInfo.getInstance().getMidiOutputDevice() != null) {
+                    try {
+                        if (yamaha == null) {
+                            yamaha = new YamahaStyleUploader();
+                            List<String> styles = yamaha.getStyleFiles().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
+
+                            dsDeviceFiles.set(FXCollections.observableArrayList(styles));
+                        }
+                    } catch (Exception e) {
+                        logger.error("[CM_MIDI_SCENE] Exception. CAUSE: " + e.getMessage());
+                    }
+                } else {
+                    dsDeviceFiles.set(FXCollections.observableArrayList(new ArrayList<>()));
+                }
+
+/*                if (ApplicationInfo.getInstance().getMidiOutputDevice() != null) {
+                    try {
+                        List<String> styles = yamaha.getStyleFiles().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
+                        dsDeviceFiles.set(FXCollections.observableArrayList(styles));
+                    } catch (Exception e) {
+                        logger.error("[CM_MIDI_SCENE] Exception. CAUSE: " + e.getMessage());
+                    }
+                } */
+            }
+        });
 
         FileChooser fileChooser = new FileChooser();
 

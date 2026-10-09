@@ -51,7 +51,7 @@ public class Initializer {
         String defaultDeviceName = PropertyContainer.getPropertyAsString(PropertyType.System, PropertyContainer.DEVICE_NAME, "Digital Keyboard");
 
         DeviceScanner task = new DeviceScanner(autoSelectDevice, defaultDeviceName, data -> {
-            Registry.publish("DeviceSelector", data);
+            Registry.publish("DeviceSelector", data, (ApplicationInfo.getInstance().getMidiInputDevice() != null));
         });
 
         task.setOnSucceeded(e -> {
