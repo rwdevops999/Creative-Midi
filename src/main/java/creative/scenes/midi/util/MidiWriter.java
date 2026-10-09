@@ -133,4 +133,10 @@ public class MidiWriter {
 
         return true;
     }
+
+    public void sendMidiMessage (Receiver receiver, ShortMessage midiMessage) {
+        logger.debug("[CM_MIDI_WRITER] Sending MIDI Message {}", midiMessage);
+
+        receiver.send(midiMessage, -1);
+    }
 }

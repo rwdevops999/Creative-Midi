@@ -24,9 +24,13 @@ import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
+import vendor.yamaha.StyleTransfer;
+import vendor.yamaha.YamahaStyleUploader;
 import vendor.yamaha.YamahaTest;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -78,8 +82,23 @@ public class MergePane extends GridPane {
 //            File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
 //            YamahaStyleTransfer.sendStyleFile(file.toPath(), ApplicationInfo.getInstance().getMidiOutputDevice(), );
 
+//            StyleTransfer st = new StyleTransfer();
             try {
-                YamahaTest.YamahaTransferHandshake();
+                // Here we can retrieve de keyboard style files
+//                YamahaStyleUploader yamaha = new YamahaStyleUploader();
+//                List<String> styles = yamaha.getStyleFiles();
+
+                Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAA.sty");
+
+                try (YamahaStyleUploader uploader =
+                             new YamahaStyleUploader()) {
+
+                    uploader.upload(styleFile);
+                }
+
+                System.out.println("Loaded");
+//                st.firstTest();
+//                YamahaTest.YamahaTransferHandshake();
 //                YamahaTest.usbTest();
 //                YamahaTest.identityTest();
 //                YamahaTest.sysexTest();
@@ -91,7 +110,7 @@ public class MergePane extends GridPane {
 //                YamahaTest.send();
             } catch (Exception e) {
                 System.out.println("EXCEPTION: " + e.getMessage());
-
+                e.printStackTrace();
             }
         }
     };
