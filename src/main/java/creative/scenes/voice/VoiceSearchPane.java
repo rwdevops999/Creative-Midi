@@ -1,5 +1,7 @@
 package creative.scenes.voice;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +31,24 @@ public class VoiceSearchPane extends BorderPane {
         buildPane();
     }
 
+    private BooleanProperty visible =  new SimpleBooleanProperty(this, "visible", true);
+
+    public void setSearchPanelsVisible(boolean visible) {
+        this.visible.set(visible);
+    }
+
     private void buildPane() {
         logger.debug("[CM_VOICE_SEARCH_PANE] Building {}", getId());
 
-        setTop(new PatchSearchPane(this));
-        setCenter(new GroupSearchPane(this));
-        setBottom(new ExcludesPane(this));
+        PatchSearchPane patchSearchPane = new PatchSearchPane(this);
+        patchSearchPane.visibleProperty().bind(visible);
+        setTop(patchSearchPane);
+        GroupSearchPane groupsSearchPane = new GroupSearchPane(this);
+        groupsSearchPane.visibleProperty().bind(visible);
+        setCenter(groupsSearchPane);
+        ExcludesPane excludesPane = new ExcludesPane(this);
+        excludesPane.visibleProperty().bind(visible);
+        setBottom(excludesPane);
 
         logger.debug("[CM_VOICE_SEARCH_PANE] Built {}", getId());
     }

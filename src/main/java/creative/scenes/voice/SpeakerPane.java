@@ -6,6 +6,7 @@ import creative.scenes.midi.data.ByteType;
 import creative.scenes.midi.util.MidiDemo;
 import creative.scenes.midi.util.MidiWriter;
 import creative.scenes.voice.components.MultiChannelMidiReceiver;
+import custom.components.LedToggleButton;
 import custom.components.voice.ChannelIndicator;
 import custom.dialog.DialogFactory;
 import entity.midi.Midi;
@@ -150,6 +151,21 @@ public class SpeakerPane extends HBox {
 
             getChildren().add(channelIndicator);
         }
+
+        LedToggleButton favorites = new LedToggleButton("Favorites");
+        favorites.setOnAction(e -> {
+            VoicePane voicePane = getVoiceSearchResultsPane().getVoicePane();
+            voicePane.getVoiceSearchPane().setSearchPanelsVisible(! favorites.isSelected());
+            VoiceSearchResultsPane resultsPane = voicePane.getVoiceSearchResultsPane();
+
+            if (favorites.isSelected()) {
+                resultsPane.showResults(new ArrayList<>(VoiceContainer.getFavorites()));
+            } else {
+                resultsPane.showResults(null);
+            }
+        });
+
+        getChildren().add(favorites);
 
         logger.debug("[CM_SPEAKER_PANE] Building {}", getId());
     }

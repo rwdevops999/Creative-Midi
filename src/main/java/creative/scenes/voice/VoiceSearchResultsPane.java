@@ -52,8 +52,14 @@ public class VoiceSearchResultsPane extends BorderPane {
 
     private List<Patch> tableResults = new ArrayList<>();
     private List<String> excludes = new ArrayList<>();
+    private List<Patch> oldData;
     public void showResults (List<Patch> data) {
-        tableResults = data;
+        if (data == null) {
+            tableResults = oldData;
+        } else {
+            oldData = tableResults;
+            tableResults = data;
+        }
 
         List<Patch> newData = removeExcludes(tableResults);
 

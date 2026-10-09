@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
+import static util.Util.setPaneBackground;
 
 public class VoicePane extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(VoicePane.class);
@@ -31,6 +32,8 @@ public class VoicePane extends BorderPane {
         logger.debug("[CM_VOICE_PANE] Building {}", getId());
 
         CommunicationModel.setStatus("Matching Voices");
+
+        setPaneBackground(this);
 
         setLeft(new VoiceSearchPane(this));
         setCenter(new VoiceSearchResultsPane(this, new ArrayList<>()));
