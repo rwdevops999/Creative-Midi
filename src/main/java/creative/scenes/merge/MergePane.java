@@ -2,6 +2,8 @@ package creative.scenes.merge;
 
 import creative.scenes.merge.util.YamahaStyleMerger;
 import custom.components.ActionButton;
+import custom.dialog.DialogFactory;
+import custom.dialog.NameDialog;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -32,6 +34,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -79,19 +82,32 @@ public class MergePane extends GridPane {
         buildPane();
     }
 
-    private StringProperty dsStyleFilename = new SimpleStringProperty("");
-    private StringProperty dsMidiFilename = new SimpleStringProperty("");
-    private StringProperty dsNewStyleFilename = new SimpleStringProperty("");
+    private final StringProperty dsStyleFilename = new SimpleStringProperty("");
+    private final StringProperty dsMidiFilename = new SimpleStringProperty("");
+    private final StringProperty dsNewStyleFilename = new SimpleStringProperty("");
 
-    private BooleanProperty dsDisabled = new SimpleBooleanProperty(true);
-    private BooleanProperty dsVisible = new SimpleBooleanProperty(false);
-    private BooleanProperty dsDisabledUpload = new SimpleBooleanProperty(false);
+    private final BooleanProperty dsDisabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty dsVisible = new SimpleBooleanProperty(false);
+    private final BooleanProperty dsDisabledUpload = new SimpleBooleanProperty(false);
 
-    private EventHandler<ActionEvent> uploadHandler = new EventHandler<ActionEvent>() {
+    private final EventHandler<ActionEvent> uploadHandler = new EventHandler<ActionEvent>() {
+
         @Override
         public void handle(ActionEvent event) {
+            NameDialog nameDialog = new NameDialog("song");
+            Optional<String> songName = nameDialog.showAndWait();
 
-            System.out.println("UPLOADING: " + dsNewStyleFilename.get());
+            if (songName.isPresent() && (! dsDeviceFiles.get().isEmpty())) {
+                if (dsDeviceFiles.get().contains(songName.get())) {
+                    System.out.println("File Exists");
+                    if (DialogFactory.renderConfirmationDialog("File exists!", "Overwrite?")) {
+                        System.out.println("Overwriting " + songName.get());
+                    }
+                }
+            }
+
+//            System.out.println("UPLOADING: " + dsNewStyleFilename.get());
+            // TODO Render a name dialog
 //            File file = new File("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\aaa.sty");
 //            YamahaStyleTransfer.sendStyleFile(file.toPath(), ApplicationInfo.getInstance().getMidiOutputDevice(), );
 
@@ -101,7 +117,9 @@ public class MergePane extends GridPane {
 //                YamahaStyleUploader yamaha = new YamahaStyleUploader();
 //                List<String> styles = yamaha.getStyleFiles();
 
-                Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAB.sty");
+
+
+  /*              Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAB.sty");
 
                 try (YamahaStyleUploader uploader =
                              new YamahaStyleUploader()) {
@@ -109,7 +127,7 @@ public class MergePane extends GridPane {
                     uploader.upload(styleFile);
                 }
 
-                System.out.println("Loaded");
+                System.out.println("Loaded"); */
 //                st.firstTest();
 //                YamahaTest.YamahaTransferHandshake();
 //                YamahaTest.usbTest();
@@ -123,12 +141,9 @@ public class MergePane extends GridPane {
 //                YamahaTest.send();
             } catch (Exception e) {
                 System.out.println("EXCEPTION: " + e.getMessage());
-                e.printStackTrace();
             }
         }
     };
-
-    private String selectedDevice = "";
 
     private void buildPane() {
         logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");

@@ -159,7 +159,7 @@ public class SelectorPane extends HBox {
                     ApplicationInfo.getInstance().setMidiInputDevice(null);
                     ApplicationInfo.getInstance().setMidiOutputDevice(null);
                 }
-                
+
                 selectedDevice = "";
                 ApplicationInfo.getInstance().setSelectedDevice(selectedDevice);
             }

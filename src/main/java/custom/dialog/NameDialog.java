@@ -9,10 +9,10 @@ import javafx.scene.layout.HBox;
 public class NameDialog extends Dialog<String> {
     public StringProperty nameProperty = new SimpleStringProperty();
 
-    public NameDialog() {
+    public NameDialog(String purpose) {
         super();
 
-        setTitle("Enter sysex name");
+        setTitle("Enter " + purpose + " name");
 
         ButtonType useButtonType = new ButtonType("Use", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(useButtonType, ButtonType.CANCEL);
@@ -21,13 +21,13 @@ public class NameDialog extends Dialog<String> {
         content.setAlignment(Pos.CENTER);
         content.setSpacing(10);
 
-        Label sysexNameLabel = new Label("Sysex Name");
-        content.getChildren().add(sysexNameLabel);
+        Label nameLabel = new Label("Name");
+        content.getChildren().add(nameLabel);
 
-        TextField sysexNameTextField = new TextField();
-        sysexNameTextField.setPromptText("Sysex name ...");
-        sysexNameTextField.textProperty().bindBidirectional(nameProperty);
-        content.getChildren().add(sysexNameTextField);
+        TextField nameTextField = new TextField();
+        nameTextField.setPromptText("name ...");
+        nameTextField.textProperty().bindBidirectional(nameProperty);
+        content.getChildren().add(nameTextField);
 
         getDialogPane().setContent(content);
 
