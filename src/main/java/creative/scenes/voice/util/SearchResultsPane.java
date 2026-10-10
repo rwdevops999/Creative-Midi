@@ -1,25 +1,20 @@
 package creative.scenes.voice.util;
 
-import creative.scenes.voice.VoiceContainer;
 import creative.scenes.voice.VoiceSearchResultsPane;
 import creative.scenes.voice.dialog.VoiceDetailDialog;
 import creative.scenes.voice.provider.InstrumentProvider;
 import entity.voice.Patch;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import system.SysData;
 import util.ApplicationInfo;
 
 import java.util.ArrayList;
@@ -82,7 +77,7 @@ public class SearchResultsPane extends AnchorPane {
                         Patch currentPatch = getTableView().getItems().get(getIndex());
 
                         // Controleer of dit item een favoriet is
-                        if (VoiceContainer.isFavorite(currentPatch)) { // Pas dit aan naar jouw eigen 'isFavorite' methode of check
+                        if (SysData.isFavorite(currentPatch)) { // Pas dit aan naar jouw eigen 'isFavorite' methode of check
                             // Zorg dat het icoon RECHTS van de tekst komt te staan
                             setContentDisplay(ContentDisplay.RIGHT);
                             setGraphic(starIcon);
@@ -191,16 +186,16 @@ public class SearchResultsPane extends AnchorPane {
 
             if (selectedPatch != null) {
                 // Controleer of de Patch in de externe ObservableSet staat
-                if (VoiceContainer.getFavorites().contains(selectedPatch)) {
+                if (SysData.getFavorites().contains(selectedPatch)) {
                     favorites.setText("Remove from Favorites");
                     favorites.setOnAction(e -> {
-                        VoiceContainer.getFavorites().remove(selectedPatch);
+                        SysData.getFavorites().remove(selectedPatch);
                         table.refresh(); // Update de ster direct
                     });
                 } else {
                     favorites.setText("Add to Favorites");
                     favorites.setOnAction(e -> {
-                        VoiceContainer.getFavorites().add(selectedPatch);
+                        SysData.getFavorites().add(selectedPatch);
                         table.refresh(); // Update de ster direct
                     });
                 }

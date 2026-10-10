@@ -26,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import system.SysData;
 import util.ApplicationInfo;
 import util.Util;
 
@@ -159,7 +160,7 @@ public class SpeakerPane extends HBox {
             VoiceSearchResultsPane resultsPane = voicePane.getVoiceSearchResultsPane();
 
             if (favorites.isSelected()) {
-                resultsPane.showResults(new ArrayList<>(VoiceContainer.getFavorites()));
+                resultsPane.showResults(new ArrayList<>(SysData.getFavorites()));
             } else {
                 resultsPane.showResults(null);
             }
