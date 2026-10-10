@@ -14,6 +14,6 @@ public class MergeScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");
 
-        return new Base("MergeScene", new MergePane(), callingScene, true);
+        return new Base("MergeScene", new MergePane(true), callingScene, true);
     }
 }

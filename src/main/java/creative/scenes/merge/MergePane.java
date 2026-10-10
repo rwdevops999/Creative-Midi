@@ -22,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
@@ -31,6 +32,7 @@ import util.properties.PropertyType;
 import vendor.yamaha.YamahaStyleUploader;
 
 import java.io.File;
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +52,14 @@ public class MergePane extends GridPane {
     static {
          try {
              yamaha = new YamahaStyleUploader();
+             List<String> styles = yamaha.getStyleFiles().stream().map(FilenameUtils::removeExtension).sorted(String.CASE_INSENSITIVE_ORDER).toList();
+             dsDeviceFiles.set(FXCollections.observableArrayList(styles));
          } catch (Exception e) {
              logger.error("[CM_MERGE_PANE]: Exception. CAUSE: " + e.getMessage());
          }
     }
 
-    public MergePane() {
+    public MergePane(boolean isMerge) {
         super();
 
         setId("MergePane");
@@ -84,7 +88,7 @@ public class MergePane extends GridPane {
 
     private final StringProperty dsStyleFilename = new SimpleStringProperty("");
     private final StringProperty dsMidiFilename = new SimpleStringProperty("");
-    private final StringProperty dsNewStyleFilename = new SimpleStringProperty("");
+    private final StringProperty dsNewStyleFilename = new SimpleStringProperty("./style/dummy.sty");
 
     private final BooleanProperty dsDisabled = new SimpleBooleanProperty(true);
     private final BooleanProperty dsVisible = new SimpleBooleanProperty(false);
@@ -94,7 +98,9 @@ public class MergePane extends GridPane {
 
         @Override
         public void handle(ActionEvent event) {
-            NameDialog nameDialog = new NameDialog("song");
+            File f = new File(dsNewStyleFilename.getValue());
+
+            NameDialog nameDialog = new NameDialog("song", FilenameUtils.removeExtension(f.getName()));
             Optional<String> songName = nameDialog.showAndWait();
 
             if (songName.isPresent()) {
@@ -116,28 +122,21 @@ public class MergePane extends GridPane {
     };
 
     private void doUpload(String songName) {
-        System.out.println("Do UPLOAD: " + songName);
-//        try {
+        try {
             if (ApplicationInfo.getInstance().getMidiOutputDevice() ==  null ||
                 ApplicationInfo.getInstance().getMidiInputDevice() == null) {
                 DialogFactory.renderErrorDialog("No device selected");
             } else {
                 System.out.println("EXECUTE REAL UPLOAD: " + songName);
-            }
-
-            /*
-//            Path styleFile = Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\send\\WRAB.sty");
-
-                try (YamahaStyleUploader uploader =
-                             new YamahaStyleUploader()) {
-
-//                    uploader.upload(Path.of("C:\\Users\\SX600\\Idea\\Creative Midi 3\\testmidi\\\\send\\WRAB.sty"), "");
-                } catch (Exception e) {
-
+                if (yamaha != null) {
+                    String newSongname = songName + ".sty";
+                    File f = new File(dsNewStyleFilename.get());
+                    yamaha.upload(f.toPath(), newSongname);
                 }
+            }
         } catch (Exception e) {
-            System.out.println("EXCEPTION: " + e.getMessage());
-        }  */
+            logger.error("[CM_MERGE_PANE]: Exception. CAUSE: {}", e.getMessage());
+        }
     }
 
     private void buildPane() {
@@ -149,10 +148,10 @@ public class MergePane extends GridPane {
                     try {
                         if (yamaha == null) {
                             yamaha = new YamahaStyleUploader();
-                            List<String> styles = yamaha.getStyleFiles().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
-
+                            List<String> styles = yamaha.getStyleFiles().stream().map(FilenameUtils::removeExtension).sorted(String.CASE_INSENSITIVE_ORDER).toList();
                             dsDeviceFiles.set(FXCollections.observableArrayList(styles));
                         }
+
                     } catch (Exception e) {
                         logger.error("[CM_MIDI_SCENE] Exception. CAUSE: " + e.getMessage());
                     }

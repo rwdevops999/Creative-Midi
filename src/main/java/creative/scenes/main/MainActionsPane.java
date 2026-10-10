@@ -7,6 +7,7 @@ import creative.scenes.midi.MidiScene;
 import creative.scenes.playlist.PlaylistScene;
 import creative.scenes.sysex.SysexScene;
 import creative.scenes.sysexgen.SysexGenScene;
+import creative.scenes.upload.UploadScene;
 import creative.scenes.voice.VoiceScene;
 import custom.components.ActionButton;
 import javafx.geometry.HPos;
@@ -61,6 +62,7 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, SIZE, "sysexButton", "Generate SysEx", "sysex-generator", new SysexGenScene()), 4, 0);
         add(new ActionButton(ownerScene, SIZE, "eventlistButton", "midi event list", "event-list", new EventlistScene()), 5, 0);
         add(new ActionButton(ownerScene, SIZE, "mergeButton", "merge style", "merge", new MergeScene()), 6, 0);
+        add(new ActionButton(ownerScene, SIZE, "uploadStyleButton", "upload style", "upload-style", new UploadScene()), 7, 0);
 
 /*        add(new ActionButton(ownerScene,"sysexButton", "handle sysex", "sysex_out", new SysExScene()), 1, 0);
         add(new ActionButton(ownerScene, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 2, 0);

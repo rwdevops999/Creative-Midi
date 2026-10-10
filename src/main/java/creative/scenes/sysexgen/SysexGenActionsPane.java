@@ -55,7 +55,7 @@ public class SysexGenActionsPane extends HBox {
                 return content;
             }).toList();
 
-            NameDialog nameDialog = new NameDialog("sysex");
+            NameDialog nameDialog = new NameDialog("sysex", null);
             Optional<String> sysexName = nameDialog.showAndWait();
 
 

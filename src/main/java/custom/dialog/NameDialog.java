@@ -1,5 +1,6 @@
 package custom.dialog;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
@@ -9,10 +10,14 @@ import javafx.scene.layout.HBox;
 public class NameDialog extends Dialog<String> {
     public StringProperty nameProperty = new SimpleStringProperty();
 
-    public NameDialog(String purpose) {
+    public NameDialog(String purpose, String defaultName) {
         super();
 
         setTitle("Enter " + purpose + " name");
+
+        if (defaultName != null) {
+            nameProperty.setValue(defaultName);
+        }
 
         ButtonType useButtonType = new ButtonType("Use", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(useButtonType, ButtonType.CANCEL);
@@ -38,6 +43,11 @@ public class NameDialog extends Dialog<String> {
 
             return null; // Geeft null terug bij annuleren
         });
+
+        setOnShowing(event -> {
+            Platform.runLater(nameTextField::requestFocus);
+        });
+
     }
 
 }
