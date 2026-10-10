@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import org.fusesource.jansi.AnsiConsole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import system.SysData;
 import util.ApplicationInfo;
 import util.Theme;
 import util.Util;
@@ -57,6 +58,8 @@ public class ControlsPane extends HBox {
 
         // Exit Button
         getChildren().add(new IconButton("exit", "exit", "icons/exit.png", e -> {
+            SysData.getInstance().save();
+            
             if (MidiDemo.isPlaying()) {
                 MidiDemo.stopDemo(null);
             }

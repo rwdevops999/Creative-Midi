@@ -3,6 +3,7 @@ package creative.scenes.base;
 import communication.CommunicationModel;
 import creative.scenes.IScene;
 import router.Router;
+import system.SysData;
 import util.ColorScheme;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -47,6 +48,8 @@ public class BaseClosePane extends HBox {
         closeButton.setId("CloseButton");
 
         closeButton.setOnAction(e -> {
+            SysData.getInstance().save();
+
             if (closeHandler != null) {
                 closeHandler.handle(null);
             }
