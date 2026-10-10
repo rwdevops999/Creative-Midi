@@ -62,6 +62,8 @@ public class MergePane extends GridPane {
     public MergePane(boolean isMerge) {
         super();
 
+        this.isMerge = isMerge;
+
         setId("MergePane");
         setPadding(new Insets(5));
         setVgap(10);
@@ -94,11 +96,19 @@ public class MergePane extends GridPane {
     private final BooleanProperty dsVisible = new SimpleBooleanProperty(false);
     private final BooleanProperty dsDisabledUpload = new SimpleBooleanProperty(false);
 
+    private boolean isMerge = true;
+
     private final EventHandler<ActionEvent> uploadHandler = new EventHandler<ActionEvent>() {
 
         @Override
         public void handle(ActionEvent event) {
-            File f = new File(dsNewStyleFilename.getValue());
+            File f;
+
+            if (isMerge) {
+                f = new File(dsNewStyleFilename.getValue());
+            } else {
+                f = new File(dsStyleFilename.getValue());
+            }
 
             NameDialog nameDialog = new NameDialog("song", FilenameUtils.removeExtension(f.getName()));
             Optional<String> songName = nameDialog.showAndWait();
@@ -158,15 +168,6 @@ public class MergePane extends GridPane {
                 } else {
                     dsDeviceFiles.set(FXCollections.observableArrayList(new ArrayList<>()));
                 }
-
-/*                if (ApplicationInfo.getInstance().getMidiOutputDevice() != null) {
-                    try {
-                        List<String> styles = yamaha.getStyleFiles().stream().sorted(String.CASE_INSENSITIVE_ORDER).toList();
-                        dsDeviceFiles.set(FXCollections.observableArrayList(styles));
-                    } catch (Exception e) {
-                        logger.error("[CM_MIDI_SCENE] Exception. CAUSE: " + e.getMessage());
-                    }
-                } */
             }
         });
 
@@ -197,49 +198,53 @@ public class MergePane extends GridPane {
         });
         add (uploadStyleFileButton, 8, row, 2, 1);
 
-        // Row 1 (Midi file selection)
-        row++;
-        Label midifileLabel = new Label("Midi file");
-        add (midifileLabel, 0, row);
+        if (isMerge) {
+            // Row 1 (Midi file selection)
+            row++;
+            Label midifileLabel = new Label("Midi file");
+            add(midifileLabel, 0, row);
 
-        Label midifileValue = new Label();
-        midifileValue.textProperty().bind(dsMidiFilename);
-        add (midifileValue, 1, row, 5, 1);
+            Label midifileValue = new Label();
+            midifileValue.textProperty().bind(dsMidiFilename);
+            add(midifileValue, 1, row, 5, 1);
 
-        Button uploadMidiFileButton = new Button("Upload Midi File");
-        uploadMidiFileButton.setOnAction(event -> {
-            fileChooser.setTitle("Select your MIDI file");
-            fileChooser.getExtensionFilters().clear();
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("MIDI", "*.mid")
-            );
+            Button uploadMidiFileButton = new Button("Upload Midi File");
+            uploadMidiFileButton.setOnAction(event -> {
+                fileChooser.setTitle("Select your MIDI file");
+                fileChooser.getExtensionFilters().clear();
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("MIDI", "*.mid")
+                );
 
-            File selectedFile = fileChooser.showOpenDialog(ApplicationInfo.getInstance().getPrimaryStage());
+                File selectedFile = fileChooser.showOpenDialog(ApplicationInfo.getInstance().getPrimaryStage());
 
-            if (selectedFile != null) {
-                dsMidiFilename.set(selectedFile.toString());
-            }
-        });
-        add (uploadMidiFileButton, 8, row, 2, 1);
+                if (selectedFile != null) {
+                    dsMidiFilename.set(selectedFile.toString());
+                }
+            });
+            add(uploadMidiFileButton, 8, row, 2, 1);
+        }
 
         // Row 2 (Merge button)
         row++;
-        Button mergeButton = new Button("Merge");
-        mergeButton.disableProperty().bind(dsDisabled);
-        mergeButton.setOnAction(event -> {
-            YamahaStyleMerger styleMerger = new YamahaStyleMerger();
-            try {
-                styleMerger.mergeStyleAndMidi(new File(dsStyleFilename.get()), new File(dsMidiFilename.get()), new File(dsNewStyleFilename.get()));
-            } catch (Exception e) {
-                System.out.println("MERGE EXCEPTION");
-            }
-            dsDisabledUpload.set(false);
-        });
-        add (mergeButton, 0, row);
+        if (isMerge) {
+            Button mergeButton = new Button("Merge");
+            mergeButton.disableProperty().bind(dsDisabled);
+            mergeButton.setOnAction(event -> {
+                YamahaStyleMerger styleMerger = new YamahaStyleMerger();
+                try {
+                    styleMerger.mergeStyleAndMidi(new File(dsStyleFilename.get()), new File(dsMidiFilename.get()), new File(dsNewStyleFilename.get()));
+                } catch (Exception e) {
+                    System.out.println("MERGE EXCEPTION");
+                }
+                dsDisabledUpload.set(false);
+            });
+            add(mergeButton, 0, row);
 
-        Label mergeFilenameLabel = new Label("to");
-        mergeFilenameLabel.visibleProperty().bind(dsVisible);
-        add (mergeFilenameLabel, 1, row);
+            Label mergeFilenameLabel = new Label("to");
+            mergeFilenameLabel.visibleProperty().bind(dsVisible);
+            add(mergeFilenameLabel, 1, row);
+        }
 
         Label mergeFilenameValue = new Label();
         mergeFilenameValue.textProperty().bind(dsNewStyleFilename);
@@ -250,18 +255,20 @@ public class MergePane extends GridPane {
         uploadButton.disableProperty().bind(dsDisabledUpload);
         add(uploadButton, 8, row);
 
-        // Row 3 (Instruction label)
-        row++;
-        Label instructionsLabel = new Label("Attention");
-        add (instructionsLabel, 0, row);
+        if (isMerge) {
+            // Row 3 (Instruction label)
+            row++;
+            Label instructionsLabel = new Label("Attention");
+            add(instructionsLabel, 0, row);
 
-        // Row 4 (Instructions)
-        row++;
-        TextArea textArea = new TextArea();
-        textArea.setEditable(false);
-        // Set the height to fit exactly 5 rows of text
-        textArea.setPrefRowCount(5);
-        add (textArea, 0, row, 10, 1);
+            // Row 4 (Instructions)
+            row++;
+            TextArea textArea = new TextArea();
+            textArea.setEditable(false);
+            // Set the height to fit exactly 5 rows of text
+            textArea.setPrefRowCount(5);
+            add(textArea, 0, row, 10, 1);
+        }
 
         // Files on device
         row++;
