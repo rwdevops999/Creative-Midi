@@ -2,6 +2,10 @@ package creative.scenes.voice.components;
 
 import creative.scenes.voice.GroupSearchPane;
 import creative.scenes.voice.PatchSearchPane;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.geometry.HPos;

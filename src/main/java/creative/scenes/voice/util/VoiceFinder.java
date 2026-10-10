@@ -26,6 +26,19 @@ public class VoiceFinder {
         return result;
     }
 
+    public static List<Patch> findVoice(Patch patchToFind) {
+        List<Patch> result = new ArrayList<>();
+
+        InstrumentProvider instrumentProvider = ApplicationInfo.getInstance().getInstrumentProvider();
+
+        for (Group group : instrumentProvider.getGroups()) {
+            result.addAll(findPatchInGroup(group, patchToFind));
+        }
+
+
+        return result;
+    }
+
     public static List<Patch> findVoiceInGroup(Group group, String voiceName) {
         List<Patch> result = new ArrayList<>();
 
@@ -42,6 +55,22 @@ public class VoiceFinder {
         if (! group.getGroups().isEmpty()) {
             for (Group g : group.getGroups()) {
                 result.addAll(findVoiceInGroup(g, voiceName));
+            }
+        }
+
+        return result;
+    }
+
+    public static List<Patch> findPatchInGroup(Group group, Patch patchToFind) {
+        List<Patch> result = new ArrayList<>();
+
+        List<Patch> patches = group.getPatches().stream().filter(p ->
+                (p.getBank().equals(patchToFind.getBank()) && p.getPc().equals(patchToFind.getPc()))).toList();
+        result.addAll(patches);
+
+        if (! group.getGroups().isEmpty()) {
+            for (Group g : group.getGroups()) {
+                result.addAll(findPatchInGroup(g, patchToFind));
             }
         }
 

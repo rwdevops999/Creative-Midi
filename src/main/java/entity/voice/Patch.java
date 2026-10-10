@@ -26,7 +26,7 @@ public class Patch {
         this.lsb.set(Integer.parseInt(lsb));
         this.pc.set(Integer.parseInt(pc));
         if ("Yamaha".equals(provider)) {
-            this.pc.set(Integer.parseInt(pc) + 1);
+            this.pc.set(Integer.parseInt(pc));
         }
         this.bank.set((this.msb.get() * 128) + this.lsb.get());
     }
