@@ -56,8 +56,7 @@ public class SearchResultsPane extends AnchorPane {
         patchColumn.setCellValueFactory(new PropertyValueFactory<>("patch"));
         patchColumn.setCellFactory(column -> {
             return new TableCell<Patch, String>() {
-                // We maken één keer het icoon aan per cel voor betere prestaties
-                // Je kunt hier een ImageView (voor een PNG) of een Label met een FontIcon (bijv. FontAwesome) gebruiken
+                // We make once the icon for a cel for beter performances
                 private final Label starIcon = new Label("★");
                 {
                     starIcon.setTextFill(Color.GOLD); // Of Color.YELLOW, maar GOLD oogt vaak mooier
@@ -73,16 +72,16 @@ public class SearchResultsPane extends AnchorPane {
                     } else {
                         setText(item);
 
-                        // Haal het Patch object van de huidige rij op
+                        // Retrieve the Patch object from the current row
                         Patch currentPatch = getTableView().getItems().get(getIndex());
 
-                        // Controleer of dit item een favoriet is
+                        // is it a favortie?
                         if (SysData.isFavorite(currentPatch)) { // Pas dit aan naar jouw eigen 'isFavorite' methode of check
-                            // Zorg dat het icoon RECHTS van de tekst komt te staan
+                            // Place the icon right of the tekst
                             setContentDisplay(ContentDisplay.RIGHT);
                             setGraphic(starIcon);
                         } else {
-                            setGraphic(null); // Verwijder de ster als het geen favoriet is
+                            setGraphic(null); // Remove the star if it is no favorite
                         }
                     }
                 }
@@ -109,15 +108,14 @@ public class SearchResultsPane extends AnchorPane {
         table.widthProperty().addListener((observable, oldValue, newValue) -> {
             double tableWidth = newValue.doubleValue();
 
-            // Corrigeer eventueel met 2 pixels voor de buitenrand van de tabel
+            // Correct if necessary with 2 pixels for the outer edge of the table
             double availableWidth = tableWidth - 2.0;
 
             // Bereken de exacte doelbreedtes
             double w60 = availableWidth * 0.60;
             double w10 = availableWidth * 0.10;
 
-            // Dwing JavaFX door MIN, MAX en PREF op exact dezelfde waarde te zetten
-            // Dit heft de automatische 'evenredige' verdeling volledig op.
+            // Force JavaFX to set MIN, MAX en PREF on exactly th same values
             setAbsoluteColumnWidth(patchColumn, w60);
             setAbsoluteColumnWidth(bankColumn,  w10);
             setAbsoluteColumnWidth(msbColumn,   w10);
@@ -185,19 +183,18 @@ public class SearchResultsPane extends AnchorPane {
             Patch selectedPatch = table.getSelectionModel().getSelectedItem();
 
             if (selectedPatch != null) {
-                // Controleer of de Patch in de externe ObservableSet staat
+                // Check if the patch is in the ObservableSet
                 if (SysData.isFavorite(selectedPatch)) {
                     favorites.setText("Remove from Favorites");
                     favorites.setOnAction(e -> {
                         SysData.removeFromFavorites(selectedPatch);
-//                        SysData.getFavorites().remove(selectedPatch);
-                        table.refresh(); // Update de ster direct
+                        table.refresh(); // Update the star immediatly
                     });
                 } else {
                     favorites.setText("Add to Favorites");
                     favorites.setOnAction(e -> {
                         SysData.getFavorites().add(selectedPatch);
-                        table.refresh(); // Update de ster direct
+                        table.refresh(); // Update the star immediatly
                     });
                 }
             }
