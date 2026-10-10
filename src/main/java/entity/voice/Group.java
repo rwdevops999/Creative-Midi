@@ -3,12 +3,15 @@ package entity.voice;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-public class Group {
+public class Group implements Serializable {
+    private static final long serialVersionUID = 1L; //
+
     private Integer index;
     private Group parent;
     private List<Group> groups = new ArrayList<>();

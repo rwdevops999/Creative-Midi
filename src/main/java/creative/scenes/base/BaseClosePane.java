@@ -48,7 +48,11 @@ public class BaseClosePane extends HBox {
         closeButton.setId("CloseButton");
 
         closeButton.setOnAction(e -> {
-            SysData.getInstance().save();
+            try {
+                SysData.getInstance().save();
+            } catch (Exception ex) {
+                logger.error("[CM_CLOSE_PANE] Exception. CAUSE {}", ex.getMessage());
+            }
 
             if (closeHandler != null) {
                 closeHandler.handle(null);

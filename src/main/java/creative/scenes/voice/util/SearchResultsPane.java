@@ -186,10 +186,11 @@ public class SearchResultsPane extends AnchorPane {
 
             if (selectedPatch != null) {
                 // Controleer of de Patch in de externe ObservableSet staat
-                if (SysData.getFavorites().contains(selectedPatch)) {
+                if (SysData.isFavorite(selectedPatch)) {
                     favorites.setText("Remove from Favorites");
                     favorites.setOnAction(e -> {
-                        SysData.getFavorites().remove(selectedPatch);
+                        SysData.removeFromFavorites(selectedPatch);
+//                        SysData.getFavorites().remove(selectedPatch);
                         table.refresh(); // Update de ster direct
                     });
                 } else {

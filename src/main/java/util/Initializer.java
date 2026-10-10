@@ -7,6 +7,7 @@ import creative.scenes.sysex.SysexContainer;
 import device.DeviceScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import system.SysData;
 import util.enums.ThemeType;
 import util.properties.PropertyContainer;
 import util.properties.PropertyLoader;
@@ -25,6 +26,12 @@ public class Initializer {
 
     public void initApp() {
         logger.debug("[CM_INITIALIZER] Initializing Application");
+
+        try {
+            SysData.getInstance().load();
+        } catch (Exception e) {
+            logger.debug("[CM_INITIALIZER] Exception. CAUSE {}", e.getMessage());
+        }
 
         CommunicationModel.setStatus("Initializing Creative Midi");
 

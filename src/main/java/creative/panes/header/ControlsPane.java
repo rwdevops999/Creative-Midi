@@ -58,8 +58,12 @@ public class ControlsPane extends HBox {
 
         // Exit Button
         getChildren().add(new IconButton("exit", "exit", "icons/exit.png", e -> {
-            SysData.getInstance().save();
-            
+            try {
+                SysData.getInstance().save();
+            } catch (Exception ex) {
+                logger.error("[CM_CONTROLS_PANE] Exception. CAUSE {}", ex.getMessage());
+            }
+
             if (MidiDemo.isPlaying()) {
                 MidiDemo.stopDemo(null);
             }
