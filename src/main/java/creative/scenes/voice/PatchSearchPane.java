@@ -69,7 +69,7 @@ public class PatchSearchPane extends VBox {
         setPaneBackground(this);
 
         buildPane();
-        handleSearch();
+        handleSearch(false);
     }
 
     private VBox tab1Content;
@@ -83,7 +83,7 @@ public class PatchSearchPane extends VBox {
             if (selectedTabIndex.get() != newIdx.intValue()) {
                 selectedTIndex = newIdx.intValue();
                 selectedTabIndex.set(newIdx.intValue());
-                handleSearch();
+                handleSearch(true);
             }
         });
 
@@ -311,12 +311,21 @@ public class PatchSearchPane extends VBox {
 
             getChildren().clear();
             buildPane();
-            handleSearch();
+            handleSearch(false);
         }
     }
 
-    public void handleSearch() {
+    public void handleSearch(boolean checkgroups) {
         if (selectedTIndex == TAB_PATCH) {
+            if (checkgroups) {
+                if ( getVoiceSearchPane().getGroupSearchPane().getGroupPane().getSelectedGroup() != null) {
+                    getVoiceSearchPane().getGroupSearchPane().handleSearch();
+                    return;
+                }
+            }
+
+            getVoiceSearchPane().getGroupSearchPane().getGroupPane().setSelectedGroup(null);
+
             String voiceToSearch = addPanes.get(0).getInputValue();
             List<Patch> result = new ArrayList<>();
 

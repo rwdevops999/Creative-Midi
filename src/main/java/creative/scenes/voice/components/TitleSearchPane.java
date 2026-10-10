@@ -61,7 +61,7 @@ public class TitleSearchPane extends GridPane {
         searchButton = new Button("Search");
         searchButton.setOnAction(event -> {
             if (owner instanceof PatchSearchPane patchSearchPane) {
-                patchSearchPane.handleSearch();
+                patchSearchPane.handleSearch(false);
             } else if (owner instanceof GroupSearchPane groupSearchPane) {
                 groupSearchPane.handleSearch();
             }

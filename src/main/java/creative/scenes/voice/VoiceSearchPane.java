@@ -40,12 +40,12 @@ public class VoiceSearchPane extends BorderPane {
     private void buildPane() {
         logger.debug("[CM_VOICE_SEARCH_PANE] Building {}", getId());
 
-        PatchSearchPane patchSearchPane = new PatchSearchPane(this);
-        patchSearchPane.visibleProperty().bind(visible);
-        setTop(patchSearchPane);
         GroupSearchPane groupsSearchPane = new GroupSearchPane(this);
         groupsSearchPane.visibleProperty().bind(visible);
         setCenter(groupsSearchPane);
+        PatchSearchPane patchSearchPane = new PatchSearchPane(this);
+        patchSearchPane.visibleProperty().bind(visible);
+        setTop(patchSearchPane);
         ExcludesPane excludesPane = new ExcludesPane(this);
         excludesPane.visibleProperty().bind(visible);
         setBottom(excludesPane);

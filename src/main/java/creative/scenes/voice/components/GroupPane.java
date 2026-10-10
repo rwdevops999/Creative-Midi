@@ -9,6 +9,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.skin.ComboBoxListViewSkin;
+import lombok.Getter;
+import lombok.Setter;
 import util.ApplicationInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +27,8 @@ import java.util.List;
 import static util.Util.setPaneWidthAsPercentage;
 
 public class GroupPane extends GridPane {
+
+    @Getter
     private String selectedGroup = null;
 
     public GroupPane() {
@@ -57,13 +61,14 @@ public class GroupPane extends GridPane {
         buildPane();
     }
 
+    private ComboBox<String> groupsComboBox;
     private void buildPane() {
         int row = 0;
 
         // ROW (+, input, -)
         List<String> groupNames = VoiceFinder.getGroupsNames(ApplicationInfo.getInstance().getInstrumentProvider().getGroups(), "");
         ObservableList<String> groups = FXCollections.observableArrayList(groupNames);
-        ComboBox<String> groupsComboBox = new ComboBox<>(groups);
+        groupsComboBox = new ComboBox<>(groups);
         groupsComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedGroup = newValue;
             linkedSearchButton.fire();
@@ -88,14 +93,6 @@ public class GroupPane extends GridPane {
         add(groupsComboBox, 2, row, 3, 1);
     }
 
-    public String getSelectedGroup() {
-        if (selectedGroup != null) {
-            return selectedGroup;
-        }
-
-        return null;
-    }
-
     public void setShowingProperty(ComboBox comboBox) {
         comboBox.setOnShowing(event -> {
             if (comboBox.getSkin() instanceof ComboBoxListViewSkin) {
@@ -114,6 +111,11 @@ public class GroupPane extends GridPane {
     private Button linkedSearchButton;
     public void addLinkedSearchButton(Button button) {
         linkedSearchButton = button;
+    }
+
+    public void setSelectedGroup(String selectedGroup) {
+        this.selectedGroup = selectedGroup;
+        groupsComboBox.getSelectionModel().select(null);
     }
 
     // ACCESSOR

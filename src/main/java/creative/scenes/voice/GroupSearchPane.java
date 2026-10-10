@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
@@ -34,6 +35,8 @@ public class GroupSearchPane extends VBox {
     }
 
     VoiceSearchPane parent;
+
+    @Getter
     private GroupPane groupPane;
 
     public GroupSearchPane(VoiceSearchPane owner) {
@@ -52,7 +55,7 @@ public class GroupSearchPane extends VBox {
     private void buildPane() {
         logger.debug("[CM_GROUP_SEARCH_PANE] Building {}", getId());
 
-        TitleSearchPane  titleSearchPane = new TitleSearchPane(this, "Groups");
+        TitleSearchPane titleSearchPane = new TitleSearchPane(this, "Groups");
         getChildren().add(titleSearchPane);
 
         Button searchButton = titleSearchPane.getSearchButton();
