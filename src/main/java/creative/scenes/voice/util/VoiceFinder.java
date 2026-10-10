@@ -64,8 +64,15 @@ public class VoiceFinder {
     public static List<Patch> findPatchInGroup(Group group, Patch patchToFind) {
         List<Patch> result = new ArrayList<>();
 
-        List<Patch> patches = group.getPatches().stream().filter(p ->
-                (p.getBank().equals(patchToFind.getBank()) && p.getPc().equals(patchToFind.getPc()))).toList();
+        List<Patch> patches;
+        if (patchToFind.getPc() != null) {
+            patches = group.getPatches().stream().filter(p ->
+                    (p.getBank().equals(patchToFind.getBank()) && p.getPc().equals(patchToFind.getPc()))).toList();
+        } else {
+            patches = group.getPatches().stream().filter(p ->
+                    (p.getBank().equals(patchToFind.getBank()))).toList();
+
+        }
         result.addAll(patches);
 
         if (! group.getGroups().isEmpty()) {

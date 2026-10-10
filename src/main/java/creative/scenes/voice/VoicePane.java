@@ -35,8 +35,8 @@ public class VoicePane extends BorderPane {
 
         setPaneBackground(this);
 
-        setLeft(new VoiceSearchPane(this));
         setCenter(new VoiceSearchResultsPane(this, new ArrayList<>()));
+        setLeft(new VoiceSearchPane(this));
 
         logger.debug("[CM_VOICE_PANE] Built {}", getId());
     }

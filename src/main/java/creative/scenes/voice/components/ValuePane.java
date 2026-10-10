@@ -37,17 +37,18 @@ public class ValuePane extends GridPane {
 
     }
 
-    public ValuePane(Pane owner, String label) {
+    private StringProperty inputValue = new SimpleStringProperty("" + 0);
+    private StringProperty linkedProperty = new SimpleStringProperty();
+    public ValuePane(Pane owner, String label, String defaultValue) {
         this();
+
+        inputValue.setValue(defaultValue);
 
         setPaneWidthAsPercentage(this, owner, 50);
 
         buildPane(label);
     }
 
-    private StringProperty linkedProperty = new SimpleStringProperty("" + 0);
-
-    private StringProperty inputValue = new SimpleStringProperty("" + 0);
     private TextField searchInputField;
 
     private void buildPane(String label) {
@@ -71,7 +72,7 @@ public class ValuePane extends GridPane {
         linkedSearchButton = button;
     }
 
-    public void addLinkedProperty(StringProperty property) {
+    public void addLinkedProperty(StringProperty property, String defaultValue) {
         linkedProperty = property;
     }
 

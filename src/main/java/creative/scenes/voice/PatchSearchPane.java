@@ -28,8 +28,7 @@ import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
-import static util.Util.setPaneBackground;
-import static util.Util.setPaneHeightAsPercentage;
+import static util.Util.*;
 
 public class PatchSearchPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(PatchSearchPane.class);
@@ -70,6 +69,7 @@ public class PatchSearchPane extends VBox {
         setPaneBackground(this);
 
         buildPane();
+        handleSearch();
     }
 
     private VBox tab1Content;
@@ -78,6 +78,7 @@ public class PatchSearchPane extends VBox {
         logger.debug("[CM_PATCH_SEARCH_PANE] Building {}", getId());
 
         TabPane tabPane = new TabPane();
+        setControlBackground(tabPane);
         tabPane.getSelectionModel().selectedIndexProperty().addListener((obs, oldIdx, newIdx) -> {
             if (selectedTabIndex.get() != newIdx.intValue()) {
                 selectedTIndex = newIdx.intValue();
@@ -125,19 +126,19 @@ public class PatchSearchPane extends VBox {
 
         Button searchButton = titleSearchPane.getSearchButton();
 
-        ValuePane valuePane = new ValuePane(this, "Bank");
+        ValuePane valuePane = new ValuePane(this, "Bank", "0");
         valuePane.addLinkedSearchButton(searchButton);
         valuePanes.add(valuePane);
 
-        valuePane = new ValuePane(this, "MSB");
+        valuePane = new ValuePane(this, "MSB", "0");
         valuePane.addLinkedSearchButton(searchButton);
         valuePanes.add(valuePane);
 
-        valuePane = new ValuePane(this, "LSB ");
+        valuePane = new ValuePane(this, "LSB", "0");
         valuePane.addLinkedSearchButton(searchButton);
         valuePanes.add(valuePane);
 
-        valuePane = new ValuePane(this, "PC");
+        valuePane = new ValuePane(this, "PC", null);
         valuePane.addLinkedSearchButton(searchButton);
         valuePanes.add(valuePane);
 
@@ -156,13 +157,13 @@ public class PatchSearchPane extends VBox {
     private StringProperty bankChangedProperty = new SimpleStringProperty("" + 0);
     private StringProperty msbChangedProperty = new SimpleStringProperty("" + 0);
     private StringProperty lsbChangedProperty = new SimpleStringProperty(""+ 0);
-    private StringProperty pcChangedProperty = new SimpleStringProperty(""+ 0);
+    private StringProperty pcChangedProperty = new SimpleStringProperty();
 
     private boolean mute = false;
 
     private void setupValuePanes() {
         ValuePane bankPane = valuePanes.get(BANK_PANE);
-        bankPane.addLinkedProperty(bankChangedProperty);
+        bankPane.addLinkedProperty(bankChangedProperty, "0");
 
         bankChangedProperty.addListener((obs, oldValue, newValue) -> {
             System.out.println("BANK VALUE CHANGED: " + newValue + " (mute) = " + mute);
@@ -187,7 +188,7 @@ public class PatchSearchPane extends VBox {
         });
 
         ValuePane msbPane = valuePanes.get(MSB_PANE);
-        msbPane.addLinkedProperty(msbChangedProperty);
+        msbPane.addLinkedProperty(msbChangedProperty, "0");
         msbChangedProperty.addListener((obs, oldValue, newValue) -> {
             System.out.println("MSB VALUE CHANGED: " + newValue + " (mute) = " + mute);
 
@@ -215,7 +216,7 @@ public class PatchSearchPane extends VBox {
         });
 
         ValuePane lsbPane = valuePanes.get(LSB_PANE);
-        lsbPane.addLinkedProperty(lsbChangedProperty);
+        lsbPane.addLinkedProperty(lsbChangedProperty, "0");
         lsbChangedProperty.addListener((obs, oldValue, newValue) -> {
             System.out.println("LSB VALUE CHANGED: " + newValue + " (mute) = " + mute);
             if (! mute) {
@@ -242,7 +243,7 @@ public class PatchSearchPane extends VBox {
         });
 
         ValuePane pcPane = valuePanes.get(PC_PANE);
-        pcPane.addLinkedProperty(pcChangedProperty);
+        pcPane.addLinkedProperty(pcChangedProperty, null);
         pcChangedProperty.addListener((obs, oldValue, newValue) -> {
             System.out.println("PC VALUE CHANGED: " + newValue + " (mute) = " + mute);
             if (! mute) {
@@ -251,8 +252,7 @@ public class PatchSearchPane extends VBox {
                 try {
                     Integer.parseInt(pcChangedProperty.get());
                 } catch (NumberFormatException e) {
-                    pc = 0;
-                    pcChangedProperty.set(""+pc);
+                    pcChangedProperty.set(null);
                 }
                 mute = false;
             }
@@ -346,7 +346,10 @@ public class PatchSearchPane extends VBox {
             int bank = Integer.parseInt(bankChangedProperty.get());
             int msb = Integer.parseInt(msbChangedProperty.get());
             int lsb = Integer.parseInt(lsbChangedProperty.get());
-            int pc = Integer.parseInt(pcChangedProperty.get());
+            Integer pc = null;
+            if (pcChangedProperty.get() != null) {
+                pc = Integer.parseInt(pcChangedProperty.get());
+            }
 
             System.out.println("Searching on values: BANK =" + bank
             + ", MSB = " + msb

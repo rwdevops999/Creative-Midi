@@ -1,15 +1,14 @@
 package entity.voice;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import lombok.Getter;
 
 public class Patch {
-    private SimpleStringProperty patch = new SimpleStringProperty();
-    private SimpleIntegerProperty msb = new SimpleIntegerProperty();
-    private SimpleIntegerProperty lsb = new SimpleIntegerProperty();
-    private SimpleIntegerProperty bank = new SimpleIntegerProperty();
-    private SimpleIntegerProperty pc = new SimpleIntegerProperty();
+    private StringProperty patch = new SimpleStringProperty();
+    private IntegerProperty msb = new SimpleIntegerProperty();
+    private IntegerProperty lsb = new SimpleIntegerProperty();
+    private IntegerProperty bank = new SimpleIntegerProperty();
+    private ObjectProperty<Integer> pc = new SimpleObjectProperty<>();
 
     @Getter
     private Group parent;
@@ -25,9 +24,9 @@ public class Patch {
         this.msb.set(Integer.parseInt(msb));
         this.lsb.set(Integer.parseInt(lsb));
         this.pc.set(Integer.parseInt(pc));
-        if ("Yamaha".equals(provider)) {
+/*        if ("Yamaha".equals(provider)) {
             this.pc.set(Integer.parseInt(pc));
-        }
+        } */
         this.bank.set((this.msb.get() * 128) + this.lsb.get());
     }
 
