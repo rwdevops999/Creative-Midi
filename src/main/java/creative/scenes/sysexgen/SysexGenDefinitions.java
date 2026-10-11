@@ -251,7 +251,7 @@ public class SysexGenDefinitions {
                 .withSysex("10 08 08")
                 .build();
 
-        SysexRoot universalNonRealTime =sysexRootBuilder
+        SysexRoot universalNonRealTime = sysexRootBuilder
                 .clear()
                 .withName("Non-Real Time")
                 .withRootSysex("7E")

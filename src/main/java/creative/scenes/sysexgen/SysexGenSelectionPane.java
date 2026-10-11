@@ -1,7 +1,10 @@
 package creative.scenes.sysexgen;
 
+import creative.scenes.sysexgen.entity.SubEvent;
 import creative.scenes.sysexgen.entity.SysexRoot;
 import entity.sysex.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -44,7 +47,7 @@ public class SysexGenSelectionPane extends GridPane {
 
         setPaneBackground(this);
 
-        int totalColumns = 10;
+        int totalColumns = 32;
         double percentagePerColumn = 100.0 / totalColumns; // Dit is ~8.3333%
 
         for (int i = 0; i < totalColumns; i++) {
@@ -61,18 +64,79 @@ public class SysexGenSelectionPane extends GridPane {
         buildPane();
     }
 
+    private BooleanProperty sectionVisible = new SimpleBooleanProperty(false);
+
     private void buildPane() {
         prepareData();
+
+        final ComboBox<SubEvent> sectionsComboBox = new ComboBox<>();
 
         getChildren().clear();
 
         int row = 0;
         // ROW0 (master selection pane)
         Label sysexLabel = new Label("SysEx");
-        add(sysexLabel, 0, row);
-    }
+        add(sysexLabel, 0, row, 2, 1);
 
-    private SysexRoot sysexRoots;
+        // We start with the master combo
+        ComboBox<SysexRoot> sysexComboBox = new ComboBox<>();
+        sysexComboBox.getItems().addAll(SysexGenDefinitions.getSysexs());
+        sysexComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(SysexRoot sysex) {
+                // Return the field to display
+                return (sysex != null) ? sysex.getName() : "";
+            }
+
+            @Override
+            public SysexRoot fromString(String string) {
+                // Not needed unless the ComboBox is editable
+                return null;
+            }
+        });
+
+        sysexComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            sectionVisible.setValue(newValue != null);
+
+            if (newValue != null) {
+                // fill Sections Combo
+                sectionsComboBox.getItems().clear();
+                sectionsComboBox.getItems().addAll(newValue.getSubEvents());
+            }
+        });
+
+        add(sysexComboBox, 2, row, 6, 1);
+
+        row++;
+        Label sectionLabel = new Label("Section");
+        sectionLabel.visibleProperty().bind(sectionVisible);
+        add(sectionLabel, 0, row, 2, 1);
+
+        sectionsComboBox.visibleProperty().bind(sectionVisible);
+        sectionsComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(SubEvent subEvent) {
+                // Return the field to display
+                return (subEvent != null) ? subEvent.getName() : "";
+            }
+
+            @Override
+            public SubEvent fromString(String string) {
+                // Not needed unless the ComboBox is editable
+                return null;
+            }
+        });
+
+        sectionsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.hasChildren()) {
+                    
+                }
+            }
+        });
+
+        add(sectionsComboBox, 2, row, 7, 1);
+    }
 
     private void prepareData() {
 

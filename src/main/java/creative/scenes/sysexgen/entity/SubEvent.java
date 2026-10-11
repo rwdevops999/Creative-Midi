@@ -1,5 +1,6 @@
 package creative.scenes.sysexgen.entity;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 public class SubEvent {
     @Setter
     private Object parent;
+    @Getter
     private String name;
     private String sysex;
     private List<Parameter> parameters;
@@ -25,6 +27,9 @@ public class SubEvent {
         }
     }
 
+    public boolean hasChildren() {
+        return this.children != null && !this.children.isEmpty();
+    }
     public static class SubEventBuilder {
         private String name;
         private String sysex;
