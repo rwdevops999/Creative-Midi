@@ -6,26 +6,19 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Root implements IRoot {
+    private static final String SYSEX_START = "F0";
     private static final String SYSEX_END = "F7";
+
     String baseSysEx;
-    String baseAddress;
 
-    public Root(String baseSysEx, String baseAddress) {
+    public Root(String baseSysEx) {
         this.baseSysEx = baseSysEx;
-        this.baseAddress = baseAddress;
-    }
-
-    private void setupSB (StringBuilder sb, Integer position) {
-        if (sb.isEmpty()) {
-            sb.append(baseSysEx).append(" ").append(baseAddress);
-            sb.append(" ").append(HexFormat.of().withUpperCase().toHexDigits(position.byteValue()));
-        }
     }
 
     @Override
-    public List<String> generateSysEx(List<InputBlock> inputList) {
+    public List<String> generateSysEx() {
         List<String> sysexList = new ArrayList<>();
-
+/*
         Iterator<InputBlock> iterator = inputList.iterator();
 
         boolean addedValues = false;
@@ -56,16 +49,7 @@ public class Root implements IRoot {
             sb.append(" ").append(SYSEX_END);
             sysexList.add(sb.toString());
         }
-
-        return sysexList;
-    }
-
-    @Override
-    public List<String> generateSysEx() {
-        List<String> sysexList = new ArrayList<>();
-
-        sysexList.add(baseSysEx + " " + baseAddress);
-
+*/
         return sysexList;
     }
 }

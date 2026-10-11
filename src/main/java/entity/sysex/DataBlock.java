@@ -16,17 +16,26 @@ public class DataBlock {
         this();
 
         if (b1 != null) {
-            this.b1 = b1.byteValue();
+            this.b1 = (byte) (b1 & 0x0F);
         }
+
         if (b2 != null) {
-            this.b2 = b2.byteValue();
+            this.b2 = (byte)(b2 & 0x0F);
         }
     }
 
-    public DataBlock(byte b1, byte b2) {
-        this();
+    public int getValue() {
+        int MSB = 0;
+        int LSB = 0;
 
-        this.b1 = b1;
-        this.b2 = b2;
+        if (this.b1 != null) {
+            MSB = (this.b1 << 7);
+        }
+
+        if (this.b2 != null) {
+            LSB = (this.b2 & 0xF0);
+        }
+
+        return MSB | LSB;
     }
 }

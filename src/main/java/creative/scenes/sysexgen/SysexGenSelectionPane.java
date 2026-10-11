@@ -1,5 +1,6 @@
 package creative.scenes.sysexgen;
 
+import creative.scenes.sysexgen.entity.SysexRoot;
 import entity.sysex.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -39,7 +40,7 @@ public class SysexGenSelectionPane extends GridPane {
 
         parent = owner;
 
-//        showPaneBorder(this, getColor("border", "green"));
+        showPaneBorder(this, getColor("border", "green"));
 
         setPaneBackground(this);
 
@@ -60,6 +61,23 @@ public class SysexGenSelectionPane extends GridPane {
         buildPane();
     }
 
+    private void buildPane() {
+        prepareData();
+
+        getChildren().clear();
+
+        int row = 0;
+        // ROW0 (master selection pane)
+        Label sysexLabel = new Label("SysEx");
+        add(sysexLabel, 0, row);
+    }
+
+    private SysexRoot sysexRoots;
+
+    private void prepareData() {
+
+    }
+/*
     private Master selectedMaster;
     private List<String> masterCategories = new ArrayList<>();
 
@@ -77,7 +95,7 @@ public class SysexGenSelectionPane extends GridPane {
 
         // We start with the master combo
         ComboBox<Master> masterComboBox = new ComboBox<>();
-        masterComboBox.getItems().addAll(SysexGenHelper.getMasters());
+        masterComboBox.getItems().addAll(SysexGenHelper_Old.getMasters());
         masterComboBox.setConverter(new StringConverter<Master>() {
             @Override
             public String toString(Master master) {
@@ -129,19 +147,7 @@ public class SysexGenSelectionPane extends GridPane {
 
                 buildPane();
             });
-/*            // what if we change the category ?
-            // if there is a category selected, select it in the combo box
-            if (selectedCategory != null) {
-                categoriesComboBox.setValue(selectedCategory);
-            }
 
-            categoriesComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                selectedCategory = newValue;
-                processMaster();
-
-                buildPane();
-            });
-*/
             // There are also types available
             if (!categoryTypeBlocks.isEmpty()) {
 
@@ -251,7 +257,6 @@ public class SysexGenSelectionPane extends GridPane {
 
     private void processType() {
         if (selectedTypeBlock != null) {
-            // create inputBlockList
             inputBlockList = new ArrayList<>();
 
             InputBlock.InputBlockBuilder inputBlockBuilder = new InputBlock.InputBlockBuilder();
@@ -293,7 +298,6 @@ public class SysexGenSelectionPane extends GridPane {
                 if (useMsbLsb) {
                     inputBlock.setInputValues(new DataBlock(selectedTypeBlock.getMsb(), selectedTypeBlock.getLsb()));
                 } else {
-//                    inputBlock.setInputValues(new DataBlock(0, null));
                     if (parameterId != null && selectedTypeBlock.getParameters() != null) {
                         ParameterBlock[] parameters = selectedTypeBlock.getParameters().getParameters();
 
@@ -325,7 +329,7 @@ public class SysexGenSelectionPane extends GridPane {
             getSysexPane().getSysexGenParametersPane().setParameters(selectedMaster, inputBlockList);
         }
     }
-
+*/
     // ACCESSORS
     public SysexGenPane getSysexPane() {
         return parent;
