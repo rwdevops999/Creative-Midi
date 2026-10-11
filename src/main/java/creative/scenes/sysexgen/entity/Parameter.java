@@ -9,9 +9,11 @@ public class Parameter {
     private String name;
     private Integer subAddress;
     private int numBytes;
+    @Getter
     private ParameterType type;
     private String parameterIdentifier;
     private String description;
+    @Getter
     private DataBlock defaultValues;
     private DataBlock rangeValues;
 

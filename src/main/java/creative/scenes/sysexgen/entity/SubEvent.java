@@ -1,5 +1,7 @@
 package creative.scenes.sysexgen.entity;
 
+import creative.scenes.sysexgen.data.ParameterType;
+import entity.sysex.DataBlock;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +40,20 @@ public class SubEvent {
 
     public List<EventType> getTypesOfCategory(String category) {
         return eventTypes.stream().filter(type -> type.getCategory().equals(category)).toList();
+    }
+
+    public Parameter findDefaultParameter() {
+        Parameter result = null;
+
+        if (parameters != null && ! parameters.isEmpty()) {
+            result = parameters.stream().filter(parameter -> parameter.getType().equals(ParameterType.TYPE)).findFirst().orElse(null);
+        }
+
+        return result;
+    }
+
+    public EventType findDefaultEventType(DataBlock values) {
+        return eventTypes.stream().filter(eventType -> eventType.getValue().getB1().equals(values.getB1()) && eventType.getValue().getB2().equals(values.getB2())).findFirst().orElse(null);
     }
 
     public static class SubEventBuilder {

@@ -58,7 +58,7 @@ public class ParameterPane extends GridPane {
     };
 
     private void buildPane(InputBlock inputBlock, Consumer<InputBlock> consumer) {
-        getChildren().clear();
+/*        getChildren().clear();
 
         Label parameter = new Label(inputBlock.getParameter());
         add(parameter, 0, 0, 3, 1);
@@ -96,6 +96,6 @@ public class ParameterPane extends GridPane {
 
             refLabel.textProperty().bindBidirectional(sp);
             add(refLabel, 11, 0, 3, 1);
-        }
+        } */
     }
 }

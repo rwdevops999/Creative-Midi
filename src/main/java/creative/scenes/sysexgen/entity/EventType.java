@@ -9,6 +9,7 @@ public class EventType {
     @Getter
     private String name;
     private String description;
+    @Getter
     private DataBlock value;
     private ParameterTable parameterTable;
 

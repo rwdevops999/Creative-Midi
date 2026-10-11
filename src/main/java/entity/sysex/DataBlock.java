@@ -16,11 +16,11 @@ public class DataBlock {
         this();
 
         if (b1 != null) {
-            this.b1 = (byte) (b1 & 0x0F);
+            this.b1 = b1.byteValue();
         }
 
         if (b2 != null) {
-            this.b2 = (byte)(b2 & 0x0F);
+            this.b2 = b2.byteValue();
         }
     }
 
@@ -33,7 +33,7 @@ public class DataBlock {
         }
 
         if (this.b2 != null) {
-            LSB = (this.b2 & 0xF0);
+            LSB = this.b2;
         }
 
         return MSB | LSB;
