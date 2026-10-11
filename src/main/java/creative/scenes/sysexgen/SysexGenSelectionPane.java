@@ -70,6 +70,14 @@ public class SysexGenSelectionPane extends GridPane {
     private BooleanProperty categoryVisible = new SimpleBooleanProperty(false);
     private BooleanProperty typeVisible = new SimpleBooleanProperty(false);
 
+    private void hideNodes(BooleanProperty ...properties) {
+        for (BooleanProperty property : properties) {
+            if (property.get()) {
+                property.set(false);
+            }
+        }
+    }
+
     private ObjectProperty<SubEvent> selectedSubEvent = new SimpleObjectProperty<>();
 
     private void prepareData() {
@@ -118,6 +126,8 @@ public class SysexGenSelectionPane extends GridPane {
                 // fill Sections Combo
                 sectionsComboBox.getItems().clear();
                 sectionsComboBox.getItems().addAll(newValue.getSubEvents());
+
+                hideNodes(effectVisible, categoryVisible, typeVisible);
             }
         });
 
@@ -155,6 +165,8 @@ public class SysexGenSelectionPane extends GridPane {
                     System.out.println("SECTION HAS NO CHILDREN");
                     selectedSubEvent.set(newValue);
                 }
+
+                hideNodes(categoryVisible, typeVisible);
             }
         });
         add(sectionsComboBox, 2, row, 7, 1);
@@ -186,6 +198,8 @@ public class SysexGenSelectionPane extends GridPane {
                 selectedEffect = newValue;
                 categoryComboBox.getItems().clear();
                 categoryComboBox.getItems().addAll(newValue.getCategories());
+
+                hideNodes(typeVisible);
             }
         });
 
