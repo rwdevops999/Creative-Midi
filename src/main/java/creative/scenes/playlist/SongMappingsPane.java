@@ -51,6 +51,7 @@ public class SongMappingsPane extends StackPane {
 
     private TableView<Mapping> table  = new TableView<>();
     private boolean isPaneBuilt = false;
+    private List<Mapping> currentMappings;
     public void buildPane(List<Mapping> mappings) {
         if (getPlaylistDetailsPane().getSongDetailsPane().getSong() != null && ! isPaneBuilt) {
             table = new TableView<>();
@@ -73,7 +74,7 @@ public class SongMappingsPane extends StackPane {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem addMenuItem = new MenuItem("Add mapping");
         addMenuItem.setOnAction(e -> {
-            new MappingDialog(this, table, false, null);
+            showAddMappingDialog(table, false, null);
             getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
         });
 
@@ -117,7 +118,7 @@ public class SongMappingsPane extends StackPane {
     }
 
     private void showAddMappingDialog(TableView<Mapping> table, boolean isUpdate, @Nullable Mapping currentMapping) {
-        new MappingDialog(this, table, isUpdate, currentMapping);
+        new MappingDialog(this, table, isUpdate, currentMapping, currentMappings);
     }
 
     public void setSong(Song song) {
@@ -125,6 +126,7 @@ public class SongMappingsPane extends StackPane {
             if (table != null) {
                 ObservableList<Mapping> tableData = FXCollections.observableArrayList(new ArrayList<>(song.getMappings()));
                 mappingProperty.set(tableData);
+                currentMappings = song.getMappings();
             }
         }
     }
