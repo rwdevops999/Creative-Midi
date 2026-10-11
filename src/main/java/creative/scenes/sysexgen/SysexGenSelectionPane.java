@@ -1,10 +1,13 @@
 package creative.scenes.sysexgen;
 
+import creative.scenes.sysexgen.entity.EventType;
 import creative.scenes.sysexgen.entity.SubEvent;
 import creative.scenes.sysexgen.entity.SysexRoot;
 import entity.sysex.*;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -16,9 +19,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -61,15 +61,30 @@ public class SysexGenSelectionPane extends GridPane {
         rowConstraints.setValignment(VPos.CENTER);
         getRowConstraints().add(rowConstraints);
 
+        prepareData();
         buildPane();
     }
 
     private BooleanProperty sectionVisible = new SimpleBooleanProperty(false);
+    private BooleanProperty effectVisible = new SimpleBooleanProperty(false);
+    private BooleanProperty categoryVisible = new SimpleBooleanProperty(false);
+    private BooleanProperty typeVisible = new SimpleBooleanProperty(false);
+
+    private ObjectProperty<SubEvent> selectedSubEvent = new SimpleObjectProperty<>();
+
+    private void prepareData() {
+        selectedSubEvent.addListener((observable, oldValue, newValue) -> {
+            System.out.println("SELECTED SUBEVENT = " + newValue.getName());
+        });
+    }
+
+    private SubEvent selectedEffect = null;
 
     private void buildPane() {
-        prepareData();
-
         final ComboBox<SubEvent> sectionsComboBox = new ComboBox<>();
+        final ComboBox<SubEvent> effectComboBox = new ComboBox<>();
+        final ComboBox<String> categoryComboBox = new ComboBox<>();
+        final ComboBox<EventType> typeComboBox = new ComboBox<>();
 
         getChildren().clear();
 
@@ -129,18 +144,103 @@ public class SysexGenSelectionPane extends GridPane {
 
         sectionsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
+                effectVisible.set(newValue.hasChildren());
                 if (newValue.hasChildren()) {
-                    
+                    effectComboBox.getItems().clear();
+                    effectComboBox.getItems().addAll(newValue.getChildren());
+                } else {
+                    selectedSubEvent.set(newValue);
                 }
             }
         });
-
         add(sectionsComboBox, 2, row, 7, 1);
+
+        Label effectLabel = new Label("Effect");
+        effectLabel.visibleProperty().bind(effectVisible);
+        add(effectLabel, 10, row, 2, 1);
+
+        effectComboBox.visibleProperty().bind(effectVisible);
+        effectComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(SubEvent subEvent) {
+                // Return the field to display
+                return (subEvent != null) ? subEvent.getName() : "";
+            }
+
+            @Override
+            public SubEvent fromString(String string) {
+                // Not needed unless the ComboBox is editable
+                return null;
+            }
+        });
+
+        effectComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            categoryVisible.set(newValue != null);
+
+            if (newValue != null) {
+                selectedEffect = newValue;
+                categoryComboBox.getItems().clear();
+                categoryComboBox.getItems().addAll(newValue.getCategories());
+            }
+        });
+
+        add(effectComboBox, 12, row, 4, 1);
+
+        Label categoryLabel = new Label("Category");
+        categoryLabel.visibleProperty().bind(categoryVisible);
+        add(categoryLabel, 16, row, 2, 1);
+
+        categoryComboBox.visibleProperty().bind(categoryVisible);
+        categoryComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(String string) {
+                // Return the field to display
+                return (string != null) ? string : "";
+            }
+
+            @Override
+            public String fromString(String string) {
+                // Not needed unless the ComboBox is editable
+                return null;
+            }
+        });
+
+        categoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            typeVisible.set(newValue != null);
+
+            if (newValue != null) {
+                typeComboBox.getItems().clear();
+                typeComboBox.getItems().addAll(selectedEffect.getTypesOfCategory(newValue));
+            }
+        });
+
+        add(categoryComboBox, 19, row, 4, 1);
+
+        Label typeLabel = new Label("Type");
+        typeLabel.visibleProperty().bind(typeVisible);
+        add(typeLabel, 24, row, 2, 1);
+
+        typeComboBox.visibleProperty().bind(typeVisible);
+        typeComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(EventType eventType) {
+                // Return the field to display
+                return (eventType != null) ? eventType.getName() : "";
+            }
+
+            @Override
+            public EventType fromString(String string) {
+                // Not needed unless the ComboBox is editable
+                return null;
+            }
+        });
+
+        typeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+        });
+
+        add(typeComboBox, 26, row, 4, 1);
     }
 
-    private void prepareData() {
-
-    }
 /*
     private Master selectedMaster;
     private List<String> masterCategories = new ArrayList<>();

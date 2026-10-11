@@ -1,9 +1,12 @@
 package creative.scenes.sysexgen.entity;
 
 import entity.sysex.DataBlock;
+import lombok.Getter;
 
 public class EventType {
+    @Getter
     private String category;
+    @Getter
     private String name;
     private String description;
     private DataBlock value;

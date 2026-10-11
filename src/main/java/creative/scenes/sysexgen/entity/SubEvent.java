@@ -14,6 +14,7 @@ public class SubEvent {
     private String sysex;
     private List<Parameter> parameters;
     private List<EventType> eventTypes;
+    @Getter
     private List<SubEvent> children;
 
     public SubEvent(SubEventBuilder builder) {
@@ -30,6 +31,15 @@ public class SubEvent {
     public boolean hasChildren() {
         return this.children != null && !this.children.isEmpty();
     }
+
+    public List<String> getCategories() {
+        return eventTypes.stream().map(EventType::getCategory).distinct().toList();
+    }
+
+    public List<EventType> getTypesOfCategory(String category) {
+        return eventTypes.stream().filter(type -> type.getCategory().equals(category)).toList();
+    }
+
     public static class SubEventBuilder {
         private String name;
         private String sysex;
