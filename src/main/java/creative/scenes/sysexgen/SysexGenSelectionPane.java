@@ -291,8 +291,6 @@ public class SysexGenSelectionPane extends GridPane {
 
     private void processCategory(String category) {
         if (category != null) {
-            System.out.println("SELECTED CATEGORY : " + category);
-
             // Find all events of that category
             List<EventType> eventTypes = selectedSubEvent.get().getEventTypes().stream().filter(eventType -> (eventType.getCategory() != null && eventType.getCategory().equals(category))).toList();
 
@@ -329,6 +327,7 @@ public class SysexGenSelectionPane extends GridPane {
                             .withRange(min, max)
                             .withRangeType(parameter.getRangeType())
                             .withValue(parameter.getDefaultValues().getDatablockValue())
+                            .withIgnore(parameter.isIgnore())
                             .build();
 
                             if (parameter.getParameterIdentifier() != null) {

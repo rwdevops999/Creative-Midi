@@ -14,7 +14,6 @@ public class Registry {
     private final static Map<String, List<BiConsumer<Node, Object>>> consumerRegistry = new HashMap<>();
 
     public static void register(String name, Node node, BiConsumer<Node, Object> consumer) {
-        System.out.println("REGISTER");
         if (! nodeRegistry.containsKey(name)) {
             nodeRegistry.put(name, new ArrayList<>());
             consumerRegistry.put(name, new ArrayList<>());

@@ -81,10 +81,8 @@ public class SysexGenParametersPane extends TabPane {
     private Consumer<InputBlock> consumer = new  Consumer<InputBlock>() {
         @Override
         public void accept(InputBlock inputBlock) {
-            System.out.println("PROCESSING DATA");
             if (inputBlock.getValues() != null) {
                 if (selectedSubEvent != null) {
-                    System.out.println("PROCESS SUBEVENT: " + inputBlock.getValues().getDatablockValue());
                     List<String> sysexList = selectedSubEvent.createSysexList(parameterBlockList);
                     getSysexGenPane().getSysexGenResultPane().renderSysex(sysexList);
                 }
@@ -97,7 +95,11 @@ public class SysexGenParametersPane extends TabPane {
 
         if (! list.isEmpty()) {
             for (InputBlock inputBlock : list) {
-                pane.getChildren().add(new ParameterPane(inputBlock, consumer));
+                if (! inputBlock.isIgnore()) {
+                    pane.getChildren().add(new ParameterPane(inputBlock, consumer));
+                } else {
+                    inputBlock.setValue(inputBlock.getValues().getDatablockValue());
+                }
 /*                if (inputBlock.getParameter() != null && ! inputBlock.getParameter().equals("Type")) {
                     pane.getChildren().add(new ParameterPane(inputBlock, consumer));
                 } */

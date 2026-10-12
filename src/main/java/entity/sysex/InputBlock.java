@@ -39,6 +39,9 @@ public class InputBlock {
     @Setter
     private Integer parameterId;
 
+    @Getter
+    private boolean ignore;
+
     public InputBlock() {
         this.name = "";
         this.parameterType = ParameterType.INLINE;
@@ -50,6 +53,7 @@ public class InputBlock {
         this.rangeType = RangeType.CONTINUOUS;
         this.dataTable = null;
         this.parameterId = null;
+        this.ignore = false;
     }
 
     public InputBlock(InputBlockBuilder builder) {
@@ -63,6 +67,11 @@ public class InputBlock {
         this.rangeMin = builder.rangeMin;
         this.rangeMax = builder.rangeMax;
         this.rangeType = builder.rangeType;
+        this.ignore = builder.ignore;
+    }
+
+    public void setValue (int value) {
+        this.values = new DataBlock(value >> 7, value & 0x7F);
     }
 
     public static class InputBlockBuilder {
@@ -73,6 +82,7 @@ public class InputBlock {
         private DataBlock values;
         private int rangeMin, rangeMax;
         private RangeType rangeType;
+        private boolean ignore;
 
         public InputBlockBuilder clear() {
             this.name = "";
@@ -83,6 +93,7 @@ public class InputBlock {
             this.rangeMax = 127;
             this.values = null;
             this.rangeType = RangeType.CONTINUOUS;
+            this.ignore = false;
 
             return this;
         }
@@ -121,6 +132,12 @@ public class InputBlock {
 
         public InputBlockBuilder withValue(Integer value) {
             this.values = new DataBlock((value >> 7), value & 0x7F);
+
+            return this;
+        }
+
+        public InputBlockBuilder withIgnore(boolean value) {
+            this.ignore = value;
 
             return this;
         }

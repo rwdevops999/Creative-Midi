@@ -21,6 +21,9 @@ public class SysexGenDefinitions {
     private static final String PARAMETER_TABLE_HARMONY="HARMONY";
     private static final String PARAMETER_TABLE_SECTION="SECTION";
 
+    private static final String PARAMETER_TABLE_PARTS="PARTS";
+    private static final String PARAMETER_TABLE_MODE="MODE";
+
     @Getter
     private static List<SysexRoot> sysexs = new ArrayList<>();
 
@@ -144,6 +147,27 @@ public class SysexGenDefinitions {
                 .withEntry(127, "ON")
                 .build());
 
+        parameterDatatables.put("Table#Parts", parameterDataTableBuilder
+                .clear()
+                .withName("TableParts")
+                .withDescription("Right/Left)")
+                .withSize(4)
+                .withEntries(
+                        "Right = ON, Left = ON",
+                        "Right = OFF, Left = ON",
+                        "Right = ON, Left = OFF",
+                        "Right = OFF, Left = OFF")
+                .build());
+
+        parameterDatatables.put("Table#Mode", parameterDataTableBuilder
+                .clear()
+                .withName("TableMore")
+                .withDescription("(0 - 6)")
+                .withSize(7)
+                .withEntries(
+                        "Off", "Follow Lights", "Any Key", "Karaoke Key", "Vocal Cue Time", "Your Tempo")
+                .build());
+
         // Parameter Tables
         ParameterTable.ParameterTableBuilder parameterTableBuilder = new ParameterTable.ParameterTableBuilder();
 
@@ -225,6 +249,17 @@ public class SysexGenDefinitions {
                 .withParameterTableEntry(1, "On/Off", "0 - 127", 0, 127, parameterDatatables.get("Table#90"))
                 .build());
 
+        parameterTables.put(PARAMETER_TABLE_PARTS, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_PARTS)
+                .withParameterTableEntry(1, "Part", "0 - 3", 0, 3, parameterDatatables.get("Table#Parts"))
+                .build());
+
+        parameterTables.put(PARAMETER_TABLE_MODE, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_MODE)
+                .withParameterTableEntry(1, "Mode", "0 - 6", 0, 6, parameterDatatables.get("Table#Mode"))
+                .build());
 
         // SubEvents
         SubEvent.SubEventBuilder subEventBuilder = new SubEvent.SubEventBuilder();
@@ -366,18 +401,21 @@ public class SysexGenDefinitions {
 
                 .build();
 
+        // TODO This one we do later as this requires calculation
         SubEvent TempoControl = subEventBuilder
                 .clear()
                 .withName("Tempo Control")
                 .withSysex("7E 01")
                 .build();
 
+        // TODO For this we have to think about
         SubEvent ChordControlType1 = subEventBuilder
                 .clear()
                 .withName("Chord Control (Type1)")
                 .withSysex("7E 01 02")
                 .build();
 
+        // TODO For this we have to think
         SubEvent ChordControlType2 = subEventBuilder
                 .clear()
                 .withName("Chord Control (Type2)")
@@ -473,7 +511,7 @@ public class SysexGenDefinitions {
                 .addChild(Reverb)
                 .build();
 
-        SubEvent XGBulkDump = subEventBuilder
+/*        SubEvent XGBulkDump = subEventBuilder
                 .clear()
                 .withName("XG Bulk Dump")
                 .withSysex("00 4C")
@@ -490,7 +528,7 @@ public class SysexGenDefinitions {
                 .withName("XG Dump Request")
                 .withSysex("20 4C")
                 .build();
-
+*/
         SubEvent ScaleTuning = subEventBuilder
                 .clear()
                 .withName("Scale Tuning")
@@ -521,6 +559,7 @@ public class SysexGenDefinitions {
                 .withSysex("73 01 03")
                 .build();
 
+        // TODO To be examined
         SubEvent Style = subEventBuilder
                 .clear()
                 .withName("Style")
@@ -531,12 +570,66 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("MIDI Master Tuning")
                 .withSysex("10 27 30 00 00")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Master Tune MSB")
+                                .withDescription("0 - 127")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 127)
+                                .build()
+                )
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Master Tune LSB")
+                                .withDescription("0 - 127")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 127)
+                                .build()
+                )
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withDefaultValue(0)
+                                .ignore()
+                                .build()
+                )
                 .build();
 
         SubEvent GuideMode = subEventBuilder
                 .clear()
                 .withName("Guide Mode")
                 .withSysex("73 01 1F 00")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Part Select")
+                                .withDescription("0 - 4")
+                                .withIdentifier("1")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 4)
+                                .withEventValue(0)
+                                .build()
+                )
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Mode")
+                                .withDescription("0 - 6")
+                                .withIdentifier("1")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 6)
+                                .withEventValue(1)
+                                .build()
+                )
+                .withEventType(eventTypeBuilder.clear().withName("Part Select").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_PARTS)).build())
+                .withEventType(eventTypeBuilder.clear().withName("Mode").withValue(1).withParameterTable(parameterTables.get(PARAMETER_TABLE_MODE)).build())
                 .build();
 
         SubEvent AudioSongControl = subEventBuilder
@@ -588,26 +681,23 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Yamaha")
                 .withRootSysex("43")
-                .add(SectionControl)
+//                .add(SectionControl)
                 .add(TempoControl)
                 .add(ChordControlType1)
                 .add(ChordControlType2)
                 .add(XGParameterChange)
-                .add(XGParameterRequest)
-                .add(XGBulkDump)
-                .add(XGDumpRequest)
                 .add(ScaleTuning)
                 .add(ScaleTuningPart)
                 .add(ScaleTuningBaseNote)
-                .add(InternalClock)
-                .add(ExternalClock)
+//                .add(InternalClock)
+//                .add(ExternalClock)
                 .add(Style)
-                .add(MIDIMasterTuning)
+//                .add(MIDIMasterTuning)
                 .add(GuideMode)
                 .add(AudioSongControl)
                 .add(Score)
-                .add(Registrations)
-                .add(Harmony)
+//                .add(Registrations)
+//                .add(Harmony)
                 .build();
         sysexs.add(yamaha);
     }

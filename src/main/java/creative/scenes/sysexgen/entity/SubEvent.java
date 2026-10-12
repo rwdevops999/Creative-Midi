@@ -101,9 +101,9 @@ public class SubEvent {
         public SubEventBuilder clear() {
             this.name = null;
             this.sysex = null;
-            this.parameters = null;
-            this.eventTypes = null;
-            this.children = null;
+            this.parameters = new ArrayList<>();
+            this.eventTypes = new ArrayList<>();
+            this.children = new ArrayList<>();
 
             return this;
         }

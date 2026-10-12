@@ -96,7 +96,7 @@ public class ParameterPane extends GridPane {
                 Label refLabel = new Label(pt);
                 refLabel.setId("refLabel"+inputBlock.getParameterId());
                 if (getChildren().removeIf(node -> ("refLabel"+inputBlock.getParameterId()).equals(node.getId()))) {
-                    add(refLabel, 11, 0, 3, 1);
+                    add(refLabel, 11, 0, 4, 1);
                 }
             }
 
@@ -115,7 +115,7 @@ public class ParameterPane extends GridPane {
 
             refLabel.textProperty().bindBidirectional(sp);
 
-            add(refLabel, 11, 0, 3, 1);
+            add(refLabel, 11, 0, 4, 1);
         }
 
 /*

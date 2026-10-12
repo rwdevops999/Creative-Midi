@@ -35,6 +35,9 @@ public class Parameter {
     @Getter
     private DataBlock eventValues = null;
 
+    @Getter
+    private boolean ignore = false;
+
     public Parameter() {
         this.name = null;
         this.subAddress = null;
@@ -48,6 +51,7 @@ public class Parameter {
         this.eventValues = null;
 
         this.value = null;          // default value(s)
+        this.ignore = false;
     }
 
     public Parameter(ParameterBuilder builder) {
@@ -63,6 +67,7 @@ public class Parameter {
         this.rangeValues = builder.rangeValues;
         this.rangeType = builder.rangeType;
         this.eventValues = builder.eventValues;
+        this.ignore = builder.ignore;
     }
 
     public static class ParameterBuilder {
@@ -76,6 +81,7 @@ public class Parameter {
         private DataBlock rangeValues = null;
         private RangeType rangeType = RangeType.CONTINUOUS;
         private DataBlock eventValues = null;
+        private boolean ignore;
 
         public ParameterBuilder clear() {
             this.name = null;
@@ -88,6 +94,7 @@ public class Parameter {
             this.eventValues = null;
             this.rangeValues = null;
             this.rangeType = RangeType.CONTINUOUS;
+            this.ignore = false;
 
             return (this);
         }
@@ -109,6 +116,11 @@ public class Parameter {
 
         public ParameterBuilder withType(ParameterType value) {
             this.type = value;
+            return this;
+        }
+
+        public ParameterBuilder ignore() {
+            this.ignore = true;
             return this;
         }
 
