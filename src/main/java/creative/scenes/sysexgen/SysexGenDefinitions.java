@@ -230,19 +230,19 @@ public class SysexGenDefinitions {
         SubEvent GM1SystemOn = subEventBuilder
                 .clear()
                 .withName("GM1 System On")
-                .withSysex("10 09 01")
+                .withSysex("7F 09 01")
                 .build();
 
         SubEvent GM2SystemOn = subEventBuilder
                 .clear()
                 .withName("GM2 System On")
-                .withSysex("10 09 03")
+                .withSysex("7F 09 03")
                 .build();
 
         SubEvent MIDISystemOff = subEventBuilder
                 .clear()
-                .withName("General MIDI SystemOff")
-                .withSysex("10 09 02")
+                .withName("General MIDI System Off")
+                .withSysex("7F 09 02")
                 .build();
 
         SubEvent ScaleOctaveTuning = subEventBuilder

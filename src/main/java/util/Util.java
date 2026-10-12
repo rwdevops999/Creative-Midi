@@ -161,4 +161,8 @@ public class Util {
 
         return pascalCaseString.toString().trim();
     }
+
+    public static String extend(String str) {
+        return str + " ";
+    }
 }

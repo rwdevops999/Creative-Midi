@@ -14,7 +14,9 @@ public class SubEvent {
     @Getter
     private String name;
     private String sysex;
+    @Getter
     private List<Parameter> parameters;
+    @Getter
     private List<EventType> eventTypes;
     @Getter
     private List<SubEvent> children;
@@ -28,6 +30,18 @@ public class SubEvent {
         if (this.children != null) {
             this.children.forEach(child -> child.setParent(this));
         }
+    }
+
+    public String createSysex() {
+        StringBuilder sysexBuilder = new StringBuilder();
+
+        System.out.println("PARENT = " + this.parent);
+
+        if (this.parent instanceof SysexRoot sysexRoot) {
+            return sysexRoot.buildSysex(this.sysex);
+        }
+
+        return "TO BE CREATED";
     }
 
     public boolean hasChildren() {

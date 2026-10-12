@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Root implements IRoot {
-    private static final String SYSEX_START = "F0";
-    private static final String SYSEX_END = "F7";
+    protected static final String SYSEX_START = "F0";
+    protected static final String SYSEX_END = "F7";
 
-    String baseSysEx;
+    protected String baseSysEx;
 
     public Root(String baseSysEx) {
         this.baseSysEx = baseSysEx;

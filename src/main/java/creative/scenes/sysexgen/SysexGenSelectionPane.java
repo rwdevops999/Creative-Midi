@@ -1,9 +1,6 @@
 package creative.scenes.sysexgen;
 
-import creative.scenes.sysexgen.entity.EventType;
-import creative.scenes.sysexgen.entity.Parameter;
-import creative.scenes.sysexgen.entity.SubEvent;
-import creative.scenes.sysexgen.entity.SysexRoot;
+import creative.scenes.sysexgen.entity.*;
 import entity.sysex.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -20,6 +17,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -79,42 +79,22 @@ public class SysexGenSelectionPane extends GridPane {
         }
     }
 
-    private ObjectProperty<SysexRoot> selectedSysex = new SimpleObjectProperty<>();
-    private ObjectProperty<SubEvent> selectedSection = new SimpleObjectProperty<>();
-    private ObjectProperty<SubEvent> selectedEffect = new SimpleObjectProperty<>();
+    private ObjectProperty<SysexRoot> selectedSysexRoot = new SimpleObjectProperty<>();
+    private ObjectProperty<SubEvent> selectedSubEvent = new SimpleObjectProperty<>();
     private ObjectProperty<String> selectedCategory = new SimpleObjectProperty<>();
     private ObjectProperty<EventType> selectedType = new SimpleObjectProperty<>();
 
     private void prepareData() {
-        selectedSysex.addListener((observable, oldValue, newValue) -> {
-            System.out.println("SELECTED SYSEX = " + newValue.getName());
-        });
-
-        selectedSection.addListener((observable, oldValue, newValue) -> {
-            System.out.println("SELECTED SECTION = " + newValue.getName());
-        });
-
-        selectedEffect.addListener((observable, oldValue, newValue) -> {
-            System.out.println("SELECTED EFFECT = " + newValue.getName());
-            // TODO Here we can set selected category and selected type
-            Parameter defaultParameter = newValue.findDefaultParameter();
-            if (defaultParameter != null) {
-                if (defaultParameter.getDefaultValues() != null) {
-                    EventType defaultEventType = newValue.findDefaultEventType(defaultParameter.getDefaultValues());
-                    categoryVisible.set(true);
-                    selectedCategory.set(defaultEventType.getCategory());
-                    typeVisible.set(true);
-                    selectedType.set(defaultEventType);
-                }
-            }
+        selectedSubEvent.addListener((observable, oldValue, newValue) -> {
+            processSubEvent(newValue);
         });
 
         selectedCategory.addListener((observable, oldValue, newValue) -> {
-            System.out.println("SELECTED CATEGORY = " + newValue);
+            processCategory(newValue);
         });
 
         selectedType.addListener((observable, oldValue, newValue) -> {
-            System.out.println("SELECTED TYPE = " + newValue);
+            processEventType(newValue);
         });
     }
 
@@ -149,15 +129,15 @@ public class SysexGenSelectionPane extends GridPane {
         });
 
         sysexComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            sectionVisible.setValue(newValue != null);
-
+            sectionVisible.set(newValue != null);
             if (newValue != null) {
-                System.out.println("SELECTED SYSEX = " + newValue.getName());
                 // fill Sections Combo
                 sectionsComboBox.getItems().clear();
                 sectionsComboBox.getItems().addAll(newValue.getSubEvents());
 
                 hideNodes(effectVisible, categoryVisible, typeVisible);
+
+                selectedSysexRoot.setValue(newValue);
             }
         });
 
@@ -185,24 +165,18 @@ public class SysexGenSelectionPane extends GridPane {
 
         sectionsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                System.out.println("SELECTED SECTION = " + newValue.getName());
                 effectVisible.set(newValue.hasChildren());
                 if (newValue.hasChildren()) {
-                    System.out.println("SECTION HAS CHILDREN");
                     effectComboBox.getItems().clear();
                     effectComboBox.getItems().addAll(newValue.getChildren());
-                } else {
-                    if ("XG Parameter Change".equals(newValue.getName())) {
-                        System.out.println("THIS IS IMPOSSIBLE");
-                    }
-
-                    System.out.println("SECTION HAS NO CHILDREN");
-                    selectedSection.set(newValue);
                 }
 
                 hideNodes(categoryVisible, typeVisible);
             }
+
+            selectedSubEvent.setValue(newValue);
         });
+
         add(sectionsComboBox, 2, row, 7, 1);
 
         Label effectLabel = new Label("Effect");
@@ -225,12 +199,11 @@ public class SysexGenSelectionPane extends GridPane {
         });
 
         effectComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            categoryVisible.set(newValue != null);
+/*            categoryVisible.set(newValue != null);
             typeVisible.set(selectedType.get() != null);
 
             if (newValue != null) {
                 hideNodes(typeVisible);
-                System.out.println("SELECTED EFFECT = " + newValue.getName());
                 selectedEffect.set(newValue);
                 categoryComboBox.getItems().clear();
                 categoryComboBox.getItems().addAll(newValue.getCategories());
@@ -238,7 +211,7 @@ public class SysexGenSelectionPane extends GridPane {
                 if (selectedCategory.get() != null) {
                     categoryComboBox.getSelectionModel().select(selectedCategory.get());
                 }
-            }
+            } */
         });
 
         add(effectComboBox, 12, row, 4, 1);
@@ -263,17 +236,16 @@ public class SysexGenSelectionPane extends GridPane {
         });
 
         categoryComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            typeVisible.set(newValue != null);
+/*            typeVisible.set(newValue != null);
 
             if (newValue != null) {
-                System.out.println("SELECTED CATEGORY = " + newValue);
                 typeComboBox.getItems().clear();
                 typeComboBox.getItems().addAll(selectedEffect.get().getTypesOfCategory(newValue));
 
                 if (selectedType.get() != null) {
                     typeComboBox.getSelectionModel().select(selectedType.get());
                 }
-            }
+            } */
         });
 
         add(categoryComboBox, 19, row, 4, 1);
@@ -298,15 +270,81 @@ public class SysexGenSelectionPane extends GridPane {
         });
 
         typeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                System.out.println("SELECTED TYPE = " + newValue.getName());
-            }
         });
 
         add(typeComboBox, 26, row, 4, 1);
     }
 
-/*
+    private void processSubEvent(SubEvent subEvent) {
+        System.out.println("SELECTED SUBEVENT " + subEvent.getName());
+
+        if (subEvent.getEventTypes() != null) {
+
+        } else {
+            if (!subEvent.hasChildren()) {
+                System.out.println("HAS CHILDREN => CONTINUE");
+            }
+        }
+
+        processCategory(selectedCategory.get());
+    }
+
+    private void processCategory(String category) {
+        if (category != null) {
+            System.out.println("SELECTED CATEGORY : " + category);
+
+            // Find all events of that category
+            List<EventType> eventTypes = selectedSubEvent.get().getEventTypes().stream().filter(eventType -> (eventType.getCategory() != null && eventType.getCategory().equals(category))).toList();
+
+        } else {
+            System.out.println("NO CATEGORY SELECTED");
+        }
+
+        processEventType(selectedType.get());
+    }
+
+    private void processEventType(EventType eventType) {
+        ParameterInputBlock inputBlock = new ParameterInputBlock();
+
+        if (eventType != null) {
+            System.out.println("SELECTED EVENTTYPE : " + eventType.getName());
+
+            // TODO here we process working data
+        } else {
+            if (selectedSubEvent.get() != null) {
+                inputBlock.setSubEvent(selectedSubEvent.get());
+            }
+        }
+
+        forwardParameterData(inputBlock);
+    }
+
+    private void forwardParameterData(ParameterInputBlock inputBlock) {
+        getSysexPane().getSysexGenParametersPane().setData(inputBlock);
+    }
+
+    private void displaySelections() {
+        if (selectedSysexRoot.get() != null) {
+            System.out.println("SELECTED SYSEXROOT = " + selectedSysexRoot.get().getName());
+        }
+
+        if (selectedSubEvent.get() != null) {
+            System.out.println("SELECTED SUBEVENT = " + selectedSubEvent.get().getName());
+        }
+
+        if (selectedCategory.get() != null) {
+            System.out.println("SELECTED CATEGORY (String) = " + selectedCategory.get());
+        }
+
+        if (selectedType.get() != null) {
+            System.out.println("SELECTED EVENTTYPE = " + selectedType.get());
+        }
+
+
+        System.out.println("Build Sysex NOW");
+    }
+
+    /*
     private Master selectedMaster;
     private List<String> masterCategories = new ArrayList<>();
 

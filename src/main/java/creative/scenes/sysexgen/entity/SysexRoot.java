@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static util.Util.extend;
+
 public class SysexRoot extends Root {
     @Getter
     private String name;
@@ -25,6 +27,12 @@ public class SysexRoot extends Root {
         this.subEvents.clear();
         this.subEvents.addAll(builder.subEvents);
         this.subEvents.forEach(e -> e.setParent(this));
+    }
+
+    public String buildSysex(String nextSysex) {
+        String result = "";
+        result += extend(SYSEX_START) + extend(baseSysEx) + extend(nextSysex) + SYSEX_END;
+        return result;
     }
 
     public static class SysexRootBuilder {

@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen;
 
 import creative.scenes.sysexgen.component.ParameterPane;
+import creative.scenes.sysexgen.entity.ParameterInputBlock;
 import entity.sysex.DataBlock;
 import entity.sysex.InputBlock;
 import javafx.geometry.Insets;
@@ -36,7 +37,7 @@ public class SysexGenParametersPane extends TabPane {
     public SysexGenParametersPane(SysexGenPane owner) {
         parent = owner;
 
-//        showPaneBorder(this, getColor("border", "blue"));
+        showPaneBorder(this, getColor("border", "blue"));
 
         this.setPrefWidth(100);
         this.setPrefHeight(100);
@@ -126,6 +127,21 @@ public class SysexGenParametersPane extends TabPane {
         buildTabs(parameterBlockList);
     }
 */
+
+    public void setData(ParameterInputBlock data) {
+        processData(data);
+    }
+
+    private void processData(ParameterInputBlock data) {
+        List<String> sysexList = new ArrayList<>();
+        if (data.getParameterData() != null) {
+
+        } else {
+            sysexList.add(data.getSubEvent().createSysex());
+        }
+
+        getSysexGenPane().getSysexGenResultPane().renderSysex(sysexList);
+    }
     // ACCESSORS
     public SysexGenPane getSysexGenPane() {
         return parent;
