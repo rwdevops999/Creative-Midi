@@ -2,6 +2,7 @@ package creative.scenes.main;
 
 import creative.scenes.IScene;
 import creative.scenes.eventlist.EventlistScene;
+import creative.scenes.extract.ExtractScene;
 import creative.scenes.merge.MergeScene;
 import creative.scenes.midi.MidiScene;
 import creative.scenes.playlist.PlaylistScene;
@@ -63,15 +64,13 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, SIZE, "eventlistButton", "midi event list", "event-list", new EventlistScene()), 5, 0);
         add(new ActionButton(ownerScene, SIZE, "mergeButton", "merge style", "merge", new MergeScene()), 6, 0);
         add(new ActionButton(ownerScene, SIZE, "uploadStyleButton", "upload style", "upload-style", new UploadScene()), 7, 0);
+        add(new ActionButton(ownerScene, SIZE, "extractMIDI", "extract midi", "extract-midi", new ExtractScene()), 8, 0);
 
-/*        add(new ActionButton(ownerScene,"sysexButton", "handle sysex", "sysex_out", new SysExScene()), 1, 0);
-        add(new ActionButton(ownerScene, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 2, 0);
-        add(new ActionButton(ownerScene, "sysexgen2Button", "Generate SysEx", "sysex-generator", new SysExGen3Scene()), 4, 0);
+/*
         add(new ActionButton(ownerScene, "convertButton", "handle convert", "convert", new ConvertScene()), 5, 0);
         add(new ActionButton(ownerScene, "setupButton", "handle setup", "setup", new SetupScene()), 6, 0);
-
-        add(new ActionButton(ownerScene, "eventlistButton", "midi event list", "event-list", new EventListScene()), 0, 1);
 */
+
         if (ApplicationInfo.getInstance().isTestMode()) {
             add(new ActionButton(ownerScene, SIZE, "test1Button", "test 1", "test1", "Test1"), 3, 1);
             add(new ActionButton(ownerScene, SIZE, "test2Button", "test 2", "test2", "Test2"), 4, 1);

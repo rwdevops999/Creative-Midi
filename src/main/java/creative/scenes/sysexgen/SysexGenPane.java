@@ -16,7 +16,7 @@ public class SysexGenPane extends BorderPane {
 
         setId("SysexGenPane");
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
         SysexGenDefinitions.setup();
 
         buildPane();

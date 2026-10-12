@@ -44,7 +44,7 @@ public class SysexGenSelectionPane extends GridPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "green"));
+//        showPaneBorder(this, getColor("border", "green"));
 
         setPaneBackground(this);
 

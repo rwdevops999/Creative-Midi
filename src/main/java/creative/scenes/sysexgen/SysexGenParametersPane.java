@@ -40,7 +40,7 @@ public class SysexGenParametersPane extends TabPane {
     public SysexGenParametersPane(SysexGenPane owner) {
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "blue"));
+//        showPaneBorder(this, getColor("border", "blue"));
 
         this.setPrefWidth(100);
         this.setPrefHeight(100);

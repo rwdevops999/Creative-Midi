@@ -82,7 +82,7 @@ public class MergePane extends GridPane {
         rowConstraints.setValignment(VPos.CENTER);
         getRowConstraints().add(rowConstraints);
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
         setPaneBackground(this);
 
         buildPane();
@@ -150,7 +150,7 @@ public class MergePane extends GridPane {
     }
 
     private void buildPane() {
-        logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");
+        logger.debug("[CM_MERGE_PANE] Building {}", getId());
 
         Registry.register("DeviceSelector", this, (node, data) -> {
             if (node instanceof MergePane) {
@@ -292,7 +292,7 @@ public class MergePane extends GridPane {
             checkFiles();
         });
 
-        logger.debug("[CM_MIDI_SCENE] Starting Merge Scene");
+        logger.debug("[CM_MERGE_PANE] Built {}", getId());
     }
 
     private void checkFiles() {

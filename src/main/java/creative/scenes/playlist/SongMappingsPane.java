@@ -41,7 +41,7 @@ public class SongMappingsPane extends StackPane {
 
         parent = owner;
 
-        showPaneBorder(this, getColor("border", "red", null));
+//        showPaneBorder(this, getColor("border", "red", null));
         setPaneHeightAsPercentage(this, owner, 50);
 
         buildPane(new ArrayList<>());
