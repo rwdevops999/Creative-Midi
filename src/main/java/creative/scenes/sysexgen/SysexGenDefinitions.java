@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen;
 
 import creative.scenes.sysexgen.data.ParameterType;
+import creative.scenes.sysexgen.data.RangeType;
 import creative.scenes.sysexgen.entity.*;
 import lombok.Getter;
 
@@ -17,6 +18,7 @@ public class SysexGenDefinitions {
     private static final String PARAMETER_TABLE_REVERB2="REVERB2";
     private static final String PARAMETER_TABLE_REVERB3="REVERB3";
     private static final String PARAMETER_TABLE_HARMONY="HARMONY";
+    private static final String PARAMETER_TABLE_SECTION="SECTION";
 
     @Getter
     private static List<SysexRoot> sysexs = new ArrayList<>();
@@ -118,6 +120,20 @@ public class SysexGenDefinitions {
                 )
                 .build());
 
+        parameterDatatables.put("Table#98", parameterDataTableBuilder
+                .clear()
+                .withName("Table98")
+                .withDescription("Sections")
+                .withSize(36)
+                .withEntries(
+                        "Intro 1", "Intro 2", "Intro 3", "Intro 4", "", "", "", "",
+                        "Main A", "Main B", "Main C", "Main D", "", "", "", "",
+                        "Fill-In AA", "Fill-In BB", "Fill-In CC", "Fill-In DD", "", "", "", "",
+                        "Break Fill", "", "", "", "", "", "", "",
+                        "Ending 1", "Ending 2", "Ending 3", "Ending 4"
+                )
+                .build());
+
         // Parameter Tables
         ParameterTable.ParameterTableBuilder parameterTableBuilder = new ParameterTable.ParameterTableBuilder();
 
@@ -185,6 +201,12 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName(PARAMETER_TABLE_HARMONY)
                 .withParameterTableEntry(1, "Harmony", "0 - 19", 0, 19, parameterDatatables.get("Table#99"))
+                .build());
+
+        parameterTables.put(PARAMETER_TABLE_SECTION, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_SECTION)
+                .withParameterTableEntry(1, "Section", "0 - 35", 0, 35, parameterDatatables.get("Table#98"))
                 .build());
 
 
@@ -298,6 +320,30 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Section Control")
                 .withSysex("7E 00")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withName("Section")
+                                .withType(ParameterType.INLINE)
+                                .withNumBytes(1)
+                                .withIdentifier("1")
+                                .withDefaultValue(0)
+                                .build()
+                )
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withName("On/Off")
+                                .withDescription("0 = 0FF, 127 = ON")
+                                .withType(ParameterType.INLINE)
+                                .withNumBytes(1)
+                                .withDefaultValue(127)
+                                .withRangeValues(0, 127)
+                                .withRangeType(RangeType.DISCRETE)
+                                .build()
+                )
+                .withEventType(eventTypeBuilder.clear().withName("Section").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_SECTION)).build())
+
                 .build();
 
         SubEvent TempoControl = subEventBuilder

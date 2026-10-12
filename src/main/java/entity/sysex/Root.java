@@ -23,15 +23,16 @@ public class Root implements IRoot {
     public List<String> generateSysEx(String sysex, List<InputBlock> inputList) {
         List<String> sysexList = new ArrayList<>();
 
+        String rootSysex = extend(SYSEX_START) + extend(this.baseSysEx) + extend(sysex);
         for (InputBlock inputBlock : inputList) {
             if (ParameterType.INLINE.equals(inputBlock.getParameterType())) {
                 // Embedded sysex
-                String rootSysex = extend(SYSEX_START) + extend(this.baseSysEx) + extend(sysex) + extend(inputBlock.getValues().asString(inputBlock.getNumbytes())) + SYSEX_END;
-                sysexList.add(rootSysex);
+                rootSysex += extend(inputBlock.getValues().asString(inputBlock.getNumbytes()));
             }
         }
+        rootSysex += SYSEX_END;
+        sysexList.add(rootSysex);
 
-        System.out.println("GENERATING SYSEXLIST");
 /*
         Iterator<InputBlock> iterator = inputList.iterator();
 

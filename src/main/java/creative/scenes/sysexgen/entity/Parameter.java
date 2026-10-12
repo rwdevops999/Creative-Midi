@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen.entity;
 
 import creative.scenes.sysexgen.data.ParameterType;
+import creative.scenes.sysexgen.data.RangeType;
 import entity.sysex.DataBlock;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,8 @@ public class Parameter {
     private DataBlock defaultValues;
     @Getter
     private DataBlock rangeValues;
+    @Getter
+    private RangeType rangeType;
 
     // this will contain the actual value
     @Getter
@@ -35,7 +38,8 @@ public class Parameter {
         this.parameterIdentifier = null;    // a parameters identifier Number or a Name
         this.description = null;            // a description
         this.defaultValues = null;          // default value(s)
-        this.rangeValues = null;          // default value(s)
+        this.rangeValues = null;            // the range
+        this.rangeType = RangeType.CONTINUOUS;
 
         this.value = null;          // default value(s)
     }
@@ -51,6 +55,7 @@ public class Parameter {
         this.description = builder.description;
         this.defaultValues = builder.defaultValues;
         this.rangeValues = builder.rangeValues;
+        this.rangeType = builder.rangeType;
     }
 
     public static class ParameterBuilder {
@@ -62,6 +67,7 @@ public class Parameter {
         private String description = "";
         private DataBlock defaultValues = null;
         private DataBlock rangeValues = null;
+        private RangeType rangeType = RangeType.CONTINUOUS;
 
         public ParameterBuilder clear() {
             this.name = null;
@@ -72,6 +78,7 @@ public class Parameter {
             this.description = "";
             this.defaultValues = null;
             this.rangeValues = null;
+            this.rangeType = RangeType.CONTINUOUS;
 
             return (this);
         }
@@ -121,6 +128,11 @@ public class Parameter {
         // It will be MSB and LSB
         public ParameterBuilder withRangeValues(Integer val1, Integer val2) {
             this.rangeValues = new DataBlock(val1, val2);
+            return this;
+        }
+
+        public ParameterBuilder withRangeType(RangeType value) {
+            this.rangeType = value;
             return this;
         }
 

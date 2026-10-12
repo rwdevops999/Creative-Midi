@@ -327,6 +327,7 @@ public class SysexGenSelectionPane extends GridPane {
                             .withNumBytes(parameter.getNumBytes())
                             .withDescription(parameter.getDescription())
                             .withRange(min, max)
+                            .withRangeType(parameter.getRangeType())
                             .withValue(parameter.getDefaultValues().getDatablockValue())
                             .build();
 

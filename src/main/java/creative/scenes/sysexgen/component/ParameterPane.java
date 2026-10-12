@@ -1,14 +1,18 @@
 package creative.scenes.sysexgen.component;
 
+import creative.scenes.sysexgen.data.RangeType;
 import entity.sysex.DataBlock;
 import entity.sysex.InputBlock;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -71,16 +75,29 @@ public class ParameterPane extends GridPane {
             add(display, 4, 0, 4, 1);
         }
 
-        Spinner<Integer> spinner = new Spinner<>(inputBlock.getRangeMin(), inputBlock.getRangeMax(), inputBlock.getValues().getDatablockValue());
+        Spinner<Integer> spinner;
+        if (inputBlock.getRangeType().equals(RangeType.CONTINUOUS)) {
+            spinner = new Spinner<>(inputBlock.getRangeMin(), inputBlock.getRangeMax(), inputBlock.getValues().getDatablockValue());
+        } else {
+            ObservableList<Integer> validValues = FXCollections.observableArrayList(inputBlock.getRangeMin(), inputBlock.getRangeMax());
+
+            SpinnerValueFactory<Integer> valueFactory =
+                    new SpinnerValueFactory.ListSpinnerValueFactory<>(validValues);
+
+            spinner = new Spinner<>(valueFactory);
+            spinner.getValueFactory().setValue(inputBlock.getValues().getDatablockValue());
+        }
         spinner.getValueFactory().valueProperty().addListener((observable, oldValue, newValue) -> {
             inputBlock.getValues().setDatablockValue(newValue);
 
-            String pt = inputBlock.getDataTable().getDataEntries()[newValue];
+            if (inputBlock.getDataTable() != null) {
+                String pt = inputBlock.getDataTable().getDataEntries()[newValue];
 
-            Label refLabel = new Label(pt);
-            refLabel.setId("refLabel"+inputBlock.getParameterId());
-            if (getChildren().removeIf(node -> ("refLabel"+inputBlock.getParameterId()).equals(node.getId()))) {
-                add(refLabel, 11, 0, 3, 1);
+                Label refLabel = new Label(pt);
+                refLabel.setId("refLabel"+inputBlock.getParameterId());
+                if (getChildren().removeIf(node -> ("refLabel"+inputBlock.getParameterId()).equals(node.getId()))) {
+                    add(refLabel, 11, 0, 3, 1);
+                }
             }
 
             consumer.accept(inputBlock);

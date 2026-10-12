@@ -1,6 +1,7 @@
 package entity.sysex;
 
 import creative.scenes.sysexgen.data.ParameterType;
+import creative.scenes.sysexgen.data.RangeType;
 import creative.scenes.sysexgen.entity.ParameterDataTable;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,9 @@ public class InputBlock {
     @Getter
     @Setter
     private int rangeMin, rangeMax;
+
+    @Getter
+    private RangeType rangeType;
 
     @Getter
     private DataBlock values;
@@ -43,6 +47,7 @@ public class InputBlock {
         this.values = new DataBlock(0, 0);
         this.rangeMin = 0;
         this.rangeMax = 127;
+        this.rangeType = RangeType.CONTINUOUS;
         this.dataTable = null;
         this.parameterId = null;
     }
@@ -57,6 +62,7 @@ public class InputBlock {
         this.values = builder.values;
         this.rangeMin = builder.rangeMin;
         this.rangeMax = builder.rangeMax;
+        this.rangeType = builder.rangeType;
     }
 
     public static class InputBlockBuilder {
@@ -66,6 +72,7 @@ public class InputBlock {
         private String description;
         private DataBlock values;
         private int rangeMin, rangeMax;
+        private RangeType rangeType;
 
         public InputBlockBuilder clear() {
             this.name = "";
@@ -75,6 +82,7 @@ public class InputBlock {
             this.rangeMin = 0;
             this.rangeMax = 127;
             this.values = null;
+            this.rangeType = RangeType.CONTINUOUS;
 
             return this;
         }
@@ -103,6 +111,11 @@ public class InputBlock {
             this.rangeMin = value1;
             this.rangeMax = value2;
 
+            return this;
+        }
+
+        public InputBlockBuilder withRangeType(RangeType value) {
+            this.rangeType = value;
             return this;
         }
 
