@@ -352,6 +352,7 @@ public class SysexGenDefinitions {
                                 .build())
                 .build();
 
+        // TODO think
         SubEvent reverbParameter = subEventBuilder
                 .clear()
                 .withName("Reverb Parameter")
@@ -365,7 +366,7 @@ public class SysexGenDefinitions {
                                 .withIdentifier("1")
                                 .withDefaultValue(0)
                                 .withRangeValues(0, 8)
-                                .withNumBytes(1)
+                                .withNumBytes(2)
                                 .withEventValue(0)
                                 .build())
                 .withParameter(
@@ -381,24 +382,28 @@ public class SysexGenDefinitions {
                 .withEventType(eventTypeBuilder.clear().withName("Reverb Type").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_REVERB_TYPES)).build())
                 .build();
 
+        // TODO think
         SubEvent chorusParameter = subEventBuilder
                 .clear()
                 .withName("Chorus Parameter")
                 .withSysex("10 04 05 01 01 01 02")
                 .build();
 
+        // TODO Think
         SubEvent channelAftertouch = subEventBuilder
                 .clear()
                 .withName("Channel Aftertouch")
                 .withSysex("10 09 01")
                 .build();
 
+        // TODO Think
         SubEvent controlChange = subEventBuilder
                 .clear()
                 .withName("Control Change")
                 .withSysex("10 09 03")
                 .build();
 
+        // TODO Think
         SubEvent instrumentControl = subEventBuilder
                 .clear()
                 .withName("Instrument Change")
@@ -412,11 +417,11 @@ public class SysexGenDefinitions {
 //                .add(masterVolume)
 //                .add(masterFineTuning)
 //                .add(masterCoarseTuning)
-                .add(reverbParameter)
-                .add(chorusParameter)
-                .add(channelAftertouch)
-                .add(controlChange)
-                .add(instrumentControl)
+//                .add(reverbParameter)
+//                .add(chorusParameter)
+//                .add(channelAftertouch)
+//                .add(controlChange)
+//                .add(instrumentControl)
                 .build();
         sysexs.add(universalRealTime);
 
@@ -438,6 +443,7 @@ public class SysexGenDefinitions {
                 .withSysex("7F 09 02")
                 .build();
 
+        // TODO Think
         SubEvent ScaleOctaveTuning = subEventBuilder
                 .clear()
                 .withName("Scale/Octave Tuning")
@@ -448,10 +454,10 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Non-Real Time")
                 .withRootSysex("7E")
-                .add(GM1SystemOn)
-                .add(GM2SystemOn)
-                .add(MIDISystemOff)
-                .add(ScaleOctaveTuning)
+//                .add(GM1SystemOn)
+//                .add(GM2SystemOn)
+//                .add(MIDISystemOff)
+//                .add(ScaleOctaveTuning)
                 .build();
         sysexs.add(universalNonRealTime);
 
@@ -491,6 +497,7 @@ public class SysexGenDefinitions {
         // TODO This one we do later as this requires calculation
         SubEvent TempoControl = subEventBuilder
                 .clear()
+                .withName("Tempo Control")
                 .withName("Tempo Control")
                 .withSysex("7E 01")
                 .build();

@@ -25,8 +25,10 @@ public class SysexRoot extends Root {
 
         this.name = builder.name;
         this.subEvents.clear();
-        this.subEvents.addAll(builder.subEvents);
-        this.subEvents.forEach(e -> e.setParent(this));
+        if (builder.subEvents != null) {
+            this.subEvents.addAll(builder.subEvents);
+            this.subEvents.forEach(e -> e.setParent(this));
+        }
     }
 
     public String buildSysex(String nextSysex) {
