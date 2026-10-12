@@ -20,6 +20,7 @@ public class SysexGenDefinitions {
     private static final String PARAMETER_TABLE_REVERB3="REVERB3";
     private static final String PARAMETER_TABLE_HARMONY="HARMONY";
     private static final String PARAMETER_TABLE_SECTION="SECTION";
+    private static final String PARAMETER_TABLE_REVERB_TYPES="REVERB_TYPES";
 
     private static final String PARAMETER_TABLE_PARTS="PARTS";
     private static final String PARAMETER_TABLE_MODE="MODE";
@@ -178,6 +179,18 @@ public class SysexGenDefinitions {
                         "Start", "Stop", "Pause")
                 .build());
 
+        parameterDatatables.put("Table#ReverbType", parameterDataTableBuilder
+                .clear()
+                .withName("TableAReverbType")
+                .withDescription("(0 - 8)")
+                .withSize(9)
+                .withEntries(
+                        "RoomS", "RoomM", "RoomL",
+                        "HallM", "HallL", "",
+                        "", "", "GM PLate"
+                )
+                .build());
+
         // Parameter Tables
         ParameterTable.ParameterTableBuilder parameterTableBuilder = new ParameterTable.ParameterTableBuilder();
 
@@ -277,6 +290,12 @@ public class SysexGenDefinitions {
                 .withParameterTableEntry(1, "Audio Control", "0 - 2", 0, 2, parameterDatatables.get("Table#AControl"))
                 .build());
 
+        parameterTables.put(PARAMETER_TABLE_REVERB_TYPES, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_REVERB_TYPES)
+                .withParameterTableEntry(1, "Reverb Type", "0 - 8", 0, 8, parameterDatatables.get("Table#ReverbType"))
+                .build());
+
         // SubEvents
         SubEvent.SubEventBuilder subEventBuilder = new SubEvent.SubEventBuilder();
         Parameter.ParameterBuilder parameterBuilder = new Parameter.ParameterBuilder();
@@ -336,7 +355,30 @@ public class SysexGenDefinitions {
         SubEvent reverbParameter = subEventBuilder
                 .clear()
                 .withName("Reverb Parameter")
-                .withSysex("10 04 05 01 01 01 01")
+                .withSysex("10 04 05 01 01 01 01 01")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Reverb Type")
+                                .withDescription("0 - 8")
+                                .withIdentifier("1")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 8)
+                                .withNumBytes(1)
+                                .withEventValue(0)
+                                .build())
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Reverb Time")
+                                .withDescription("0 - 11.0s")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 127)
+                                .withNumBytes(1)
+                                .build())
+                .withEventType(eventTypeBuilder.clear().withName("Reverb Type").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_REVERB_TYPES)).build())
                 .build();
 
         SubEvent chorusParameter = subEventBuilder
@@ -444,7 +486,6 @@ public class SysexGenDefinitions {
                 )
                 .withEventType(eventTypeBuilder.clear().withName("Section").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_SECTION)).build())
                 .withEventType(eventTypeBuilder.clear().withName("OnOff").withValue(1).withParameterTable(parameterTables.get(PARAMETER_TABLE_ON_OFF)).build())
-
                 .build();
 
         // TODO This one we do later as this requires calculation
