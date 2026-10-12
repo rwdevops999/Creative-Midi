@@ -13,6 +13,7 @@ public class Parameter {
     private int numBytes;
     @Getter
     private ParameterType type;
+    @Getter
     private String parameterIdentifier;
     @Getter
     private String description;
@@ -113,7 +114,7 @@ public class Parameter {
 
         // It is only LSB
         public ParameterBuilder withDefaultValue(Integer value) {
-            this.defaultValues = new DataBlock(null, value);
+            this.defaultValues = new DataBlock(value >> 7, value & 0X7F);
             return this;
         }
 

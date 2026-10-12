@@ -26,7 +26,7 @@ public class DataBlock {
         }
     }
 
-    public int getValue() {
+    public int getDatablockValue() {
         int MSB = 0;
         int LSB = 0;
 
@@ -41,7 +41,7 @@ public class DataBlock {
         return MSB | LSB;
     }
 
-    public void setValue(Integer value) {
+    public void setDatablockValue(Integer value) {
         int MSB = 0;
         int LSB = 0;
 

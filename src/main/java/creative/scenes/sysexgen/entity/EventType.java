@@ -11,6 +11,7 @@ public class EventType {
     private String description;
     @Getter
     private DataBlock value;
+    @Getter
     private ParameterTable parameterTable;
 
     public EventType(EventTypeBuilder builder) {
@@ -30,6 +31,10 @@ public class EventType {
 
         public EventTypeBuilder clear() {
             this.name = null;
+            this.category = null;
+            this.description = null;
+            this.value = null;
+            this.parameterTable = null;
 
             return this;
         }

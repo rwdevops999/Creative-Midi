@@ -327,8 +327,25 @@ public class SysexGenSelectionPane extends GridPane {
                             .withNumBytes(parameter.getNumBytes())
                             .withDescription(parameter.getDescription())
                             .withRange(min, max)
-                            .withValue(parameter.getDefaultValues().getValue())
+                            .withValue(parameter.getDefaultValues().getDatablockValue())
                             .build();
+
+                            if (parameter.getParameterIdentifier() != null) {
+                                EventType et = subEvent.findLinkedEventType(parameter.getDefaultValues());
+                                if (et != null) {
+                                    inputBlock.setName(et.getName());
+                                    int parameterId = Integer.valueOf(parameter.getParameterIdentifier());
+                                    inputBlock.setParameterId(parameterId);
+                                    ParameterTableEntry pte = et.getParameterTable().getEntries()[parameterId];
+                                    if (pte != null) {
+                                        inputBlock.setDescription(pte.getDisplay());
+                                        inputBlock.setRangeMin(pte.getMin());
+                                        inputBlock.setRangeMax(pte.getMax());
+                                        inputBlock.setDataTable(pte.getDataTable());
+                                    }
+                                }
+
+                            }
 
                     parameterInputBlock.getInputBlocks().add(inputBlock);
                 }
@@ -340,27 +357,6 @@ public class SysexGenSelectionPane extends GridPane {
 
     private void forwardParameterData(ParameterInputBlock inputBlock) {
         getSysexPane().getSysexGenParametersPane().setData(inputBlock);
-    }
-
-    private void displaySelections() {
-        if (selectedSysexRoot.get() != null) {
-            System.out.println("SELECTED SYSEXROOT = " + selectedSysexRoot.get().getName());
-        }
-
-        if (selectedSubEvent.get() != null) {
-            System.out.println("SELECTED SUBEVENT = " + selectedSubEvent.get().getName());
-        }
-
-        if (selectedCategory.get() != null) {
-            System.out.println("SELECTED CATEGORY (String) = " + selectedCategory.get());
-        }
-
-        if (selectedType.get() != null) {
-            System.out.println("SELECTED EVENTTYPE = " + selectedType.get());
-        }
-
-
-        System.out.println("Build Sysex NOW");
     }
 
     /*

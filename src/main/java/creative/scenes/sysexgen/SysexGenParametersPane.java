@@ -84,7 +84,7 @@ public class SysexGenParametersPane extends TabPane {
             System.out.println("PROCESSING DATA");
             if (inputBlock.getValues() != null) {
                 if (selectedSubEvent != null) {
-                    System.out.println("PROCESS SUBEVENT: " + inputBlock.getValues().getValue());
+                    System.out.println("PROCESS SUBEVENT: " + inputBlock.getValues().getDatablockValue());
                     List<String> sysexList = selectedSubEvent.createSysexList(parameterBlockList);
                     getSysexGenPane().getSysexGenResultPane().renderSysex(sysexList);
                 }

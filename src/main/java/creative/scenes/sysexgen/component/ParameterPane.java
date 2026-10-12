@@ -57,6 +57,8 @@ public class ParameterPane extends GridPane {
         }
     };
 
+    StringProperty sp = new SimpleStringProperty();
+
     private void buildPane(InputBlock inputBlock, Consumer<InputBlock> consumer) {
         getChildren().clear();
 
@@ -69,16 +71,36 @@ public class ParameterPane extends GridPane {
             add(display, 4, 0, 4, 1);
         }
 
-        Spinner<Integer> spinner = new Spinner<>(inputBlock.getRangeMin(), inputBlock.getRangeMax(), inputBlock.getValues().getValue());
+        Spinner<Integer> spinner = new Spinner<>(inputBlock.getRangeMin(), inputBlock.getRangeMax(), inputBlock.getValues().getDatablockValue());
         spinner.getValueFactory().valueProperty().addListener((observable, oldValue, newValue) -> {
-            inputBlock.getValues().setValue(newValue);
+            inputBlock.getValues().setDatablockValue(newValue);
 
-            // TODO render Datatable values
+            String pt = inputBlock.getDataTable().getDataEntries()[newValue];
+
+            Label refLabel = new Label(pt);
+            refLabel.setId("refLabel"+inputBlock.getParameterId());
+            if (getChildren().removeIf(node -> ("refLabel"+inputBlock.getParameterId()).equals(node.getId()))) {
+                add(refLabel, 11, 0, 3, 1);
+            }
 
             consumer.accept(inputBlock);
         });
 
         add(spinner, 8, 0, 2, 1);
+
+        if (inputBlock.getDataTable() != null) {
+            String[] pt = inputBlock.getDataTable().getDataEntries();
+
+            sp.set(pt[spinner.getValueFactory().getValue()]);
+
+            Label refLabel = new Label(pt[spinner.getValueFactory().getValue()]);
+            refLabel.setId("refLabel"+inputBlock.getParameterId());
+
+            refLabel.textProperty().bindBidirectional(sp);
+
+            add(refLabel, 11, 0, 3, 1);
+        }
+
 /*
 
         StringProperty sp = new SimpleStringProperty();

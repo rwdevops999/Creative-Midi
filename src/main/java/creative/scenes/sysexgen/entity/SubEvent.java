@@ -3,6 +3,7 @@ package creative.scenes.sysexgen.entity;
 import creative.scenes.sysexgen.data.ParameterType;
 import entity.sysex.DataBlock;
 import entity.sysex.InputBlock;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -77,6 +78,16 @@ public class SubEvent {
     }
 
     public EventType findDefaultEventType(DataBlock values) {
+        return eventTypes.stream().filter(eventType -> eventType.getValue().getB1().equals(values.getB1()) && eventType.getValue().getB2().equals(values.getB2())).findFirst().orElse(null);
+    }
+
+    public EventType findLinkedEventType(DataBlock values) {
+        //        return eventTypes.stream().filter(eventType -> eventType.getValue().getB1().equals(values.getB1()) && eventType.getValue().getB2().equals(values.getB2())).findFirst().orElse(null);
+        for (EventType eventType : eventTypes) {
+            DataBlock db1 = eventType.getValue();
+            DataBlock db2 = values;
+        }
+
         return eventTypes.stream().filter(eventType -> eventType.getValue().getB1().equals(values.getB1()) && eventType.getValue().getB2().equals(values.getB2())).findFirst().orElse(null);
     }
 

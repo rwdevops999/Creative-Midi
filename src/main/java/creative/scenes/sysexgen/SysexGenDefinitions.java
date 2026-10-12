@@ -503,7 +503,7 @@ public class SysexGenDefinitions {
         SubEvent Harmony = subEventBuilder
                         .clear()
                         .withName("Harmony")
-                        .withSysex("F0 43 10 4C 0 04 00")
+                        .withSysex("73 01 51 04 00 00")
                         .withParameter(
                                 parameterBuilder
                                         .clear()
@@ -513,7 +513,7 @@ public class SysexGenDefinitions {
                                         .withDefaultValue(0)
                                         .build()
                         )
-                .withEventType(eventTypeBuilder.clear().withName("Harmony Type").withParameterTable(parameterTables.get(PARAMETER_TABLE_HARMONY)).build())
+                .withEventType(eventTypeBuilder.clear().withName("Harmony Type").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_HARMONY)).build())
                 .build();
 
         SysexRoot yamaha = sysexRootBuilder

@@ -1,17 +1,21 @@
 package entity.sysex;
 
 import creative.scenes.sysexgen.data.ParameterType;
+import creative.scenes.sysexgen.entity.ParameterDataTable;
 import lombok.Getter;
 import lombok.Setter;
 
 public class InputBlock {
     @Getter
+    @Setter
     private String name;
 
     @Getter
+    @Setter
     private String description;
 
     @Getter
+    @Setter
     private int rangeMin, rangeMax;
 
     @Getter
@@ -23,6 +27,14 @@ public class InputBlock {
     @Getter
     private int numbytes;
 
+    @Setter
+    @Getter
+    private ParameterDataTable dataTable;
+
+    @Getter
+    @Setter
+    private Integer parameterId;
+
     public InputBlock() {
         this.name = "";
         this.parameterType = ParameterType.INLINE;
@@ -31,6 +43,8 @@ public class InputBlock {
         this.values = new DataBlock(0, 0);
         this.rangeMin = 0;
         this.rangeMax = 127;
+        this.dataTable = null;
+        this.parameterId = null;
     }
 
     public InputBlock(InputBlockBuilder builder) {
