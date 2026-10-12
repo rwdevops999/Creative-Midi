@@ -16,6 +16,7 @@ public class SysexGenDefinitions {
     private static final String PARAMETER_TABLE_REVERB1="REVERB1";
     private static final String PARAMETER_TABLE_REVERB2="REVERB2";
     private static final String PARAMETER_TABLE_REVERB3="REVERB3";
+    private static final String PARAMETER_TABLE_HARMONY="HARMONY";
 
     @Getter
     private static List<SysexRoot> sysexs = new ArrayList<>();
@@ -106,11 +107,36 @@ public class SysexGenDefinitions {
                 )
                 .build());
 
+        parameterDatatables.put("Table#99", parameterDataTableBuilder
+                .clear()
+                .withName("Table99")
+                .withDescription("Harmony Types")
+                .withSize(20)
+                .withEntries(
+                        "Duet 1", "Duet 2", "Trio", "Full Chord", "Rock Duet", "Country Duet 1", "Country Duet 2", "Country Trio", "Block", "4-Way Close 1", "4-Way Close 2", "4-Way Close 3", "4-Way Close 4",
+                        "4-Way Open 1", "4-Way Open 2", "4-Way Open 3", "1+5", "Octave", "Strum", "Multi Assign"
+                )
+                .build());
+
         // Parameter Tables
         ParameterTable.ParameterTableBuilder parameterTableBuilder = new ParameterTable.ParameterTableBuilder();
-        parameterTables.put(PARAMETER_TABLE_REVERB2, parameterTableBuilder
+
+        parameterTables.put(PARAMETER_TABLE_REAL_REVERB, parameterTableBuilder
                 .clear()
-                .withName(PARAMETER_TABLE_REVERB2)
+                .withName(PARAMETER_TABLE_REAL_REVERB)
+                .withParameterTableEntry(1, "Reverb Time", "0.3s - 30.0s", 0, 69, parameterDatatables.get("Table#1"))
+                .withParameterTableEntry(3, "Initial Delay Time", "0.1ms - 200.0ms", 0, 127, parameterDatatables.get("Table#2"))
+                .withParameterTableEntry(4, "High Damp Frequency", "1.0kHz - 18kHr, Thru", 34, 60, parameterDatatables.get("Table#3"))
+                .withParameterTableEntry(6, "High Ratio", "0.0 - 1.0", 0, 10)
+                .withParameterTableEntry(13, "EQ Low Frequency", "22Hz - 1.0kHz", 1, 34, parameterDatatables.get("Table#3"))
+                .withParameterTableEntry(14, "EQ Low Gain", "-12db - 0db - +12db", 52, 76)
+                .withParameterTableEntry(15, "EQ High Frequency", "500Hz - 18kHz", 28, 59, parameterDatatables.get("Table#3"))
+                .withParameterTableEntry(16, "EQ High Gain", "-12db - 0db - +12db", 52, 76)
+                .build());
+
+        parameterTables.put(PARAMETER_TABLE_REVERB1, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_REVERB1)
                 .withParameterTableEntry(1, "Reverb Time", "0.3s - 30.0s", 0, 69, parameterDatatables.get("Table#1)"))
                 .withParameterTableEntry(2, "Diffusion", "0 - 10", 0, 10)
                 .withParameterTableEntry(3, "Initial Delay Time", "0.1ms - 200.0ms", 0, 127, parameterDatatables.get("Table#2"))
@@ -123,7 +149,6 @@ public class SysexGenDefinitions {
                 .withParameterTableEntry(14, "High Damp", "0.1 - 1.0", 1, 10)
                 .withParameterTableEntry(15, "Feedback Level", "-63 - 0 - +63", 1, 127)
                 .build());
-
 
         parameterTables.put(PARAMETER_TABLE_REVERB2, parameterTableBuilder
                 .clear()
@@ -155,6 +180,13 @@ public class SysexGenDefinitions {
                 .withParameterTableEntry(14, "High Damp", "0.1 - 1.0", 1, 10)
                 .withParameterTableEntry(15, "Feedback Level", "-63 - 0 - +63", 1, 127)
                 .build());
+
+        parameterTables.put(PARAMETER_TABLE_HARMONY, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_HARMONY)
+                .withParameterTableEntry(1, "Harmony", "0 - 19", 0, 19, parameterDatatables.get("Table#99"))
+                .build());
+
 
         // SubEvents
         SubEvent.SubEventBuilder subEventBuilder = new SubEvent.SubEventBuilder();
