@@ -23,6 +23,7 @@ public class SysexGenDefinitions {
 
     private static final String PARAMETER_TABLE_PARTS="PARTS";
     private static final String PARAMETER_TABLE_MODE="MODE";
+    private static final String PARAMETER_TABLE_AUDIO_CONTROL="AUDIO_CONTROL";
 
     @Getter
     private static List<SysexRoot> sysexs = new ArrayList<>();
@@ -168,6 +169,15 @@ public class SysexGenDefinitions {
                         "Off", "Follow Lights", "Any Key", "Karaoke Key", "Vocal Cue Time", "Your Tempo")
                 .build());
 
+        parameterDatatables.put("Table#AControl", parameterDataTableBuilder
+                .clear()
+                .withName("TableAControl")
+                .withDescription("(0 - 2)")
+                .withSize(3)
+                .withEntries(
+                        "Start", "Stop", "Pause")
+                .build());
+
         // Parameter Tables
         ParameterTable.ParameterTableBuilder parameterTableBuilder = new ParameterTable.ParameterTableBuilder();
 
@@ -259,6 +269,12 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName(PARAMETER_TABLE_MODE)
                 .withParameterTableEntry(1, "Mode", "0 - 6", 0, 6, parameterDatatables.get("Table#Mode"))
+                .build());
+
+        parameterTables.put(PARAMETER_TABLE_AUDIO_CONTROL, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_AUDIO_CONTROL)
+                .withParameterTableEntry(1, "Audio Control", "0 - 2", 0, 2, parameterDatatables.get("Table#AControl"))
                 .build());
 
         // SubEvents
@@ -636,6 +652,19 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Audio Song Control")
                 .withSysex("73 01 50 19 00 00")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("AudioControl")
+                                .withDescription("0 - 2")
+                                .withIdentifier("1")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 2)
+                                .withEventValue(0)
+                                .build()
+                )
+                .withEventType(eventTypeBuilder.clear().withName("Audio Control").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_AUDIO_CONTROL)).build())
                 .build();
 
         SubEvent Score = subEventBuilder
@@ -693,7 +722,7 @@ public class SysexGenDefinitions {
 //                .add(ExternalClock)
                 .add(Style)
 //                .add(MIDIMasterTuning)
-                .add(GuideMode)
+//                .add(GuideMode)
                 .add(AudioSongControl)
                 .add(Score)
 //                .add(Registrations)
