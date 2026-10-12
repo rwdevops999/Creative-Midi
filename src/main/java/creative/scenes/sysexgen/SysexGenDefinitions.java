@@ -500,6 +500,22 @@ public class SysexGenDefinitions {
                                 .build())
                 .build();
 
+        SubEvent Harmony = subEventBuilder
+                        .clear()
+                        .withName("Harmony")
+                        .withSysex("F0 43 10 4C 0 04 00")
+                        .withParameter(
+                                parameterBuilder
+                                        .clear()
+                                        .withType(ParameterType.INLINE)
+                                        .withNumBytes(1)
+                                        .withIdentifier("1")
+                                        .withDefaultValue(0)
+                                        .build()
+                        )
+                .withEventType(eventTypeBuilder.clear().withName("Harmony Type").withParameterTable(parameterTables.get(PARAMETER_TABLE_HARMONY)).build())
+                .build();
+
         SysexRoot yamaha = sysexRootBuilder
                 .clear()
                 .withName("Yamaha")
@@ -523,6 +539,7 @@ public class SysexGenDefinitions {
                 .add(AudioSongControl)
                 .add(Score)
                 .add(Registrations)
+                .add(Harmony)
                 .build();
         sysexs.add(yamaha);
     }

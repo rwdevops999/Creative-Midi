@@ -56,7 +56,7 @@ public class EventType {
         }
 
         public EventTypeBuilder withValue(int value) {
-            this.value = new DataBlock(null, value);
+            this.value = new DataBlock((value >> 7), (value & 0x7F));
 
             return this;
         }
