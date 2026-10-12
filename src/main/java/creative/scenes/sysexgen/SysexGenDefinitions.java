@@ -309,7 +309,7 @@ public class SysexGenDefinitions {
                         parameterBuilder
                                 .clear()
                                 .withType(ParameterType.INLINE)
-                                .withName("Volume")
+                                .withName("Fine tuning")
                                 .withDescription("0 - 16383")
                                 .withDefaultValue(0)
                                 .withRangeValues(0, 16383)
@@ -320,7 +320,17 @@ public class SysexGenDefinitions {
         SubEvent masterCoarseTuning = subEventBuilder
                 .clear()
                 .withName("Master Coarse Tuning")
-                .withSysex("10 04 00")
+                .withSysex("10 04 04 00")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Coarse Tuning")
+                                .withDescription("0 - 127")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 127)
+                                .withNumBytes(1)
+                                .build())
                 .build();
 
         SubEvent reverbParameter = subEventBuilder
@@ -358,8 +368,8 @@ public class SysexGenDefinitions {
                 .withName("Real Time")
                 .withRootSysex("7F")
 //                .add(masterVolume)
-                .add(masterFineTuning)
-                .add(masterCoarseTuning)
+//                .add(masterFineTuning)
+//                .add(masterCoarseTuning)
                 .add(reverbParameter)
                 .add(chorusParameter)
                 .add(channelAftertouch)
