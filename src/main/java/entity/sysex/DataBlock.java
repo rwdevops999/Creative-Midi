@@ -2,6 +2,8 @@ package entity.sysex;
 
 import lombok.Getter;
 
+import java.util.HexFormat;
+
 @Getter
 public class DataBlock {
     Byte b1;
@@ -37,5 +39,24 @@ public class DataBlock {
         }
 
         return MSB | LSB;
+    }
+
+    public void setValue(Integer value) {
+        int MSB = 0;
+        int LSB = 0;
+
+        b1 = (byte)(value >> 7);
+        b2 = (byte)(value & 0x7F);
+    }
+
+    public String asString(int numBytes) {
+        // Put bytes into an array for easy slicing/indexing
+        byte[] bytes = { b2, b1 };
+
+        // Ensure numBytes stays within valid bounds (0 to 2)
+        int targetLength = Math.max(0, Math.min(numBytes, bytes.length));
+
+        // Use HexFormat to format only the requested number of bytes
+        return HexFormat.of().withUpperCase().formatHex(bytes, 0, targetLength).toUpperCase();
     }
 }

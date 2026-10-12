@@ -2,6 +2,7 @@ package creative.scenes.sysexgen;
 
 import creative.scenes.sysexgen.component.ParameterPane;
 import creative.scenes.sysexgen.entity.ParameterInputBlock;
+import creative.scenes.sysexgen.entity.SubEvent;
 import entity.sysex.DataBlock;
 import entity.sysex.InputBlock;
 import javafx.geometry.Insets;
@@ -23,6 +24,8 @@ public class SysexGenParametersPane extends TabPane {
     private static final Logger logger = LoggerFactory.getLogger(SysexGenParametersPane.class);
 
     private static final int TAB_SIZE = 10;
+
+    private SubEvent selectedSubEvent = null;
 
     public SysexGenParametersPane() {
         super();
@@ -47,11 +50,7 @@ public class SysexGenParametersPane extends TabPane {
         buildPane();
     }
 
-    private void buildPane() {
-
-    }
-
-/*    private List<InputBlock> parameterBlockList = new ArrayList<>();
+    private List<InputBlock> parameterBlockList = new ArrayList<>();
 
     private void buildPane() {
         logger.debug("[CM_SYSEX_GEN_PARAMETERS_PANE] Building {}", getId());
@@ -61,6 +60,55 @@ public class SysexGenParametersPane extends TabPane {
         logger.debug("[CM_SYSEX_GEN_PARAMETERS_PANE] Built {}", getId());
     }
 
+    private void buildTabs (List<InputBlock> list) {
+        getTabs().clear();
+
+        int numtabs = list.size() / TAB_SIZE;
+        if (!list.isEmpty()) {
+            numtabs++;
+        }
+
+        for (int i = 0; i < numtabs; i++) {
+            List<InputBlock> partiallyList = list.stream().skip((long) i * TAB_SIZE).limit(TAB_SIZE).toList();
+
+            Tab tab = new Tab("Parameters " + (i + 1));
+            tab.setContent(createContent(partiallyList));
+            tab.setClosable(false);
+            getTabs().add(tab);
+        }
+    }
+
+    private Consumer<InputBlock> consumer = new  Consumer<InputBlock>() {
+        @Override
+        public void accept(InputBlock inputBlock) {
+            System.out.println("PROCESSING DATA");
+            if (inputBlock.getValues() != null) {
+                if (selectedSubEvent != null) {
+                    System.out.println("PROCESS SUBEVENT: " + inputBlock.getValues().getValue());
+                    List<String> sysexList = selectedSubEvent.createSysexList(parameterBlockList);
+                    getSysexGenPane().getSysexGenResultPane().renderSysex(sysexList);
+                }
+            }
+        }
+    };
+
+    private VBox createContent(List<InputBlock> list) {
+        VBox pane = new VBox();
+
+        if (! list.isEmpty()) {
+            for (InputBlock inputBlock : list) {
+                pane.getChildren().add(new ParameterPane(inputBlock, consumer));
+/*                if (inputBlock.getParameter() != null && ! inputBlock.getParameter().equals("Type")) {
+                    pane.getChildren().add(new ParameterPane(inputBlock, consumer));
+                } */
+            }
+        }
+
+        return pane;
+    }
+
+
+/*
     private void buildTabs (List<InputBlock> list) {
         list = list.stream().filter(ib -> ib.getParameter() != null && ! ib.getParameter().equals("Type")).toList();
 
@@ -129,13 +177,19 @@ public class SysexGenParametersPane extends TabPane {
 */
 
     public void setData(ParameterInputBlock data) {
+        selectedSubEvent = data.getSubEvent();
         processData(data);
     }
 
     private void processData(ParameterInputBlock data) {
         List<String> sysexList = new ArrayList<>();
-        if (data.getParameterData() != null) {
+        if (! data.getInputBlocks().isEmpty()) {
+            parameterBlockList = data.getInputBlocks();
+            buildTabs(parameterBlockList);
 
+            if (selectedSubEvent != null) {
+                sysexList = selectedSubEvent.createSysexList(data.getInputBlocks());
+            }
         } else {
             sysexList.add(data.getSubEvent().createSysex());
         }

@@ -2,6 +2,7 @@ package creative.scenes.sysexgen.entity;
 
 import creative.scenes.sysexgen.data.ParameterType;
 import entity.sysex.DataBlock;
+import entity.sysex.InputBlock;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,13 +36,22 @@ public class SubEvent {
     public String createSysex() {
         StringBuilder sysexBuilder = new StringBuilder();
 
-        System.out.println("PARENT = " + this.parent);
-
         if (this.parent instanceof SysexRoot sysexRoot) {
             return sysexRoot.buildSysex(this.sysex);
         }
 
         return "TO BE CREATED";
+    }
+
+    public List<String> createSysexList (List<InputBlock> inputList) {
+        List<String> sysexList = new ArrayList<>();
+
+        if (parent instanceof SysexRoot sysexRoot) {
+            // TODO pass the list?
+            return sysexRoot.generateSysEx(this.sysex, inputList);
+        }
+
+        return sysexList;
     }
 
     public boolean hasChildren() {

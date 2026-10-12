@@ -3,6 +3,5 @@ package entity.sysex;
 import java.util.List;
 
 public interface IRoot {
-//    List<String> generateSysEx(List<InputBlock> inputBlocks);
-    List<String> generateSysEx();
+    List<String> generateSysEx(String sysex, List<InputBlock> inputBlocks);
 }

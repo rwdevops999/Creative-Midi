@@ -58,15 +58,28 @@ public class ParameterPane extends GridPane {
     };
 
     private void buildPane(InputBlock inputBlock, Consumer<InputBlock> consumer) {
-/*        getChildren().clear();
+        getChildren().clear();
 
-        Label parameter = new Label(inputBlock.getParameter());
+        Label parameter = new Label(inputBlock.getName());
         add(parameter, 0, 0, 3, 1);
 
-        if (inputBlock.getDisplay() != null) {
-            Label display = new Label("(" + inputBlock.getDisplay() + ")");
+        String description = inputBlock.getDescription();
+        if (description != null && ! description.isEmpty()) {
+            Label display = new Label("(" + inputBlock.getDescription() + ")");
             add(display, 4, 0, 4, 1);
         }
+
+        Spinner<Integer> spinner = new Spinner<>(inputBlock.getRangeMin(), inputBlock.getRangeMax(), inputBlock.getValues().getValue());
+        spinner.getValueFactory().valueProperty().addListener((observable, oldValue, newValue) -> {
+            inputBlock.getValues().setValue(newValue);
+
+            // TODO render Datatable values
+
+            consumer.accept(inputBlock);
+        });
+
+        add(spinner, 8, 0, 2, 1);
+/*
 
         StringProperty sp = new SimpleStringProperty();
 

@@ -456,15 +456,15 @@ public class SysexGenDefinitions {
         SubEvent Registrations = subEventBuilder
                 .clear()
                 .withName("Registration")
-                .withSysex("73 01 52 25 11")
+                .withSysex("73 01 52 25 11 00 02 00")
                 .withParameter(
                         parameterBuilder
                                 .clear()
                                 .withType(ParameterType.INLINE)
                                 .withName("Registration number")
-                                .withDescription("1 - 8")
-                                .withDefaultValue(1)
-                                .withRangeValues(1, 8)
+                                .withDescription("0 - 7")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 7)
                                 .build())
                 .build();
 

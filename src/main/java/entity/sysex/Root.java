@@ -1,9 +1,13 @@
 package entity.sysex;
 
+import creative.scenes.sysexgen.data.ParameterType;
+
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.List;
+
+import static util.Util.extend;
 
 public class Root implements IRoot {
     protected static final String SYSEX_START = "F0";
@@ -16,8 +20,18 @@ public class Root implements IRoot {
     }
 
     @Override
-    public List<String> generateSysEx() {
+    public List<String> generateSysEx(String sysex, List<InputBlock> inputList) {
         List<String> sysexList = new ArrayList<>();
+
+        for (InputBlock inputBlock : inputList) {
+            if (ParameterType.INLINE.equals(inputBlock.getParameterType())) {
+                // Embedded sysex
+                String rootSysex = extend(SYSEX_START) + extend(this.baseSysEx) + extend(sysex) + extend(inputBlock.getValues().asString(inputBlock.getNumbytes())) + SYSEX_END;
+                sysexList.add(rootSysex);
+            }
+        }
+
+        System.out.println("GENERATING SYSEXLIST");
 /*
         Iterator<InputBlock> iterator = inputList.iterator();
 

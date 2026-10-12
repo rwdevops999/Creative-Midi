@@ -1,10 +1,110 @@
 package entity.sysex;
 
+import creative.scenes.sysexgen.data.ParameterType;
 import lombok.Getter;
 import lombok.Setter;
 
 public class InputBlock {
     @Getter
+    private String name;
+
+    @Getter
+    private String description;
+
+    @Getter
+    private int rangeMin, rangeMax;
+
+    @Getter
+    private DataBlock values;
+
+    @Getter
+    private ParameterType parameterType;
+
+    @Getter
+    private int numbytes;
+
+    public InputBlock() {
+        this.name = "";
+        this.parameterType = ParameterType.INLINE;
+        this.numbytes = 1;
+        this.description = "";
+        this.values = new DataBlock(0, 0);
+        this.rangeMin = 0;
+        this.rangeMax = 127;
+    }
+
+    public InputBlock(InputBlockBuilder builder) {
+        this();
+
+        this.name = builder.name;
+        this.parameterType = builder.parameterType;
+        this.numbytes = builder.numbytes;
+        this.description = builder.description;
+        this.values = builder.values;
+        this.rangeMin = builder.rangeMin;
+        this.rangeMax = builder.rangeMax;
+    }
+
+    public static class InputBlockBuilder {
+        private String name;
+        private ParameterType parameterType;
+        private int numbytes;
+        private String description;
+        private DataBlock values;
+        private int rangeMin, rangeMax;
+
+        public InputBlockBuilder clear() {
+            this.name = "";
+            this.parameterType = ParameterType.INLINE;
+            this.numbytes = 1;
+            this.description = "";
+            this.rangeMin = 0;
+            this.rangeMax = 127;
+            this.values = null;
+
+            return this;
+        }
+
+        public InputBlockBuilder withName(String value) {
+            this.name = value;
+            return this;
+        }
+
+        public InputBlockBuilder withParameterType(ParameterType parameterType) {
+            this.parameterType = parameterType;
+            return this;
+        }
+
+        public InputBlockBuilder withNumBytes(int value) {
+            this.numbytes = value;
+            return this;
+        }
+
+        public InputBlockBuilder withDescription(String value) {
+            this.description = value  == null ? "" : value;
+            return this;
+        }
+
+        public InputBlockBuilder withRange(int value1, int value2) {
+            this.rangeMin = value1;
+            this.rangeMax = value2;
+
+            return this;
+        }
+
+        public InputBlockBuilder withValue(Integer value) {
+            this.values = new DataBlock((value >> 7), value & 0x7F);
+
+            return this;
+        }
+
+        public InputBlock build() {
+            return new InputBlock(this);
+        }
+    }
+}
+
+    /*    @Getter
     Integer position;
     @Getter
     Integer numBytes;
@@ -115,5 +215,5 @@ public class InputBlock {
         public InputBlock build() {
             return new InputBlock(this);
         }
-    }
-}
+    } */
+

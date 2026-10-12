@@ -6,15 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Parameter {
+    @Getter
     private String name;
     private Integer subAddress;
+    @Getter
     private int numBytes;
     @Getter
     private ParameterType type;
     private String parameterIdentifier;
+    @Getter
     private String description;
     @Getter
     private DataBlock defaultValues;
+    @Getter
     private DataBlock rangeValues;
 
     // this will contain the actual value

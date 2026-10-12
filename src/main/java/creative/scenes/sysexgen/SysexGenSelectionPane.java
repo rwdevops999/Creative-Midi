@@ -304,19 +304,38 @@ public class SysexGenSelectionPane extends GridPane {
     }
 
     private void processEventType(EventType eventType) {
-        ParameterInputBlock inputBlock = new ParameterInputBlock();
+        InputBlock.InputBlockBuilder inputBlockBuilder = new InputBlock.InputBlockBuilder();
+
+        ParameterInputBlock parameterInputBlock = new ParameterInputBlock();
 
         if (eventType != null) {
             System.out.println("SELECTED EVENTTYPE : " + eventType.getName());
 
             // TODO here we process working data
         } else {
-            if (selectedSubEvent.get() != null) {
-                inputBlock.setSubEvent(selectedSubEvent.get());
+            SubEvent subEvent = selectedSubEvent.get();
+            if (subEvent != null) {
+                parameterInputBlock.setSubEvent(subEvent);
+
+                for (Parameter parameter: subEvent.getParameters()) {
+                    int min = parameter.getRangeValues() == null ? 0 : parameter.getRangeValues().getB1();
+                    int max = parameter.getRangeValues() == null ? 127 : parameter.getRangeValues().getB2();
+                    InputBlock inputBlock = inputBlockBuilder
+                            .clear()
+                            .withName(parameter.getName())
+                            .withParameterType(parameter.getType())
+                            .withNumBytes(parameter.getNumBytes())
+                            .withDescription(parameter.getDescription())
+                            .withRange(min, max)
+                            .withValue(parameter.getDefaultValues().getValue())
+                            .build();
+
+                    parameterInputBlock.getInputBlocks().add(inputBlock);
+                }
             }
         }
 
-        forwardParameterData(inputBlock);
+        forwardParameterData(parameterInputBlock);
     }
 
     private void forwardParameterData(ParameterInputBlock inputBlock) {
