@@ -57,6 +57,6 @@ public class DataBlock {
         int targetLength = Math.max(0, Math.min(numBytes, bytes.length));
 
         // Use HexFormat to format only the requested number of bytes
-        return HexFormat.of().withUpperCase().formatHex(bytes, 0, targetLength).toUpperCase();
+        return HexFormat.of().withUpperCase().withDelimiter(" ").formatHex(bytes, 0, targetLength).toUpperCase();
     }
 }

@@ -78,6 +78,7 @@ public class ParameterPane extends GridPane {
         Spinner<Integer> spinner;
         if (inputBlock.getRangeType().equals(RangeType.CONTINUOUS)) {
             spinner = new Spinner<>(inputBlock.getRangeMin(), inputBlock.getRangeMax(), inputBlock.getValues().getDatablockValue());
+            spinner.setEditable(true);
         } else {
             ObservableList<Integer> validValues = FXCollections.observableArrayList(inputBlock.getRangeMin(), inputBlock.getRangeMax());
 

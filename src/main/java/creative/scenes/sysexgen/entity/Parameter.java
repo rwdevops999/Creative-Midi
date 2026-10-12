@@ -3,6 +3,7 @@ package creative.scenes.sysexgen.entity;
 import creative.scenes.sysexgen.data.ParameterType;
 import creative.scenes.sysexgen.data.RangeType;
 import entity.sysex.DataBlock;
+import entity.sysex.IntegerDataBlock;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +24,7 @@ public class Parameter {
     @Getter
     private DataBlock defaultValues;
     @Getter
-    private DataBlock rangeValues;
+    private IntegerDataBlock rangeValues;
     @Getter
     private RangeType rangeType;
 
@@ -78,7 +79,7 @@ public class Parameter {
         private String parameterIdentifier = null;
         private String description = "";
         private DataBlock defaultValues = null;
-        private DataBlock rangeValues = null;
+        private IntegerDataBlock rangeValues = null;
         private RangeType rangeType = RangeType.CONTINUOUS;
         private DataBlock eventValues = null;
         private boolean ignore;
@@ -158,7 +159,7 @@ public class Parameter {
 
         // It will be MSB and LSB
         public ParameterBuilder withRangeValues(Integer val1, Integer val2) {
-            this.rangeValues = new DataBlock(val1, val2);
+            this.rangeValues = new IntegerDataBlock(val1, val2);
             return this;
         }
 
@@ -168,11 +169,6 @@ public class Parameter {
         }
 
         // It is only LSB
-        public ParameterBuilder withRangeValue(Integer value) {
-            this.rangeValues = new DataBlock(null, value);
-            return this;
-        }
-
         public Parameter build() { return new Parameter(this); }
     }
 }

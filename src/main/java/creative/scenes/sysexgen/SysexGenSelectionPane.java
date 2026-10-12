@@ -86,7 +86,11 @@ public class SysexGenSelectionPane extends GridPane {
 
     private void prepareData() {
         selectedSubEvent.addListener((observable, oldValue, newValue) -> {
-            processSubEvent(newValue);
+            if (newValue != null) {
+                processSubEvent(newValue);
+            } else {
+                getSysexPane().getSysexGenParametersPane().clear();
+            }
         });
 
         selectedCategory.addListener((observable, oldValue, newValue) -> {
@@ -316,8 +320,8 @@ public class SysexGenSelectionPane extends GridPane {
                 parameterInputBlock.setSubEvent(subEvent);
 
                 for (Parameter parameter: subEvent.getParameters()) {
-                    int min = parameter.getRangeValues() == null ? 0 : parameter.getRangeValues().getB1();
-                    int max = parameter.getRangeValues() == null ? 127 : parameter.getRangeValues().getB2();
+                    int min = parameter.getRangeValues() == null ? 0 : parameter.getRangeValues().getI1();
+                    int max = parameter.getRangeValues() == null ? 127 : parameter.getRangeValues().getI2();
                     InputBlock inputBlock = inputBlockBuilder
                             .clear()
                             .withName(parameter.getName())

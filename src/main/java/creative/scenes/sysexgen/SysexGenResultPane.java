@@ -93,8 +93,6 @@ public class SysexGenResultPane extends VBox {
         }
     }
 
-    public Supplier<List<String>> sysexSupplier = () -> currentSysexList;
-
     public void clear() {
         currentSysexList = new ArrayList<>();
 
@@ -104,6 +102,9 @@ public class SysexGenResultPane extends VBox {
             sysexGenActionsPane.setEnables(sysexSupplier);
         }
     }
+
+    public Supplier<List<String>> sysexSupplier = () -> currentSysexList;
+
     // ACCESSORS
     public SysexGenPane getSysexGenPane() {
         return parent;

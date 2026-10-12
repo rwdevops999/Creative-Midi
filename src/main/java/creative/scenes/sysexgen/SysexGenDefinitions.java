@@ -289,6 +289,16 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Master Volume")
                 .withSysex("10 04 01")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Volume")
+                                .withDescription("0 - 16383")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 16383)
+                                .withNumBytes(2)
+                                .build())
                 .build();
 
         SubEvent masterFineTuning = subEventBuilder
@@ -527,36 +537,21 @@ public class SysexGenDefinitions {
                 .addChild(Reverb)
                 .build();
 
-/*        SubEvent XGBulkDump = subEventBuilder
-                .clear()
-                .withName("XG Bulk Dump")
-                .withSysex("00 4C")
-                .build();
-
-        SubEvent XGParameterRequest = subEventBuilder
-                .clear()
-                .withName("XG Parameter Request")
-                .withSysex("30 4C")
-                .build();
-
-        SubEvent XGDumpRequest = subEventBuilder
-                .clear()
-                .withName("XG Dump Request")
-                .withSysex("20 4C")
-                .build();
-*/
+        // TODO Think
         SubEvent ScaleTuning = subEventBuilder
                 .clear()
                 .withName("Scale Tuning")
                 .withSysex("73 01 52 2F 02 cc 40")
                 .build();
 
+        // TODO Think
         SubEvent ScaleTuningPart = subEventBuilder
                 .clear()
                 .withName("Scale Tuning Part")
                 .withSysex("73 01 52 2F 02 cc")
                 .build();
 
+        // TODO Think
         SubEvent ScaleTuningBaseNote = subEventBuilder
                 .clear()
                 .withName("Scale Tuning base Note")
@@ -667,6 +662,7 @@ public class SysexGenDefinitions {
                 .withEventType(eventTypeBuilder.clear().withName("Audio Control").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_AUDIO_CONTROL)).build())
                 .build();
 
+        // TODO think about
         SubEvent Score = subEventBuilder
                 .clear()
                 .withName("Score")
@@ -711,20 +707,20 @@ public class SysexGenDefinitions {
                 .withName("Yamaha")
                 .withRootSysex("43")
 //                .add(SectionControl)
-                .add(TempoControl)
-                .add(ChordControlType1)
-                .add(ChordControlType2)
+//                .add(TempoControl)
+//                .add(ChordControlType1)
+//                .add(ChordControlType2)
                 .add(XGParameterChange)
-                .add(ScaleTuning)
-                .add(ScaleTuningPart)
-                .add(ScaleTuningBaseNote)
+//                .add(ScaleTuning)
+//                .add(ScaleTuningPart)
+//                .add(ScaleTuningBaseNote)
 //                .add(InternalClock)
 //                .add(ExternalClock)
-                .add(Style)
+//                .add(Style)
 //                .add(MIDIMasterTuning)
 //                .add(GuideMode)
-                .add(AudioSongControl)
-                .add(Score)
+//                .add(AudioSongControl)
+//                .add(Score)
 //                .add(Registrations)
 //                .add(Harmony)
                 .build();

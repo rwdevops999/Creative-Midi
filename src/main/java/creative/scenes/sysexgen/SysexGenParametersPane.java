@@ -183,6 +183,10 @@ public class SysexGenParametersPane extends TabPane {
         processData(data);
     }
 
+    public void clear() {
+        getSysexGenPane().getSysexGenResultPane().clear();
+    }
+
     private void processData(ParameterInputBlock data) {
         List<String> sysexList = new ArrayList<>();
         if (! data.getInputBlocks().isEmpty()) {

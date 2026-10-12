@@ -17,15 +17,15 @@ public class Test4Pane extends HBox {
         runTest();
     }
 
-    private int Bank;
+    private int Volume;
     private int Msb;
     private int Lsb;
 
     private void setupTest() {
         logger.debug("[CM_TEST4_PANE] Setting up {}", getId());
 
-        Msb = 131;
-        Lsb = 25;
+        Msb = 127;
+        Lsb = 127;
 
         logger.debug("[CM_TEST4_PANE] Set up {}", getId());
     }
@@ -33,13 +33,13 @@ public class Test4Pane extends HBox {
     private void runTest() {
         logger.debug("[CM_TEST4_PANE] Executing {}", getId());
 
-        Bank = (Msb << 7) | Lsb;
-        System.out.println("Bank = " + Bank);
+        Volume = 15221;
+        System.out.println("Volume = " + Volume);
 
         int nMsb = 0;
         int nLsb = 0;
-        nMsb = Bank >> 7;
-        nLsb = Bank & 0x7F;
+        nMsb = Volume >> 7;
+        nLsb = Volume & 0x7F;
         System.out.println("n MSB = " + nMsb);
         System.out.println("n LSB = " + nLsb);
 
