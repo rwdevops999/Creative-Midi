@@ -13,6 +13,7 @@ import java.util.Map;
 public class SysexGenDefinitions {
     private static Map<String, ParameterTable> parameterTables = new HashMap<>();
 
+    private static final String PARAMETER_TABLE_ON_OFF="ON_OFF";
     private static final String PARAMETER_TABLE_REAL_REVERB="REAL_REVERB";
     private static final String PARAMETER_TABLE_REVERB1="REVERB1";
     private static final String PARAMETER_TABLE_REVERB2="REVERB2";
@@ -134,6 +135,15 @@ public class SysexGenDefinitions {
                 )
                 .build());
 
+        parameterDatatables.put("Table#90", parameterDataTableBuilder
+                .clear()
+                .withName("Table90")
+                .withDescription("On-Off")
+                .withSize(128)
+                .withEntry(0, "OFF")
+                .withEntry(127, "ON")
+                .build());
+
         // Parameter Tables
         ParameterTable.ParameterTableBuilder parameterTableBuilder = new ParameterTable.ParameterTableBuilder();
 
@@ -207,6 +217,12 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName(PARAMETER_TABLE_SECTION)
                 .withParameterTableEntry(1, "Section", "0 - 35", 0, 35, parameterDatatables.get("Table#98"))
+                .build());
+
+        parameterTables.put(PARAMETER_TABLE_ON_OFF, parameterTableBuilder
+                .clear()
+                .withName(PARAMETER_TABLE_ON_OFF)
+                .withParameterTableEntry(1, "On/Off", "0 - 127", 0, 127, parameterDatatables.get("Table#90"))
                 .build());
 
 
@@ -328,6 +344,7 @@ public class SysexGenDefinitions {
                                 .withNumBytes(1)
                                 .withIdentifier("1")
                                 .withDefaultValue(0)
+                                .withEventValue(0)
                                 .build()
                 )
                 .withParameter(
@@ -336,13 +353,16 @@ public class SysexGenDefinitions {
                                 .withName("On/Off")
                                 .withDescription("0 = 0FF, 127 = ON")
                                 .withType(ParameterType.INLINE)
+                                .withIdentifier("1")
                                 .withNumBytes(1)
+                                .withEventValue(1)
                                 .withDefaultValue(127)
                                 .withRangeValues(0, 127)
                                 .withRangeType(RangeType.DISCRETE)
                                 .build()
                 )
                 .withEventType(eventTypeBuilder.clear().withName("Section").withValue(0).withParameterTable(parameterTables.get(PARAMETER_TABLE_SECTION)).build())
+                .withEventType(eventTypeBuilder.clear().withName("OnOff").withValue(1).withParameterTable(parameterTables.get(PARAMETER_TABLE_ON_OFF)).build())
 
                 .build();
 
@@ -541,6 +561,7 @@ public class SysexGenDefinitions {
                                 .withType(ParameterType.INLINE)
                                 .withName("Registration number")
                                 .withDescription("0 - 7")
+                                .withEventValue(0)
                                 .withDefaultValue(0)
                                 .withRangeValues(0, 7)
                                 .build())
@@ -556,6 +577,7 @@ public class SysexGenDefinitions {
                                         .withType(ParameterType.INLINE)
                                         .withNumBytes(1)
                                         .withIdentifier("1")
+                                        .withEventValue(0)
                                         .withDefaultValue(0)
                                         .build()
                         )

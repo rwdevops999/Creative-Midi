@@ -6,6 +6,8 @@ import entity.sysex.DataBlock;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.DatabaseMetaData;
+
 public class Parameter {
     @Getter
     private String name;
@@ -30,6 +32,9 @@ public class Parameter {
     @Setter
     private DataBlock value;
 
+    @Getter
+    private DataBlock eventValues = null;
+
     public Parameter() {
         this.name = null;
         this.subAddress = null;
@@ -40,6 +45,7 @@ public class Parameter {
         this.defaultValues = null;          // default value(s)
         this.rangeValues = null;            // the range
         this.rangeType = RangeType.CONTINUOUS;
+        this.eventValues = null;
 
         this.value = null;          // default value(s)
     }
@@ -56,6 +62,7 @@ public class Parameter {
         this.defaultValues = builder.defaultValues;
         this.rangeValues = builder.rangeValues;
         this.rangeType = builder.rangeType;
+        this.eventValues = builder.eventValues;
     }
 
     public static class ParameterBuilder {
@@ -68,6 +75,7 @@ public class Parameter {
         private DataBlock defaultValues = null;
         private DataBlock rangeValues = null;
         private RangeType rangeType = RangeType.CONTINUOUS;
+        private DataBlock eventValues = null;
 
         public ParameterBuilder clear() {
             this.name = null;
@@ -77,6 +85,7 @@ public class Parameter {
             this.parameterIdentifier = null;
             this.description = "";
             this.defaultValues = null;
+            this.eventValues = null;
             this.rangeValues = null;
             this.rangeType = RangeType.CONTINUOUS;
 
@@ -122,6 +131,16 @@ public class Parameter {
         // It is only LSB
         public ParameterBuilder withDefaultValue(Integer value) {
             this.defaultValues = new DataBlock(value >> 7, value & 0X7F);
+            return this;
+        }
+
+        public ParameterBuilder withEventValues(Integer val1, Integer val2) {
+            this.eventValues = new DataBlock(val1, val2);
+            return this;
+        }
+
+        public ParameterBuilder withEventValue(Integer value) {
+            this.eventValues = new DataBlock(value >> 7, value & 0x7F);
             return this;
         }
 

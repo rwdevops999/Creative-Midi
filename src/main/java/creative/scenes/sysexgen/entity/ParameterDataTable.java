@@ -42,6 +42,11 @@ public class ParameterDataTable {
             return this;
         }
 
+        public ParameterDataTableBuilder withEntry(int index, String value) {
+            dataEntries[index] = value;
+            return this;
+        }
+
         public ParameterDataTableBuilder clear() {
             this.name = null;
             this.description = "";

@@ -332,7 +332,7 @@ public class SysexGenSelectionPane extends GridPane {
                             .build();
 
                             if (parameter.getParameterIdentifier() != null) {
-                                EventType et = subEvent.findLinkedEventType(parameter.getDefaultValues());
+                                EventType et = subEvent.findLinkedEventType(parameter.getEventValues());
                                 if (et != null) {
                                     inputBlock.setName(et.getName());
                                     int parameterId = Integer.valueOf(parameter.getParameterIdentifier());
@@ -345,7 +345,6 @@ public class SysexGenSelectionPane extends GridPane {
                                         inputBlock.setDataTable(pte.getDataTable());
                                     }
                                 }
-
                             }
 
                     parameterInputBlock.getInputBlocks().add(inputBlock);
