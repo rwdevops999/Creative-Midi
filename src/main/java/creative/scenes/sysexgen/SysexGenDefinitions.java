@@ -305,6 +305,16 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Master Fine Tuning")
                 .withSysex("10 04 03")
+                .withParameter(
+                        parameterBuilder
+                                .clear()
+                                .withType(ParameterType.INLINE)
+                                .withName("Volume")
+                                .withDescription("0 - 16383")
+                                .withDefaultValue(0)
+                                .withRangeValues(0, 16383)
+                                .withNumBytes(2)
+                                .build())
                 .build();
 
         SubEvent masterCoarseTuning = subEventBuilder
@@ -347,7 +357,7 @@ public class SysexGenDefinitions {
                 .clear()
                 .withName("Real Time")
                 .withRootSysex("7F")
-                .add(masterVolume)
+//                .add(masterVolume)
                 .add(masterFineTuning)
                 .add(masterCoarseTuning)
                 .add(reverbParameter)
