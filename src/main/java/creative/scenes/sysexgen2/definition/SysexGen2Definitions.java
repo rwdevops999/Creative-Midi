@@ -9,21 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SysexGen2Definitions {
-    private static Event.EventBuilder eventBuilder;
+    private static final Event.EventBuilder eventBuilder;
 
-    private static EventType.EventTypeBuilder eventTypeBuilder;
-    private static EventParameter.EventParameterBuilder eventParameterBuilder;
+    private static final EventType.EventTypeBuilder eventTypeBuilder;
+    private static final EventParameter.EventParameterBuilder eventParameterBuilder;
 
-    private static ParameterTable.ParameterTableBuilder parameterTableBuilder;
-    private static ParametersTableEntry.ParametersTableEntryBuilder parameterTableEntryBuilder;
+    private static final ParameterTable.ParameterTableBuilder parameterTableBuilder;
+    private static final ParametersTableEntry.ParametersTableEntryBuilder parameterTableEntryBuilder;
 
-    private static DataTable.DataTableBuilder dataTableBuilder;
+    private static final DataTable.DataTableBuilder dataTableBuilder;
 
     @Getter
     private static final Event rootEvent = new Event();
 
-    private static List<ParameterTable> parameterTables;
-    private static List<DataTable> dataTables;
+    private static final List<ParameterTable> parameterTables;
+    private static final List<DataTable> dataTables;
 
     static {
         // create builders
