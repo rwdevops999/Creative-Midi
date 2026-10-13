@@ -15,7 +15,7 @@ public class Event implements IEvent {
     private Event parent;
 
     @Getter
-    private String name;
+    private String name;    // This comes in a combo box
 
     private String sysex;
 

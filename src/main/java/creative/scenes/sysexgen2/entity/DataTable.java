@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public class DataTable {
     @Getter
-    String tableId;
+    String tableId;                 // USEFULL FOR TESTING...
 
     String tableDescription;
     String[] entries;

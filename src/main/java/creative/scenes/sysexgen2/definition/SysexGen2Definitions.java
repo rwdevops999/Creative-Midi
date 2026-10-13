@@ -105,7 +105,7 @@ public class SysexGen2Definitions {
                                 .withDescription("0 = Start, 1 = Stop, 2 = Pause")
                                 .withDefaultValue(0)
                                 .withRange(0, 2)
-                                .withDataTable(findDataTable("Switch Controls"))
+                                .withDataTable(findDataTable("SwitchControlsDataTable"))
                                 .build()
                 )
                 .build();
@@ -123,7 +123,7 @@ public class SysexGen2Definitions {
                                 .withDescription("0 - 3, 8 - 11, 16 - 19, 24, 32 - 35")
                                 .withDefaultValue(0)
                                 .withRange(0, 35)
-                                .withDataTable(findDataTable("Switch Numbers"))
+                                .withDataTable(findDataTable("SwitchNumbersDataTable"))
                                 .build()
                 )
                 .withEntry(
@@ -192,10 +192,10 @@ public class SysexGen2Definitions {
         return result;
     }
 
-    private static void createDataValueTables() {
+    private static void createDataTables() {
         DataTable SwitchDataTable = dataTableBuilder
                 .clear()
-                .withTableId("Switch Controls")
+                .withTableId("SwitchControlsDataTable")
                 .withTableDescription("Audio Switch Controls")
                 .withSize(3)
                 .withEntries("Start", "Stop", "Pause")
@@ -204,7 +204,7 @@ public class SysexGen2Definitions {
 
         DataTable SwitchNumbersDataTable = dataTableBuilder
                 .clear()
-                .withTableId("Switch Numbers")
+                .withTableId("SwitchNumbersDataTable")
                 .withTableDescription("Section Switch Number")
                 .withSize(36)
                 .withEntry(0x00, "INTRO 1")
@@ -273,7 +273,7 @@ public class SysexGen2Definitions {
 
 
     public static void setup() {
-        createDataValueTables();
+        createDataTables();
         createGeneralParameterTables();
         createCustomParameterTables();
 

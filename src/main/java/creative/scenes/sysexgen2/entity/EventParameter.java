@@ -5,7 +5,7 @@ import lombok.Setter;
 
 public class EventParameter {
     @Getter
-    private String name;
+    private String name;    // USEFULL FOR TESTING...
 
     @Getter
     private int parameterId;
