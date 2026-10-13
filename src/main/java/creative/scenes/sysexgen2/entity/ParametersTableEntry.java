@@ -23,7 +23,7 @@ public class ParametersTableEntry {
     @Setter
     private Range range;
 
-    private DataTable dataValueTable;
+    private DataTable dataTable;
 
     public ParametersTableEntry() {
     }
@@ -36,7 +36,7 @@ public class ParametersTableEntry {
         this.description = builder.description;
         this.defaultValue = builder.defaultValue;
         this.range = builder.range;
-        this.dataValueTable = builder.dataValueTable;
+        this.dataTable = builder.dataTable;
     }
 
     public ParametersTableEntry(ParametersTableEntry other) {
@@ -47,7 +47,7 @@ public class ParametersTableEntry {
         this.description = other.description;
         this.defaultValue = other.defaultValue;
         this.range = new Range(other.range);
-        this.dataValueTable = new DataTable(other.dataValueTable);
+        this.dataTable = new DataTable(other.dataTable);
     }
 
     public static class ParametersTableEntryBuilder {
@@ -56,7 +56,7 @@ public class ParametersTableEntry {
         private String description;
         private int defaultValue;
         private Range range;
-        private DataTable dataValueTable;
+        private DataTable dataTable;
 
         public ParametersTableEntryBuilder clear() {
             this.parameterId = -1;
@@ -64,7 +64,7 @@ public class ParametersTableEntry {
             this.description = "";
             this.defaultValue = 0;
             this.range = new Range();
-            this.dataValueTable = null;
+            this.dataTable = null;
 
             return this;
         }
@@ -99,8 +99,8 @@ public class ParametersTableEntry {
             return this;
         }
 
-        public ParametersTableEntryBuilder withDataValueTable(DataTable dataValueTable) {
-            this.dataValueTable = dataValueTable;
+        public ParametersTableEntryBuilder withDataTable(DataTable dataTable) {
+            this.dataTable = dataTable;
             return this;
         }
 

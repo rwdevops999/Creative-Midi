@@ -79,6 +79,7 @@ public class EventType {
         }
 
         public EventType build() {
+
             return new EventType(this);
         }
     }

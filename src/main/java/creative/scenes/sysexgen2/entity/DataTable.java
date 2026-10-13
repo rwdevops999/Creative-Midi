@@ -71,6 +71,12 @@ public class DataTable {
             return this;
         }
 
+        public DataTableBuilder withEntry(int index, String value) {
+            entries[index] = value;
+
+            return this;
+        }
+
         public DataTable build() {
             return new DataTable(this);
         }

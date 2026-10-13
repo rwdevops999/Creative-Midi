@@ -105,11 +105,81 @@ public class SysexGen2Definitions {
                                 .withDescription("0 = Start, 1 = Stop, 2 = Pause")
                                 .withDefaultValue(0)
                                 .withRange(0, 2)
-                                .withDataValueTable(findDataTable("Switch Controls"))
+                                .withDataTable(findDataTable("Switch Controls"))
                                 .build()
                 )
                 .build();
         parameterTables.add(AudioControlTable);
+
+        ParameterTable SectionControlTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("SectionControlTable")
+                .withName("Section Control")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Switch Number")
+                                .withDescription("0 - 3, 8 - 11, 16 - 19, 24, 32 - 35")
+                                .withDefaultValue(0)
+                                .withRange(0, 35)
+                                .withDataTable(findDataTable("Switch Numbers"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withLabel("Switch Value")
+                                .withDescription("0 = 0ff, 7F = 0n")
+                                .withDefaultValue(0x7F)
+                                .withRange(0, 0x7F)
+                                .withDataTable(findDataTable("OnOffDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(SectionControlTable);
+
+        ParameterTable ScaleTuningPartTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ScaleTuningPartTable")
+                .withName("Scale Tuning Part")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Type")
+                                .withDescription("0x00 = Main, 0x01 = SUB")
+                                .withDefaultValue(0)
+                                .withRange(0x0, 0x1)
+                                .withDataTable(findDataTable("PartTypeDataTable"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withLabel("Part")
+                                .withDescription("0x4F = LEFT, 0x50 = STYLE, 0x51 = MULTI PAD, 0x52 = RIGHT1, 0x53 = RIGHT2")
+                                .withDefaultValue(0)
+                                .withRange(0x47, 0x53)
+                                .withDataTable(findDataTable("PartValuesDataTable"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Part Value")
+                                .withDescription("00 = 0ff, 7F = 0n")
+                                .withDefaultValue(0x7F)
+                                .withRange(0x00, 0x7F)
+                                .withDataTable(findDataTable("OnOffDataTable"))
+                                .build()
+                )
+
+                .build();
+        parameterTables.add(ScaleTuningPartTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -131,6 +201,64 @@ public class SysexGen2Definitions {
                 .withEntries("Start", "Stop", "Pause")
                 .build();
         dataTables.add(SwitchDataTable);
+
+        DataTable SwitchNumbersDataTable = dataTableBuilder
+                .clear()
+                .withTableId("Switch Numbers")
+                .withTableDescription("Section Switch Number")
+                .withSize(36)
+                .withEntry(0x00, "INTRO 1")
+                .withEntry(0x01, "INTRO 2")
+                .withEntry(0x02, "INTRO 3")
+                .withEntry(0x03, "INTRO 4")
+                .withEntry(0x08, "MAIN A")
+                .withEntry(0x09, "MAIN B")
+                .withEntry(0x0A, "MAIN C")
+                .withEntry(0x0B, "MAIN D")
+                .withEntry(0x10, "FILL IN AA")
+                .withEntry(0x11, "FILL IN BB")
+                .withEntry(0x12, "FILL IN CC")
+                .withEntry(0x13, "FILL IN DD")
+                .withEntry(0x18, "BREAK FILL")
+                .withEntry(0x20, "ENDING 1")
+                .withEntry(0x21, "ENDING 2")
+                .withEntry(0x22, "ENDING 3")
+                .withEntry(0x23, "ENDING 4")
+                .build();
+        dataTables.add(SwitchNumbersDataTable);
+
+        DataTable OnOffDataTable = dataTableBuilder
+                .clear()
+                .withTableId("OnOffDataTable")
+                .withTableDescription("On Off Values")
+                .withSize(128)
+                .withEntry(0x00, "OFF")
+                .withEntry(0x7F, "ON")
+                .build();
+        dataTables.add(OnOffDataTable);
+
+        DataTable PartTypeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("PartTypeDataTable")
+                .withTableDescription("Part Type Number")
+                .withSize(2)
+                .withEntry(0x00, "Main")
+                .withEntry(0x01, "Sub")
+                .build();
+        dataTables.add(PartTypeDataTable);
+
+        DataTable PartValuesDataTable = dataTableBuilder
+                .clear()
+                .withTableId("PartValuesDataTable")
+                .withTableDescription("Part Values")
+                .withSize(84)
+                .withEntry(0x4F, "Left")
+                .withEntry(0x50, "Style")
+                .withEntry(0X51, "Multi Pad")
+                .withEntry(0x52, "Right1")
+                .withEntry(0x53, "Right2")
+                .build();
+        dataTables.add(PartValuesDataTable);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -303,6 +431,78 @@ public class SysexGen2Definitions {
                 )
                 .build();
 
+        Event eventSectionControl =
+                eventBuilder
+                        .clear()
+                        .withName("Section Control")
+                        .withSysex("7E 00")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Section Control EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("SectionControlTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 2")
+                                        .withParameterId(2)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .build();
+
+        Event eventScaleTuningPart =
+                eventBuilder
+                        .clear()
+                        .withName("Scale Tuning Part")
+                        .withSysex("73 01 52 2F 02")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Scale Tuning Part EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("ScaleTuningPartTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 2")
+                                        .withParameterId(2)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 3")
+                                        .withParameterId(3)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -310,6 +510,8 @@ public class SysexGen2Definitions {
                 .withChild(eventInternalClock)
                 .withChild(eventExternalClock)
                 .withChild(eventAudioSongControl)
+                .withChild(eventSectionControl)
+                .withChild(eventScaleTuningPart)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }
