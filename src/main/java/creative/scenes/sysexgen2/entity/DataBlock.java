@@ -1,4 +1,4 @@
-package entity.sysex;
+package creative.scenes.sysexgen2.entity;
 
 import lombok.Getter;
 
@@ -26,30 +26,24 @@ public class DataBlock {
         }
     }
 
-    public int getDatablockValue() {
-        int MSB = 0;
-        int LSB = 0;
+    public DataBlock(Integer i1) {
+        this();
 
-        if (this.b1 != null) {
-            MSB = (this.b1 << 7);
-        }
-
-        if (this.b2 != null) {
-            LSB = this.b2;
-        }
-
-        return MSB | LSB;
+        this.b1 = (byte) ((i1 >> 8) & 0xFF);
+        this.b2 = (byte) (i1 & 0xFF);;
     }
 
-    public void setDatablockValue(Integer value) {
-        int MSB = 0;
-        int LSB = 0;
+    public Integer getValue() {
+        return (this.b1 << 7) | this.b2;
+    }
 
+    public void setValue(Integer value) {
         b1 = (byte)(value >> 7);
         b2 = (byte)(value & 0x7F);
     }
 
-    public String asString(int numBytes) {
+    // Returns "lsb msb" (e.g. "0A 13"
+    public String toHex(int numBytes) {
         // Put bytes into an array for easy slicing/indexing
         byte[] bytes = { b2, b1 };
 
@@ -57,6 +51,6 @@ public class DataBlock {
         int targetLength = Math.max(0, Math.min(numBytes, bytes.length));
 
         // Use HexFormat to format only the requested number of bytes
-        return HexFormat.of().withUpperCase().withDelimiter(" ").formatHex(bytes, 0, targetLength).toUpperCase();
+        return HexFormat.of().withUpperCase().withDelimiter(" ").formatHex(bytes, 0, targetLength);
     }
 }

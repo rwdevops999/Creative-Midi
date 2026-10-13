@@ -1,0 +1,284 @@
+package creative.scenes.sysexgen2.entity;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Event implements IEvent {
+    @Setter
+    @Getter
+    private Event parent;
+
+    @Getter
+    private String name;
+
+    private String sysex;
+
+    private List<Event> children = new ArrayList<>();
+    private DataBlock defaultValue;
+
+    private List<EventParameter> parameters;
+    private List<EventType> eventTypes;
+
+    public Event() {
+        this.eventTypes = new ArrayList<>();
+        this.children = new ArrayList<>();
+        this.parameters = new ArrayList<>();
+        this.sysex = "";
+    }
+
+    public Event(EventBuilder builder) {
+        this();
+
+        this.name = builder.name;
+        this.sysex = builder.sysex;
+
+        this.children.addAll(builder.children);
+        this.children.stream().filter(c -> c.getParent() == null).forEach(c -> c.setParent(this));
+
+        this.defaultValue = builder.defaultValue;
+
+        this.parameters.addAll(builder.parameters);
+        this.eventTypes.addAll(builder.eventTypes);
+    }
+
+    private boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
+    private boolean hasEventTypes() {
+        return !eventTypes.isEmpty();
+    }
+
+    public void addChild(Event child) {
+        child.setParent(this);
+
+        children.add(child);
+    }
+
+    private boolean hasParameters() {
+        return !parameters.isEmpty();
+    }
+
+    /**
+     * Find the EventParameter with given name
+     *
+     * @param name the name of the parameter
+     *
+     * @return the EventParameter instance
+     */
+    public EventParameter findEventParameterByName(String name) {
+        EventParameter parameter = null;
+
+        if (hasParameters()) {
+            parameter = this.parameters.stream().filter(ep -> name.equals(ep.getName())).findFirst().orElse(null);
+        }
+
+        return parameter;
+    }
+
+    public EventParameter findEventParameterById(int id) {
+        EventParameter parameter = null;
+
+        if (hasParameters()) {
+            parameter = this.parameters.stream().filter(ep -> ep.getParameterId() == id).findFirst().orElse(null);
+        }
+
+        return parameter;
+    }
+
+    private boolean hasParent() {
+        return parent != null;
+    }
+
+    public Event findEvent(String name) {
+        Event result = null;
+
+        if (hasChildren()) {
+            result = children.stream().filter(e -> name.equals(e.getName())).findAny().orElse(null);
+            if (result == null) {
+                for (Event child : children) {
+                    result = child.findEvent(name);
+                    if (result != null) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public List<String> createSysexStrings() {
+        List<String> sysexStrings = new ArrayList<>();
+
+        // TODO create sysexs here
+        if (this.hasParent()) {
+            List<String> parentSysexStrings = this.parent.createSysexStrings();
+
+            parentSysexStrings.replaceAll(s -> s.length() == 0 ? this.sysex : s + extend(this.sysex));
+            sysexStrings.addAll(parentSysexStrings);
+        } else {
+            sysexStrings.add(this.sysex);
+        }
+
+        List<String> parameterSysexList = new ArrayList<>();
+        if (hasEventTypes()) {
+            EventType eventType = findEventTypeFromDefaultValue();
+            if (eventType != null) {
+                ParameterTable parameterTable = eventType.getParameterTable();
+                if (parameterTable != null) {
+                    for (ParametersTableEntry entry :parameterTable.getEntries()) {
+                        int parameterId = entry.getParameterId();
+
+                        if (hasParameters()) {
+                            EventParameter parameter = findEventParameterById(parameterId);
+                            if (parameter != null) {
+                                parameterSysexList.add(parameter.toSysex());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (! parameterSysexList.isEmpty()) {
+            System.out.println("ADD TO SYSEX");
+
+            // Embedded
+            for (String sysex : parameterSysexList) {
+                sysexStrings.replaceAll(s -> s + extend(sysex));
+            }
+        }
+
+        return sysexStrings;
+    }
+
+    public List<String> complete(List<String> sysexStrings) {
+        sysexStrings.replaceAll(s -> SYSEX_START + extend(s) + extend(SYSEX_END));
+
+        return sysexStrings;
+    }
+
+    /**
+     * Find the EventType where defaultValue references to.
+     *
+     * @return the EventType oor null (if not found)
+     */
+    public EventType findEventTypeFromDefaultValue() {
+        EventType result = null;
+
+        if (hasEventTypes()) {
+            result = eventTypes.stream().filter(et1 -> et1.getEventValue() != null).filter(et2 -> et2.getEventValue().getValue().equals(defaultValue.getValue())).findFirst().orElse(null);
+        }
+
+        return result;
+    }
+
+    /**
+     * Get a list of all categories
+     *
+     * @return a list of categorynames or an empty list
+     */
+    public List<String> getEventTypeCategories() {
+        List<String> result = new ArrayList<>();
+
+        if (hasEventTypes()) {
+            result = eventTypes.stream().map(EventType::getCategory).distinct().toList();
+        }
+
+        return result;
+    }
+
+    /**
+     * Get the list of EventTypes of the category
+     *
+     * @param category the category name where we want to get the EventTypes of.
+     *
+     * @return a List of event types or an empty list
+     */
+    public List<EventType> getEventTypesOfCategory(@NotNull String category) {
+        List<EventType> result = new ArrayList<>();
+
+        if (hasEventTypes()) {
+            result = eventTypes.stream().filter(et -> category.equals(et.getCategory())).toList();
+        }
+        return result;
+    }
+    public static class EventBuilder {
+        private String name;
+        private String sysex;
+        private DataBlock defaultValue; // is used to find the eventType
+        private List<Event> children;
+        private List<EventType> eventTypes;
+        private List<EventParameter> parameters;
+
+        public EventBuilder clear() {
+            this.name = "";
+            this.sysex = "";
+            this.defaultValue = null;
+            this.children = new ArrayList<>();
+            this.eventTypes = new ArrayList<>();
+            this.parameters = new ArrayList<>();
+
+            return this;
+        }
+
+        public EventBuilder withName(String value) {
+            this.name = value;
+            return this;
+        }
+
+        public EventBuilder withSysex(String value) {
+            this.sysex = value;
+            return this;
+        }
+
+        public EventBuilder withDefaultValue(DataBlock value) {
+            this.defaultValue = value;
+            return this;
+        }
+
+        public EventBuilder withDefaultValue(Integer value) {
+            this.defaultValue = new DataBlock(value);
+            return this;
+        }
+
+        public EventBuilder withDefaultValues(Integer i1, Integer i2) {
+            this.defaultValue = new DataBlock(i1, i2);
+            return this;
+        }
+
+        public EventBuilder withEventType(EventType value) {
+            this.eventTypes.add(value);
+            return this;
+        }
+
+        public EventBuilder withEventParameter(EventParameter parameter) {
+            this.parameters.add(parameter);
+            return this;
+        }
+
+        public EventBuilder withChildren(List<Event> values) {
+            this.children = values;
+
+            return this;
+        }
+
+        public EventBuilder withChild(Event value) {
+            this.children.add(value);
+
+            return this;
+        }
+
+        public Event build() {
+            return new Event(this);
+        }
+    }
+}

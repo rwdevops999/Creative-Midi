@@ -8,6 +8,7 @@ import creative.scenes.midi.MidiScene;
 import creative.scenes.playlist.PlaylistScene;
 import creative.scenes.sysex.SysexScene;
 import creative.scenes.sysexgen.SysexGenScene;
+import creative.scenes.sysexgen2.SysexGen2Scene;
 import creative.scenes.upload.UploadScene;
 import creative.scenes.voice.VoiceScene;
 import custom.components.ActionButton;
@@ -60,7 +61,7 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, SIZE, "sysexButton", "handle sysex", "sysex_out", new SysexScene()), 1, 0);
         add(new ActionButton(ownerScene, SIZE, "voiceButton", "handle voice", "voice_search", new VoiceScene()), 2, 0);
         add(new ActionButton(ownerScene, SIZE, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 3, 0);
-        add(new ActionButton(ownerScene, SIZE, "sysexButton", "Generate SysEx", "sysex-generator", new SysexGenScene()), 4, 0);
+        add(new ActionButton(ownerScene, SIZE, "sysexGenButton", "Generate SysEx 2", "sysex-generator", new SysexGen2Scene()), 4, 0);
         add(new ActionButton(ownerScene, SIZE, "eventlistButton", "midi event list", "event-list", new EventlistScene()), 5, 0);
         add(new ActionButton(ownerScene, SIZE, "mergeButton", "merge style", "merge", new MergeScene()), 6, 0);
         add(new ActionButton(ownerScene, SIZE, "uploadStyleButton", "upload style", "upload-style", new UploadScene()), 7, 0);
