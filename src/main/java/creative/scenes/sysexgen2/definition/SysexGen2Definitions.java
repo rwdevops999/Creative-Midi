@@ -190,6 +190,78 @@ public class SysexGen2Definitions {
                 .fromParameterTable(findParameterTable("IntegerInputTable"))
                 .build();
         parameterTables.add(RegistrationTable);
+
+        ParameterTable HarmonyTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("HarmonyTable")
+                .withName("Harmony")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Type")
+                                .withDescription("0 - 19")
+                                .withDefaultValue(0)
+                                .withRange(0, 19)
+                                .withDataTable(findDataTable("HarmonyDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(HarmonyTable);
+
+        ParameterTable EchoTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("EchoTable")
+                .withName("Echo")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Type")
+                                .withDescription("20 - 23")
+                                .withDefaultValue(20)
+                                .withRange(20, 23)
+                                .withDataTable(findDataTable("HarmonyDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(EchoTable);
+
+        ParameterTable TremoloTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("TremoloTable")
+                .withName("Tremolo")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Type")
+                                .withDescription("24 - 27")
+                                .withDefaultValue(24)
+                                .withRange(24, 27)
+                                .withDataTable(findDataTable("HarmonyDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(TremoloTable);
+
+        ParameterTable TrillTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("TrillTable")
+                .withName("Trill")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Type")
+                                .withDescription("28 - 31")
+                                .withDefaultValue(28)
+                                .withRange(28, 31)
+                                .withDataTable(findDataTable("HarmonyDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(TrillTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -269,6 +341,25 @@ public class SysexGen2Definitions {
                 .withEntry(0x53, "Right2")
                 .build();
         dataTables.add(PartValuesDataTable);
+
+
+        DataTable HarmonyDataTable = dataTableBuilder
+                .clear()
+                .withTableId("HarmonyDataTable")
+                .withTableDescription("Harmony Types")
+                .withSize(32)
+                .withEntries(
+                        "Standard Duet 1", "Standard Duet 2", "Standard Trio", "Full Chord",
+                        "Rock Duet", "Country Duet 1", "Country Duet 2", "Country Trio", "Block",
+                        "4-Way Close 1", "4-Way Close 2", "4-Way Close 3", "4-Way Close 4",
+                        "4-Way Open 1", "4-Way Open 2", "4-Way Open 3", "1+5",
+                        "Octave", "Strum", "Multi Assign",
+                        "Echo 4", "Echo 6", "Echo 8", "Echo 12",
+                        "Tremolo 8", "Tremolo 12", "Tremolo 16", "Tremolo 32",
+                        "Trill 12", "Trill 16", "Trill 24", "Trill 32"
+                )
+                .build();
+        dataTables.add(HarmonyDataTable);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -537,10 +628,104 @@ public class SysexGen2Definitions {
                         )
                         .build();
 
-        // TODO Complete this
         Event eventHarmony  =
                 eventBuilder
                         .clear()
+                        .withName("Harmony")
+                        .withSysex("73 01 02 00 24")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Harmony EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("HarmonyTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+
+                        .build();
+
+        Event eventEcho  =
+                eventBuilder
+                        .clear()
+                        .withName("Echo")
+                        .withSysex("73 01 02 00 24")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Echo EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("EchoTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+
+                        .build();
+
+        Event eventTremolo  =
+                eventBuilder
+                        .clear()
+                        .withName("Tremolo")
+                        .withSysex("73 01 02 00 24")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Tremolo EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("TremoloTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+
+                        .build();
+
+        Event eventTrill  =
+                eventBuilder
+                        .clear()
+                        .withName("Trill")
+                        .withSysex("73 01 02 00 24")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Trill EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("TrillTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+
                         .build();
 
         Event eventYamaha = eventBuilder
@@ -554,6 +739,9 @@ public class SysexGen2Definitions {
                 .withChild(eventScaleTuningPart)
                 .withChild(eventRegistration)
                 .withChild(eventHarmony)
+                .withChild(eventEcho)
+                .withChild(eventTremolo)
+                .withChild(eventTrill)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }

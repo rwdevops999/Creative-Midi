@@ -151,10 +151,37 @@ public class Test3Pane extends VBox {
         final int REG_7=6;
         final int REG_8=7;
 
-        setEventValue("Registration", "Parameter 1", null, 0, REG_3);
-        handleEvent("Registration");
-        setEventValue("Registration", "Parameter 1", null, 0, REG_7);
-        handleEvent("Registration");
+//        setEventValue("Registration", "Parameter 1", null, 0, REG_3);
+//        handleEvent("Registration");
+//        setEventValue("Registration", "Parameter 1", null, 0, REG_7);
+//        handleEvent("Registration");
+
+        // TODO Test From Here
+        final int DUET_1=0;
+        final int BLOCK=8;
+        final int OCTAVE=17;
+
+        setEventValue("Harmony", "Parameter 1", null, 0, DUET_1);
+        handleEvent("Harmony");
+        setEventValue("Harmony", "Parameter 1", null, 0, BLOCK);
+        handleEvent("Harmony");
+        setEventValue("Harmony", "Parameter 1", null, 0, OCTAVE);
+        handleEvent("Harmony");
+
+        final int ECHO_6=21;
+
+        setEventValue("Echo", "Parameter 1", null, 0, ECHO_6);
+        handleEvent("Echo");
+
+        final int TREMOLO_32=27;
+
+        setEventValue("Tremolo", "Parameter 1", null, 0, TREMOLO_32);
+        handleEvent("Tremolo");
+
+        final int TRILL_12=28;
+
+        setEventValue("Trill", "Parameter 1", null, 0, TRILL_12);
+        handleEvent("Trill");
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
