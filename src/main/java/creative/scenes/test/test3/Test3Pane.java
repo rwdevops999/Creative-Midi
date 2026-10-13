@@ -133,15 +133,28 @@ public class Test3Pane extends VBox {
         final int RIGHT1=0x52;
         final int RIGHT2=0x53;
 
-        setEventValue("Scale Tuning Part", "Parameter 1", null, 0, MAIN);
-        setEventValue("Scale Tuning Part", "Parameter 2", null, 0, LEFT);
-        setEventValue("Scale Tuning Part", "Parameter 3", null, 0, ON);
-        handleEvent("Scale Tuning Part");
-        setEventValue("Scale Tuning Part", "Parameter 1", null, 0, SUB);
-        setEventValue("Scale Tuning Part", "Parameter 2", null, 0, MULTI_PAD);
-        setEventValue("Scale Tuning Part", "Parameter 3", null, 0, OFF);
-        handleEvent("Scale Tuning Part");
+//        setEventValue("Scale Tuning Part", "Parameter 1", null, 0, MAIN);
+//        setEventValue("Scale Tuning Part", "Parameter 2", null, 0, LEFT);
+//        setEventValue("Scale Tuning Part", "Parameter 3", null, 0, ON);
+//        handleEvent("Scale Tuning Part");
+//        setEventValue("Scale Tuning Part", "Parameter 1", null, 0, SUB);
+//        setEventValue("Scale Tuning Part", "Parameter 2", null, 0, MULTI_PAD);
+//        setEventValue("Scale Tuning Part", "Parameter 3", null, 0, OFF);
+//        handleEvent("Scale Tuning Part");
 
+        final int REG_1=0;
+        final int REG_2=1;
+        final int REG_3=2;
+        final int REG_4=3;
+        final int REG_5=4;
+        final int REG_6=5;
+        final int REG_7=6;
+        final int REG_8=7;
+
+        setEventValue("Registration", "Parameter 1", null, 0, REG_3);
+        handleEvent("Registration");
+        setEventValue("Registration", "Parameter 1", null, 0, REG_7);
+        handleEvent("Registration");
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

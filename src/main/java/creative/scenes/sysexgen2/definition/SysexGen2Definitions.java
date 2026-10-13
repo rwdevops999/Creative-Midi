@@ -180,6 +180,16 @@ public class SysexGen2Definitions {
 
                 .build();
         parameterTables.add(ScaleTuningPartTable);
+
+        ParameterTable RegistrationTable = mutableParameterTableBuilder
+                .clear()
+                .withIdentifier("RegistrationTable")
+                .withLabel("Registration")
+                .withDefaultValue(0)
+                .withRange(0, 7)
+                .fromParameterTable(findParameterTable("IntegerInputTable"))
+                .build();
+        parameterTables.add(RegistrationTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -503,6 +513,30 @@ public class SysexGen2Definitions {
                         )
                         .build();
 
+        Event eventRegistration  =
+                eventBuilder
+                        .clear()
+                        .withName("Registration")
+                        .withSysex("73 01 52 25 11 00 02 00")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Registration EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("RegistrationTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -512,6 +546,7 @@ public class SysexGen2Definitions {
                 .withChild(eventAudioSongControl)
                 .withChild(eventSectionControl)
                 .withChild(eventScaleTuningPart)
+                .withChild(eventRegistration)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }

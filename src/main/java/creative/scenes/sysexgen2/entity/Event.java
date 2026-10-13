@@ -149,7 +149,7 @@ public class Event implements IEvent {
 
 
         if (! parameterSysexList.isEmpty()) {
-            System.out.println("ADD TO SYSEX");
+//            System.out.println("ADD TO SYSEX");
 
             // Embedded
             for (String sysex : parameterSysexList) {
