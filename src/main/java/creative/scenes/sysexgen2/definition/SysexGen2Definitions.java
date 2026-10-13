@@ -537,6 +537,12 @@ public class SysexGen2Definitions {
                         )
                         .build();
 
+        // TODO Complete this
+        Event eventHarmony  =
+                eventBuilder
+                        .clear()
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -547,6 +553,7 @@ public class SysexGen2Definitions {
                 .withChild(eventSectionControl)
                 .withChild(eventScaleTuningPart)
                 .withChild(eventRegistration)
+                .withChild(eventHarmony)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }
