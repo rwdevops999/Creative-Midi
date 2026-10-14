@@ -4,11 +4,8 @@ import creative.scenes.sysexgen2.entity.*;
 import lombok.Getter;
 import util.Vendors;
 
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.parameters;
 
 public class SysexGen2Definitions {
     private static final Event.EventBuilder eventBuilder;
@@ -443,6 +440,486 @@ public class SysexGen2Definitions {
 
                 .build();
         parameterTables.add(ScoreTable);
+
+        // For XG Parameter Change
+        ParameterTable RealReverbTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("RealReverb")
+                .withDescription("Block: Reverb")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Reverb Time")
+                                .withDescription("0.3s - 30.0s")
+                                .withDefaultValue(0)
+                                .withRange(0, 69)
+                                .withDataTable(findDataTable("Table#1"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(4)
+                                .withLabel("High Damp Frequency")
+                                .withDescription("1.0kHz - 18kHz, Thru")
+                                .withDefaultValue(34)
+                                .withRange(34, 60)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(6)
+                                .withLabel("High Ratio")
+                                .withDescription("0.0 - 1.0")
+                                .withDefaultValue(0)
+                                .withRange(0, 10)
+                                .build()
+                )
+
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(13)
+                                .withLabel("EQ Low Frequency")
+                                .withDescription("22Hz - 1.0kHz")
+                                .withDefaultValue(1)
+                                .withRange(1, 34)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(14)
+                                .withLabel("EQ Low Gain")
+                                .withDescription("-12db - 0db - +12db")
+                                .withDefaultValue(52)
+                                .withRange(52, 76)
+                                .build()
+                )
+
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(15)
+                                .withLabel("EQ High Frequency")
+                                .withDescription("500Hz - 18kHz")
+                                .withDefaultValue(28)
+                                .withRange(28, 59)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(16)
+                                .withLabel("EQ High Gain")
+                                .withDescription("-12db - 0db - +12db")
+                                .withDefaultValue(52)
+                                .withRange(52, 76)
+                                .build()
+                )
+
+                .build();
+        parameterTables.add(RealReverbTable);
+
+        ParameterTable Reverb1Table = parameterTableBuilder
+                .clear()
+                .withIdentifier("Reverb1")
+                .withDescription("Block: Reverb, Chorus, Variation")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Reverb Time")
+                                .withDescription("0.3s - 30.0s")
+                                .withDefaultValue(0)
+                                .withRange(0, 69)
+                                .withDataTable(findDataTable("Table#1"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withLabel("Diffusion")
+                                .withDescription("0 - 10")
+                                .withDefaultValue(0)
+                                .withRange(0, 10)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(4)
+                                .withLabel("HPF Cutoff Frequency")
+                                .withDescription("Thru, 22Hz - 8.0kHz")
+                                .withDefaultValue(0)
+                                .withRange(0, 52)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(5)
+                                .withLabel("LPF Cutoff Frequency")
+                                .withDescription("1.0kHz - 18.0kHz, Thru")
+                                .withDefaultValue(34)
+                                .withRange(34, 60)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(10)
+                                .withLabel("Dry/Wet")
+                                .withDescription("D63>W - D=W - D<W63")
+                                .withDefaultValue(1)
+                                .withRange(1, 127)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(11)
+                                .withLabel("Reverb Delay Time")
+                                .withDescription("0.1ms - 200ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(12)
+                                .withLabel("Density")
+                                .withDescription("0 - 4")
+                                .withDefaultValue(0)
+                                .withRange(0, 4)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(13)
+                                .withLabel("ER/Reverb Balance")
+                                .withDescription("E63>R - R=R - E<R63")
+                                .withDefaultValue(1)
+                                .withRange(1, 127)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(14)
+                                .withLabel("High Damp")
+                                .withDescription("0.1 - 1.0")
+                                .withDefaultValue(1)
+                                .withRange(1, 10)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(15)
+                                .withLabel("Feedback Level")
+                                .withDescription("-63 - 0 - +63")
+                                .withDefaultValue(1)
+                                .withRange(1, 127)
+                                .build()
+                )
+                .build();
+        parameterTables.add(Reverb1Table);
+
+        ParameterTable Reverb2Table = parameterTableBuilder
+                .clear()
+                .withIdentifier("Reverb2")
+                .withDescription("Block: Reverb")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Reverb Time")
+                                .withDescription("0.3s - 30.0s")
+                                .withDefaultValue(0)
+                                .withRange(0, 69)
+                                .withDataTable(findDataTable("Table#1"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withLabel("Diffusion")
+                                .withDescription("0 - 10")
+                                .withDefaultValue(0)
+                                .withRange(0, 10)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(4)
+                                .withLabel("HPF Cutoff Frequency")
+                                .withDescription("Thru, 22Hz - 8.0kHz")
+                                .withDefaultValue(0)
+                                .withRange(0, 52)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(5)
+                                .withLabel("LPF Cutoff Frequency")
+                                .withDescription("1.0kHz - 18.0kHz, Thru")
+                                .withDefaultValue(34)
+                                .withRange(34, 60)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(14)
+                                .withLabel("High Damp")
+                                .withDescription("0.1 - 1.0")
+                                .withDefaultValue(0)
+                                .withRange(0, 10)
+                                .build()
+                )
+                .build();
+        parameterTables.add(Reverb2Table);
+
+        ParameterTable Reverb3Table = parameterTableBuilder
+                .clear()
+                .withIdentifier("Reverb3")
+                .withDescription("Block; Reverb, Variation")
+
+                .withParameters(1, "Reverb Time", "0.3s - 30.0s", 0, 69, tables.get("Table#1)"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(2, "Diffusion", "0 - 10", 0, 10)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(3, "Initial Delay Time", "0.1ms - 200.0ms", 0, 127, tables.get("Table#2"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(4, "HPF Cutoff Frequency", "Thru, 22Hz - 8.0kHz", 0, 52, tables.get("Table#3"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(5, "LPF Cutoff Frequency", "1.0kHz - 18.0kHz, Thru", 34, 60, tables.get("Table#3"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(6, "Width", "0.5m - 30.2m", 0, 104, tables.get("Table#4"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(7, "Height", "0.5m - 30.2m", 0, 104, tables.get("Table#4"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(8, "Depth", "0.5m - 30.2m", 0, 104, tables.get("Table#4"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(9, "Wall Vary", "0 - 30", 0, 30)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(10, "Dry/Wet", "D63>W - D=W - D<W63", 1, 127)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(11, "Reverb Delay Time", "0.1ms - 200ms", 0, 127, tables.get("Table#2"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(12, "Density", "0 - 4", 0, 4)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(13, "ER/Reverb Balance", "E63>R - R=R - E<R63", 1, 127)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(14, "High Damp", "0.1 - 1.0", 1, 10)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+                .withParameters(15, "Feedback Level", "-63 - 0 - +63", 1, 127)
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(3)
+                                .withLabel("Initial Delay Time")
+                                .withDescription("0.1ms - 200.0ms")
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("Table#2"))
+                                .build()
+                )
+
+                .build();
+        parameterTables.add(Reverb3Table);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
