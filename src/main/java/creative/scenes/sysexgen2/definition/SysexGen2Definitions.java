@@ -8,6 +8,8 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.parameters;
+
 public class SysexGen2Definitions {
     private static final Event.EventBuilder eventBuilder;
 
@@ -1207,7 +1209,6 @@ public class SysexGen2Definitions {
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("LightHall").withEventValues(1,22).withParameterTable(findParameterTable("Reverb1")).build())
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("BalladHall").withEventValues(1,19).withParameterTable(findParameterTable("Reverb2")).build())
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("PianoHall").withEventValues(1,20).withParameterTable(findParameterTable("Reverb2")).build())
-
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall1").withEventValues(1,0).withParameterTable(findParameterTable("Reverb1")).build())
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall2").withEventValues(1,16).withParameterTable(findParameterTable("Reverb1")).build())
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall3").withEventValues(1,17).withParameterTable(findParameterTable("Reverb1")).build())
@@ -1224,6 +1225,38 @@ public class SysexGen2Definitions {
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealMedPlate").withEventValues(4,33).withParameterTable(findParameterTable("RealReverb")).build())
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealRtlPlate").withEventValues(4,34).withParameterTable(findParameterTable("RealReverb")).build())
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Plate1").withEventValues(4,16).withParameterTable(findParameterTable("Reverb1")).build())
+
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("HallM").withEventValues(1,6).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("HallL").withEventValues(1,7).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("AtmoHall").withEventValues(1,23).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("LargeHall").withEventValues(1,2).withParameterTable(findParameterTable("Reverb2")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("MediumHall").withEventValues(1,3).withParameterTable(findParameterTable("Reverb2")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("PercRoom").withEventValues(2,22).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room1").withEventValues(2,16).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room2").withEventValues(2,17).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room3").withEventValues(2,18).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room4").withEventValues(2,19).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room5").withEventValues(2,0).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room6").withEventValues(2,1).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Room7").withEventValues(2,2).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("RoomS").withEventValues(2,5).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("RoomM").withEventValues(2,6).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("RoomL").withEventValues(2,7).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("WarmRoom").withEventValues(2,3).withParameterTable(findParameterTable("Reverb2")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("WhiteRoom").withEventValues(16,0).withParameterTable(findParameterTable("Reverb3")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("WoodyRoom").withEventValues(2,4).withParameterTable(findParameterTable("Reverb2")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Stage2").withEventValues(3,17).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Stage3").withEventValues(3,0).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Stage4").withEventValues(3,1).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Plate2").withEventValues(4,17).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Plate3").withEventValues(4,0).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("GM Plate").withEventValues(4,7).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("RichPlate").withEventValues(4,1).withParameterTable(findParameterTable("Reverb2")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Tunnel").withEventValues(17,0).withParameterTable(findParameterTable("Reverb3")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Canyon").withEventValues(18,0).withParameterTable(findParameterTable("Reverb3")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Legacy").withName("Basement").withEventValues(19,0).withParameterTable(findParameterTable("Reverb3")).build())
+
+                        .withEventType(eventTypeBuilder.clear().withCategory("None").withName("No Effect").withEventValues(0,0).build())
 
                         .build();
 
