@@ -1171,7 +1171,71 @@ public class SysexGen2Definitions {
                         .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).withAddress("0B").build())
                     .build();
 
-                Event eventYamaha = eventBuilder
+// Starting wit XG Change Parameter
+
+        Event eventReverb =
+                eventBuilder
+                        .clear()
+                        .withName("Reverb")
+                        .withSysex("02 01")
+                        // Add Parameters
+                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withNumBytes(2).withAddress("00").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Free").withNumBytes(1).withAddress("0C").build()) // REVERB RETURN
+                        .withEventParameter(eventParameterBuilder.clear().withName("Free").withNumBytes(1).withAddress("0D").build()) // REVERB OAN
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).withAddress("10").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).withAddress("11").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterId(13).withNumBytes(1).withAddress("12").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterId(14).withNumBytes(1).withAddress("13").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 15").withParameterId(15).withNumBytes(1).withAddress("14").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 16").withParameterId(16).withNumBytes(1).withAddress("15").build())
+
+                        // Add Types
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("ReadLrgHall").withEventValues(1,32).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("ReadMedHall").withEventValues(1,33).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("ReadBrtHall").withEventValues(1,34).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("BasicHall").withEventValues(1,21).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("LightHall").withEventValues(1,22).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("BalladHall").withEventValues(1,19).withParameterTable(findParameterTable("Reverb2")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("PianoHall").withEventValues(1,20).withParameterTable(findParameterTable("Reverb2")).build())
+
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall1").withEventValues(1,0).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall2").withEventValues(1,16).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall3").withEventValues(1,17).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall4").withEventValues(1,18).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Hall5").withEventValues(1,1).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("VocalHall1").withEventValues(1,27).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("VocalHall2").withEventValues(1,28).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealRoom").withEventValues(2,32).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealPwrRoom").withEventValues(2,33).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("AcousticRoom").withEventValues(2,20).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("DrumsRoom").withEventValues(2,21).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Stage1").withEventValues(3,16).withParameterTable(findParameterTable("Reverb1")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealLrgPlate").withEventValues(4,32).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealMedPlate").withEventValues(4,33).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("RealRtlPlate").withEventValues(4,34).withParameterTable(findParameterTable("RealReverb")).build())
+                        .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("Plate1").withEventValues(4,16).withParameterTable(findParameterTable("Reverb1")).build())
+
+                        .build();
+
+        Event eventXFChangeParameter =
+                eventBuilder
+                        .clear()
+                        .withName("XG Change Parameter")
+                        .withSysex("10 4C")
+                        .withChild(eventReverb)
+                        .build();
+
+        Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
                 .withSysex(Vendors.VENDOR_YAMAHA)
@@ -1190,6 +1254,7 @@ public class SysexGen2Definitions {
                 .withChild(eventScaleTuning)
                 .withChild(eventScaleTuningBaseNote)
                 .withChild(eventScore)
+                .withChild(eventXFChangeParameter)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }
