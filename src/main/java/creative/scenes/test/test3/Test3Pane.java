@@ -49,6 +49,10 @@ public class Test3Pane extends VBox {
         logger.debug("[CM_TEST1_PANE] Set up {}", getId());
     }
 
+    private int normalize_minus_63(int value) {
+        return value + 63;
+    }
+
     private void handleEvent (String name) {
         Event rootEvent = SysexGen2Definitions.getRootEvent();
         Event event = rootEvent.findEvent(name);
@@ -194,6 +198,22 @@ public class Test3Pane extends VBox {
 //        setEventValue("MIDI Master Tuning", "Parameter 2", null, 0, 98);
 //        setEventValue("MIDI Master Tuning", "Parameter 3", null, 0, 100);
 //        handleEvent("MIDI Master Tuning");
+
+        setEventValue("Scale Tuning", "Parameter 1", SUB, null, null);
+//        setEventValue("Scale Tuning", "Parameter 2", -40, null, null); IS FIXED
+        setEventValue("Scale Tuning", "Parameter 3", normalize_minus_63(-35), null, null);
+        setEventValue("Scale Tuning", "Parameter 4", normalize_minus_63(-30), null, null);
+        setEventValue("Scale Tuning", "Parameter 5", normalize_minus_63(-25), null, null);
+        setEventValue("Scale Tuning", "Parameter 6", normalize_minus_63(-20), null, null);
+        setEventValue("Scale Tuning", "Parameter 7", normalize_minus_63(-15), null, null);
+        setEventValue("Scale Tuning", "Parameter 8", normalize_minus_63(-10), null, null);
+        setEventValue("Scale Tuning", "Parameter 9", normalize_minus_63(0), null, null);
+        setEventValue("Scale Tuning", "Parameter 10", normalize_minus_63( 10), null, null);
+        setEventValue("Scale Tuning", "Parameter 11", normalize_minus_63(15), null, null);
+        setEventValue("Scale Tuning", "Parameter 12", normalize_minus_63(20), null, null);
+        setEventValue("Scale Tuning", "Parameter 13", normalize_minus_63(30), null, null);
+        setEventValue("Scale Tuning", "Parameter 14", normalize_minus_63(40), null, null);
+        handleEvent("Scale Tuning");
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

@@ -138,10 +138,14 @@ public class Event implements IEvent {
 
                         if (hasParameters()) {
                             for (EventParameter parameter : this.parameters) {
-                                if (!parameter.isIgnore()) {
-                                    parameterSysexList.add(parameter.toSysex());
+                                if (! parameter.isFixed()) {
+                                    if (!parameter.isIgnore()) {
+                                        parameterSysexList.add(parameter.toSysex());
+                                    } else {
+                                        parameterSysexList.add("00");
+                                    }
                                 } else {
-                                    parameterSysexList.add("00");
+                                    parameterSysexList.add(parameter.toSysex(parameter.getFixedValue()));
                                 }
                             }
 /*                            EventParameter parameter = findEventParameterById(parameterId);

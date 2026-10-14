@@ -19,6 +19,13 @@ public class EventParameter {
 
     private boolean useLowerOnly = false;
 
+    @Getter
+    private boolean fixed = false;
+    @Getter
+    private DataBlock fixedValue = null;
+
+    private String label;
+
     public EventParameter() {
         this.value = null;
     }
@@ -29,6 +36,9 @@ public class EventParameter {
         this.numBytes = builder.numBytes;
         this.ignore = builder.ignore;
         this.useLowerOnly = builder.useLowerOnly;
+        this.fixed = builder.fixed;
+        this.fixedValue = builder.fixedValue;
+        this.label = builder.label; // should replace row entry label
     }
 
     public void setValue(Integer value) {
@@ -43,17 +53,36 @@ public class EventParameter {
         return value.toHex(numBytes, useLowerOnly);
     }
 
+    public String toSysex(DataBlock value) {
+        return value.toHex(numBytes, useLowerOnly);
+    }
+
     public static class EventParameterBuilder {
         private String name;        // maybe needed in a finder
         private int parameterId;
         private int numBytes;
         private boolean ignore = false;
         private boolean useLowerOnly = false;
+        private boolean fixed = false;
+        private DataBlock fixedValue = null;
+        private String label;
 
         public EventParameterBuilder clear() {
             this.name = "";
             this.parameterId = -1;
+            this.numBytes = 1;
+            this.ignore = false;
+            this.useLowerOnly = false;
+            this.fixed = false;
+            this.fixedValue = null;
+            this.label = null;
 
+            return this;
+        }
+
+        public EventParameterBuilder isFixed(int value) {
+            this.fixed = true;
+            this.fixedValue = new DataBlock(value);
             return this;
         }
 
@@ -81,6 +110,11 @@ public class EventParameter {
         public EventParameterBuilder withNumBytes(Integer num, boolean useLowerOnly) {
             this.numBytes = num;
             this.useLowerOnly = useLowerOnly;
+            return this;
+        }
+
+        public EventParameterBuilder withLabel(String value) {
+            this.label = value;
             return this;
         }
 
