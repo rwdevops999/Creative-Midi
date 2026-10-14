@@ -302,7 +302,7 @@ public class SysexGen2Definitions {
                 .build();
         parameterTables.add(MIDIMasterTuningTable);
 
-        ParameterTable ScaleTuningTable = mutableParameterTableBuilder
+/*        ParameterTable ScaleTuningTable = mutableParameterTableBuilder
                 .clear()
                 .withIdentifier("ScaleTuningTable")
                 .withLabel("Tuning")
@@ -312,6 +312,53 @@ public class SysexGen2Definitions {
                 .crossReferenceTable(1, findParameterTable("PartTypeDataTable")) // For Parameter 1 we use another table
                 .build();
         parameterTables.add(ScaleTuningTable);
+*/
+        String[] labels = {
+            "Scale tuning C",
+                "Scale tuning C#",
+                "Scale tuning D",
+                "Scale tuning D#/E\u266D",
+                "Scale tuning E",
+                "Scale tuning F",
+                "Scale tuning G",
+                "Scale tuning G#/A\u266D",
+                "Scale tuning A",
+                "Scale tuning A#/B\u266D",
+                "Scale tuning B",
+        };
+
+        ParameterTable ScaleTuningTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ScaleTuningTable")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Type")
+                                .withDescription("0 - 2")
+                                .withDefaultValue(0)
+                                .withRange(0, 2)
+                                .withDataTable(findDataTable("PartTypeDataTable"))
+                                .build()
+                )
+                .withEntry(  // FIXED VALUE
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withDefaultValue(40)
+                                .withRange(40, 40)
+                                .build()
+                )
+                .withEntries(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .build(), labels, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+                )
+                .build();
+        parameterTables.add(MIDIMasterTuningTable);
+
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -890,19 +937,19 @@ public class SysexGen2Definitions {
                                         .build()
                         )
                         .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).isFixed(0x40).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).withLabel("Scale tuning C").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).withLabel("Scale tuning C#").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).withLabel("Scale tuning D").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).withLabel("Scale tuning D#/E\u266D").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).withLabel("Scale tuning E").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).withLabel("Scale tuning F").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).withLabel("Scale tuning F#").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).withLabel("Scale tuning G").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).withLabel("Scale tuning G#/A\u266D").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).withLabel("Scale tuning A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterId(13).withNumBytes(1).withLabel("Scale tuning A#/B\u266D").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterId(14).withNumBytes(1).withLabel("Scale tuning B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterId(13).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterId(14).withNumBytes(1).build())
                         .build();
 
         Event eventYamaha = eventBuilder

@@ -87,6 +87,20 @@ public class ParameterTable {
             return this;
         }
 
+        public ParameterTableBuilder withEntries(ParametersTableEntry entry, String[] labels, int ...ids) {
+            for (int i = 0; i < ids.length; i++) {
+                ParametersTableEntry newEntry = new ParametersTableEntry(entry);
+
+                if (labels != null && labels.length > i) {
+                    newEntry.setLabel(labels[i]);
+                }
+                newEntry.setParameterId(ids[i]);
+                this.entries.add(newEntry);
+            }
+
+            return this;
+        }
+
         public ParameterTable build() {
             return new ParameterTable(this);
         }

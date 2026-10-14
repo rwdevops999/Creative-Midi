@@ -11,8 +11,6 @@ public class MutableParameterTable {
     @Getter
     private ParameterTable parameterTable;
 
-    private Map<Integer, ParameterTable> crossReferenceTables;
-
     public MutableParameterTable() {
     }
 
@@ -20,18 +18,6 @@ public class MutableParameterTable {
         this();
 
         this.parameterTable = builder.parameterTable;
-        this.crossReferenceTables = builder.crossReferenceTables;
-    }
-
-    public boolean hasCrossReference(int parameterId) {
-        return (this.crossReferenceTables != null) && (this.crossReferenceTables.containsKey(parameterId));
-    }
-
-    public ParameterTable getCrossReferenceTable(int parameterId) {
-        Optional<Map.Entry<Integer, ParameterTable>> parameterTable = this.crossReferenceTables.entrySet().stream().filter(entry -> entry.getKey() == parameterId).findFirst();
-
-        return parameterTable.map(Map.Entry::getValue).orElse((null));
-
     }
 
     public static class MutableParameterTableBuilder {
@@ -42,7 +28,6 @@ public class MutableParameterTable {
         private ParameterTable parameterTable;
 
         private String identifier;
-        private Map<Integer, ParameterTable> crossReferenceTables;
 
         public MutableParameterTableBuilder clear() {
             this.label = null;
@@ -50,7 +35,6 @@ public class MutableParameterTable {
             this.range = null;
             this.defaultValue = null;
             this.identifier = "";
-            this.crossReferenceTables = new HashMap<Integer, ParameterTable>();
 
             return this;
         }
@@ -82,12 +66,6 @@ public class MutableParameterTable {
 
         public MutableParameterTableBuilder withDefaultValue(int defaultValue) {
             this.defaultValue = defaultValue;
-            return this;
-        }
-
-        public MutableParameterTableBuilder crossReferenceTable(int parameterId, ParameterTable crossReferenceTable) {
-            this.crossReferenceTables.put(parameterId, crossReferenceTable);
-
             return this;
         }
 

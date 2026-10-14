@@ -5,6 +5,7 @@ import lombok.Setter;
 
 public class ParametersTableEntry {
     @Getter
+    @Setter
     private int parameterId;
 
     @Getter
@@ -43,6 +44,17 @@ public class ParametersTableEntry {
         this();
 
         this.parameterId = other.parameterId;
+        this.label = other.label;
+        this.description = other.description;
+        this.defaultValue = other.defaultValue;
+        this.range = new Range(other.range);
+        this.dataTable = new DataTable(other.dataTable);
+    }
+
+    public ParametersTableEntry(int index, ParametersTableEntry other) {
+        this();
+
+        this.parameterId = index;
         this.label = other.label;
         this.description = other.description;
         this.defaultValue = other.defaultValue;
