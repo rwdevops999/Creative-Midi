@@ -58,7 +58,7 @@ public class Test3Pane extends VBox {
         Event event = rootEvent.findEvent(name);
 
         if (event != null) {
-            List<String> sysexs = event.complete(event.createSysexStrings());
+            List<String> sysexs = event.complete(new ArrayList<>(event.createSysexStrings()));
 
             System.out.println("SYSEXS OF: " + name);
             sysexs.forEach(System.out::println);
@@ -243,7 +243,7 @@ public class Test3Pane extends VBox {
         final int FIXED_DO=1;
 
         setEventValue("Score", "Parameter 1", ON, null, null);
-        setEventValue("Score", "Parameter 1", OFF, null, null);
+        setEventValue("Score", "Parameter 2", OFF, null, null);
         setEventValue("Score", "Parameter 3", ON, null, null);
         setEventValue("Score", "Parameter 6", LARGE, null, null);
         setEventValue("Score", "Parameter 7", CHANNEL_3, null, null);

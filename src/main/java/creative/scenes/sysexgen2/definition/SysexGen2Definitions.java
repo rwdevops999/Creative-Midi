@@ -20,7 +20,7 @@ public class SysexGen2Definitions {
     private static final DataTable.DataTableBuilder dataTableBuilder;
 
     @Getter
-    private static final Event rootEvent = new Event();
+    private static final Event rootEvent = new Event("Root");
 
     private static final List<ParameterTable> parameterTables;
     private static final List<DataTable> dataTables;
@@ -1158,17 +1158,17 @@ public class SysexGen2Definitions {
                                         .build()
                         )
                         .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).withAddress("00").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(1).withNumBytes(1).withAddress("01").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(1).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(1).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(1).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(1).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(1).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(1).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(1).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(1).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(1).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(1).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).withAddress("01").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).withAddress("0B").build())
                     .build();
 
                 Event eventYamaha = eventBuilder

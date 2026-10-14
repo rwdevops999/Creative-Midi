@@ -32,10 +32,16 @@ public class Event implements IEvent {
         this.sysex = "";
     }
 
-    public Event(EventBuilder builder) {
+    public Event(String name) {
         this();
+        if (this.name == null || this.name.isEmpty()) {
+            this.name = name;
+        }
+    }
 
-        this.name = builder.name;
+    public Event(EventBuilder builder) {
+        this(builder.name);
+
         this.sysex = builder.sysex;
 
         this.children.addAll(builder.children);
@@ -52,7 +58,7 @@ public class Event implements IEvent {
     }
 
     private boolean hasEventTypes() {
-        return !eventTypes.isEmpty();
+        return ((eventTypes != null) && (!eventTypes.isEmpty()));
     }
 
     public void addChild(Event child) {
@@ -119,8 +125,7 @@ public class Event implements IEvent {
 
         // TODO create sysexs here
         if (this.hasParent()) {
-            List<String> parentSysexStrings = this.parent.createSysexStrings();
-
+            List<String> parentSysexStrings = new ArrayList<>(this.parent.createSysexStrings());
             parentSysexStrings.replaceAll(s -> s.length() == 0 ? this.sysex : s + extend(this.sysex));
             sysexStrings.addAll(parentSysexStrings);
         } else {
@@ -139,7 +144,9 @@ public class Event implements IEvent {
                             EventParameter parameter = findEventParameterById(parameterId);
                             if (parameter != null) {
                                 if (!parameter.isIgnore()) {
-                                    parameterSysexList.add(parameter.toSysex());
+                                    if (parameter.getValue() != null) {
+                                        parameterSysexList.add(parameter.toSysex());
+                                    }
                                 } else {
                                     parameterSysexList.add("00");
                                 }
@@ -155,12 +162,17 @@ public class Event implements IEvent {
 //            System.out.println("ADD TO SYSEX");
 
             // Embedded
-            for (String sysex : parameterSysexList) {
-                sysexStrings.replaceAll(s -> s + extend(sysex));
+            if (! sysexStrings.isEmpty()) {
+                String baseSysex = sysexStrings.get(0);
+
+                sysexStrings.clear();
+                for (String sysex : parameterSysexList) {
+                    sysexStrings.add(baseSysex + extend(sysex));
+                }
             }
         }
 
-        return sysexStrings;
+        return sysexStrings.stream().sorted().toList();
     }
 
     public List<String> complete(List<String> sysexStrings) {

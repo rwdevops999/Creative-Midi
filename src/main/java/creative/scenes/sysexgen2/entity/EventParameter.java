@@ -43,7 +43,10 @@ public class EventParameter {
     }
 
     public String toSysex() {
-        return value.toHex(numBytes, useLowerOnly);
+        if (value == null) {
+            System.out.println("is NULL");
+        };
+        return (address != null ? address + " " : "") + value.toHex(numBytes, useLowerOnly);
     }
 
     public String toSysex(DataBlock value) {
