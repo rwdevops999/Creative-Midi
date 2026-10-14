@@ -161,27 +161,39 @@ public class Test3Pane extends VBox {
         final int BLOCK=8;
         final int OCTAVE=17;
 
-        setEventValue("Harmony", "Parameter 1", null, 0, DUET_1);
-        handleEvent("Harmony");
-        setEventValue("Harmony", "Parameter 1", null, 0, BLOCK);
-        handleEvent("Harmony");
-        setEventValue("Harmony", "Parameter 1", null, 0, OCTAVE);
-        handleEvent("Harmony");
+//        setEventValue("Harmony", "Parameter 1", null, 0, DUET_1);
+//        handleEvent("Harmony");
+//        setEventValue("Harmony", "Parameter 1", null, 0, BLOCK);
+//        handleEvent("Harmony");
+//        setEventValue("Harmony", "Parameter 1", null, 0, OCTAVE);
+//        handleEvent("Harmony");
 
         final int ECHO_6=21;
 
-        setEventValue("Echo", "Parameter 1", null, 0, ECHO_6);
-        handleEvent("Echo");
+//        setEventValue("Echo", "Parameter 1", null, 0, ECHO_6);
+//        handleEvent("Echo");
 
         final int TREMOLO_32=27;
 
-        setEventValue("Tremolo", "Parameter 1", null, 0, TREMOLO_32);
-        handleEvent("Tremolo");
+//        setEventValue("Tremolo", "Parameter 1", null, 0, TREMOLO_32);
+//        handleEvent("Tremolo");
 
         final int TRILL_12=28;
 
-        setEventValue("Trill", "Parameter 1", null, 0, TRILL_12);
-        handleEvent("Trill");
+//        setEventValue("Trill", "Parameter 1", null, 0, TRILL_12);
+//        handleEvent("Trill");
+
+        final int TRACK1_OFF_TRACK2_ON = 1;
+        final int KARAOKE_KEY=3;
+
+//        setEventValue("Guide", "Parameter 1", null, 0, TRACK1_OFF_TRACK2_ON);
+//        setEventValue("Guide", "Parameter 2", null, 0, KARAOKE_KEY);
+//        handleEvent("Guide");
+
+//        setEventValue("MIDI Master Tuning", "Parameter 1", null, 0, 123);
+//        setEventValue("MIDI Master Tuning", "Parameter 2", null, 0, 98);
+//        setEventValue("MIDI Master Tuning", "Parameter 3", null, 0, 100);
+//        handleEvent("MIDI Master Tuning");
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

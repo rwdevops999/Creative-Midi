@@ -43,9 +43,9 @@ public class DataBlock {
     }
 
     // Returns "lsb msb" (e.g. "0A 13"
-    public String toHex(int numBytes) {
+    public String toHex(int numBytes, boolean useLowerOnly) {
         // Put bytes into an array for easy slicing/indexing
-        byte[] bytes = { b2, b1 };
+        byte[] bytes = { useLowerOnly ? (byte)(b2 & 0xF): b2, useLowerOnly ? (byte)(b1 & 0xF): b1 };
 
         // Ensure numBytes stays within valid bounds (0 to 2)
         int targetLength = Math.max(0, Math.min(numBytes, bytes.length));

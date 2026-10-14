@@ -262,6 +262,45 @@ public class SysexGen2Definitions {
                 )
                 .build();
         parameterTables.add(TrillTable);
+
+        ParameterTable GuideTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("GuideTable")
+                .withName("Guide")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Part")
+                                .withDescription("Track On-Off")
+                                .withDefaultValue(4)
+                                .withRange(0, 3)
+                                .withDataTable(findDataTable("GuideTrackDataTable"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withLabel("Mode")
+                                .withDescription("0 - 6")
+                                .withDefaultValue(7)
+                                .withRange(0, 7)
+                                .withDataTable(findDataTable("GuideModeDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(GuideTable);
+
+        ParameterTable MIDIMasterTuningTable = mutableParameterTableBuilder
+                .clear()
+                .withIdentifier("MIDIMasterTuningTable")
+                .withLabel("Tuning")
+                .withDefaultValue(0)
+                .withRange(0, 16383)
+                .fromParameterTable(findParameterTable("IntegerInputTable"))
+                .build();
+        parameterTables.add(MIDIMasterTuningTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -360,6 +399,32 @@ public class SysexGen2Definitions {
                 )
                 .build();
         dataTables.add(HarmonyDataTable);
+
+        DataTable GuideTrackDataTable = dataTableBuilder
+                .clear()
+                .withTableId("GuideTrackDataTable")
+                .withTableDescription("Guide Track")
+                .withSize(4)
+                .withEntries(
+                        "Track1 ON, Track2 ON",
+                        "Track1 OFF, Track2 ON",
+                        "Track1 ON, Track2 OFF",
+                        "Track1 OFF, Track2 OFF")
+                .build();
+        dataTables.add(GuideTrackDataTable);
+
+        DataTable GuideModeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("GuideModeDataTable")
+                .withTableDescription("Guide Mode")
+                .withSize(7)
+                .withEntry( 0X00, "Guide Off")
+                .withEntry( 0X01, "Follow Lights")
+                .withEntry( 0X02, "Any Key")
+                .withEntry( 0X03, "Karaoke Key")
+                .withEntry( 0X06, "Your Tempo")
+                .build();
+        dataTables.add(GuideModeDataTable);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -725,7 +790,79 @@ public class SysexGen2Definitions {
                                         .withNumBytes(1)
                                         .build()
                         )
+                        .build();
 
+        Event eventGuide  =
+                eventBuilder
+                        .clear()
+                        .withName("Guide")
+                        .withSysex("73 01 1F 00")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Guide EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("GuideTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 2")
+                                        .withParameterId(2)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
+                        .build();
+
+        Event eventMIDIMasterTuning  =
+                eventBuilder
+                        .clear()
+                        .withName("MIDI Master Tuning")
+                        .withSysex("10 27 30 00 00")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("MIDI Master Tuning EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("MIDIMasterTuningTable"))
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 1")
+                                        .withParameterId(1)
+                                        .withNumBytes(1, true)
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 2")
+                                        .withParameterId(2)
+                                        .withNumBytes(1,true)
+                                        .build()
+                        )
+                        .withEventParameter(
+                                eventParameterBuilder
+                                        .clear()
+                                        .withName("Parameter 3")
+                                        .withParameterId(3)
+                                        .isIgnore(true)
+                                        .withNumBytes(1)
+                                        .build()
+                        )
                         .build();
 
         Event eventYamaha = eventBuilder
@@ -742,6 +879,8 @@ public class SysexGen2Definitions {
                 .withChild(eventEcho)
                 .withChild(eventTremolo)
                 .withChild(eventTrill)
+                .withChild(eventGuide)
+                .withChild(eventMIDIMasterTuning)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }
