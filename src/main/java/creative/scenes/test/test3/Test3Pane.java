@@ -1,6 +1,7 @@
 package creative.scenes.test.test3;
 
 import communication.CommunicationModel;
+import creative.scenes.sysexgen2.data.ParameterType;
 import creative.scenes.sysexgen2.definition.SysexGen2Definitions;
 import creative.scenes.sysexgen2.entity.Event;
 import creative.scenes.sysexgen2.entity.EventParameter;
@@ -24,19 +25,24 @@ public class Test3Pane extends VBox {
         runTest();
     }
 
-    private void setEventValue(String eventName, String parameterName, Integer value, Integer b1, Integer b2) {
+    private void setEventValue(String eventName, ParameterType parameterType, Object identifier, Integer ival, Integer b1val, Integer b2val) {
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
-            EventParameter eventParameter = event.findEventParameterByName(parameterName);
+            EventParameter eventParameter;
+            if (parameterType == ParameterType.PARAMETER) {
+                eventParameter = event.findEventParameterById((Integer)identifier);
+            } else {
+                eventParameter = event.findEventParameterByAddress((String)identifier);
+            }
+
             if (eventParameter != null) {
-                if (value != null) {
-                    eventParameter.setValue(value); // 51730 = CA 12 or 12 CA
+                if (ival != null) {
+                    eventParameter.setValue(ival); // 51730 = CA 12 or 12 CA
                 } else {
-                    eventParameter.setValue(b1, b2);
+                    eventParameter.setValue(b1val, b2val);
                 }
             }
         }
-
     }
 
     private void setupTest() {
@@ -53,9 +59,13 @@ public class Test3Pane extends VBox {
         return value + 63;
     }
 
-    private void handleEvent (String name) {
+    private void handleEvent (String name, Integer b1, Integer b2 ) {
         Event rootEvent = SysexGen2Definitions.getRootEvent();
+
         Event event = rootEvent.findEvent(name);
+        if (! (b1 == null && b2 == null)) {
+            event.setDefaultValues(b1, b2);
+        }
 
         if (event != null) {
             List<String> sysexs = event.complete(new ArrayList<>(event.createSysexStrings()));
@@ -242,16 +252,33 @@ public class Test3Pane extends VBox {
 
         final int FIXED_DO=1;
 
-        setEventValue("Score", "Parameter 1", ON, null, null);
-        setEventValue("Score", "Parameter 2", OFF, null, null);
-        setEventValue("Score", "Parameter 3", ON, null, null);
-        setEventValue("Score", "Parameter 6", LARGE, null, null);
-        setEventValue("Score", "Parameter 7", CHANNEL_3, null, null);
-        setEventValue("Score", "Parameter 8", CHANNEL_AUTO, null, null);
-        setEventValue("Score", "Parameter 9", ON, null, null);
-        setEventValue("Score", "Parameter 10", THIRTY_SECOND, null, null);
-        setEventValue("Score", "Parameter 11", FIXED_DO, null, null);
-        handleEvent("Score");
+//        setEventValue("Score", "Parameter 1", ON, null, null);
+//        setEventValue("Score", "Parameter 2", OFF, null, null);
+//        setEventValue("Score", "Parameter 3", ON, null, null);
+//        setEventValue("Score", "Parameter 6", LARGE, null, null);
+//        setEventValue("Score", "Parameter 7", CHANNEL_3, null, null);
+//        setEventValue("Score", "Parameter 8", CHANNEL_AUTO, null, null);
+//        setEventValue("Score", "Parameter 9", ON, null, null);
+//        setEventValue("Score", "Parameter 10", THIRTY_SECOND, null, null);
+//        setEventValue("Score", "Parameter 11", FIXED_DO, null, null);
+//        handleEvent("Score");
+
+        setEventValue("Reverb", ParameterType.PARAMETER, 1,10, null, null); // #1
+        setEventValue("Reverb", ParameterType.PARAMETER, 2, 3, null, null);
+        setEventValue("Reverb", ParameterType.PARAMETER, 3, 100, null, null); // #2
+        setEventValue("Reverb", ParameterType.PARAMETER, 4, 30, null, null); // #3
+        setEventValue("Reverb", ParameterType.PARAMETER, 5, 47, null, null); // #3
+        setEventValue("Reverb", ParameterType.PARAMETER, 10, 21, null, null);
+        setEventValue("Reverb", ParameterType.PARAMETER, 11, 90, null, null); // #2
+        setEventValue("Reverb", ParameterType.PARAMETER, 12, 2, null, null);
+        setEventValue("Reverb", ParameterType.PARAMETER, 13, 63, null, null);
+        setEventValue("Reverb", ParameterType.PARAMETER, 14, 5, null, null);
+        setEventValue("Reverb", ParameterType.PARAMETER, 15, 13, null, null);
+
+        setEventValue("Reverb", ParameterType.FREE, "0C", 13, null, null);
+        setEventValue("Reverb", ParameterType.FREE, "0D", 13, null, null);
+
+        handleEvent("Reverb", 1, 0); // (1,0) = Hall1
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

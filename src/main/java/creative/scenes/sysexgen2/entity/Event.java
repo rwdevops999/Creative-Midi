@@ -53,6 +53,18 @@ public class Event implements IEvent {
         this.eventTypes.addAll(builder.eventTypes);
     }
 
+    public void setDefaultValue(DataBlock value) {
+        this.defaultValue = value;
+    }
+
+    public void setDefaultValue(Integer value) {
+        this.defaultValue = new DataBlock(value);
+    }
+
+    public void setDefaultValues(Integer i1, Integer i2) {
+        this.defaultValue = new DataBlock(i1, i2);
+    }
+
     private boolean hasChildren() {
         return !children.isEmpty();
     }
@@ -72,17 +84,19 @@ public class Event implements IEvent {
     }
 
     /**
-     * Find the EventParameter with given name
+     * Find the EventParameter with given address
      *
-     * @param name the name of the parameter
+     * @param address the address of the parameter
      *
      * @return the EventParameter instance
      */
-    public EventParameter findEventParameterByName(String name) {
+    public EventParameter findEventParameterByAddress(String address) {
         EventParameter parameter = null;
 
         if (hasParameters()) {
-            parameter = this.parameters.stream().filter(ep -> name.equals(ep.getName())).findFirst().orElse(null);
+            if (address != null && !address.isEmpty()) {
+                parameter = this.parameters.stream().filter(ep -> (address.equals(ep.getAddress()))).findFirst().orElse(null);
+            }
         }
 
         return parameter;

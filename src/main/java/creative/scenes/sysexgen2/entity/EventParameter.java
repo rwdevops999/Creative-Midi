@@ -1,12 +1,10 @@
 package creative.scenes.sysexgen2.entity;
 
+import creative.scenes.sysexgen2.data.ParameterType;
 import lombok.Getter;
 import lombok.Setter;
 
 public class EventParameter {
-    @Getter
-    private String name;    // USEFULL FOR TESTING...
-
     @Getter
     private int parameterId;
     private int numBytes;
@@ -19,19 +17,23 @@ public class EventParameter {
 
     private boolean useLowerOnly = false;
 
+    @Getter
     private String address;
+
+    @Getter
+    private ParameterType parameterType;
 
     public EventParameter() {
         this.value = null;
     }
 
     public EventParameter(EventParameterBuilder builder) {
-        this.name = builder.name;
         this.parameterId = builder.parameterId;
         this.numBytes = builder.numBytes;
         this.ignore = builder.ignore;
         this.useLowerOnly = builder.useLowerOnly;
         this.address = builder.address;
+        this.parameterType = builder.parameterType;
     }
 
     public void setValue(Integer value) {
@@ -61,6 +63,8 @@ public class EventParameter {
         private boolean useLowerOnly = false;
         private String address;
 
+        private ParameterType parameterType;
+
         public EventParameterBuilder clear() {
             this.name = "";
             this.parameterId = -1;
@@ -68,6 +72,7 @@ public class EventParameter {
             this.ignore = false;
             this.useLowerOnly = false;
             this.address = null;
+            this.parameterType = ParameterType.PARAMETER;
 
             return this;
         }
@@ -82,8 +87,8 @@ public class EventParameter {
             return this;
         }
 
-        public EventParameterBuilder withName(String name) {
-            this.name = name;
+        public EventParameterBuilder withParameterType(ParameterType type) {
+            this.parameterType = type;
             return this;
         }
 

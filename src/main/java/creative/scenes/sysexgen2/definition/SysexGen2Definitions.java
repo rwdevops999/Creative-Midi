@@ -1,5 +1,6 @@
 package creative.scenes.sysexgen2.definition;
 
+import creative.scenes.sysexgen2.data.ParameterType;
 import creative.scenes.sysexgen2.entity.*;
 import lombok.Getter;
 import util.Vendors;
@@ -737,7 +738,27 @@ public class SysexGen2Definitions {
                 .withIdentifier("Reverb3")
                 .withDescription("Block; Reverb, Variation")
 
-                .withParameters(1, "Reverb Time", "0.3s - 30.0s", 0, 69, tables.get("Table#1)"))
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Reverb Time")
+                                .withDescription("0.3s - 30.0s")
+                                .withDefaultValue(0)
+                                .withRange(0, 69)
+                                .withDataTable(findDataTable("Table#1"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withLabel("Diffusion")
+                                .withDescription("0 - 10")
+                                .withDefaultValue(0)
+                                .withRange(0, 10)
+                                .build()
+                )
                 .withEntry(
                         parameterTableEntryBuilder
                                 .clear()
@@ -749,175 +770,132 @@ public class SysexGen2Definitions {
                                 .withDataTable(findDataTable("Table#2"))
                                 .build()
                 )
-                .withParameters(2, "Diffusion", "0 - 10", 0, 10)
                 .withEntry(
                         parameterTableEntryBuilder
                                 .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
+                                .withParameterId(4)
+                                .withLabel("HPF Cutoff Frequency")
+                                .withDescription("Thru, 22Hz - 8.0kHz")
+                                .withDefaultValue(0)
+                                .withRange(0, 52)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(5)
+                                .withLabel("LPF Cutoff Frequency")
+                                .withDescription("1.0kHz - 18.0kHz, Thru")
+                                .withDefaultValue(34)
+                                .withRange(34, 60)
+                                .withDataTable(findDataTable("Table#3"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(6)
+                                .withLabel("Width")
+                                .withDescription("0.5m - 30.2m")
+                                .withDefaultValue(0)
+                                .withRange(0, 104)
+                                .withDataTable(findDataTable("Table#4"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(7)
+                                .withLabel("Height")
+                                .withDescription("0.5m - 30.2m")
+                                .withDefaultValue(0)
+                                .withRange(0, 104)
+                                .withDataTable(findDataTable("Table#4"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(8)
+                                .withLabel("Depth")
+                                .withDescription("0.5m - 30.2m")
+                                .withDefaultValue(0)
+                                .withRange(0, 104)
+                                .withDataTable(findDataTable("Table#4"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(9)
+                                .withLabel("Wall Vary")
+                                .withDescription("0 - 30")
+                                .withDefaultValue(0)
+                                .withRange(0, 30)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(10)
+                                .withLabel("Dry/Wet")
+                                .withDescription("D63>W - D=W - D<W63")
+                                .withDefaultValue(1)
+                                .withRange(1, 127)
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(11)
+                                .withLabel("Reverb Delay Time")
                                 .withDescription("0.1ms - 200.0ms")
                                 .withDefaultValue(0)
                                 .withRange(0, 127)
                                 .withDataTable(findDataTable("Table#2"))
                                 .build()
                 )
-                .withParameters(3, "Initial Delay Time", "0.1ms - 200.0ms", 0, 127, tables.get("Table#2"))
                 .withEntry(
                         parameterTableEntryBuilder
                                 .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
+                                .withParameterId(12)
+                                .withLabel("Density")
+                                .withDescription("0 - 4")
                                 .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
+                                .withRange(0, 4)
                                 .build()
                 )
-                .withParameters(4, "HPF Cutoff Frequency", "Thru, 22Hz - 8.0kHz", 0, 52, tables.get("Table#3"))
                 .withEntry(
                         parameterTableEntryBuilder
                                 .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
+                                .withParameterId(13)
+                                .withLabel("ER/Reverb Balance")
+                                .withDescription("E63>R - R=R - E<R63")
+                                .withDefaultValue(1)
+                                .withRange(1, 127)
                                 .build()
                 )
-                .withParameters(5, "LPF Cutoff Frequency", "1.0kHz - 18.0kHz, Thru", 34, 60, tables.get("Table#3"))
                 .withEntry(
                         parameterTableEntryBuilder
                                 .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
+                                .withParameterId(14)
+                                .withLabel("High Damp")
+                                .withDescription("0.1 - 1.0")
+                                .withDefaultValue(1)
+                                .withRange(1, 10)
                                 .build()
                 )
-                .withParameters(6, "Width", "0.5m - 30.2m", 0, 104, tables.get("Table#4"))
                 .withEntry(
                         parameterTableEntryBuilder
                                 .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
+                                .withParameterId(15)
+                                .withLabel("Feedback Level")
+                                .withDescription("-63 - 0 - +63")
+                                .withDefaultValue(1)
+                                .withRange(1, 127)
                                 .build()
                 )
-                .withParameters(7, "Height", "0.5m - 30.2m", 0, 104, tables.get("Table#4"))
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(8, "Depth", "0.5m - 30.2m", 0, 104, tables.get("Table#4"))
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(9, "Wall Vary", "0 - 30", 0, 30)
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(10, "Dry/Wet", "D63>W - D=W - D<W63", 1, 127)
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(11, "Reverb Delay Time", "0.1ms - 200ms", 0, 127, tables.get("Table#2"))
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(12, "Density", "0 - 4", 0, 4)
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(13, "ER/Reverb Balance", "E63>R - R=R - E<R63", 1, 127)
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(14, "High Damp", "0.1 - 1.0", 1, 10)
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-                .withParameters(15, "Feedback Level", "-63 - 0 - +63", 1, 127)
-                .withEntry(
-                        parameterTableEntryBuilder
-                                .clear()
-                                .withParameterId(3)
-                                .withLabel("Initial Delay Time")
-                                .withDescription("0.1ms - 200.0ms")
-                                .withDefaultValue(0)
-                                .withRange(0, 127)
-                                .withDataTable(findDataTable("Table#2"))
-                                .build()
-                )
-
                 .build();
         parameterTables.add(Reverb3Table);
     }
@@ -1123,7 +1101,6 @@ public class SysexGen2Definitions {
                 .build();
         dataTables.add(QuantizeDataTable);
 
-
         DataTable NoteNameDataTable = dataTableBuilder
                 .clear()
                 .withTableId("NoteNameDataTable")
@@ -1134,6 +1111,90 @@ public class SysexGen2Definitions {
                 .withEntry(0x02, "Movable Do")
                 .build();
         dataTables.add(NoteNameDataTable);
+
+        DataTable Table1 = dataTableBuilder
+                .clear()
+                .withTableId("Table#1")
+                .withTableDescription("Reverb Time [s]")
+                .withSize(70)
+                .withEntries(
+                        "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9", "1.0", "1.1", "1.2",
+                        "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2.0", "2.1", "2.2",
+                        "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9", "3.0", "3.1", "3.2",
+                        "3.3", "3.4", "3.5", "3.6", "3.7", "3.8", "3.9", "4.0", "4.1", "4.2",
+                        "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9", "5.0", "5.5", "6.0",
+                        "6.5", "7.0", "7.5", "8.0", "8.5", "9.0", "9.5", "10.0", "11.0", "12.0",
+                        "13.0", "14.0", "15.0", "16.0", "17.0", "18.0", "19.0", "20.0", "25.0", "30.0"
+                )
+                .build();
+        dataTables.add(Table1);
+
+        DataTable Table2 = dataTableBuilder
+                .clear()
+                .withTableId("Table#2")
+                .withTableDescription("Reverb Time [s]")
+                .withSize(128)
+                .withEntries(
+                        "0.1", "1.7", "3.2", "4.8", "6.4", "8.0", "9.5", "11.1", "12.7", "14.3",
+                        "15.8", "17.4", "19.0", "20.6", "22.1", "23.7", "25.3", "26.9", "28.4", "30.0",
+                        "31.6", "33.2", "34.7", "36.3", "37.9", "39.5", "41.0", "42.6", "44.2", "45.7",
+                        "47.3", "48.9",
+
+                        "50.5", "52.0", "53.6", "55.2", "56.8", "58.3", "59.9", "61.5", "63.1", "64.6",
+                        "66.2", "67.8", "69.4", "70.9", "72.5", "74.1", "75.7", "77.2", "78.8", "80.4",
+                        "81.9", "83.5", "85.1", "86.7", "88.2", "89.8", "91.4", "93.0", "94.5", "96.1",
+                        "97.7", "99.3",
+
+                        "100.8", "102.4", "104.0", "105.6", "107.1", "108.7", "110.3", "111.9", "113,4", "115.0",
+                        "116.6", "118.2", "119.7", "121.3", "122.9", "124.4", "126.0", "127.6", "129.2", "130.7",
+                        "132.3", "133.9", "135.5", "137.0", "138.6", "140.2", "141.8", "143.3", "144.9", "146.5",
+                        "148.1", "149.6",
+
+                        "151.2", "152.8", "154.4", "155.9", "157.5", "159.1", "160.6", "162.2", "163.8", "165.4",
+                        "166.9", "168.5", "170.1", "171.7", "173.2", "174.8", "176.4", "178.0", "179.5", "181.1",
+                        "182.7", "184.3", "185.8", "187.4", "189.0", "190.6", "192.1", "193.7", "195.3", "196.9",
+                        "198.4", "200.0"
+                )
+                .build();
+        dataTables.add(Table2);
+
+        DataTable Table3 = dataTableBuilder
+                .clear()
+                .withTableId("Table#3")
+                .withTableDescription("EQ Frequency [Hz]")
+                .withSize(61)
+                .withEntries(
+                        "THRU(20)", "22", "25", "28", "32", "36", "40", "45", "50", "56",
+                        "63", "70", "80", "90", "100", "110", "125", "140", "160", "180",
+                        "200", "225", "250", "280", "315", "355", "400", "450", "500", "560",
+                        "630", "700", "800", "900", "1.0k", "1.1k", "1.2k", "1.4k", "1.6k", "1.8k",
+                        "2.0k", "2.2k", "2.5k", "2.8k", "3.2k", "3.6k", "4.0k", "4.5k", "5.0k", "5.6K",
+                        "6.3k", "7.0k", "8.0k", "9.0k", "10k", "11k", "12k", "14k", "16k", "18k",
+                        "THRU(20)"
+                )
+                .build();
+        dataTables.add(Table3);
+
+        DataTable Table4 = dataTableBuilder
+                .clear()
+                .withTableId("Table#4")
+                .withTableDescription("Reverb Width; Depth; Height [m]")
+                .withSize(105)
+                .withEntries(
+                        "0.5","0.8","1.0","1.3","1.5","1.8","2.0","2.3","2.6","2.8",
+                        "3.1","3.3","3.6","3.9","4.1","4.4","4.6","4.9","5.2","5.4",
+                        "5.7","5.9","6.2","6.5","6.7","7.0","7.2","7.5","7.8","8.0",
+                        "8.3","8.6","8.8","9.1","9.4","9.6","9.9","10.2","10.4","10.7",
+                        "11.0","11.2","11.5","11.8","12.1","12.3","12.6","12.9","13.1","13.4",
+                        "13.7","14.0","14.2","14.5","14.8","15.1","15.4","15.6","15.9","16.2",
+                        "16.5","16.8","17.1","17.3","17.6","17.9","18.2","18.5","18.8","19.1",
+                        "19.4","19.7","20.0","20.2","20.5","20.8","21.1","21.4","21.7","22.0",
+                        "22.4","22.7","23.0","23.3","23.6","23.9","24.2","24.5","24.9","25.2",
+                        "25.5","25.8","26.1","26.5","26.8","27.1","27.5","27.8","28.1","28.5",
+                        "28.8","29.2","29.5","29.9","30.2"
+                )
+                .build();
+        dataTables.add(Table3);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -1176,7 +1237,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
-                                .withName("Parameter 1")
+                                .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(2)
                                 .build()
@@ -1199,7 +1260,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
-                                .withName("Parameter 1")
+                                .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(2)
                                 .build()
@@ -1222,7 +1283,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
-                                .withName("Parameter 1")
+                                .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)
                                 .build()
@@ -1299,7 +1360,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
-                                .withName("Parameter 1")
+                                .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)
                                 .build()
@@ -1323,7 +1384,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1331,7 +1392,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 2")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
                                         .build()
@@ -1355,7 +1416,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1363,7 +1424,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 2")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
                                         .build()
@@ -1371,7 +1432,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 3")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(3)
                                         .withNumBytes(1)
                                         .build()
@@ -1395,7 +1456,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1419,7 +1480,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1444,7 +1505,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1469,7 +1530,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1494,7 +1555,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1518,7 +1579,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
                                         .build()
@@ -1526,7 +1587,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 2")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
                                         .build()
@@ -1550,7 +1611,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 1")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1, true)
                                         .build()
@@ -1558,7 +1619,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 2")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1,true)
                                         .build()
@@ -1566,7 +1627,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withName("Parameter 3")
+                                        .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(3)
                                         .isIgnore(true)
                                         .withNumBytes(1)
@@ -1588,20 +1649,20 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScaleTuningTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterId(13).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterId(14).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).build())
                         .build();
 
         Event eventScaleTuningBaseNote  =
@@ -1618,8 +1679,8 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScaleTuningBaseNoteTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
                         .build();
 
         Event eventScore =
@@ -1636,18 +1697,18 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScoreTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).withAddress("00").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).withAddress("01").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("00").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("01").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("0B").build())
                     .build();
 
 // Starting wit XG Change Parameter
@@ -1657,26 +1718,28 @@ public class SysexGen2Definitions {
                         .clear()
                         .withName("Reverb")
                         .withSysex("02 01")
+                        .withDefaultValues(1, 0)
                         // Add Parameters
-                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withNumBytes(2).withAddress("00").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(3).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(4).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(5).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(6).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(7).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(8).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(9).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(10).withNumBytes(1).withAddress("0B").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Free").withNumBytes(1).withAddress("0C").build()) // REVERB RETURN
-                        .withEventParameter(eventParameterBuilder.clear().withName("Free").withNumBytes(1).withAddress("0D").build()) // REVERB OAN
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(11).withNumBytes(1).withAddress("10").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(12).withNumBytes(1).withAddress("11").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterId(13).withNumBytes(1).withAddress("12").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterId(14).withNumBytes(1).withAddress("13").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 15").withParameterId(15).withNumBytes(1).withAddress("14").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 16").withParameterId(16).withNumBytes(1).withAddress("15").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("0B").build())
+                        // For Free Parameters we need additional information (that is normally handled by Parameter Table
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C").build()) // REVERB RETURN
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D").build()) // REVERB OAN
+
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("10").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("11").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).withAddress("12").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).withAddress("13").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(15).withNumBytes(1).withAddress("14").build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(16).withNumBytes(1).withAddress("15").build())
 
                         // Add Types
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("ReadLrgHall").withEventValues(1,32).withParameterTable(findParameterTable("RealReverb")).build())
