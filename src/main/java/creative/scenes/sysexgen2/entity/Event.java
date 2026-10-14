@@ -135,23 +135,15 @@ public class Event implements IEvent {
                 if (parameterTable != null) {
                     for (ParametersTableEntry entry :parameterTable.getEntries()) {
                         int parameterId = entry.getParameterId();
-
                         if (hasParameters()) {
-                            for (EventParameter parameter : this.parameters) {
-                                if (!parameter.isIgnore()) {
-                                    parameterSysexList.add(parameter.toSysex());
-                                } else {
-                                    parameterSysexList.add("00");
-                                }
-                            }
-/*                            EventParameter parameter = findEventParameterById(parameterId);
+                            EventParameter parameter = findEventParameterById(parameterId);
                             if (parameter != null) {
                                 if (!parameter.isIgnore()) {
                                     parameterSysexList.add(parameter.toSysex());
                                 } else {
                                     parameterSysexList.add("00");
                                 }
-                            } */
+                            }
                         }
                     }
                 }

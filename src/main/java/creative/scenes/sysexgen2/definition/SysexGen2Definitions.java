@@ -302,19 +302,8 @@ public class SysexGen2Definitions {
                 .build();
         parameterTables.add(MIDIMasterTuningTable);
 
-/*        ParameterTable ScaleTuningTable = mutableParameterTableBuilder
-                .clear()
-                .withIdentifier("ScaleTuningTable")
-                .withLabel("Tuning")
-                .withDefaultValue(0)
-                .withRange(0, 127)
-                .fromParameterTable(findParameterTable("IntegerInputTable"))
-                .crossReferenceTable(1, findParameterTable("PartTypeDataTable")) // For Parameter 1 we use another table
-                .build();
-        parameterTables.add(ScaleTuningTable);
-*/
         String[] labels = {
-            "Scale tuning C",
+                "Scale tuning C",
                 "Scale tuning C#",
                 "Scale tuning D",
                 "Scale tuning D#/E\u266D",
@@ -359,6 +348,30 @@ public class SysexGen2Definitions {
                 .build();
         parameterTables.add(MIDIMasterTuningTable);
 
+        ParameterTable ScaleTuningBaseNoteTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ScaleTuningBaseNoteTable")
+                .withDescription("Scale Tunig Base Notes")
+                .withEntry(  // FIXED VALUE
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withDefaultValue(0)
+                                .withRange(0, 11)
+                                .withDataTable(findDataTable("BaseNoteDataTable"))
+                                .build()
+                )
+                .withEntry(  // FIXED VALUE
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(2)
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("BaseNoteModeDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(ScaleTuningBaseNoteTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -433,7 +446,7 @@ public class SysexGen2Definitions {
                 .withSize(84)
                 .withEntry(0x4F, "Left")
                 .withEntry(0x50, "Style")
-                .withEntry(0X51, "Multi Pad")
+                .withEntry(0x51, "Multi Pad")
                 .withEntry(0x52, "Right1")
                 .withEntry(0x53, "Right2")
                 .build();
@@ -476,13 +489,43 @@ public class SysexGen2Definitions {
                 .withTableId("GuideModeDataTable")
                 .withTableDescription("Guide Mode")
                 .withSize(7)
-                .withEntry( 0X00, "Guide Off")
-                .withEntry( 0X01, "Follow Lights")
-                .withEntry( 0X02, "Any Key")
-                .withEntry( 0X03, "Karaoke Key")
-                .withEntry( 0X06, "Your Tempo")
+                .withEntry( 0x00, "Guide Off")
+                .withEntry( 0x01, "Follow Lights")
+                .withEntry( 0x02, "Any Key")
+                .withEntry( 0x03, "Karaoke Key")
+                .withEntry( 0x06, "Your Tempo")
                 .build();
         dataTables.add(GuideModeDataTable);
+
+        DataTable BaseNoteDataTable = dataTableBuilder
+                .clear()
+                .withTableId("BaseNoteDataTable")
+                .withTableDescription("Base Notes")
+                .withSize(12)
+                .withEntry( 0x00, "C")
+                .withEntry( 0x01, "C#")
+                .withEntry( 0x02, "D")
+                .withEntry( 0x03, "D#/E\u266D")
+                .withEntry( 0x06, "E")
+                .withEntry( 0x06, "F")
+                .withEntry( 0x06, "F#")
+                .withEntry( 0x06, "G")
+                .withEntry( 0x06, "G#/A\u266D")
+                .withEntry( 0x06, "A")
+                .withEntry( 0x06, "A#/B\u266D")
+                .withEntry( 0x06, "B")
+                .build();
+        dataTables.add(BaseNoteDataTable);
+
+        DataTable BaseNoteModeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("BaseNoteModeDataTable")
+                .withTableDescription("Base Note Modes")
+                .withSize(128)
+                .withEntry( 0x00, "Base Note Only")
+                .withEntry( 0x7F, "Base Note and Scale Tune")
+                .build();
+        dataTables.add(BaseNoteModeDataTable);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -922,6 +965,7 @@ public class SysexGen2Definitions {
                                         .build()
                         )
                         .build();
+
         Event eventScaleTuning  =
                 eventBuilder
                         .clear()
@@ -952,6 +996,24 @@ public class SysexGen2Definitions {
                         .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterId(14).withNumBytes(1).build())
                         .build();
 
+        Event eventScaleTuningBaseNote  =
+                eventBuilder
+                        .clear()
+                        .withName("Scale Tuning Base Note")
+                        .withSysex("73 01 52 2F 02 00 4D")
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Scale Tuning BaseNote EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("ScaleTuningBaseNoteTable"))
+                                        .build()
+                        )
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).build())
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -969,6 +1031,7 @@ public class SysexGen2Definitions {
                 .withChild(eventGuideOn)
                 .withChild(eventMIDIMasterTuning)
                 .withChild(eventScaleTuning)
+                .withChild(eventScaleTuningBaseNote)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }

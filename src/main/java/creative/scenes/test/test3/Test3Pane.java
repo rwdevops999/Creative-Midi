@@ -199,21 +199,35 @@ public class Test3Pane extends VBox {
 //        setEventValue("MIDI Master Tuning", "Parameter 3", null, 0, 100);
 //        handleEvent("MIDI Master Tuning");
 
-        setEventValue("Scale Tuning", "Parameter 1", SUB, null, null);
-//        setEventValue("Scale Tuning", "Parameter 2", -40, null, null); IS FIXED
-        setEventValue("Scale Tuning", "Parameter 3", normalize_minus_63(-35), null, null);
-        setEventValue("Scale Tuning", "Parameter 4", normalize_minus_63(-30), null, null);
-        setEventValue("Scale Tuning", "Parameter 5", normalize_minus_63(-25), null, null);
-        setEventValue("Scale Tuning", "Parameter 6", normalize_minus_63(-20), null, null);
-        setEventValue("Scale Tuning", "Parameter 7", normalize_minus_63(-15), null, null);
-        setEventValue("Scale Tuning", "Parameter 8", normalize_minus_63(-10), null, null);
-        setEventValue("Scale Tuning", "Parameter 9", normalize_minus_63(0), null, null);
-        setEventValue("Scale Tuning", "Parameter 10", normalize_minus_63( 10), null, null);
-        setEventValue("Scale Tuning", "Parameter 11", normalize_minus_63(15), null, null);
-        setEventValue("Scale Tuning", "Parameter 12", normalize_minus_63(20), null, null);
-        setEventValue("Scale Tuning", "Parameter 13", normalize_minus_63(30), null, null);
-        setEventValue("Scale Tuning", "Parameter 14", normalize_minus_63(40), null, null);
-        handleEvent("Scale Tuning");
+//        setEventValue("Scale Tuning", "Parameter 1", SUB, null, null);
+////        setEventValue("Scale Tuning", "Parameter 2", -40, null, null); IS FIXED
+//        setEventValue("Scale Tuning", "Parameter 3", normalize_minus_63(-35), null, null);
+//        setEventValue("Scale Tuning", "Parameter 4", normalize_minus_63(-30), null, null);
+//        setEventValue("Scale Tuning", "Parameter 5", normalize_minus_63(-25), null, null);
+//        setEventValue("Scale Tuning", "Parameter 6", normalize_minus_63(-20), null, null);
+//        setEventValue("Scale Tuning", "Parameter 7", normalize_minus_63(-15), null, null);
+//        setEventValue("Scale Tuning", "Parameter 8", normalize_minus_63(-10), null, null);
+//        setEventValue("Scale Tuning", "Parameter 9", normalize_minus_63(0), null, null);
+//        setEventValue("Scale Tuning", "Parameter 10", normalize_minus_63( 10), null, null);
+//        setEventValue("Scale Tuning", "Parameter 11", normalize_minus_63(15), null, null);
+//        setEventValue("Scale Tuning", "Parameter 12", normalize_minus_63(20), null, null);
+//        setEventValue("Scale Tuning", "Parameter 13", normalize_minus_63(30), null, null);
+//        setEventValue("Scale Tuning", "Parameter 14", normalize_minus_63(40), null, null);
+//        handleEvent("Scale Tuning");
+
+        final int BASE_NOTE_D=2;
+        final int BASE_NOTE_MODE_ONLY_BASE_NOTE=0;
+
+        setEventValue("Scale Tuning Base Note", "Parameter 1", null, 0, BASE_NOTE_D);
+        setEventValue("Scale Tuning Base Note", "Parameter 2", null, 0, BASE_NOTE_MODE_ONLY_BASE_NOTE);
+        handleEvent("Scale Tuning Base Note");
+
+        final int BASE_NOTE_G_SHARP=9;
+        final int BASE_NOTE_MODE_BASE_AND_SCALE=1;
+
+        setEventValue("Scale Tuning Base Note", "Parameter 1", BASE_NOTE_G_SHARP, 0, null);
+        setEventValue("Scale Tuning Base Note", "Parameter 2", BASE_NOTE_MODE_BASE_AND_SCALE, 0, null);
+        handleEvent("Scale Tuning Base Note");
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
