@@ -218,16 +218,40 @@ public class Test3Pane extends VBox {
         final int BASE_NOTE_D=2;
         final int BASE_NOTE_MODE_ONLY_BASE_NOTE=0;
 
-        setEventValue("Scale Tuning Base Note", "Parameter 1", null, 0, BASE_NOTE_D);
-        setEventValue("Scale Tuning Base Note", "Parameter 2", null, 0, BASE_NOTE_MODE_ONLY_BASE_NOTE);
-        handleEvent("Scale Tuning Base Note");
+//        setEventValue("Scale Tuning Base Note", "Parameter 1", null, 0, BASE_NOTE_D);
+//        setEventValue("Scale Tuning Base Note", "Parameter 2", null, 0, BASE_NOTE_MODE_ONLY_BASE_NOTE);
+//        handleEvent("Scale Tuning Base Note");
 
         final int BASE_NOTE_G_SHARP=9;
         final int BASE_NOTE_MODE_BASE_AND_SCALE=1;
 
-        setEventValue("Scale Tuning Base Note", "Parameter 1", BASE_NOTE_G_SHARP, 0, null);
-        setEventValue("Scale Tuning Base Note", "Parameter 2", BASE_NOTE_MODE_BASE_AND_SCALE, 0, null);
-        handleEvent("Scale Tuning Base Note");
+ //       setEventValue("Scale Tuning Base Note", "Parameter 1", BASE_NOTE_G_SHARP, 0, null);
+ //       setEventValue("Scale Tuning Base Note", "Parameter 2", BASE_NOTE_MODE_BASE_AND_SCALE, 0, null);
+ //       handleEvent("Scale Tuning Base Note");
+
+        final int SMALL=0x00;
+        final int LARGE=0x01;
+
+        final int CHANNEL_3=2;
+        final int CHANNEL_AUTO=127;
+
+        final int QUARTER=0;
+        final int EIGHTH=1;
+        final int SIXTEENTH=2;
+        final int THIRTY_SECOND=3;
+
+        final int FIXED_DO=1;
+
+        setEventValue("Score", "Parameter 1", ON, null, null);
+        setEventValue("Score", "Parameter 1", OFF, null, null);
+        setEventValue("Score", "Parameter 3", ON, null, null);
+        setEventValue("Score", "Parameter 6", LARGE, null, null);
+        setEventValue("Score", "Parameter 7", CHANNEL_3, null, null);
+        setEventValue("Score", "Parameter 8", CHANNEL_AUTO, null, null);
+        setEventValue("Score", "Parameter 9", ON, null, null);
+        setEventValue("Score", "Parameter 10", THIRTY_SECOND, null, null);
+        setEventValue("Score", "Parameter 11", FIXED_DO, null, null);
+        handleEvent("Score");
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

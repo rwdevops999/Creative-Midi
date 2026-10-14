@@ -19,6 +19,8 @@ public class EventParameter {
 
     private boolean useLowerOnly = false;
 
+    private String address;
+
     public EventParameter() {
         this.value = null;
     }
@@ -29,6 +31,7 @@ public class EventParameter {
         this.numBytes = builder.numBytes;
         this.ignore = builder.ignore;
         this.useLowerOnly = builder.useLowerOnly;
+        this.address = builder.address;
     }
 
     public void setValue(Integer value) {
@@ -53,6 +56,7 @@ public class EventParameter {
         private int numBytes;
         private boolean ignore = false;
         private boolean useLowerOnly = false;
+        private String address;
 
         public EventParameterBuilder clear() {
             this.name = "";
@@ -60,7 +64,13 @@ public class EventParameter {
             this.numBytes = 1;
             this.ignore = false;
             this.useLowerOnly = false;
+            this.address = null;
 
+            return this;
+        }
+
+        public EventParameterBuilder withAddress(String address) {
+            this.address = address;
             return this;
         }
 

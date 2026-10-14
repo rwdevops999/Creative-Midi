@@ -346,12 +346,12 @@ public class SysexGen2Definitions {
                                 .build(), labels, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
                 )
                 .build();
-        parameterTables.add(MIDIMasterTuningTable);
+        parameterTables.add(ScaleTuningTable);
 
         ParameterTable ScaleTuningBaseNoteTable = parameterTableBuilder
                 .clear()
                 .withIdentifier("ScaleTuningBaseNoteTable")
-                .withDescription("Scale Tunig Base Notes")
+                .withDescription("Scale Tuning Base Notes")
                 .withEntry(  // FIXED VALUE
                         parameterTableEntryBuilder
                                 .clear()
@@ -372,6 +372,75 @@ public class SysexGen2Definitions {
                 )
                 .build();
         parameterTables.add(ScaleTuningBaseNoteTable);
+
+        ParameterTable ScoreTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ScoreTable")
+                .withDescription("Score Handling")
+                .withEntries(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("OnOffDataTable"))
+                                .build(),
+                        new String[]{
+                                "Left Part Indication",
+                                "Right Part Indication",
+                                "Lyrics Indication",
+                                "Chord Indication",
+                                "Note Name Indication",
+                                "",
+                                "",
+                                "",
+                                "Quantize Triplet",
+                                "",
+                                "",
+                                "Color Note",
+                        }, 1, 2, 3, 4, 5, 9, 12
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(6)
+                                .withDefaultValue(0)
+                                .withRange(0, 2)
+                                .withDataTable(findDataTable("SizeDataTable"))
+                                .build()
+                )
+                .withEntries(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withDefaultValue(0)
+                                .withRange(0, 127)
+                                .withDataTable(findDataTable("ChannelDataTable"))
+                                .build(),
+                        new String[]{
+                                "Left Channel",
+                                "Right Channel",
+                        }, 7, 8
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(10)
+                                .withDefaultValue(0)
+                                .withRange(0, 3)
+                                .withDataTable(findDataTable("QuantizeDataTable"))
+                                .build()
+                )
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(11)
+                                .withDefaultValue(0)
+                                .withRange(0, 3)
+                                .withDataTable(findDataTable("NoteNameDataTable"))
+                                .build()
+                )
+
+                .build();
+        parameterTables.add(ScoreTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -526,6 +595,66 @@ public class SysexGen2Definitions {
                 .withEntry( 0x7F, "Base Note and Scale Tune")
                 .build();
         dataTables.add(BaseNoteModeDataTable);
+
+        DataTable SizeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("SizeDataTable")
+                .withTableDescription("Size Indication")
+                .withSize(3)
+                .withEntry(0x00, "Small")
+                .withEntry(0x02, "Large")
+                .build();
+        dataTables.add(SizeDataTable);
+
+        DataTable ChannelDataTable = dataTableBuilder
+                .clear()
+                .withTableId("ChannelDataTable")
+                .withTableDescription("Channels")
+                .withSize(128)
+                .withEntry(0x00, "Channel 1")
+                .withEntry(0x01, "Channel 2")
+                .withEntry(0x02, "Channel 3")
+                .withEntry(0x03, "Channel 4")
+                .withEntry(0x04, "Channel 5")
+                .withEntry(0x05, "Channel 6")
+                .withEntry(0x06, "Channel 7")
+                .withEntry(0x07, "Channel 8")
+                .withEntry(0x08, "Channel 9")
+                .withEntry(0x09, "Channel 10")
+                .withEntry(0x0A, "Channel 11")
+                .withEntry(0x0B, "Channel 12")
+                .withEntry(0x0C, "Channel 13")
+                .withEntry(0x0D, "Channel 14")
+                .withEntry(0x0E, "Channel 15")
+                .withEntry(0x0F, "Channel 16")
+                .withEntry(0x7E, "Off")
+                .withEntry(0x7F, "Auto")
+                .build();
+        dataTables.add(ChannelDataTable);
+
+        DataTable QuantizeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("QuantizeDataTable")
+                .withTableDescription("Channels")
+                .withSize(4)
+                .withEntry(0x00, "Quarter")
+                .withEntry(0x01, "Eighth")
+                .withEntry(0x02, "Sixteenth")
+                .withEntry(0x03, "Thirty-second")
+                .build();
+        dataTables.add(QuantizeDataTable);
+
+
+        DataTable NoteNameDataTable = dataTableBuilder
+                .clear()
+                .withTableId("NoteNameDataTable")
+                .withTableDescription("Note Representation")
+                .withSize(3)
+                .withEntry(0x00, "A, B, C")
+                .withEntry(0x01, "Fixed Do")
+                .withEntry(0x02, "Movable Do")
+                .build();
+        dataTables.add(NoteNameDataTable);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -1014,7 +1143,35 @@ public class SysexGen2Definitions {
                         .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(2).withNumBytes(1).build())
                         .build();
 
-        Event eventYamaha = eventBuilder
+        Event eventScore =
+                eventBuilder
+                    .clear()
+                        .withName("Score")
+                        .withSysex("73 01 50 12 00") // Here we must add sysex to parameter
+                        .withDefaultValues(0, 0)
+                        .withEventType(
+                                eventTypeBuilder
+                                        .clear()
+                                        .withName("Score EventType")
+                                        .withEventValues(0, 0)
+                                        .withParameterTable(findParameterTable("ScoreTable"))
+                                        .build()
+                        )
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterId(1).withNumBytes(1).withAddress("00").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterId(1).withNumBytes(1).withAddress("01").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterId(1).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterId(1).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterId(1).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterId(1).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterId(1).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterId(1).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterId(1).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterId(1).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterId(1).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterId(1).withNumBytes(1).withAddress("0B").build())
+                    .build();
+
+                Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
                 .withSysex(Vendors.VENDOR_YAMAHA)
@@ -1032,6 +1189,7 @@ public class SysexGen2Definitions {
                 .withChild(eventMIDIMasterTuning)
                 .withChild(eventScaleTuning)
                 .withChild(eventScaleTuningBaseNote)
+                .withChild(eventScore)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }
