@@ -1873,6 +1873,35 @@ public class SysexGen2Definitions {
                                 .build()) // SPLIT POINT
                         .build();
 
+        Event eventTempo =
+                eventBuilder
+                        .clear()
+                        .withName("Tempo")
+                        .withSysex("7E 01")
+                        // Here we are going to define an event callback
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE)
+                                .withCallback((tempo) -> {
+                                    int microsecondValue = Math.round(60_000_000F / tempo);
+
+                                    byte t1 = (byte)(microsecondValue & 0x7F);
+                                    byte t2 = (byte)((microsecondValue >> 7) & 0x7F);
+                                    byte t3 = (byte)((microsecondValue >> 14) & 0x7F);
+                                    byte t4 = (byte)((microsecondValue >> 21) & 0x7F);
+
+                                    return String.format("%02X %02X %02X %02X", t4, t3, t2, t1);
+                                })
+                                .withDisplayblock(
+                                        displayBlockBuilder
+                                                .clear()
+                                                .withLabel("Tempo")
+                                                .withDescription("Tempo speed")
+                                                .withRange(0, 1020)
+                                                .withDefaultValue(100)
+                                                .build()
+                                )
+                                .build()) // SPLIT POINT
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -1895,6 +1924,7 @@ public class SysexGen2Definitions {
                 .withChild(eventXFChangeParameter)
                 .withChild(eventSplitPoint)
                 .withChild(eventStyleSelect)
+                .withChild(eventTempo)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }

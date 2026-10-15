@@ -4,6 +4,8 @@ import creative.scenes.sysexgen2.data.ParameterType;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.function.Function;
+
 public class EventParameter {
     @Getter
     private int parameterId;
@@ -30,6 +32,8 @@ public class EventParameter {
     @Getter
     private DisplayBlock displayBlock;
 
+    private Function<Integer, String> callback;
+
     public EventParameter(EventParameterBuilder builder) {
         this.parameterId = builder.parameterId;
         this.numBytes = builder.numBytes;
@@ -38,6 +42,7 @@ public class EventParameter {
         this.address = builder.address;
         this.parameterType = builder.parameterType;
         this.displayBlock = builder.displayBlock;
+        this.callback = builder.callback;
     }
 
     public void setValue(DataBlock dataBlock) {
@@ -49,6 +54,7 @@ public class EventParameter {
     }
 
     public void setValue(Integer i1, Integer i2) {
+
         this.value = new DataBlock(i1,i2);
     }
 
@@ -61,10 +67,18 @@ public class EventParameter {
             System.out.println("is NULL");
         };
 
+        if (callback != null) {
+            return callback.apply(value.getValue());
+        }
+
         return (address != null ? address + " " : "") + value.toHex(numBytes, useLowerOnly);
     }
 
     public String toSysex(DataBlock value) {
+        if (callback != null) {
+            return callback.apply(value.getValue());
+        }
+
         return value.toHex(numBytes, useLowerOnly);
     }
 
@@ -79,6 +93,8 @@ public class EventParameter {
         private ParameterType parameterType;
         private DisplayBlock displayBlock;
 
+        private Function<Integer, String> callback;
+
         public EventParameterBuilder clear() {
             this.name = "";
             this.parameterId = -1;
@@ -88,12 +104,18 @@ public class EventParameter {
             this.address = null;
             this.parameterType = ParameterType.PARAMETER;
             this.displayBlock = null;
+            this.callback = null;
 
             return this;
         }
 
         public EventParameterBuilder withAddress(String address) {
             this.address = address;
+            return this;
+        }
+
+        public EventParameterBuilder withCallback(Function<Integer, String> callback) {
+            this.callback = callback;
             return this;
         }
 

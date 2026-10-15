@@ -288,8 +288,13 @@ public class Test3Pane extends VBox {
 //        setEventValue("Split Point", ParameterType.FREE, "Split point", 93, null, null);
 //        handleEvent("Split Point", null, null);
 
-        setEventValue("Select Style", ParameterType.FREE, "Style", 12345, null, null);
-        handleEvent("Select Style", null, null);
+//        setEventValue("Select Style", ParameterType.FREE, "Style", 12345, null, null);
+//        handleEvent("Select Style", null, null);
+
+        setEventValue("Tempo", ParameterType.FREE, "Tempo", 5, null, null);
+        handleEvent("Tempo", null, null);
+        setEventValue("Tempo", ParameterType.FREE, "Tempo", 112, null, null);
+        handleEvent("Tempo", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
