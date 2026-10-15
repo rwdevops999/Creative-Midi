@@ -333,22 +333,19 @@ public class PatchSearchPane extends VBox {
                 voiceToSearch = "";
             }
 
-            // TODO remove this test
-            if (voiceToSearch != null) {
-                result = VoiceFinder.findVoice(voiceToSearch);
+            result = VoiceFinder.findVoice(voiceToSearch);
 
-                for (int i = 1; i < addPanes.size(); i++) {
-                    if (addPanes.get(i) != null) {
-                        String voiceName = addPanes.get(i).getInputValue();
-                        if (voiceName != null) {
-                            result = refine(result, voiceName.toLowerCase());
-                        }
+            for (int i = 1; i < addPanes.size(); i++) {
+                if (addPanes.get(i) != null) {
+                    String voiceName = addPanes.get(i).getInputValue();
+                    if (voiceName != null) {
+                        result = refine(result, voiceName.toLowerCase());
                     }
                 }
-
-                VoiceSearchResultsPane resultsPane = getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane();
-                resultsPane.showResults(result);
             }
+
+            VoiceSearchResultsPane resultsPane = getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane();
+            resultsPane.showResults(result);
         } else if (selectedTIndex == TAB_BANK) {
             System.out.println("Searching on values");
 

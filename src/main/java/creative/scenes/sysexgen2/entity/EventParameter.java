@@ -34,6 +34,9 @@ public class EventParameter {
 
     private List<EventParameter> linkedEventParameterList;
 
+    @Getter
+    private int controllerId;
+
     public EventParameter() {
         this.value = null;
         this.linkedValuesMap = new HashMap<>();
@@ -60,6 +63,8 @@ public class EventParameter {
         }
         this.callback = builder.callback;
 
+        this.controllerId = builder.controllerId;
+
         if (builder.linkedEventParameterList != null) {
             if (linkedEventParameterList == null) {
                 linkedValuesMap = new HashMap<>();
@@ -75,43 +80,42 @@ public class EventParameter {
         linkedValuesMap.put(id, value);
     }
 
-    public EventParameter findLinkedEventParameterById(Integer identifier) {
+    public EventParameter findLinkedEventParameterByControllerId(Integer controllerId) {
         if (! linkedEventParameterList.isEmpty()) {
-            return linkedEventParameterList.stream().filter(e -> e.getParameterId() == identifier).findFirst().orElse(null);
+            return linkedEventParameterList.stream().filter(e -> e.getControllerId() == controllerId).findFirst().orElse(null);
         }
 
         return null;
     }
 
-    private void handleLinkedValue(Integer parameterId, DataBlock value) {
-        int id = parameterId - 1;
+    private void handleLinkedValue(Integer controllerId, DataBlock value) {
         if (value != null) {
             if (linkedEventParameter != null) {
-                linkedEventParameter.setLinkedValue(id, value);
+                linkedEventParameter.setLinkedValue(controllerId, value);
             } else {
-                setLinkedValue(id, value);
+                setLinkedValue(controllerId, value);
             }
         }
     }
 
     public void setValue(DataBlock dataBlock) {
         this.value = dataBlock;
-        handleLinkedValue(parameterId, this.value);
+        handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer value, boolean isLittle) {
         this.value = new DataBlock(value, isLittle);
-        handleLinkedValue(parameterId, this.value);
+        handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2) {
         this.value = new DataBlock(i1,i2);
-        handleLinkedValue(parameterId, this.value);
+        handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2, boolean isLittle) {
         this.value = new DataBlock(i1,i2, isLittle);
-        handleLinkedValue(parameterId, this.value);
+        handleLinkedValue(controllerId, this.value);
     }
 
     public void clearValue() {
@@ -166,6 +170,8 @@ public class EventParameter {
         private Function<Integer, String> callback;
         private List<EventParameter> linkedEventParameterList = new ArrayList<>();
 
+        private int controllerId;
+
         public EventParameterBuilder clear() {
             this.parameterId = -1;
             this.numBytes = 1;
@@ -182,6 +188,11 @@ public class EventParameter {
 
         public EventParameterBuilder withAddress(String address) {
             this.address = address;
+            return this;
+        }
+
+        public EventParameterBuilder withControllerId(int controllerId) {
+            this.controllerId = controllerId;
             return this;
         }
 

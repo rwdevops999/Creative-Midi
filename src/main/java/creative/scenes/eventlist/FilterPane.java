@@ -30,7 +30,6 @@ public class FilterPane extends HBox {
 
     private final ObjectProperty<Integer> selectedChannel = new SimpleObjectProperty<>(0);
 
-    // TODO Each time this is initialised
     private static final List<EventKeyValue> visibleEvents;
     private static final List<EventKeyValue> hiddenEvents;
 

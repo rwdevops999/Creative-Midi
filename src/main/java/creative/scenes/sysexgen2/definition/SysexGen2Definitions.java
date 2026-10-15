@@ -5,6 +5,7 @@ import creative.scenes.sysexgen2.entity.*;
 import lombok.Getter;
 import util.Vendors;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -444,6 +445,24 @@ public class SysexGen2Definitions {
 
                 .build();
         parameterTables.add(ScoreTable);
+
+        ParameterTable ChannelsTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ChannelsTable")
+                .withName("Channels")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Channel")
+                                .withDescription("0x00 - 0x0F")
+                                .withDefaultValue(0)
+                                .withRange(0x00, 0x0F)
+                                .withDataTable(findDataTable("ChannelDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(ChannelsTable);
 
         // For XG Parameter Change
         ParameterTable RealReverbTable = parameterTableBuilder
@@ -1311,13 +1330,13 @@ public class SysexGen2Definitions {
 
         Event eventMasterFineTuning = eventBuilder
                 .clear()
-                .withName("Master Fine Tuning")
+                .withName("Master Fine-Tuning")
                 .withSysex("7F 04 03")
                 .withDefaultValues(0, 0)
                 .withEventType(
                         eventTypeBuilder
                                 .clear()
-                                .withName("Master Fine Tuning EventType")
+                                .withName("Master Fine-Tuning EventType")
                                 .withEventValues(0, 0)
                                 .withParameterTable(findParameterTable("FineTuningTable"))
                                 .build()
@@ -1373,11 +1392,13 @@ public class SysexGen2Definitions {
                                 .clear()
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
+                                .withControllerId(0X00)
                                 .withNumBytes(1)
+                                // TODO Linked Parameters also need DisplayBlock
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
-                                                .withParameterId(2)
+                                                .withControllerId(0X01)
                                                 .withNumBytes(1)
                                                 .build()
                                 )
@@ -1403,29 +1424,100 @@ public class SysexGen2Definitions {
                                 .clear()
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
+                                .withControllerId(0x00)
                                 .withNumBytes(1)
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
-                                                .withParameterId(2)
+                                                .withControllerId(0x01)
                                                 .build()
                                 )
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
-                                                .withParameterId(3)
+                                                .withControllerId(0x02)
                                                 .build()
                                 )
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
-                                                .withParameterId(4)
+                                                .withControllerId(0x03)
                                                 .build()
                                 )
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
-                                                .withParameterId(5)
+                                                .withControllerId(0x04)
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
+
+        Event eventChannelPressure = eventBuilder
+                .clear()
+                .withName("Aftertouch")
+                .withSysex("7F 09 01")
+                .withDefaultValues(0, 0)
+                .withEventType(
+                        eventTypeBuilder
+                                .clear()
+                                .withName("Channel EventType")
+                                .withEventValues(0, 0)
+                                .withParameterTable(findParameterTable("ChannelsTable"))
+                                .build()
+                )
+                .withEventParameter(
+                        eventParameterBuilder
+                                .clear()
+                                .withParameterType(ParameterType.PARAMETER)
+                                .withParameterId(1)
+                                .withNumBytes(1)
+                                .withUseLowerOnly(true)
+                                .build()
+                )
+                // Here come the controllers
+                .withEventParameter(
+                        // Pich Control
+                        new EventParameter.EventParameterBuilder()
+                                .clear()
+                                .withParameterType(ParameterType.FREE)
+                                .withParameterId(1)
+                                .withControllerId(0X00)
+                                .withNumBytes(1)
+                                .withLinkedEventParameter(
+                                        // Filter Cutoff Control
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withControllerId(0X01)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // Amplitude Control
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withControllerId(0X02)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Pitch Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withControllerId(0X03)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Filter Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withControllerId(0X04)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Amplitude Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withControllerId(0X05)
                                                 .build()
                                 )
                                 .build()
@@ -1441,6 +1533,7 @@ public class SysexGen2Definitions {
                 .withChild(eventMasterCoarseTuning)
                 .withChild(eventReverbParameter)
                 .withChild(eventChorusParameter)
+                .withChild(eventChannelPressure)
                 .build();
         rootEvent.addChild(eventUniversalRealTime);
 

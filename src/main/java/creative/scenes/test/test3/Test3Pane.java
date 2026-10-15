@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static util.Constants.BIG_ENDIAN;
-import static util.Constants.LITTLE_ENDIAN;
 import static util.Util.setPaneBackground;
 
 public class Test3Pane extends VBox {
@@ -56,12 +54,12 @@ public class Test3Pane extends VBox {
         return eventParameter;
     }
 
-    private void setLinkedEventValue(String eventName, Object identifier, Object linkedIdentifier, Integer ival, Integer b1val, Integer b2val) {
+    private void setLinkedEventValue(String eventName, Object identifier, int controllerId, Integer ival, Integer b1val, Integer b2val) {
         boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
             EventParameter eventParameter = event.findEventParameterById((Integer)identifier);
-            EventParameter linkedEventParameter = eventParameter.findLinkedEventParameterById((Integer)linkedIdentifier);
+            EventParameter linkedEventParameter = eventParameter.findLinkedEventParameterByControllerId(controllerId);
 
             if (linkedEventParameter != null) {
                 if (ival == null && b1val == null && b2val == null) {
@@ -77,9 +75,9 @@ public class Test3Pane extends VBox {
         }
     }
 
-    private void setEventValue(EventParameter parentParameter, Integer identifier, Integer ival, Integer b1val, Integer b2val) {
+    private void setEventValue(EventParameter parentParameter, Integer controllerId, Integer ival, Integer b1val, Integer b2val) {
         if (parentParameter != null) {
-            EventParameter linkedEventParameter = parentParameter.findLinkedEventParameterById(identifier);
+            EventParameter linkedEventParameter = parentParameter.findLinkedEventParameterByControllerId(controllerId);
             if (linkedEventParameter != null) {
                 if (ival != null) {
                     linkedEventParameter.setValue(ival, true);
@@ -137,8 +135,8 @@ public class Test3Pane extends VBox {
 //        setEventValue("Master Volume", "Parameter 1", 51730, null, null);
 //        handleEvent("Master Volume");
 
-//        setEventValue("Master Fine Tuning", "Parameter 1", 51730, null, null);
-//        handleEvent("Master Fine Tuning");
+//        setEventValue("Master Fine-Tuning", "Parameter 1", 51730, null, null);
+//        handleEvent("Master Fine-Tuning");
 
 //        setEventValue("Master Coarse Tuning", "Parameter 1", null, 0, 123);
 //        handleEvent("Master Coarse Tuning");
@@ -215,7 +213,6 @@ public class Test3Pane extends VBox {
 //        setEventValue("Registration", "Parameter 1", null, 0, REG_7);
 //        handleEvent("Registration");
 
-        // TODO Test From Here
         final int DUET_1=0;
         final int BLOCK=8;
         final int OCTAVE=17;
@@ -352,17 +349,14 @@ public class Test3Pane extends VBox {
         final int FB_CHORUS=4;
 
         EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, FB_CHORUS, null, null);
-        setLinkedEventValue("Chorus Parameter", 1, 2, 123, null, null);
-        setLinkedEventValue("Chorus Parameter", 1, 3, 125, null, null);
-        setLinkedEventValue("Chorus Parameter", 1, 5, 126, null, null);
+        setLinkedEventValue("Chorus Parameter", 1, 0x01, 123, null, null);
+        setLinkedEventValue("Chorus Parameter", 1, 0X02, 125, null, null);
+        setLinkedEventValue("Chorus Parameter", 1, 0x04, 126, null, null);
 //        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
 //        ep.setValue(GM_PLATE, true);
 //        setEventValue(ep, 101, 123, null, null);
 //        setLinkedEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, 1, 111, null, null);
         handleEvent("Chorus Parameter", null, null);
-
-//        final int GM_FLANGER=5;
-//        EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, GM_FLANGER, null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

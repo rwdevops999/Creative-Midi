@@ -109,7 +109,6 @@ public class FileSelectionPane extends HBox {
     }
 
     public void handleSaveFile() {
-        // TODO
         if (selectedFile != null) {
             String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi");
             String newFilename = FilenameUtils.removeExtension(selectedFile.getName()) + ".mid";
