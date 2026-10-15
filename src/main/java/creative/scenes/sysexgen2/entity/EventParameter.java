@@ -125,17 +125,12 @@ public class EventParameter {
     }
 
     public void setValue(Integer value) {
-        this.value = new DataBlock(value, endian);
+        this.value = new DataBlock(value, endian == BIG_ENDIAN);
         handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2) {
-        this.value = new DataBlock(i1,i2,endian);
-        handleLinkedValue(controllerId, this.value);
-    }
-
-    public void setValue(Integer i1, Integer i2, boolean isLittle) {
-        this.value = new DataBlock(i1,i2, endian);
+        this.value = new DataBlock(i1,i2,endian == BIG_ENDIAN);
         handleLinkedValue(controllerId, this.value);
     }
 
@@ -177,7 +172,7 @@ public class EventParameter {
         private boolean ignore = false;
         private boolean useLowerOnly = false;
         private String address;
-        private int endian = LITTLE_ENDIAN;
+        private int endian = BIG_ENDIAN;
 
         private ParameterType parameterType;
         private DisplayBlock displayBlock;
@@ -198,7 +193,7 @@ public class EventParameter {
             this.callback = null;
             this.linkedEventParameterList = new ArrayList<>();
             this.name = "";
-            this.endian = LITTLE_ENDIAN;
+            this.endian = BIG_ENDIAN;
 
             return this;
         }

@@ -26,19 +26,10 @@ public class Test3Pane extends VBox {
     }
 
     private EventParameter setEventValue(String eventName, String eventParameterName, Integer ival, Integer b1val, Integer b2val) {
-        System.out.println("1");
         EventParameter eventParameter = null;
-        boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
             eventParameter = event.findEventParameterByName(eventParameterName);
-
-//            if (parameterType == ParameterType.PARAMETER || parameterType == ParameterType.TYPE) {
-//                eventParameter = event.findEventParameterById((Integer) identifier);
-//            } else {
-//                isLittleEndian = false;
-//                    eventParameter = event.findEventParameterByLabel((String)identifier);
-//            }
 
             if (eventParameter != null) {
                 if (ival == null && b1val == null && b2val == null) {
@@ -57,11 +48,9 @@ public class Test3Pane extends VBox {
     }
 
     private void setLinkedEventValue(String eventName, String eventParameterName, String linkedEventName, Integer ival, Integer b1val, Integer b2val) {
-        boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
-            EventParameter eventParameter = null;
-            eventParameter = event.findEventParameterByName(eventParameterName);
+            EventParameter eventParameter = event.findEventParameterByName(eventParameterName);
 
             if (eventParameter != null) {
                 EventParameter linkedEventParameter = eventParameter.findLinkedEventParameterByName(linkedEventName);
@@ -121,11 +110,15 @@ public class Test3Pane extends VBox {
         if (event != null) {
             List<String> sysexs = event.complete(new ArrayList<>(event.createSysexStrings()));
 
-            System.out.println("SYSEXS OF: " + name);
+            System.out.println("---=== " + name + " ===---");
             sysexs.forEach(System.out::println);
         } else {
             System.out.println("EVENT:" + name + " NOT FOUND");
         }
+    }
+
+    private void handleEvent (String name ) {
+        handleEvent(name, null, null);
     }
 
     private void runTest() {
@@ -140,8 +133,8 @@ public class Test3Pane extends VBox {
 //        handleEvent("Internal Clock");
 //        handleEvent("External Clock");
 
-//        setEventValue("Master Volume", "Parameter 1", 51730, null, null);
-//        handleEvent("Master Volume");
+        setEventValue("Master Volume", "Volume", 51730, null, null);
+        handleEvent("Master Volume");
 
 //        setEventValue("Master Fine-Tuning", "Parameter 1", 51730, null, null);
 //        handleEvent("Master Fine-Tuning");
@@ -371,11 +364,11 @@ public class Test3Pane extends VBox {
 //        handleEvent("Chorus Parameter", null, null);
 
         // THIS IS THE LATEST ONE
-        setEventValue("Aftertouch", "ChannelSelect", CHANNEL_5, null, null);
-        setEventValue("Aftertouch", "PitchControl", 0x31, null, null);
-        setLinkedEventValue("Aftertouch", "PitchControl", "AmplitudeControl", 123, null, null);
-        setLinkedEventValue("Aftertouch", "PitchControl", "LFOAmplitudeDepth", 33, null, null);
-        handleEvent("Aftertouch", null, null);
+//        setEventValue("Aftertouch", "ChannelSelect", CHANNEL_5, null, null);
+//        setEventValue("Aftertouch", "PitchControl", 0x31, null, null);
+//        setLinkedEventValue("Aftertouch", "PitchControl", "AmplitudeControl", 123, null, null);
+//        setLinkedEventValue("Aftertouch", "PitchControl", "LFOAmplitudeDepth", 33, null, null);
+//        handleEvent("Aftertouch", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

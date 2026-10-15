@@ -1,88 +1,103 @@
 package creative.scenes.sysexgen2.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HexFormat;
 
 import static util.Constants.BIG_ENDIAN;
-import static util.Constants.LITTLE_ENDIAN;
 
-@Getter
 public class DataBlock {
-    private int endian;
-    private Byte b1;
-    private Byte b2;
+    private boolean encodingIsBigEndian;
+    @Getter
+    private byte first;
+    @Getter
+    private byte second;
 
     public DataBlock() {
-        this.endian = BIG_ENDIAN;
-        this.b1 = null;
-        this.b2 = null;
+        this.encodingIsBigEndian = true;
+        this.first = 0;
+        this.second = 0;
     }
 
-    public DataBlock(int endian) {
+    public DataBlock(boolean encodingIsBigEndian) {
         this();
-        this.endian = endian;
+        this.encodingIsBigEndian = encodingIsBigEndian;
     }
 
-    public DataBlock(Integer msb, Integer lsb, int endian) {
-        this(endian);
+    public DataBlock(byte first, byte second) {
+        this();
+        this.first = first;
+        this.second = second;
+    }
 
-        if (msb != null) {
-            this.b1 = msb.byteValue();
-        } else {
-            this.b1 = 0;
-        }
+    public DataBlock(byte first, byte second, boolean encodingIsBigEndian) {
+        this(encodingIsBigEndian);
+        this.first = first;
+        this.second = second;
+    }
 
-        if (lsb != null) {
-            this.b2 = lsb.byteValue();
+    public DataBlock(Integer ib1, Integer ib2) {
+        this();
+        this.first = (byte)(ib2 & 0XFF);
+        this.second = (byte)(ib1 & 0xFF);
+    }
+
+    public DataBlock(Integer b1, Integer b2, boolean encodingIsBigEndian) {
+        this(encodingIsBigEndian);
+        this.first = (byte)(b2 & 0xFF);
+        this.second = (byte)(b1 & 0XFF);
+    }
+
+    public DataBlock(Integer ival) {
+        this();
+        if (this.encodingIsBigEndian) {
+            this.first = (byte)((ival >> 8) & 0xFF);
+            this.second = (byte)(ival & 0xFF);
         } else {
-            this.b2 = 0;
+            this.first = (byte)(ival & 0xFF);
+            this.second = (byte)((ival >> 8) & 0xFF);
         }
     }
 
-    public DataBlock(Integer msb, Integer lsb) {
-        this(BIG_ENDIAN);
+    public DataBlock(Integer ival, boolean encodingIsBigEndian) {
+        this(encodingIsBigEndian);
 
-        if (b1 != null) {
-            this.b1 = msb.byteValue();
+        if (this.encodingIsBigEndian) {
+            this.first = (byte)((ival >> 8) & 0xFF);
+            this.second = (byte)(ival & 0xFF);
         } else {
-            this.b1 = 0;
-        }
-
-        if (b2 != null) {
-            this.b2 = lsb.byteValue();
-        } else {
-            this.b2 = 0;
+            this.first = (byte)(ival & 0xFF);
+            this.second = (byte)((ival >> 8) & 0xFF);
         }
     }
 
-    public DataBlock(Integer i1) {
-        this(BIG_ENDIAN);
-
-        this.b1 = (byte) ((i1 >> 8) & 0xFF);
-        this.b2 = (byte) (i1 & 0xFF);;
+    public void setValue(Integer ival) {
+        if (this.encodingIsBigEndian) {
+            this.first = (byte)((ival >> 8) & 0xFF);
+            this.second = (byte)(ival & 0xFF);
+        } else {
+            this.first = (byte)(ival & 0xFF);
+            this.second = (byte)((ival >> 8) & 0xFF);
+        }
     }
 
     public Integer getValue() {
-        return (this.b1 << 7) | this.b2;
+        if (this.encodingIsBigEndian) {
+            return (this.second << 8) | this.first;
+        } else {
+            return (this.first << 8) | this.second;
+        }
     }
 
-    public void setValue(Integer value) {
-        b1 = (byte)(value >> 7);
-        b2 = (byte)(value & 0x7F);
-    }
-
-    // Returns "lsb msb" (e.g. "0A 13"
+    // msb = 13
+    // lsb = 0A
+    // Returns "lsb msb" (e.g. "0A 13" for BIG_ENDIAN)
+    // Returns "msb lsb" (e.g. "13 0A" for LITTLE_ENDIAN)
     public String toHex(int numBytes, boolean useLowerOnly) {
         // Put bytes into an array for easy slicing/indexing
         byte[] bytes;
 
-        if (endian == LITTLE_ENDIAN) {
-            bytes = new byte[]{ useLowerOnly ? (byte)(b2 & 0xF): b2, useLowerOnly ? (byte)(b1 & 0xF): b1 };
-        } else {
-            bytes = new byte[]{useLowerOnly ? (byte) (b1 & 0xF) : b1, useLowerOnly ? (byte) (b2 & 0xF) : b2};
-        }
+        bytes = new byte[]{ useLowerOnly ? (byte)(second & 0x0F): second, useLowerOnly ? (byte)(first & 0x0F): first };
 
         // Ensure numBytes stays within valid bounds (0 to 2)
         int targetLength = Math.max(0, Math.min(numBytes, bytes.length));

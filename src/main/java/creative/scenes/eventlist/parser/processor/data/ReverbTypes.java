@@ -73,7 +73,7 @@ public class ReverbTypes {
         byte bMSB = (byte)(msb & 0xFF);
         byte bLSB = (byte)(lsb & 0xFF);
 
-        DataBlock dataBlock = REVERB_REGISTRY.keySet().stream().filter(b -> (b.getB1() == bMSB) && (b.getB2() == bLSB)).findFirst().orElse(null);
+        DataBlock dataBlock = REVERB_REGISTRY.keySet().stream().filter(b -> (b.getFirst() == bMSB) && (b.getSecond() == bLSB)).findFirst().orElse(null);
         if (dataBlock != null) {
             return REVERB_REGISTRY.get(dataBlock);
         }
