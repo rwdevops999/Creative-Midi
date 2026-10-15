@@ -42,6 +42,9 @@ public class EventParameter {
         this.address = builder.address;
         this.parameterType = builder.parameterType;
         this.displayBlock = builder.displayBlock;
+        if (this.displayBlock != null) {
+            this.value = this.displayBlock.getDefaultValue();
+        }
         this.callback = builder.callback;
     }
 
@@ -60,6 +63,10 @@ public class EventParameter {
 
     public void setValue(Integer i1, Integer i2, boolean isLittleEndian) {
         this.value = new DataBlock(i1,i2, isLittleEndian);
+    }
+
+    public void clearValue() {
+        this.value = null;
     }
 
     public String toSysex() {
@@ -83,7 +90,6 @@ public class EventParameter {
     }
 
     public static class EventParameterBuilder {
-        private String name;        // maybe needed in a finder
         private int parameterId;
         private int numBytes;
         private boolean ignore = false;
@@ -96,7 +102,6 @@ public class EventParameter {
         private Function<Integer, String> callback;
 
         public EventParameterBuilder clear() {
-            this.name = "";
             this.parameterId = -1;
             this.numBytes = 1;
             this.ignore = false;
@@ -121,6 +126,8 @@ public class EventParameter {
 
         public EventParameterBuilder withDisplayblock(DisplayBlock block) {
             this.displayBlock = block;
+            if (block.getDefaultValue() != null) {
+            }
             return this;
         }
 

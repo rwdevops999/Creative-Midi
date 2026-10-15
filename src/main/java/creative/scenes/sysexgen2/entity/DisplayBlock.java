@@ -6,6 +6,8 @@ public class DisplayBlock {
     @Getter
     private String label;
     private String description;
+
+    @Getter
     private DataBlock defaultValue;
     private Range range;
 

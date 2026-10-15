@@ -29,10 +29,14 @@ public class DataBlock {
 
         if (b1 != null) {
             this.b1 = b1.byteValue();
+        } else {
+            this.b1 = 0;
         }
 
         if (b2 != null) {
             this.b2 = b2.byteValue();
+        } else {
+            this.b2 = 0;
         }
     }
 
@@ -41,10 +45,14 @@ public class DataBlock {
 
         if (b1 != null) {
             this.b1 = b1.byteValue();
+        } else {
+            this.b1 = 0;
         }
 
         if (b2 != null) {
             this.b2 = b2.byteValue();
+        } else {
+            this.b2 = 0;
         }
     }
 

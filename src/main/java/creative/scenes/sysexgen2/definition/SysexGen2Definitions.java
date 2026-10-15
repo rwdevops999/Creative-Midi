@@ -309,13 +309,13 @@ public class SysexGen2Definitions {
                 "Scale tuning C",
                 "Scale tuning C#",
                 "Scale tuning D",
-                "Scale tuning D#/E\u266D",
+                "Scale tuning D#/E♭",
                 "Scale tuning E",
                 "Scale tuning F",
                 "Scale tuning G",
-                "Scale tuning G#/A\u266D",
+                "Scale tuning G#/A♭",
                 "Scale tuning A",
-                "Scale tuning A#/B\u266D",
+                "Scale tuning A#/B♭",
                 "Scale tuning B",
         };
 
@@ -1034,14 +1034,14 @@ public class SysexGen2Definitions {
                 .withEntry( 0x00, "C")
                 .withEntry( 0x01, "C#")
                 .withEntry( 0x02, "D")
-                .withEntry( 0x03, "D#/E\u266D")
+                .withEntry( 0x03, "D#/E♭")
                 .withEntry( 0x06, "E")
                 .withEntry( 0x06, "F")
                 .withEntry( 0x06, "F#")
                 .withEntry( 0x06, "G")
-                .withEntry( 0x06, "G#/A\u266D")
+                .withEntry( 0x06, "G#/A♭")
                 .withEntry( 0x06, "A")
-                .withEntry( 0x06, "A#/B\u266D")
+                .withEntry( 0x06, "A#/B♭")
                 .withEntry( 0x06, "B")
                 .build();
         dataTables.add(BaseNoteDataTable);
@@ -1322,6 +1322,85 @@ public class SysexGen2Definitions {
                 .withSysex("7F 09 02")
                 .build();
 
+        Event eventScaleOctaveTuning =
+                eventBuilder
+                        .clear()
+                        .withName("Scale/Octave Tuning")
+                        .withSysex("7E 08 08")
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE)
+                                .withCallback((channel) -> {
+                                    int jj = 0;
+                                    int gg = 0;
+                                    int mm = 0;
+
+                                    if (channel == 16) {
+                                        jj = 0xFF; // Bit 14 and 15 (binair: 00000011)
+                                        gg = 0xFF; // Bit From 7 to 13  (binair: 01111111)
+                                        mm = 0x7F; // Bit From 0  to 6   (binair: 01111111)
+                                    } else {
+                                        // Set Specific channel (from 0 to 15)
+                                        if (channel >= 14) {
+                                            // Channel 14 and 15 are set in the JJ byte
+                                            jj = 1 << (channel - 14);
+                                        } else if (channel >= 7) {
+                                            // Channel 7 till 13 are set in the GG byte
+                                            gg = 1 << (channel - 7);
+                                        } else {
+                                            // Channel 0 till 6 are set in the MM byte
+                                            mm = 1 << channel;
+                                        }
+                                    }
+
+                                    return String.format("%02X %02X %02X", (byte)jj, (byte)gg, (byte)mm);
+                                })
+                                .withDisplayblock(
+                                        displayBlockBuilder
+                                                .clear()
+                                                .withLabel("Channel")
+                                                .withDescription("0-16 (16 = ALL)")
+                                                .withRange(0, 16)
+                                                .withDefaultValue(0)
+                                                .build()
+                                )
+                                .build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D#/E♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune E").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G#/A♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A#/B♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune B").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                                ).build())
+                        .build();
+
         Event eventUniversalNonRealTime = eventBuilder
                 .clear()
                 .withName("Universal Non-Real Time")
@@ -1329,6 +1408,7 @@ public class SysexGen2Definitions {
                 .withChild(eventGM1SystemOn)
                 .withChild(eventGM2SystemOn)
                 .withChild(eventGeneralMIDISystemOff)
+                .withChild(eventScaleOctaveTuning)
                 .build();
         rootEvent.addChild(eventUniversalNonRealTime);
 
@@ -1692,6 +1772,7 @@ public class SysexGen2Definitions {
                         .withName("Score")
                         .withSysex("73 01 50 12 00") // Here we must add sysex to parameter
                         .withDefaultValues(0, 0)
+                        .isNotInline()
                         .withEventType(
                                 eventTypeBuilder
                                         .clear()
@@ -1722,6 +1803,8 @@ public class SysexGen2Definitions {
                         .withName("Reverb")
                         .withSysex("02 01")
                         .withDefaultValues(1, 0)
+                        .isNotInline()
+
                         // Type Parameter
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.TYPE).withNumBytes(2).withAddress("00").build())
 
@@ -1842,7 +1925,7 @@ public class SysexGen2Definitions {
                         .withSysex("73 01 51 00 00 00 03 10 00")
                         // Here we don't use a EventType but just free parameters
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(
+                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Split point")

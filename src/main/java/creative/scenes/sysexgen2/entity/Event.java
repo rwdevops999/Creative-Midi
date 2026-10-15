@@ -28,6 +28,8 @@ public class Event implements IEvent {
     private List<EventParameter> parameters;
     private List<EventType> eventTypes;
 
+    private boolean inline = true;
+
     public Event() {
         this.eventTypes = new ArrayList<>();
         this.children = new ArrayList<>();
@@ -56,6 +58,7 @@ public class Event implements IEvent {
         postProcess(this.parameters);
 
         this.eventTypes.addAll(builder.eventTypes);
+        this.inline = builder.inline;
     }
 
     private void postProcess(List<EventParameter> parameters) {
@@ -206,16 +209,21 @@ public class Event implements IEvent {
         }
 
 
-        if (! parameterSysexList.isEmpty()) {
+        if (! parameterSysexList.isEmpty() ) {
 //            System.out.println("ADD TO SYSEX");
 
-            // Embedded
-            if (! sysexStrings.isEmpty()) {
-                String baseSysex = sysexStrings.get(0);
+            if (! inline ) {
+                if (!sysexStrings.isEmpty()) {
+                    String baseSysex = sysexStrings.get(0);
 
-                sysexStrings.clear();
-                for (String sysex : parameterSysexList) {
-                    sysexStrings.add(baseSysex + extend(sysex));
+                    sysexStrings.clear();
+                    for (String sysex : parameterSysexList) {
+                        sysexStrings.add(baseSysex + extend(sysex));
+                    }
+                }
+            } else {
+                for (String parameterSysex : parameterSysexList) {
+                    sysexStrings.replaceAll(s -> s.length() == 0 ? parameterSysex : s + extend(parameterSysex));
                 }
             }
         }
@@ -288,6 +296,7 @@ public class Event implements IEvent {
         private List<Event> children;
         private List<EventType> eventTypes;
         private List<EventParameter> parameters;
+        private boolean inline;
 
         public EventBuilder clear() {
             this.name = "";
@@ -296,12 +305,18 @@ public class Event implements IEvent {
             this.children = new ArrayList<>();
             this.eventTypes = new ArrayList<>();
             this.parameters = new ArrayList<>();
+            this.inline = true;
 
             return this;
         }
 
         public EventBuilder withName(String value) {
             this.name = value;
+            return this;
+        }
+
+        public EventBuilder isNotInline() {
+            this.inline = false;
             return this;
         }
 

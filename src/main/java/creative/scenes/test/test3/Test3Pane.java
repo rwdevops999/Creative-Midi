@@ -41,10 +41,14 @@ public class Test3Pane extends VBox {
             }
 
             if (eventParameter != null) {
-                if (ival != null) {
-                    eventParameter.setValue(ival, isLittleEndian);
+                if (ival == null && b1val == null && b2val == null) {
+                    eventParameter.clearValue();
                 } else {
-                    eventParameter.setValue(b1val, b2val, isLittleEndian);
+                    if (ival != null) {
+                        eventParameter.setValue(ival, isLittleEndian);
+                    } else {
+                        eventParameter.setValue(b1val, b2val, isLittleEndian);
+                    }
                 }
             }
         }
@@ -291,10 +295,16 @@ public class Test3Pane extends VBox {
 //        setEventValue("Select Style", ParameterType.FREE, "Style", 12345, null, null);
 //        handleEvent("Select Style", null, null);
 
-        setEventValue("Tempo", ParameterType.FREE, "Tempo", 5, null, null);
-        handleEvent("Tempo", null, null);
-        setEventValue("Tempo", ParameterType.FREE, "Tempo", 112, null, null);
-        handleEvent("Tempo", null, null);
+//        setEventValue("Tempo", ParameterType.FREE, "Tempo", 5, null, null);
+//        handleEvent("Tempo", null, null);
+//        setEventValue("Tempo", ParameterType.FREE, "Tempo", 112, null, null);
+//        handleEvent("Tempo", null, null);
+
+
+        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Channel", 16, null, null);
+        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune E", null, 0x0E, null);
+        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
+        handleEvent("Scale/Octave Tuning", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
