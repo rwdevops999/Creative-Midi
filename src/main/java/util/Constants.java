@@ -25,4 +25,7 @@ public class Constants {
 
     public static String SYSEX_START_BYTE="F0";
     public static String SYSEX_STOP_BYTE="F7";
+
+    public static int BIG_ENDIAN = 0;
+    public static int LITTLE_ENDIAN = 1;
 }

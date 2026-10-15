@@ -1854,6 +1854,25 @@ public class SysexGen2Definitions {
                                 .build()) // SPLIT POINT
                         .build();
 
+        Event eventStyleSelect =
+                eventBuilder
+                        .clear()
+                        .withName("Select Style")
+                        .withSysex("73 01 51 05 00 03 04 00 00")
+                        // Here we don't use a EventType but just free parameters
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(2)
+                                .withDisplayblock(
+                                        displayBlockBuilder
+                                                .clear()
+                                                .withLabel("Style")
+                                                .withDescription("Style number")
+                                                .withRange(0, 65535)
+                                                .withDefaultValue(0)
+                                                .build()
+                                )
+                                .build()) // SPLIT POINT
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -1875,6 +1894,7 @@ public class SysexGen2Definitions {
                 .withChild(eventScore)
                 .withChild(eventXFChangeParameter)
                 .withChild(eventSplitPoint)
+                .withChild(eventStyleSelect)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }

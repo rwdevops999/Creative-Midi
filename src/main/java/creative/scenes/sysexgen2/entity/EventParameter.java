@@ -44,18 +44,23 @@ public class EventParameter {
         this.value = dataBlock;
     }
 
-    public void setValue(Integer value) {
-        this.value = new DataBlock(value);
+    public void setValue(Integer value, boolean isLittleEndian) {
+        this.value = new DataBlock(value, isLittleEndian);
     }
 
     public void setValue(Integer i1, Integer i2) {
         this.value = new DataBlock(i1,i2);
     }
 
+    public void setValue(Integer i1, Integer i2, boolean isLittleEndian) {
+        this.value = new DataBlock(i1,i2, isLittleEndian);
+    }
+
     public String toSysex() {
         if (value == null) {
             System.out.println("is NULL");
         };
+
         return (address != null ? address + " " : "") + value.toHex(numBytes, useLowerOnly);
     }
 

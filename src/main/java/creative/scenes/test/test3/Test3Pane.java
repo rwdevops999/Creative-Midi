@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static util.Constants.BIG_ENDIAN;
+import static util.Constants.LITTLE_ENDIAN;
 import static util.Util.setPaneBackground;
 
 public class Test3Pane extends VBox {
@@ -25,21 +27,24 @@ public class Test3Pane extends VBox {
         runTest();
     }
 
+
     private void setEventValue(String eventName, ParameterType parameterType, Object identifier, Integer ival, Integer b1val, Integer b2val) {
+        boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
             EventParameter eventParameter;
             if (parameterType == ParameterType.PARAMETER) {
                 eventParameter = event.findEventParameterById((Integer)identifier);
             } else {
+                isLittleEndian = false;
                 eventParameter = event.findEventParameterByLabel((String)identifier);
             }
 
             if (eventParameter != null) {
                 if (ival != null) {
-                    eventParameter.setValue(ival); // 51730 = CA 12 or 12 CA
+                    eventParameter.setValue(ival, isLittleEndian);
                 } else {
-                    eventParameter.setValue(b1val, b2val);
+                    eventParameter.setValue(b1val, b2val, isLittleEndian);
                 }
             }
         }
@@ -280,8 +285,11 @@ public class Test3Pane extends VBox {
 
 //        handleEvent("Reverb", 1, 0); // (1,0) = Hall1
 
-        setEventValue("Split Point", ParameterType.FREE, "Split point", 93, null, null);
-        handleEvent("Split Point", null, null);
+//        setEventValue("Split Point", ParameterType.FREE, "Split point", 93, null, null);
+//        handleEvent("Split Point", null, null);
+
+        setEventValue("Select Style", ParameterType.FREE, "Style", 12345, null, null);
+        handleEvent("Select Style", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
