@@ -27,6 +27,8 @@ public class EventParameter {
         this.value = null;
     }
 
+    private DisplayBlock displayBlock;
+
     public EventParameter(EventParameterBuilder builder) {
         this.parameterId = builder.parameterId;
         this.numBytes = builder.numBytes;
@@ -34,6 +36,11 @@ public class EventParameter {
         this.useLowerOnly = builder.useLowerOnly;
         this.address = builder.address;
         this.parameterType = builder.parameterType;
+        this.displayBlock = builder.displayBlock;
+    }
+
+    public void setValue(DataBlock dataBlock) {
+        this.value = dataBlock;
     }
 
     public void setValue(Integer value) {
@@ -64,6 +71,7 @@ public class EventParameter {
         private String address;
 
         private ParameterType parameterType;
+        private DisplayBlock displayBlock;
 
         public EventParameterBuilder clear() {
             this.name = "";
@@ -73,12 +81,18 @@ public class EventParameter {
             this.useLowerOnly = false;
             this.address = null;
             this.parameterType = ParameterType.PARAMETER;
+            this.displayBlock = null;
 
             return this;
         }
 
         public EventParameterBuilder withAddress(String address) {
             this.address = address;
+            return this;
+        }
+
+        public EventParameterBuilder withDisplayblock(DisplayBlock block) {
+            this.displayBlock = block;
             return this;
         }
 

@@ -1,5 +1,6 @@
 package creative.scenes.sysexgen2.entity;
 
+import creative.scenes.sysexgen2.data.ParameterType;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Event implements IEvent {
     @Setter
@@ -50,7 +53,17 @@ public class Event implements IEvent {
         this.defaultValue = builder.defaultValue;
 
         this.parameters.addAll(builder.parameters);
+        postProcess(this.parameters);
+
         this.eventTypes.addAll(builder.eventTypes);
+    }
+
+    private void postProcess(List<EventParameter> parameters) {
+        for (EventParameter parameter : parameters) {
+            if (parameter.getParameterType().equals(ParameterType.TYPE)) {
+                parameter.setValue(defaultValue);
+            }
+        }
     }
 
     public void setDefaultValue(DataBlock value) {
@@ -137,7 +150,6 @@ public class Event implements IEvent {
     public List<String> createSysexStrings() {
         List<String> sysexStrings = new ArrayList<>();
 
-        // TODO create sysexs here
         if (this.hasParent()) {
             List<String> parentSysexStrings = new ArrayList<>(this.parent.createSysexStrings());
             parentSysexStrings.replaceAll(s -> s.length() == 0 ? this.sysex : s + extend(this.sysex));
@@ -167,6 +179,25 @@ public class Event implements IEvent {
                             }
                         }
                     }
+                    // handle Type and Free Parameters
+                    if (hasParameters()) {
+                        // handle Free Parameters
+                        List<EventParameter> freeParameters = parameters.stream().filter(p -> p.getParameterType().equals(ParameterType.FREE)).toList();
+                        if (!freeParameters.isEmpty()) {
+                            freeParameters.forEach(p -> {
+                                // QUESTION: Can free parameters be ignored ?
+                                if (p.getValue() != null) {
+                                    parameterSysexList.add(p.toSysex());
+                                }
+                            });
+                        }
+
+                        // handle Type Parameters
+                        EventParameter typeParameter = parameters.stream().filter(p -> p.getParameterType().equals(ParameterType.TYPE)).findAny().orElse(null);
+                        if (typeParameter != null && typeParameter.getValue() != null) {
+                            parameterSysexList.add(typeParameter.toSysex());
+                        }
+                    }
                 }
             }
         }
@@ -187,6 +218,13 @@ public class Event implements IEvent {
         }
 
         return sysexStrings.stream().sorted().toList();
+    }
+
+    private String sortStringInternally(String input) {
+        return input.chars()
+                .sorted()
+                .mapToObj(c -> String.valueOf((char) c))
+                .collect(Collectors.joining());
     }
 
     public List<String> complete(List<String> sysexStrings) {

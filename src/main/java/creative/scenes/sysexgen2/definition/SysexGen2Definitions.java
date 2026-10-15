@@ -18,6 +18,7 @@ public class SysexGen2Definitions {
     private static final ParametersTableEntry.ParametersTableEntryBuilder parameterTableEntryBuilder;
 
     private static final DataTable.DataTableBuilder dataTableBuilder;
+    private static final DisplayBlock.DisplayBlockBuilder displayBlockBuilder;
 
     @Getter
     private static final Event rootEvent = new Event("Root");
@@ -36,6 +37,8 @@ public class SysexGen2Definitions {
         parameterTableEntryBuilder = new ParametersTableEntry.ParametersTableEntryBuilder();
 
         dataTableBuilder = new DataTable.DataTableBuilder();
+
+        displayBlockBuilder = new DisplayBlock.DisplayBlockBuilder();
 
         parameterTables = new ArrayList<>();
         dataTables = new ArrayList<>();
@@ -1719,6 +1722,9 @@ public class SysexGen2Definitions {
                         .withName("Reverb")
                         .withSysex("02 01")
                         .withDefaultValues(1, 0)
+                        // Type Parameter
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.TYPE).withNumBytes(2).withAddress("00").build())
+
                         // Add Parameters
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("02").build())
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("03").build())
@@ -1730,9 +1736,30 @@ public class SysexGen2Definitions {
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("09").build())
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("0A").build())
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("0B").build())
+
                         // For Free Parameters we need additional information (that is normally handled by Parameter Table
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C").build()) // REVERB RETURN
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D").build()) // REVERB OAN
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C")
+                                .withDisplayblock(
+                                        displayBlockBuilder
+                                                .clear()
+                                                .withLabel("Reverb Return")
+                                                .withDescription("-8dB .. OdB .. +6dB")
+                                                .withRange(0, 127)
+                                                .withDefaultValue(64)
+                                                .build()
+                                )
+                                .build()) // REVERB RETURN
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D")
+                                .withDisplayblock(
+                                        displayBlockBuilder
+                                                .clear()
+                                                .withLabel("Reverb Pan")
+                                                .withDescription("L63..C..R63")
+                                                .withRange(0, 127)
+                                                .withDefaultValue(64)
+                                                .build()
+                                )
+                                .build()) // REVERB PAN
 
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("10").build())
                         .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("11").build())
