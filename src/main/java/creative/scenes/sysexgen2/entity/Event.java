@@ -110,24 +110,17 @@ public class Event implements IEvent {
         return !parameters.isEmpty();
     }
 
-    /**
-     * Find the EventParameter with given address
-     *
-     * @param label the label of the parameter inside the displayBlock
-     *
-     * @return the EventParameter instance
-     */
-    public EventParameter findEventParameterByLabel(String label) {
-        EventParameter parameter = null;
+        public EventParameter findEventParameterByName(String name) {
+            EventParameter parameter = null;
 
-        if (hasParameters()) {
-            if (label != null && !label.isEmpty()) {
-                parameter = this.parameters.stream().filter(ep -> (ep.getDisplayBlock() != null && label.equals(ep.getDisplayBlock().getLabel()))).findFirst().orElse(null);
+            if (hasParameters()) {
+                if (name != null && !name.isEmpty()) {
+                    parameter = this.parameters.stream().filter(ep -> name.equals(ep.getName())).findFirst().orElse(null);
+                }
             }
-        }
 
-        return parameter;
-    }
+            return parameter;
+        }
 
     public EventParameter findEventParameterById(int id) {
         EventParameter parameter = null;
@@ -163,7 +156,7 @@ public class Event implements IEvent {
 
     public List<String> createSysexStrings() {
         List<String> sysexStrings = new ArrayList<>();
-        
+
         if (this.hasParent()) {
             List<String> parentSysexStrings = new ArrayList<>(this.parent.createSysexStrings());
             parentSysexStrings.replaceAll(s -> s.length() == 0 ? this.sysex : s + extend(this.sysex));

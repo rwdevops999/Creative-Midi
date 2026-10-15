@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen2.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HexFormat;
 
@@ -9,61 +10,55 @@ import static util.Constants.LITTLE_ENDIAN;
 
 @Getter
 public class DataBlock {
-    private int endian = LITTLE_ENDIAN;
+    private int endian;
     private Byte b1;
     private Byte b2;
 
     public DataBlock() {
+        this.endian = BIG_ENDIAN;
         this.b1 = null;
         this.b2 = null;
     }
 
-    public DataBlock(boolean isLittle) {
+    public DataBlock(int endian) {
         this();
-        this.endian = isLittle ? LITTLE_ENDIAN : BIG_ENDIAN;
+        this.endian = endian;
     }
 
-    public DataBlock(Integer b1, Integer b2, boolean isLittle) {
-        this(isLittle);
+    public DataBlock(Integer msb, Integer lsb, int endian) {
+        this(endian);
 
-        if (b1 != null) {
-            this.b1 = b1.byteValue();
+        if (msb != null) {
+            this.b1 = msb.byteValue();
         } else {
             this.b1 = 0;
         }
 
-        if (b2 != null) {
-            this.b2 = b2.byteValue();
+        if (lsb != null) {
+            this.b2 = lsb.byteValue();
         } else {
             this.b2 = 0;
         }
     }
 
-    public DataBlock(Integer b1, Integer b2) {
-        this(true);
+    public DataBlock(Integer msb, Integer lsb) {
+        this(BIG_ENDIAN);
 
         if (b1 != null) {
-            this.b1 = b1.byteValue();
+            this.b1 = msb.byteValue();
         } else {
             this.b1 = 0;
         }
 
         if (b2 != null) {
-            this.b2 = b2.byteValue();
+            this.b2 = lsb.byteValue();
         } else {
             this.b2 = 0;
         }
     }
 
     public DataBlock(Integer i1) {
-        this(true);
-
-        this.b1 = (byte) ((i1 >> 8) & 0xFF);
-        this.b2 = (byte) (i1 & 0xFF);;
-    }
-
-    public DataBlock(Integer i1, boolean isLittle) {
-        this(isLittle);
+        this(BIG_ENDIAN);
 
         this.b1 = (byte) ((i1 >> 8) & 0xFF);
         this.b2 = (byte) (i1 & 0xFF);;
@@ -74,13 +69,6 @@ public class DataBlock {
     }
 
     public void setValue(Integer value) {
-        b1 = (byte)(value >> 7);
-        b2 = (byte)(value & 0x7F);
-    }
-
-    public void setValue(Integer value, boolean isLittle) {
-        this.endian = isLittle ? LITTLE_ENDIAN : BIG_ENDIAN;
-
         b1 = (byte)(value >> 7);
         b2 = (byte)(value & 0x7F);
     }

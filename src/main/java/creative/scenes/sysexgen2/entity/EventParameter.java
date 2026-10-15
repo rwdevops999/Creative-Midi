@@ -7,7 +7,15 @@ import lombok.Setter;
 import java.util.*;
 import java.util.function.Function;
 
+import static util.Constants.BIG_ENDIAN;
+import static util.Constants.LITTLE_ENDIAN;
+
 public class EventParameter {
+    @Getter
+    private String name;
+
+    private int endian = BIG_ENDIAN;
+
     @Getter
     @Setter
     private int parameterId;
@@ -51,12 +59,16 @@ public class EventParameter {
 
     public EventParameter(EventParameterBuilder builder) {
         this();
+
+        this.name = builder.name;
+
         this.parameterId = builder.parameterId;
         this.numBytes = builder.numBytes;
         this.ignore = builder.ignore;
         this.useLowerOnly = builder.useLowerOnly;
         this.address = builder.address;
         this.parameterType = builder.parameterType;
+        this.endian = builder.endian;
         this.displayBlock = builder.displayBlock;
         if (this.displayBlock != null) {
             this.value = this.displayBlock.getDefaultValue();
@@ -80,13 +92,22 @@ public class EventParameter {
         linkedValuesMap.put(id, value);
     }
 
-    public EventParameter findLinkedEventParameterByControllerId(Integer controllerId) {
+    public EventParameter findLinkedEventParameterByName(String name) {
+        if (! linkedEventParameterList.isEmpty()) {
+            return linkedEventParameterList.stream().filter(e -> name.equals(e.getName())).findFirst().orElse(null);
+        }
+
+        return null;
+    }
+
+/*    public EventParameter findLinkedEventParameterByControllerId(Integer controllerId) {
         if (! linkedEventParameterList.isEmpty()) {
             return linkedEventParameterList.stream().filter(e -> e.getControllerId() == controllerId).findFirst().orElse(null);
         }
 
         return null;
     }
+*/
 
     private void handleLinkedValue(Integer controllerId, DataBlock value) {
         if (value != null) {
@@ -103,18 +124,18 @@ public class EventParameter {
         handleLinkedValue(controllerId, this.value);
     }
 
-    public void setValue(Integer value, boolean isLittle) {
-        this.value = new DataBlock(value, isLittle);
+    public void setValue(Integer value) {
+        this.value = new DataBlock(value, endian);
         handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2) {
-        this.value = new DataBlock(i1,i2);
+        this.value = new DataBlock(i1,i2,endian);
         handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2, boolean isLittle) {
-        this.value = new DataBlock(i1,i2, isLittle);
+        this.value = new DataBlock(i1,i2, endian);
         handleLinkedValue(controllerId, this.value);
     }
 
@@ -149,20 +170,14 @@ public class EventParameter {
         return ""; // CHECK Normally we should never come here
     }
 
-/*    public String toSysex(DataBlock value) {
-        if (callback != null) {
-            return callback.apply(value.getValue());
-        }
-
-        return value.toHex(numBytes, useLowerOnly);
-    }
-*/
     public static class EventParameterBuilder {
+        private String name;
         private int parameterId;
         private int numBytes;
         private boolean ignore = false;
         private boolean useLowerOnly = false;
         private String address;
+        private int endian = LITTLE_ENDIAN;
 
         private ParameterType parameterType;
         private DisplayBlock displayBlock;
@@ -182,12 +197,24 @@ public class EventParameter {
             this.displayBlock = null;
             this.callback = null;
             this.linkedEventParameterList = new ArrayList<>();
+            this.name = "";
+            this.endian = LITTLE_ENDIAN;
 
+            return this;
+        }
+
+        public EventParameterBuilder withName(String name) {
+            this.name = name;
             return this;
         }
 
         public EventParameterBuilder withAddress(String address) {
             this.address = address;
+            return this;
+        }
+
+        public EventParameterBuilder withEndian(int endian) {
+            this.endian = endian;
             return this;
         }
 
@@ -220,6 +247,7 @@ public class EventParameter {
 
         public EventParameterBuilder withParameterType(ParameterType type) {
             this.parameterType = type;
+
             return this;
         }
 

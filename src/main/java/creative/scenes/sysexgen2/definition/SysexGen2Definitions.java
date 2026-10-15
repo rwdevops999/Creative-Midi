@@ -1454,6 +1454,7 @@ public class SysexGen2Definitions {
                 )
                 .build();
 
+        // TODO Check Other EventParameters (and adapt the tests)
         Event eventChannelPressure = eventBuilder
                 .clear()
                 .withName("Aftertouch")
@@ -1470,6 +1471,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
+                                .withName("ChannelSelect")
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)
@@ -1478,17 +1480,19 @@ public class SysexGen2Definitions {
                 )
                 // Here come the controllers
                 .withEventParameter(
-                        // Pich Control
+                        // Pitch Control
                         new EventParameter.EventParameterBuilder()
                                 .clear()
-                                .withParameterType(ParameterType.FREE)
-                                .withParameterId(1)
+                                .withName("PitchControl")
+                                .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
                                 .withControllerId(0X00)
                                 .withNumBytes(1)
                                 .withLinkedEventParameter(
                                         // Filter Cutoff Control
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
+                                                .withName("FilterCutoffControl")
                                                 .withControllerId(0X01)
                                                 .build()
                                 )
@@ -1496,6 +1500,7 @@ public class SysexGen2Definitions {
                                         // Amplitude Control
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
+                                                .withName("AmplitudeControl")
                                                 .withControllerId(0X02)
                                                 .build()
                                 )
@@ -1503,6 +1508,7 @@ public class SysexGen2Definitions {
                                         // LFO Pitch Depth
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
+                                                .withName("LFOPitchDepth")
                                                 .withControllerId(0X03)
                                                 .build()
                                 )
@@ -1510,6 +1516,7 @@ public class SysexGen2Definitions {
                                         // LFO Filter Depth
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
+                                                .withName("LFOFilterDepth")
                                                 .withControllerId(0X04)
                                                 .build()
                                 )
@@ -1517,6 +1524,7 @@ public class SysexGen2Definitions {
                                         // LFO Amplitude Depth
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
+                                                .withName("LFOAmplitudeDepth")
                                                 .withControllerId(0X05)
                                                 .build()
                                 )

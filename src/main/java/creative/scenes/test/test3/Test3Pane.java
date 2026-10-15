@@ -25,27 +25,29 @@ public class Test3Pane extends VBox {
         runTest();
     }
 
-
-    private EventParameter setEventValue(String eventName, ParameterType parameterType, Object identifier, Integer ival, Integer b1val, Integer b2val) {
+    private EventParameter setEventValue(String eventName, String eventParameterName, Integer ival, Integer b1val, Integer b2val) {
+        System.out.println("1");
         EventParameter eventParameter = null;
         boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
-            if (parameterType == ParameterType.PARAMETER || parameterType == ParameterType.TYPE) {
-                eventParameter = event.findEventParameterById((Integer)identifier);
-            } else {
-                isLittleEndian = false;
-                eventParameter = event.findEventParameterByLabel((String)identifier);
-            }
+            eventParameter = event.findEventParameterByName(eventParameterName);
+
+//            if (parameterType == ParameterType.PARAMETER || parameterType == ParameterType.TYPE) {
+//                eventParameter = event.findEventParameterById((Integer) identifier);
+//            } else {
+//                isLittleEndian = false;
+//                    eventParameter = event.findEventParameterByLabel((String)identifier);
+//            }
 
             if (eventParameter != null) {
                 if (ival == null && b1val == null && b2val == null) {
                     eventParameter.clearValue();
                 } else {
                     if (ival != null) {
-                        eventParameter.setValue(ival, isLittleEndian);
+                        eventParameter.setValue(ival);
                     } else {
-                        eventParameter.setValue(b1val, b2val, isLittleEndian);
+                        eventParameter.setValue(b1val, b2val);
                     }
                 }
             }
@@ -54,35 +56,41 @@ public class Test3Pane extends VBox {
         return eventParameter;
     }
 
-    private void setLinkedEventValue(String eventName, Object identifier, int controllerId, Integer ival, Integer b1val, Integer b2val) {
+    private void setLinkedEventValue(String eventName, String eventParameterName, String linkedEventName, Integer ival, Integer b1val, Integer b2val) {
         boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
-            EventParameter eventParameter = event.findEventParameterById((Integer)identifier);
-            EventParameter linkedEventParameter = eventParameter.findLinkedEventParameterByControllerId(controllerId);
+            EventParameter eventParameter = null;
+            eventParameter = event.findEventParameterByName(eventParameterName);
 
-            if (linkedEventParameter != null) {
-                if (ival == null && b1val == null && b2val == null) {
-                    linkedEventParameter.clearValue();
-                } else {
-                    if (ival != null) {
-                        linkedEventParameter.setValue(ival, isLittleEndian);
+            if (eventParameter != null) {
+                EventParameter linkedEventParameter = eventParameter.findLinkedEventParameterByName(linkedEventName);
+
+                if (linkedEventParameter != null) {
+                    if (ival == null && b1val == null && b2val == null) {
+                        linkedEventParameter.clearValue();
                     } else {
-                        linkedEventParameter.setValue(b1val, b2val, isLittleEndian);
+                        if (ival != null) {
+                            linkedEventParameter.setValue(ival);
+                        } else {
+                            linkedEventParameter.setValue(b1val, b2val);
+                        }
                     }
                 }
+            } else {
+                System.out.println("WE SHOULDN'T COME HERE");
             }
         }
     }
 
-    private void setEventValue(EventParameter parentParameter, Integer controllerId, Integer ival, Integer b1val, Integer b2val) {
+    private void setEventValue(EventParameter parentParameter, String linkedEventName, Integer ival, Integer b1val, Integer b2val) {
         if (parentParameter != null) {
-            EventParameter linkedEventParameter = parentParameter.findLinkedEventParameterByControllerId(controllerId);
+            EventParameter linkedEventParameter = parentParameter.findLinkedEventParameterByName(linkedEventName);
             if (linkedEventParameter != null) {
                 if (ival != null) {
-                    linkedEventParameter.setValue(ival, true);
+                    linkedEventParameter.setValue(ival);
                 } else {
-                    linkedEventParameter.setValue(b1val, b2val, true);
+                    linkedEventParameter.setValue(b1val, b2val);
                 }
             }
         }
@@ -284,7 +292,11 @@ public class Test3Pane extends VBox {
         final int SMALL=0x00;
         final int LARGE=0x01;
 
-        final int CHANNEL_3=2;
+        final int CHANNEL_1 = 0;
+        final int CHANNEL_2 = CHANNEL_1 + 1;
+        final int CHANNEL_3 = CHANNEL_2 + 1;
+        final int CHANNEL_4 = CHANNEL_3 + 1;
+        final int CHANNEL_5 = CHANNEL_4 + 1;
         final int CHANNEL_AUTO=127;
 
         final int QUARTER=0;
@@ -348,15 +360,22 @@ public class Test3Pane extends VBox {
 
         final int FB_CHORUS=4;
 
-        EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, FB_CHORUS, null, null);
-        setLinkedEventValue("Chorus Parameter", 1, 0x01, 123, null, null);
-        setLinkedEventValue("Chorus Parameter", 1, 0X02, 125, null, null);
-        setLinkedEventValue("Chorus Parameter", 1, 0x04, 126, null, null);
+//        EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, FB_CHORUS, null, null);
+//        setLinkedEventValue("Chorus Parameter", 1, 0x01, 123, null, null);
+//        setLinkedEventValue("Chorus Parameter", 1, 0X02, 125, null, null);
+//        setLinkedEventValue("Chorus Parameter", 1, 0x04, 126, null, null);
 //        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
 //        ep.setValue(GM_PLATE, true);
 //        setEventValue(ep, 101, 123, null, null);
 //        setLinkedEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, 1, 111, null, null);
-        handleEvent("Chorus Parameter", null, null);
+//        handleEvent("Chorus Parameter", null, null);
+
+        // THIS IS THE LATEST ONE
+        setEventValue("Aftertouch", "ChannelSelect", CHANNEL_5, null, null);
+        setEventValue("Aftertouch", "PitchControl", 0x31, null, null);
+        setLinkedEventValue("Aftertouch", "PitchControl", "AmplitudeControl", 123, null, null);
+        setLinkedEventValue("Aftertouch", "PitchControl", "LFOAmplitudeDepth", 33, null, null);
+        handleEvent("Aftertouch", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
