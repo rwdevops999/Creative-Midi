@@ -38,14 +38,14 @@ public class DataBlock {
 
     public DataBlock(Integer ib1, Integer ib2) {
         this();
-        this.first = (byte)(ib2 & 0XFF);
-        this.second = (byte)(ib1 & 0xFF);
+        this.first = (byte)(ib1 & 0XFF);
+        this.second = (byte)(ib2 & 0xFF);
     }
 
     public DataBlock(Integer b1, Integer b2, boolean encodingIsBigEndian) {
         this(encodingIsBigEndian);
-        this.first = (byte)(b2 & 0xFF);
-        this.second = (byte)(b1 & 0XFF);
+        this.first = (byte)(b1 & 0xFF);
+        this.second = (byte)(b2 & 0XFF);
     }
 
     public DataBlock(Integer ival) {

@@ -1345,6 +1345,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
+                                .withName("FineTuning")
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(2)
@@ -1368,6 +1369,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
+                                .withName("CoarseTuning")
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)

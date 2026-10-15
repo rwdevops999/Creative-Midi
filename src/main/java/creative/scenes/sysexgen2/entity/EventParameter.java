@@ -43,7 +43,7 @@ public class EventParameter {
     private List<EventParameter> linkedEventParameterList;
 
     @Getter
-    private int controllerId;
+    private Integer controllerId = null;
 
     public EventParameter() {
         this.value = null;
@@ -110,6 +110,10 @@ public class EventParameter {
 */
 
     private void handleLinkedValue(Integer controllerId, DataBlock value) {
+        if (controllerId == null) {
+            return;
+        }
+
         if (value != null) {
             if (linkedEventParameter != null) {
                 linkedEventParameter.setLinkedValue(controllerId, value);
@@ -140,7 +144,7 @@ public class EventParameter {
     }
 
     public String toSysex() {
-        if (linkedValuesMap != null) {
+        if (linkedValuesMap != null && ! linkedValuesMap.isEmpty()) {
             StringBuilder sb = new StringBuilder();
 
             for (Map.Entry<Integer, DataBlock> entry : linkedValuesMap.entrySet()) {
@@ -180,7 +184,7 @@ public class EventParameter {
         private Function<Integer, String> callback;
         private List<EventParameter> linkedEventParameterList = new ArrayList<>();
 
-        private int controllerId;
+        private Integer controllerId;
 
         public EventParameterBuilder clear() {
             this.parameterId = -1;
@@ -194,6 +198,7 @@ public class EventParameter {
             this.linkedEventParameterList = new ArrayList<>();
             this.name = "";
             this.endian = BIG_ENDIAN;
+            this.controllerId = null;
 
             return this;
         }

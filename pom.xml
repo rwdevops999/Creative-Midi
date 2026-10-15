@@ -107,6 +107,13 @@
             <version>0.17</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- to apply asserts in test -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.27.7</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

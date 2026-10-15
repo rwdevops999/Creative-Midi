@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.*;
 
 import static util.Util.setPaneBackground;
@@ -99,7 +101,7 @@ public class Test3Pane extends VBox {
         return value + 63;
     }
 
-    private void handleEvent (String name, Integer b1, Integer b2 ) {
+    private void handleEvent (String name, Integer b1, Integer b2, List<String> results ) {
         Event rootEvent = SysexGen2Definitions.getRootEvent();
 
         Event event = rootEvent.findEvent(name);
@@ -112,13 +114,17 @@ public class Test3Pane extends VBox {
 
             System.out.println("---=== " + name + " ===---");
             sysexs.forEach(System.out::println);
+
+            for (String result: results) {
+                assertThat(sysexs).contains(result);
+            }
         } else {
             System.out.println("EVENT:" + name + " NOT FOUND");
         }
     }
 
-    private void handleEvent (String name ) {
-        handleEvent(name, null, null);
+    private void handleEvent (String name, List<String> result ) {
+        handleEvent(name, null, null, result);
     }
 
     private void runTest() {
@@ -133,15 +139,17 @@ public class Test3Pane extends VBox {
 //        handleEvent("Internal Clock");
 //        handleEvent("External Clock");
 
-        setEventValue("Master Volume", "Volume", 51730, null, null);
-        handleEvent("Master Volume");
+//        setEventValue("Master Volume", "Volume", 51730, null, null);
+//        handleEvent("Master Volume", List.of("F0 7F 7F 04 01 12 CA F7"));
 
-//        setEventValue("Master Fine-Tuning", "Parameter 1", 51730, null, null);
-//        handleEvent("Master Fine-Tuning");
+//        setEventValue("Master Fine-Tuning", "FineTuning", 51730, null, null);
+//        handleEvent("Master Fine-Tuning", List.of("F0 7F 7F 04 03 12 CA F7"));
 
-//        setEventValue("Master Coarse Tuning", "Parameter 1", null, 0, 123);
-//        handleEvent("Master Coarse Tuning");
+//        setEventValue("Master Coarse Tuning", "CoarseTuning", null, 0, 123);
+//        handleEvent("Master Coarse Tuning", List.of("F0 7F 7F 04 04 00 7B F7"));
 
+        // TODO Continue here
+        
         final int START=0;
         final int STOP=1;
         final int PAUSE =2;
