@@ -901,6 +901,23 @@ public class SysexGen2Definitions {
                 )
                 .build();
         parameterTables.add(Reverb3Table);
+
+        ParameterTable ReverbTypesTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ReverbTypesTable")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Reverb type")
+                                .withDescription("0 - 4, 8")
+                                .withDefaultValue(0)
+                                .withRange(0, 8)
+                                .withDataTable(findDataTable("ReverbTypeDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(ReverbTypesTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -1198,6 +1215,21 @@ public class SysexGen2Definitions {
                 )
                 .build();
         dataTables.add(Table3);
+
+        DataTable ReverbTypeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("ReverbTypeDataTable")
+                .withTableDescription("Reverb Type")
+                .withSize(9)
+                .withEntry(0, "RoomS")
+                .withEntry(1, "RoomM")
+                .withEntry(2, "RoomL")
+                .withEntry(3, "HallM")
+                .withEntry(4, "HallL")
+                .withEntry(8, "GM Plate")
+                .build();
+        dataTables.add(ReverbTypeDataTable);
+
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -1293,6 +1325,35 @@ public class SysexGen2Definitions {
                 )
                 .build();
 
+        Event eventReverbParameter = eventBuilder
+                .clear()
+                .withName("Event Reverb Parameter")
+                .withSysex("7F 04 05 01 01 01 01 01")
+                .withDefaultValues(0, 0)
+                .withEventType(
+                        eventTypeBuilder
+                                .clear()
+                                .withName("Reverb EventType")
+                                .withEventValues(0, 0)
+                                .withParameterTable(findParameterTable("ReverbTypesTable"))
+                                .build()
+                )
+                .withEventParameter(
+                        new EventParameter.EventParameterBuilder()
+                                .clear()
+                                .withParameterType(ParameterType.PARAMETER)
+                                .withParameterId(1)
+                                .withNumBytes(1)
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withParameterId(101)  // This is just usedfull in testing
+                                                .withNumBytes(1)
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
         Event eventUniversalRealTime = eventBuilder
                 .clear()
                 .withName("Universal Real Time")
@@ -1300,6 +1361,7 @@ public class SysexGen2Definitions {
                 .withChild(eventMasterVolume)
                 .withChild(eventMasterFineTuning)
                 .withChild(eventMasterCoarseTuning)
+                .withChild(eventReverbParameter)
                 .build();
         rootEvent.addChild(eventUniversalRealTime);
 

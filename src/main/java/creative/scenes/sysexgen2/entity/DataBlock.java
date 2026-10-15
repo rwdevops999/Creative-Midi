@@ -16,16 +16,15 @@ public class DataBlock {
     public DataBlock() {
         this.b1 = null;
         this.b2 = null;
-        this.endian = LITTLE_ENDIAN;
     }
 
-    public DataBlock(boolean endian) {
+    public DataBlock(boolean isLittle) {
         this();
-        this.endian = endian ? LITTLE_ENDIAN : BIG_ENDIAN;
+        this.endian = isLittle ? LITTLE_ENDIAN : BIG_ENDIAN;
     }
 
-    public DataBlock(Integer b1, Integer b2, boolean isLittleEndian) {
-        this(isLittleEndian);
+    public DataBlock(Integer b1, Integer b2, boolean isLittle) {
+        this(isLittle);
 
         if (b1 != null) {
             this.b1 = b1.byteValue();
@@ -63,8 +62,8 @@ public class DataBlock {
         this.b2 = (byte) (i1 & 0xFF);;
     }
 
-    public DataBlock(Integer i1, boolean isLittleEndian) {
-        this(isLittleEndian);
+    public DataBlock(Integer i1, boolean isLittle) {
+        this(isLittle);
 
         this.b1 = (byte) ((i1 >> 8) & 0xFF);
         this.b2 = (byte) (i1 & 0xFF);;
@@ -79,8 +78,8 @@ public class DataBlock {
         b2 = (byte)(value & 0x7F);
     }
 
-    public void setValue(Integer value, boolean isLittleEndian) {
-        this.endian = isLittleEndian ? LITTLE_ENDIAN : BIG_ENDIAN;
+    public void setValue(Integer value, boolean isLittle) {
+        this.endian = isLittle ? LITTLE_ENDIAN : BIG_ENDIAN;
 
         b1 = (byte)(value >> 7);
         b2 = (byte)(value & 0x7F);

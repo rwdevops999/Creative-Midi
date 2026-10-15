@@ -28,12 +28,12 @@ public class Test3Pane extends VBox {
     }
 
 
-    private void setEventValue(String eventName, ParameterType parameterType, Object identifier, Integer ival, Integer b1val, Integer b2val) {
+    private EventParameter setEventValue(String eventName, ParameterType parameterType, Object identifier, Integer ival, Integer b1val, Integer b2val) {
+        EventParameter eventParameter = null;
         boolean isLittleEndian = true;
         Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
         if (event != null) {
-            EventParameter eventParameter;
-            if (parameterType == ParameterType.PARAMETER) {
+            if (parameterType == ParameterType.PARAMETER || parameterType == ParameterType.TYPE) {
                 eventParameter = event.findEventParameterById((Integer)identifier);
             } else {
                 isLittleEndian = false;
@@ -49,6 +49,21 @@ public class Test3Pane extends VBox {
                     } else {
                         eventParameter.setValue(b1val, b2val, isLittleEndian);
                     }
+                }
+            }
+        }
+
+        return eventParameter;
+    }
+
+    private void setEventValue(EventParameter parentParameter, Integer identifier, Integer ival, Integer b1val, Integer b2val) {
+        if (parentParameter != null) {
+            EventParameter linkedEventParameter = parentParameter.findLinkedEventParameterById(identifier);
+            if (linkedEventParameter != null) {
+                if (ival != null) {
+                    linkedEventParameter.setValue(ival, true);
+                } else {
+                    linkedEventParameter.setValue(b1val, b2val, true);
                 }
             }
         }
@@ -301,10 +316,21 @@ public class Test3Pane extends VBox {
 //        handleEvent("Tempo", null, null);
 
 
-        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Channel", 16, null, null);
-        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune E", null, 0x0E, null);
-        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
-        handleEvent("Scale/Octave Tuning", null, null);
+//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Channel", 16, null, null);
+//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune E", null, 0x0E, null);
+//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
+//        handleEvent("Scale/Octave Tuning", null, null);
+
+        final int ROOM_S=0;
+        final int GM_PLATE=8;
+
+//        EventParameter ep = setEventValue("Event Reverb Parameter", ParameterType.PARAMETER, 1, ROOM_S, null, null);
+//        setEventValue(ep, 101, 110, null, null);
+//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
+//        ep.setValue(GM_PLATE, true);
+        EventParameter ep = setEventValue("Event Reverb Parameter", ParameterType.PARAMETER, 1, GM_PLATE, null, null);
+        setEventValue(ep, 101, 123, null, null);
+        handleEvent("Event Reverb Parameter", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
