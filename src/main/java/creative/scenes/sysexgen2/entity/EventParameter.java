@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 public class EventParameter {
     @Getter
+    @Setter
     private int parameterId;
     private int numBytes;
 
@@ -29,7 +30,7 @@ public class EventParameter {
     @Getter
     @Setter
     private EventParameter linkedEventParameter;
-    private Map<DataBlock, DataBlock> linkedValuesMap;
+    private Map<Integer, DataBlock> linkedValuesMap;
 
     private List<EventParameter> linkedEventParameterList;
 
@@ -58,22 +59,20 @@ public class EventParameter {
             this.value = this.displayBlock.getDefaultValue();
         }
         this.callback = builder.callback;
-        if (builder.linkedEventParameter != null) {
+
+        if (builder.linkedEventParameterList != null) {
             if (linkedEventParameterList == null) {
-                linkedEventParameterList = new ArrayList<>();
+                linkedValuesMap = new HashMap<>();
             }
 
-            builder.linkedEventParameter.setLinkedEventParameter(this);
-            linkedEventParameterList.add(builder.linkedEventParameter);
+            linkedEventParameterList = builder.linkedEventParameterList;
+            linkedEventParameterList.forEach(ep -> ep.setLinkedEventParameter(this));
         };
     }
 
-    public void setLinkedValue(DataBlock value) {
-        if (linkedValuesMap.containsKey(this.value)) {
-            linkedValuesMap.remove(this.value);
-        }
-
-        linkedValuesMap.put(this.value, value);
+    public void setLinkedValue(Integer id, DataBlock value) {
+        linkedValuesMap.remove(id);
+        linkedValuesMap.put(id, value);
     }
 
     public EventParameter findLinkedEventParameterById(Integer identifier) {
@@ -84,43 +83,49 @@ public class EventParameter {
         return null;
     }
 
-    private void handleLinkedValue(DataBlock value) {
-        if (linkedEventParameter != null) {
-            linkedEventParameter.setLinkedValue(value);
+    private void handleLinkedValue(Integer parameterId, DataBlock value) {
+        int id = parameterId - 1;
+        if (value != null) {
+            if (linkedEventParameter != null) {
+                linkedEventParameter.setLinkedValue(id, value);
+            } else {
+                setLinkedValue(id, value);
+            }
         }
     }
 
     public void setValue(DataBlock dataBlock) {
         this.value = dataBlock;
-        handleLinkedValue(this.value);
+        handleLinkedValue(parameterId, this.value);
     }
 
     public void setValue(Integer value, boolean isLittle) {
         this.value = new DataBlock(value, isLittle);
-        handleLinkedValue(this.value);
+        handleLinkedValue(parameterId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2) {
         this.value = new DataBlock(i1,i2);
-        handleLinkedValue(this.value);
+        handleLinkedValue(parameterId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2, boolean isLittle) {
         this.value = new DataBlock(i1,i2, isLittle);
-        handleLinkedValue(this.value);
+        handleLinkedValue(parameterId, this.value);
     }
 
     public void clearValue() {
         this.value = null;
+        handleLinkedValue(parameterId, this.value);
     }
 
     public String toSysex() {
         if (linkedValuesMap != null) {
             StringBuilder sb = new StringBuilder();
 
-            for (Map.Entry<DataBlock, DataBlock> entry : linkedValuesMap.entrySet()) {
+            for (Map.Entry<Integer, DataBlock> entry : linkedValuesMap.entrySet()) {
                 sb
-                        .append(entry.getKey().toHex(numBytes))
+                        .append(String.format("%02X", entry.getKey()))
                         .append(" ")
                         .append(entry.getValue().toHex(numBytes))
                         .append(" ");
@@ -159,7 +164,7 @@ public class EventParameter {
         private DisplayBlock displayBlock;
 
         private Function<Integer, String> callback;
-        private EventParameter linkedEventParameter;
+        private List<EventParameter> linkedEventParameterList = new ArrayList<>();
 
         public EventParameterBuilder clear() {
             this.parameterId = -1;
@@ -170,7 +175,7 @@ public class EventParameter {
             this.parameterType = ParameterType.PARAMETER;
             this.displayBlock = null;
             this.callback = null;
-            this.linkedEventParameter = null;
+            this.linkedEventParameterList = new ArrayList<>();
 
             return this;
         }
@@ -181,7 +186,7 @@ public class EventParameter {
         }
 
         public EventParameterBuilder withLinkedEventParameter(EventParameter linkedParameter) {
-            this.linkedEventParameter = linkedParameter;
+            this.linkedEventParameterList.add(linkedParameter);
             return this;
         }
 

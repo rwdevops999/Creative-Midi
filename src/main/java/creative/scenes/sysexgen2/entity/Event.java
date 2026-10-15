@@ -54,16 +54,27 @@ public class Event implements IEvent {
 
         this.defaultValue = builder.defaultValue;
 
+        this.eventTypes.addAll(builder.eventTypes);
         this.parameters.addAll(builder.parameters);
         postProcess(this.parameters);
 
-        this.eventTypes.addAll(builder.eventTypes);
         this.inline = builder.inline;
     }
 
     private void postProcess(List<EventParameter> parameters) {
         for (EventParameter parameter : parameters) {
-            if (parameter.getParameterType().equals(ParameterType.TYPE)) {
+            int parameterId = parameter.getParameterId();
+
+            if (hasEventTypes()) {
+                EventType eventType = findEventTypeFromDefaultValue();
+
+                ParameterTable pt = eventType.getParameterTable();
+                for (ParametersTableEntry entry : pt.getEntries()) {
+                    if (entry.getParameterId() == parameterId) {
+                        parameter.setValue(new DataBlock(entry.getDefaultValue()));
+                    }
+                }
+            } else {
                 parameter.setValue(defaultValue);
             }
         }
@@ -152,7 +163,7 @@ public class Event implements IEvent {
 
     public List<String> createSysexStrings() {
         List<String> sysexStrings = new ArrayList<>();
-
+        
         if (this.hasParent()) {
             List<String> parentSysexStrings = new ArrayList<>(this.parent.createSysexStrings());
             parentSysexStrings.replaceAll(s -> s.length() == 0 ? this.sysex : s + extend(this.sysex));

@@ -911,13 +911,30 @@ public class SysexGen2Definitions {
                                 .withParameterId(1)
                                 .withLabel("Reverb type")
                                 .withDescription("0 - 4, 8")
-                                .withDefaultValue(0)
+                                .withDefaultValue(4)
                                 .withRange(0, 8)
                                 .withDataTable(findDataTable("ReverbTypeDataTable"))
                                 .build()
                 )
                 .build();
         parameterTables.add(ReverbTypesTable);
+
+        ParameterTable ChorusTypesTable = parameterTableBuilder
+                .clear()
+                .withIdentifier("ChorusTypesTable")
+                .withEntry(
+                        parameterTableEntryBuilder
+                                .clear()
+                                .withParameterId(1)
+                                .withLabel("Chorus type")
+                                .withDescription("0 - 5")
+                                .withDefaultValue(2)
+                                .withRange(0, 5)
+                                .withDataTable(findDataTable("ChorusTypeDataTable"))
+                                .build()
+                )
+                .build();
+        parameterTables.add(ChorusTypesTable);
     }
 
     private static ParameterTable findParameterTable(String identifier) {
@@ -1230,6 +1247,19 @@ public class SysexGen2Definitions {
                 .build();
         dataTables.add(ReverbTypeDataTable);
 
+        DataTable ChorusTypeDataTable = dataTableBuilder
+                .clear()
+                .withTableId("ChorusTypeDataTable")
+                .withTableDescription("Chorus Type")
+                .withSize(9)
+                .withEntry(0, "GM Chorus1")
+                .withEntry(1, "GM Chorus2")
+                .withEntry(2, "GM Chorus3")
+                .withEntry(3, "GM Chorus4")
+                .withEntry(4, "FB Chorus")
+                .withEntry(5, "GM Flanger")
+                .build();
+        dataTables.add(ChorusTypeDataTable);
     }
 
     private static DataTable findDataTable(String identifier) {
@@ -1327,7 +1357,7 @@ public class SysexGen2Definitions {
 
         Event eventReverbParameter = eventBuilder
                 .clear()
-                .withName("Event Reverb Parameter")
+                .withName("Reverb Parameter")
                 .withSysex("7F 04 05 01 01 01 01 01")
                 .withDefaultValues(0, 0)
                 .withEventType(
@@ -1347,13 +1377,61 @@ public class SysexGen2Definitions {
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
-                                                .withParameterId(101)  // This is just usedfull in testing
+                                                .withParameterId(2)
                                                 .withNumBytes(1)
                                                 .build()
                                 )
                                 .build()
                 )
                 .build();
+
+        Event eventChorusParameter = eventBuilder
+                .clear()
+                .withName("Chorus Parameter")
+                .withSysex("7F 04 05 01 01 01 01 02")
+                .withDefaultValues(0, 0)
+                .withEventType(
+                        eventTypeBuilder
+                                .clear()
+                                .withName("Chorus EventType")
+                                .withEventValues(0, 0)
+                                .withParameterTable(findParameterTable("ChorusTypesTable"))
+                                .build()
+                )
+                .withEventParameter(
+                        new EventParameter.EventParameterBuilder()
+                                .clear()
+                                .withParameterType(ParameterType.PARAMETER)
+                                .withParameterId(1)
+                                .withNumBytes(1)
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withParameterId(2)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withParameterId(3)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withParameterId(4)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withParameterId(5)
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
+
         Event eventUniversalRealTime = eventBuilder
                 .clear()
                 .withName("Universal Real Time")
@@ -1362,6 +1440,7 @@ public class SysexGen2Definitions {
                 .withChild(eventMasterFineTuning)
                 .withChild(eventMasterCoarseTuning)
                 .withChild(eventReverbParameter)
+                .withChild(eventChorusParameter)
                 .build();
         rootEvent.addChild(eventUniversalRealTime);
 

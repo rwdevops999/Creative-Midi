@@ -56,6 +56,27 @@ public class Test3Pane extends VBox {
         return eventParameter;
     }
 
+    private void setLinkedEventValue(String eventName, Object identifier, Object linkedIdentifier, Integer ival, Integer b1val, Integer b2val) {
+        boolean isLittleEndian = true;
+        Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
+        if (event != null) {
+            EventParameter eventParameter = event.findEventParameterById((Integer)identifier);
+            EventParameter linkedEventParameter = eventParameter.findLinkedEventParameterById((Integer)linkedIdentifier);
+
+            if (linkedEventParameter != null) {
+                if (ival == null && b1val == null && b2val == null) {
+                    linkedEventParameter.clearValue();
+                } else {
+                    if (ival != null) {
+                        linkedEventParameter.setValue(ival, isLittleEndian);
+                    } else {
+                        linkedEventParameter.setValue(b1val, b2val, isLittleEndian);
+                    }
+                }
+            }
+        }
+    }
+
     private void setEventValue(EventParameter parentParameter, Integer identifier, Integer ival, Integer b1val, Integer b2val) {
         if (parentParameter != null) {
             EventParameter linkedEventParameter = parentParameter.findLinkedEventParameterById(identifier);
@@ -324,13 +345,24 @@ public class Test3Pane extends VBox {
         final int ROOM_S=0;
         final int GM_PLATE=8;
 
-//        EventParameter ep = setEventValue("Event Reverb Parameter", ParameterType.PARAMETER, 1, ROOM_S, null, null);
-//        setEventValue(ep, 101, 110, null, null);
+//        EventParameter ep = setEventValue("Reverb Parameter", ParameterType.PARAMETER, 1, ROOM_S, null, null);
+//        setLinkedEventValue("Reverb Parameter", 1, 2, 123, null, null);
+//        handleEvent("Reverb Parameter", null, null);
+
+        final int FB_CHORUS=4;
+
+        EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, FB_CHORUS, null, null);
+        setLinkedEventValue("Chorus Parameter", 1, 2, 123, null, null);
+        setLinkedEventValue("Chorus Parameter", 1, 3, 125, null, null);
+        setLinkedEventValue("Chorus Parameter", 1, 5, 126, null, null);
 //        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
 //        ep.setValue(GM_PLATE, true);
-        EventParameter ep = setEventValue("Event Reverb Parameter", ParameterType.PARAMETER, 1, GM_PLATE, null, null);
-        setEventValue(ep, 101, 123, null, null);
-        handleEvent("Event Reverb Parameter", null, null);
+//        setEventValue(ep, 101, 123, null, null);
+//        setLinkedEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, 1, 111, null, null);
+        handleEvent("Chorus Parameter", null, null);
+
+//        final int GM_FLANGER=5;
+//        EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, GM_FLANGER, null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
