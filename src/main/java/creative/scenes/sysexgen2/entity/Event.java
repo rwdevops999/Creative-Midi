@@ -99,16 +99,16 @@ public class Event implements IEvent {
     /**
      * Find the EventParameter with given address
      *
-     * @param address the address of the parameter
+     * @param label the label of the parameter inside the displayBlock
      *
      * @return the EventParameter instance
      */
-    public EventParameter findEventParameterByAddress(String address) {
+    public EventParameter findEventParameterByLabel(String label) {
         EventParameter parameter = null;
 
         if (hasParameters()) {
-            if (address != null && !address.isEmpty()) {
-                parameter = this.parameters.stream().filter(ep -> (address.equals(ep.getAddress()))).findFirst().orElse(null);
+            if (label != null && !label.isEmpty()) {
+                parameter = this.parameters.stream().filter(ep -> (ep.getDisplayBlock() != null && label.equals(ep.getDisplayBlock().getLabel()))).findFirst().orElse(null);
             }
         }
 
@@ -179,26 +179,29 @@ public class Event implements IEvent {
                             }
                         }
                     }
-                    // handle Type and Free Parameters
-                    if (hasParameters()) {
-                        // handle Free Parameters
-                        List<EventParameter> freeParameters = parameters.stream().filter(p -> p.getParameterType().equals(ParameterType.FREE)).toList();
-                        if (!freeParameters.isEmpty()) {
-                            freeParameters.forEach(p -> {
-                                // QUESTION: Can free parameters be ignored ?
-                                if (p.getValue() != null) {
-                                    parameterSysexList.add(p.toSysex());
-                                }
-                            });
-                        }
 
-                        // handle Type Parameters
+                    // handle Type Parameters
+                    if (hasParameters()) {
                         EventParameter typeParameter = parameters.stream().filter(p -> p.getParameterType().equals(ParameterType.TYPE)).findAny().orElse(null);
                         if (typeParameter != null && typeParameter.getValue() != null) {
                             parameterSysexList.add(typeParameter.toSysex());
                         }
                     }
                 }
+            }
+        }
+
+        // Handle Free Parameters
+        if (hasParameters()) {
+            // handle Free Parameters
+            List<EventParameter> freeParameters = parameters.stream().filter(p -> p.getParameterType().equals(ParameterType.FREE)).toList();
+            if (!freeParameters.isEmpty()) {
+                freeParameters.forEach(p -> {
+                    // QUESTION: Can free parameters be ignored ?
+                    if (p.getValue() != null) {
+                        parameterSysexList.add(p.toSysex());
+                    }
+                });
             }
         }
 

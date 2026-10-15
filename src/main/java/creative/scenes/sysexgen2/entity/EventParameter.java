@@ -27,6 +27,7 @@ public class EventParameter {
         this.value = null;
     }
 
+    @Getter
     private DisplayBlock displayBlock;
 
     public EventParameter(EventParameterBuilder builder) {

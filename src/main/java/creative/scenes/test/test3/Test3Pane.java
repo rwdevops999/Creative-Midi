@@ -32,7 +32,7 @@ public class Test3Pane extends VBox {
             if (parameterType == ParameterType.PARAMETER) {
                 eventParameter = event.findEventParameterById((Integer)identifier);
             } else {
-                eventParameter = event.findEventParameterByAddress((String)identifier);
+                eventParameter = event.findEventParameterByLabel((String)identifier);
             }
 
             if (eventParameter != null) {
@@ -263,22 +263,25 @@ public class Test3Pane extends VBox {
 //        setEventValue("Score", "Parameter 11", FIXED_DO, null, null);
 //        handleEvent("Score");
 
-        setEventValue("Reverb", ParameterType.PARAMETER, 1,10, null, null); // #1
-        setEventValue("Reverb", ParameterType.PARAMETER, 2, 3, null, null);
-        setEventValue("Reverb", ParameterType.PARAMETER, 3, 100, null, null); // #2
-        setEventValue("Reverb", ParameterType.PARAMETER, 4, 30, null, null); // #3
-        setEventValue("Reverb", ParameterType.PARAMETER, 5, 47, null, null); // #3
-        setEventValue("Reverb", ParameterType.PARAMETER, 10, 21, null, null);
-        setEventValue("Reverb", ParameterType.PARAMETER, 11, 90, null, null); // #2
-        setEventValue("Reverb", ParameterType.PARAMETER, 12, 2, null, null);
-        setEventValue("Reverb", ParameterType.PARAMETER, 13, 63, null, null);
-        setEventValue("Reverb", ParameterType.PARAMETER, 14, 5, null, null);
-        setEventValue("Reverb", ParameterType.PARAMETER, 15, 13, null, null);
+//        setEventValue("Reverb", ParameterType.PARAMETER, 1,10, null, null); // #1
+//        setEventValue("Reverb", ParameterType.PARAMETER, 2, 3, null, null);
+//        setEventValue("Reverb", ParameterType.PARAMETER, 3, 100, null, null); // #2
+//        setEventValue("Reverb", ParameterType.PARAMETER, 4, 30, null, null); // #3
+//        setEventValue("Reverb", ParameterType.PARAMETER, 5, 47, null, null); // #3
+//        setEventValue("Reverb", ParameterType.PARAMETER, 10, 21, null, null);
+//        setEventValue("Reverb", ParameterType.PARAMETER, 11, 90, null, null); // #2
+//        setEventValue("Reverb", ParameterType.PARAMETER, 12, 2, null, null);
+//        setEventValue("Reverb", ParameterType.PARAMETER, 13, 63, null, null);
+//        setEventValue("Reverb", ParameterType.PARAMETER, 14, 5, null, null);
+//        setEventValue("Reverb", ParameterType.PARAMETER, 15, 13, null, null);
 
-        setEventValue("Reverb", ParameterType.FREE, "0C", 13, null, null);
-        setEventValue("Reverb", ParameterType.FREE, "0D", 13, null, null);
+//        setEventValue("Reverb", ParameterType.FREE, "0C", 13, null, null);
+//        setEventValue("Reverb", ParameterType.FREE, "0D", 13, null, null);
 
-        handleEvent("Reverb", 1, 0); // (1,0) = Hall1
+//        handleEvent("Reverb", 1, 0); // (1,0) = Hall1
+
+        setEventValue("Split Point", ParameterType.FREE, "Split point", 93, null, null);
+        handleEvent("Split Point", null, null);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

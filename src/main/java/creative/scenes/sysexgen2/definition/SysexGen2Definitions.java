@@ -1835,6 +1835,25 @@ public class SysexGen2Definitions {
                         .withChild(eventReverb)
                         .build();
 
+        Event eventSplitPoint =
+                eventBuilder
+                        .clear()
+                        .withName("Split Point")
+                        .withSysex("73 01 51 00 00 00 03 10 00")
+                        // Here we don't use a EventType but just free parameters
+                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                                .withDisplayblock(
+                                        displayBlockBuilder
+                                                .clear()
+                                                .withLabel("Split point")
+                                                .withDescription("Note number")
+                                                .withRange(0, 127)
+                                                .withDefaultValue(0)
+                                                .build()
+                                )
+                                .build()) // SPLIT POINT
+                        .build();
+
         Event eventYamaha = eventBuilder
                 .clear()
                 .withName("Yamaha")
@@ -1855,6 +1874,7 @@ public class SysexGen2Definitions {
                 .withChild(eventScaleTuningBaseNote)
                 .withChild(eventScore)
                 .withChild(eventXFChangeParameter)
+                .withChild(eventSplitPoint)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
     }

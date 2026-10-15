@@ -1,6 +1,9 @@
 package creative.scenes.sysexgen2.entity;
 
+import lombok.Getter;
+
 public class DisplayBlock {
+    @Getter
     private String label;
     private String description;
     private DataBlock defaultValue;
@@ -10,6 +13,10 @@ public class DisplayBlock {
     }
 
     public DisplayBlock(DisplayBlockBuilder builder) {
+        this.label = builder.label;
+        this.description = builder.description;
+        this.defaultValue = builder.defaultValue;
+        this.range = builder.range;
     }
 
     public static class DisplayBlockBuilder {
