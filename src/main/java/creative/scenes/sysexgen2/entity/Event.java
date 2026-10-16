@@ -169,6 +169,8 @@ public class Event implements IEvent {
         if (hasEventTypes()) {
             EventType eventType = findEventTypeFromDefaultValue();
             if (eventType != null) {
+
+
                 ParameterTable parameterTable = eventType.getParameterTable();
                 if (parameterTable != null) {
                     for (ParametersTableEntry entry :parameterTable.getEntries()) {

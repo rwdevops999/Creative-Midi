@@ -1,0 +1,112 @@
+---=== GM1 System On ===---
+F0 7E 7F 09 01 F7
+---=== GM2 System On ===---
+F0 7E 7F 09 03 F7
+---=== General MIDI System Off ===---
+F0 7E 7F 09 02 F7
+---=== Internal Clock ===---
+F0 43 73 01 02 F7
+---=== External Clock ===---
+F0 43 73 01 02 F7
+
+TEST: Set MASTER VOLUME to 51730 (= CA12H)
+---=== Master Volume ===---
+F0 7F 7F 04 01 12 CA F7
+
+TEST: Set FINE TUNING to 51730 (= CA12H)
+---=== Master Fine-Tuning ===---
+F0 7F 7F 04 03 12 CA F7
+
+TEST: Set Audio Song Control to START;
+---=== Audio Song Control ===---
+F0 43 73 01 50 19 00 00 00 F7
+
+TEST: Set Audio Song Control to STOP;
+---=== Audio Song Control ===---
+F0 43 73 01 50 19 00 00 01 F7
+
+TEST: Set Audio Song Control to PAUSE;
+---=== Audio Song Control ===---
+F0 43 73 01 50 19 00 00 02 F7
+
+TEST: Set SECTION CONTROL to INTRO_1/ON
+---=== Section Control ===---
+F0 43 7E 00 00 7F F7
+
+TEST: Set SECTION CONTROL to MAIN_B/OFF
+---=== Section Control ===---
+F0 43 7E 00 09 00 F7
+
+TEST: Set Scale Tuning Part to MAIN/LEFT/ON
+---=== Scale Tuning Part ===---
+F0 43 73 01 52 2F 02 00 4F 7F F7
+
+TEST: Set Scale Tuning Part to SUB/MULTIPAD/OFF
+---=== Scale Tuning Part ===---
+F0 43 73 01 52 2F 02 01 51 00 F7
+
+TEST: Set REGISTRATION to registration 3
+---=== Registration ===---
+F0 43 73 01 52 25 11 00 02 00 02 F7
+
+TEST: Set REGISTRATION to registration 7
+---=== Registration ===---
+F0 43 73 01 52 25 11 00 02 00 06 F7
+
+TEST: Set HARMONY to STANDARD DUET 1
+---=== Harmony ===---
+F0 43 73 01 02 00 24 00 F7
+
+TEST: Set HARMONY to BLOCK
+---=== Harmony ===---
+F0 43 73 01 02 00 24 08 F7
+
+TEST: Set HARMONY to OCTAVE
+---=== Harmony ===---
+F0 43 73 01 02 00 24 11 F7
+
+TEST: Set ECHO to ECHO_6
+---=== Echo ===---
+F0 43 73 01 02 00 24 15 F7
+
+TEST: Set TREMOLO to TREMOLO_32
+---=== Tremolo ===---
+F0 43 73 01 02 00 24 1B F7
+
+TEST: Set TRILL to TRILL_12
+---=== Trill ===---
+F0 43 73 01 02 00 24 1C F7
+
+TEST: Set Guide to TRACK1=0FF, TRACK2=ON, KARAOKE
+---=== Guide ===---
+F0 43 73 01 1F 00 01 03 F7
+ 
+TEST:set MIDI MASTER TUNING with MSB=123 (7BH -> 0BH) and LSB=98 (62H -> 02H) and DON'T CARE=100 (64H)
+---=== MIDI Master Tuning ===---
+F0 43 10 27 30 00 00 0B 02 64 F7
+
+TEST: Set scale tuning for SUB
+Fixed value = 0x40
+C, -38
+C#, -35
+D, -30
+D#, -25
+E, -20
+F, -15
+F#, -10
+G, 0
+G#, 10
+A, 15
+A#, 20
+B, 30
+---=== Scale Tuning ===---
+F0 43 73 01 52 2F 02 01 40 19 1C 21 26 2B 30 35 3F 49 4E 53 5D F7
+
+TEST: Set Scale Tuning Base Note to Base note D with mode Base Note Only
+---=== Scale Tuning Base Note ===---
+F0 43 73 01 52 2F 02 00 4D 02 00 F7
+
+TEST: Set Scale Tuning Base Note to Base note G# with mode Base Note And Scale Tuning
+---=== Scale Tuning Base Note ===---
+F0 43 73 01 52 2F 02 00 4D 08 01 F7
+

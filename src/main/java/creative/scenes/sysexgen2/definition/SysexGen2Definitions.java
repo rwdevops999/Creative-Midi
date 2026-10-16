@@ -1088,14 +1088,14 @@ public class SysexGen2Definitions {
                 .withEntry( 0x01, "C#")
                 .withEntry( 0x02, "D")
                 .withEntry( 0x03, "D#/E♭")
-                .withEntry( 0x06, "E")
-                .withEntry( 0x06, "F")
+                .withEntry( 0x04, "E")
+                .withEntry( 0x05, "F")
                 .withEntry( 0x06, "F#")
-                .withEntry( 0x06, "G")
-                .withEntry( 0x06, "G#/A♭")
-                .withEntry( 0x06, "A")
-                .withEntry( 0x06, "A#/B♭")
-                .withEntry( 0x06, "B")
+                .withEntry( 0x07, "G")
+                .withEntry( 0x08, "G#/A♭")
+                .withEntry( 0x09, "A")
+                .withEntry( 0x0A, "A#/B♭")
+                .withEntry( 0x0B, "B")
                 .build();
         dataTables.add(BaseNoteDataTable);
 
@@ -1688,6 +1688,7 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         eventParameterBuilder
                                 .clear()
+                                .withName("Control")
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)
@@ -1712,6 +1713,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Section")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1720,6 +1722,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Switch")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
@@ -1744,6 +1747,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Type")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1752,6 +1756,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Parameter ID")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
@@ -1760,6 +1765,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Switch")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(3)
                                         .withNumBytes(1)
@@ -1784,6 +1790,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Number")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1808,6 +1815,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Type")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1833,6 +1841,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Type")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1858,6 +1867,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Type")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1883,6 +1893,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Type")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1890,10 +1901,10 @@ public class SysexGen2Definitions {
                         )
                         .build();
 
-        Event eventGuideOn  =
+        Event eventGuide  =
                 eventBuilder
                         .clear()
-                        .withName("Guide On")
+                        .withName("Guide")
                         .withSysex("73 01 1F 00")
                         .withDefaultValues(0, 0)
                         .withEventType(
@@ -1907,6 +1918,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Part")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
@@ -1915,6 +1927,7 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
+                                        .withName("Mode")
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
@@ -1928,18 +1941,11 @@ public class SysexGen2Definitions {
                         .withName("MIDI Master Tuning")
                         .withSysex("10 27 30 00 00")
                         .withDefaultValues(0, 0)
-                        .withEventType(
-                                eventTypeBuilder
-                                        .clear()
-                                        .withName("MIDI Master Tuning EventType")
-                                        .withEventValues(0, 0)
-                                        .withParameterTable(findParameterTable("MIDIMasterTuningTable"))
-                                        .build()
-                        )
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withParameterType(ParameterType.PARAMETER)
+                                        .withName("MSB")
+                                        .withParameterType(ParameterType.FREE)
                                         .withParameterId(1)
                                         .withNumBytes(1, true)
                                         .build()
@@ -1947,7 +1953,8 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withParameterType(ParameterType.PARAMETER)
+                                        .withName("LSB")
+                                        .withParameterType(ParameterType.FREE)
                                         .withParameterId(2)
                                         .withNumBytes(1,true)
                                         .build()
@@ -1955,7 +1962,8 @@ public class SysexGen2Definitions {
                         .withEventParameter(
                                 eventParameterBuilder
                                         .clear()
-                                        .withParameterType(ParameterType.PARAMETER)
+                                        .withName("DONT CARE")
+                                        .withParameterType(ParameterType.FREE)
                                         .withParameterId(3)
                                         .isIgnore(true)
                                         .withNumBytes(1)
@@ -1977,20 +1985,20 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScaleTuningTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Fixed").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("C").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("C#").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("D").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("D#").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("E").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("F").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("F#").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("G").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("G#").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("A").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("A#").withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("B").withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).build())
                         .build();
 
         Event eventScaleTuningBaseNote  =
@@ -2007,8 +2015,8 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScaleTuningBaseNoteTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Base note").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Mode").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
                         .build();
 
         Event eventScore =
@@ -2244,7 +2252,7 @@ public class SysexGen2Definitions {
                 .withChild(eventEcho)
                 .withChild(eventTremolo)
                 .withChild(eventTrill)
-                .withChild(eventGuideOn)
+                .withChild(eventGuide)
                 .withChild(eventMIDIMasterTuning)
                 .withChild(eventScaleTuning)
                 .withChild(eventScaleTuningBaseNote)

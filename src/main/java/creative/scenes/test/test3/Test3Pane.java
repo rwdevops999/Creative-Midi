@@ -148,18 +148,16 @@ public class Test3Pane extends VBox {
 //        setEventValue("Master Coarse Tuning", "CoarseTuning", null, 0, 123);
 //        handleEvent("Master Coarse Tuning", List.of("F0 7F 7F 04 04 00 7B F7"));
 
-        // TODO Continue here
-        
         final int START=0;
         final int STOP=1;
-        final int PAUSE =2;
+        final int PAUSE=2;
 
-//        setEventValue("Audio Song Control", "Parameter 1", null, 0, START);
-//        handleEvent("Audio Song Control");
-//        setEventValue("Audio Song Control", "Parameter 1", null, 0, STOP);
-//        handleEvent("Audio Song Control");
-//        setEventValue("Audio Song Control", "Parameter 1", null, 0, PAUSE);
-//        handleEvent("Audio Song Control");
+//        setEventValue("Audio Song Control", "Control", null, 0, START);
+//        handleEvent("Audio Song Control", List.of("F0 43 73 01 50 19 00 00 00 F7"));
+//        setEventValue("Audio Song Control", "Control", null, 0, STOP);
+//        handleEvent("Audio Song Control", List.of("F0 43 73 01 50 19 00 00 01 F7"));
+//        setEventValue("Audio Song Control", "Control", null, 0, PAUSE);
+//        handleEvent("Audio Song Control", List.of("F0 43 73 01 50 19 00 00 02 F7"));
 
         final int INTRO_1 = 0x00;
         final int INTRO_2 = 0x01;
@@ -183,12 +181,12 @@ public class Test3Pane extends VBox {
         final int ENDING_3 = 0x22;
         final int ENDING_4 = 0x23;
 
-//        setEventValue("Section Control", "Parameter 1", null, 0, INTRO_1);
-//        setEventValue("Section Control", "Parameter 2", null, 0, ON);
-//        handleEvent("Section Control");
-//        setEventValue("Section Control", "Parameter 1", null, 0, MAIN_B);
-//        setEventValue("Section Control", "Parameter 2", null, 0, OFF);
-//        handleEvent("Section Control");
+//        setEventValue("Section Control", "Section", null, 0, INTRO_1);
+//        setEventValue("Section Control", "Switch", null, 0, ON);
+//        handleEvent("Section Control", List.of("F0 43 7E 00 00 7F F7"));
+//        setEventValue("Section Control", "Section", null, 0, MAIN_B);
+//        setEventValue("Section Control", "Switch", null, 0, OFF);
+//        handleEvent("Section Control", List.of("F0 43 7E 00 09 00 F7"));
 
         final int MAIN=0x00;
         final int SUB=0x01;
@@ -199,14 +197,15 @@ public class Test3Pane extends VBox {
         final int RIGHT1=0x52;
         final int RIGHT2=0x53;
 
-//        setEventValue("Scale Tuning Part", "Parameter 1", null, 0, MAIN);
-//        setEventValue("Scale Tuning Part", "Parameter 2", null, 0, LEFT);
-//        setEventValue("Scale Tuning Part", "Parameter 3", null, 0, ON);
-//        handleEvent("Scale Tuning Part");
-//        setEventValue("Scale Tuning Part", "Parameter 1", null, 0, SUB);
-//        setEventValue("Scale Tuning Part", "Parameter 2", null, 0, MULTI_PAD);
-//        setEventValue("Scale Tuning Part", "Parameter 3", null, 0, OFF);
-//        handleEvent("Scale Tuning Part");
+//        setEventValue("Scale Tuning Part", "Type", null, 0, MAIN);
+//        setEventValue("Scale Tuning Part", "Parameter ID", null, 0, LEFT);
+//        setEventValue("Scale Tuning Part", "Switch", null, 0, ON);
+//        handleEvent("Scale Tuning Part", List.of("F0 43 73 01 52 2F 02 00 4F 7F F7"));
+
+//        setEventValue("Scale Tuning Part", "Type", null, 0, SUB);
+//        setEventValue("Scale Tuning Part", "Parameter ID", null, 0, MULTI_PAD);
+//        setEventValue("Scale Tuning Part", "Switch", null, 0, OFF);
+//        handleEvent("Scale Tuning Part", List.of("F0 43 73 01 52 2F 02 01 51 00 F7"));
 
         final int REG_1=0;
         final int REG_2=1;
@@ -217,79 +216,80 @@ public class Test3Pane extends VBox {
         final int REG_7=6;
         final int REG_8=7;
 
-//        setEventValue("Registration", "Parameter 1", null, 0, REG_3);
-//        handleEvent("Registration");
-//        setEventValue("Registration", "Parameter 1", null, 0, REG_7);
-//        handleEvent("Registration");
+//        setEventValue("Registration", "Number", null, 0, REG_3);
+//        handleEvent("Registration", List.of("F0 43 73 01 52 25 11 00 02 00 02 F7"));
+//        setEventValue("Registration", "Number", null, 0, REG_7);
+//        handleEvent("Registration", List.of("F0 43 73 01 52 25 11 00 02 00 06 F7"));
 
-        final int DUET_1=0;
+        final int STANDARD_DUET_1=0;
         final int BLOCK=8;
         final int OCTAVE=17;
 
-//        setEventValue("Harmony", "Parameter 1", null, 0, DUET_1);
-//        handleEvent("Harmony");
-//        setEventValue("Harmony", "Parameter 1", null, 0, BLOCK);
-//        handleEvent("Harmony");
-//        setEventValue("Harmony", "Parameter 1", null, 0, OCTAVE);
-//        handleEvent("Harmony");
+//        setEventValue("Harmony", "Type", null, 0, STANDARD_DUET_1);
+//        handleEvent("Harmony", List.of("F0 43 73 01 02 00 24 00 F7"));
+//        setEventValue("Harmony", "Type", null, 0, BLOCK);
+//        handleEvent("Harmony", List.of("F0 43 73 01 02 00 24 08 F7"));
+//        setEventValue("Harmony", "Type", null, 0, OCTAVE);
+//        handleEvent("Harmony", List.of("F0 43 73 01 02 00 24 11 F7"));
 
         final int ECHO_6=21;
 
-//        setEventValue("Echo", "Parameter 1", null, 0, ECHO_6);
-//        handleEvent("Echo");
+//        setEventValue("Echo", "Type", null, 0, ECHO_6);
+//        handleEvent("Echo", List.of("F0 43 73 01 02 00 24 15 F7"));
 
         final int TREMOLO_32=27;
 
-//        setEventValue("Tremolo", "Parameter 1", null, 0, TREMOLO_32);
-//        handleEvent("Tremolo");
+//        setEventValue("Tremolo", "Type", null, 0, TREMOLO_32);
+//        handleEvent("Tremolo", List.of("F0 43 73 01 02 00 24 1B F7"));
 
         final int TRILL_12=28;
 
 //        setEventValue("Trill", "Parameter 1", null, 0, TRILL_12);
-//        handleEvent("Trill");
+//        handleEvent("Trill", List.of("F0 43 73 01 02 00 24 1C F7"));
 
         final int TRACK1_OFF_TRACK2_ON = 1;
         final int KARAOKE_KEY=3;
 
-//        setEventValue("Guide", "Parameter 1", null, 0, TRACK1_OFF_TRACK2_ON);
-//        setEventValue("Guide", "Parameter 2", null, 0, KARAOKE_KEY);
-//        handleEvent("Guide");
+//        setEventValue("Guide", "Part", null, 0, TRACK1_OFF_TRACK2_ON);
+//        setEventValue("Guide", "Mode", null, 0, KARAOKE_KEY);
+//        handleEvent("Guide", List.of("F0 43 73 01 1F 00 01 03 F7"));
 
-//        setEventValue("MIDI Master Tuning", "Parameter 1", null, 0, 123);
-//        setEventValue("MIDI Master Tuning", "Parameter 2", null, 0, 98);
-//        setEventValue("MIDI Master Tuning", "Parameter 3", null, 0, 100);
-//        handleEvent("MIDI Master Tuning");
+//       setEventValue("MIDI Master Tuning", "MSB", null, 0, 123);
+//       setEventValue("MIDI Master Tuning", "LSB", null, 0, 98);
+//       setEventValue("MIDI Master Tuning", "DONT CARE", null, 0, 100);
+//       handleEvent("MIDI Master Tuning", List.of("F0 43 10 27 30 00 00 0B 02 64 F7"));
 
-//        setEventValue("Scale Tuning", "Parameter 1", SUB, null, null);
-////        setEventValue("Scale Tuning", "Parameter 2", -40, null, null); IS FIXED
-//        setEventValue("Scale Tuning", "Parameter 3", normalize_minus_63(-35), null, null);
-//        setEventValue("Scale Tuning", "Parameter 4", normalize_minus_63(-30), null, null);
-//        setEventValue("Scale Tuning", "Parameter 5", normalize_minus_63(-25), null, null);
-//        setEventValue("Scale Tuning", "Parameter 6", normalize_minus_63(-20), null, null);
-//        setEventValue("Scale Tuning", "Parameter 7", normalize_minus_63(-15), null, null);
-//        setEventValue("Scale Tuning", "Parameter 8", normalize_minus_63(-10), null, null);
-//        setEventValue("Scale Tuning", "Parameter 9", normalize_minus_63(0), null, null);
-//        setEventValue("Scale Tuning", "Parameter 10", normalize_minus_63( 10), null, null);
-//        setEventValue("Scale Tuning", "Parameter 11", normalize_minus_63(15), null, null);
-//        setEventValue("Scale Tuning", "Parameter 12", normalize_minus_63(20), null, null);
-//        setEventValue("Scale Tuning", "Parameter 13", normalize_minus_63(30), null, null);
-//        setEventValue("Scale Tuning", "Parameter 14", normalize_minus_63(40), null, null);
-//        handleEvent("Scale Tuning");
+//        setEventValue("Scale Tuning", "Type", SUB, null, null);
+//        setEventValue("Scale Tuning", "Fixed", 0x40, null, null); // IS FIXED
+//        setEventValue("Scale Tuning", "C", normalize_minus_63(-38), null, null);
+//        setEventValue("Scale Tuning", "C#", normalize_minus_63(-35), null, null);
+//        setEventValue("Scale Tuning", "D", normalize_minus_63(-30), null, null);
+//        setEventValue("Scale Tuning", "D#", normalize_minus_63(-25), null, null);
+//        setEventValue("Scale Tuning", "E", normalize_minus_63(-20), null, null);
+//        setEventValue("Scale Tuning", "F", normalize_minus_63(-15), null, null);
+//        setEventValue("Scale Tuning", "F#", normalize_minus_63(-10), null, null);
+//        setEventValue("Scale Tuning", "G", normalize_minus_63(0), null, null);
+//        setEventValue("Scale Tuning", "G#", normalize_minus_63( 10), null, null);
+//        setEventValue("Scale Tuning", "A", normalize_minus_63(15), null, null);
+//        setEventValue("Scale Tuning", "A#", normalize_minus_63(20), null, null);
+//        setEventValue("Scale Tuning", "B", normalize_minus_63(30), null, null);
+//        handleEvent("Scale Tuning", List.of("F0 43 73 01 52 2F 02 01 40 19 1C 21 26 2B 30 35 3F 49 4E 53 5D F7"));
 
         final int BASE_NOTE_D=2;
         final int BASE_NOTE_MODE_ONLY_BASE_NOTE=0;
 
-//        setEventValue("Scale Tuning Base Note", "Parameter 1", null, 0, BASE_NOTE_D);
-//        setEventValue("Scale Tuning Base Note", "Parameter 2", null, 0, BASE_NOTE_MODE_ONLY_BASE_NOTE);
-//        handleEvent("Scale Tuning Base Note");
+//        setEventValue("Scale Tuning Base Note", "Base note", null, 0, BASE_NOTE_D);
+//        setEventValue("Scale Tuning Base Note", "Mode", null, 0, BASE_NOTE_MODE_ONLY_BASE_NOTE);
+//        handleEvent("Scale Tuning Base Note", List.of("F0 43 73 01 52 2F 02 00 4D 02 00 F7"));
 
-        final int BASE_NOTE_G_SHARP=9;
+        final int BASE_NOTE_G_SHARP=8;
         final int BASE_NOTE_MODE_BASE_AND_SCALE=1;
 
- //       setEventValue("Scale Tuning Base Note", "Parameter 1", BASE_NOTE_G_SHARP, 0, null);
- //       setEventValue("Scale Tuning Base Note", "Parameter 2", BASE_NOTE_MODE_BASE_AND_SCALE, 0, null);
- //       handleEvent("Scale Tuning Base Note");
+//        setEventValue("Scale Tuning Base Note", "Base note", null, 0, BASE_NOTE_G_SHARP);
+//        setEventValue("Scale Tuning Base Note", "Mode", null, 0, BASE_NOTE_MODE_BASE_AND_SCALE);
+//        handleEvent("Scale Tuning Base Note", List.of("F0 43 73 01 52 2F 02 00 4D 08 01 F7"));
 
+        // TODO Continue from here
         final int SMALL=0x00;
         final int LARGE=0x01;
 
