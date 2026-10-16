@@ -289,9 +289,8 @@ public class Test3Pane extends VBox {
 //        setEventValue("Scale Tuning Base Note", "Mode", null, 0, BASE_NOTE_MODE_BASE_AND_SCALE);
 //        handleEvent("Scale Tuning Base Note", List.of("F0 43 73 01 52 2F 02 00 4D 08 01 F7"));
 
-        // TODO Continue from here
         final int SMALL=0x00;
-        final int LARGE=0x01;
+        final int LARGE=0x02;
 
         final int CHANNEL_1 = 0;
         final int CHANNEL_2 = CHANNEL_1 + 1;
@@ -306,51 +305,77 @@ public class Test3Pane extends VBox {
         final int THIRTY_SECOND=3;
 
         final int FIXED_DO=1;
+//        setEventValue("Score", "Left Part Indication", ON, null, null);
+//        setEventValue("Score", "Right Part Indication", OFF, null, null);
+//        setEventValue("Score", "Chord Indication", ON, null, null);
+//        setEventValue("Score", "Size", LARGE, null, null);
+//        setEventValue("Score", "Left Channel", CHANNEL_3, null, null);
+//        setEventValue("Score", "Right Channel", CHANNEL_AUTO, null, null);
+//        setEventValue("Score", "Quantize Triplet", ON, null, null);
+//        setEventValue("Score", "Quantize", THIRTY_SECOND, null, null);
+//        setEventValue("Score", "Note Name", FIXED_DO, null, null);
+//        handleEvent("Score", List.of(
+//                "F0 43 73 01 50 12 00 00 7F F7",
+//                "F0 43 73 01 50 12 00 01 00 F7",
+//                "F0 43 73 01 50 12 00 03 7F F7",
+//                "F0 43 73 01 50 12 00 05 02 F7",
+//                "F0 43 73 01 50 12 00 06 02 F7",
+//                "F0 43 73 01 50 12 00 07 7F F7",
+//                "F0 43 73 01 50 12 00 09 03 F7",
+//                "F0 43 73 01 50 12 00 0A 01 F7"));
 
-//        setEventValue("Score", "Parameter 1", ON, null, null);
-//        setEventValue("Score", "Parameter 2", OFF, null, null);
-//        setEventValue("Score", "Parameter 3", ON, null, null);
-//        setEventValue("Score", "Parameter 6", LARGE, null, null);
-//        setEventValue("Score", "Parameter 7", CHANNEL_3, null, null);
-//        setEventValue("Score", "Parameter 8", CHANNEL_AUTO, null, null);
-//        setEventValue("Score", "Parameter 9", ON, null, null);
-//        setEventValue("Score", "Parameter 10", THIRTY_SECOND, null, null);
-//        setEventValue("Score", "Parameter 11", FIXED_DO, null, null);
-//        handleEvent("Score");
+//        setEventValue("Score", "Note Name", FIXED_DO, null, null);
 
-//        setEventValue("Reverb", ParameterType.PARAMETER, 1,10, null, null); // #1
-//        setEventValue("Reverb", ParameterType.PARAMETER, 2, 3, null, null);
-//        setEventValue("Reverb", ParameterType.PARAMETER, 3, 100, null, null); // #2
-//        setEventValue("Reverb", ParameterType.PARAMETER, 4, 30, null, null); // #3
-//        setEventValue("Reverb", ParameterType.PARAMETER, 5, 47, null, null); // #3
-//        setEventValue("Reverb", ParameterType.PARAMETER, 10, 21, null, null);
-//        setEventValue("Reverb", ParameterType.PARAMETER, 11, 90, null, null); // #2
-//        setEventValue("Reverb", ParameterType.PARAMETER, 12, 2, null, null);
-//        setEventValue("Reverb", ParameterType.PARAMETER, 13, 63, null, null);
-//        setEventValue("Reverb", ParameterType.PARAMETER, 14, 5, null, null);
-//        setEventValue("Reverb", ParameterType.PARAMETER, 15, 13, null, null);
+//        setEventValue("Reverb", "Parameter 1", 10, null, null); // #1
+//        setEventValue("Reverb", "Parameter 2", 3, null, null);
+//        setEventValue("Reverb", "Parameter 3", 100, null, null); // #2
+//        setEventValue("Reverb", "Parameter 4", 30, null, null); // #3
+//        setEventValue("Reverb", "Parameter 5", 47, null, null); // #3
+//        setEventValue("Reverb", "Parameter 10", 21, null, null);
+//        setEventValue("Reverb", "Parameter 11", 90, null, null); // #2
+//        setEventValue("Reverb", "Parameter 12", 2, null, null);
+//        setEventValue("Reverb", "Parameter 13", 63, null, null);
+//        setEventValue("Reverb", "Parameter 14", 5, null, null);
+//        setEventValue("Reverb", "Parameter 15", 11, null, null);
 
-//        setEventValue("Reverb", ParameterType.FREE, "0C", 13, null, null);
-//        setEventValue("Reverb", ParameterType.FREE, "0D", 13, null, null);
+//        setEventValue("Reverb", "Reverb Return", 13, null, null);
+//        setEventValue("Reverb", "Reverb Pan", 38, null, null);
 
-//        handleEvent("Reverb", 1, 0); // (1,0) = Hall1
+//        handleEvent("Reverb", 1, 0, List.of(
+//                "F0 43 10 4C 02 01 00 01 00 F7",
+//                "F0 43 10 4C 02 01 02 0A F7",
+//                "F0 43 10 4C 02 01 03 03 F7",
+//                "F0 43 10 4C 02 01 04 64 F7",
+//                "F0 43 10 4C 02 01 05 1E F7",
+//                "F0 43 10 4C 02 01 06 2F F7",
+//                "F0 43 10 4C 02 01 0B 15 F7",
+//                "F0 43 10 4C 02 01 10 5A F7",
+//                "F0 43 10 4C 02 01 11 02 F7",
+//                "F0 43 10 4C 02 01 12 3F F7",
+//                "F0 43 10 4C 02 01 13 05 F7",
+//                "F0 43 10 4C 02 01 14 0B F7",
+//                "F0 43 10 4C 02 01 0C 0D F7",
+//                "F0 43 10 4C 02 01 0D 26 F7"
+//        )); // (1,0) = Hall1
 
-//        setEventValue("Split Point", ParameterType.FREE, "Split point", 93, null, null);
-//        handleEvent("Split Point", null, null);
+//        setEventValue("Split Point", "Note Number", 93, null, null);
+//        handleEvent("Split Point", List.of("F0 43 73 01 51 00 00 00 03 10 00 5D F7"));
 
-//        setEventValue("Select Style", ParameterType.FREE, "Style", 12345, null, null);
-//        handleEvent("Select Style", null, null);
+//        setEventValue("Select Style", "Style Number", 12345, null, null);
+//        handleEvent("Select Style", List.of("F0 43 73 01 51 05 00 03 04 00 00 30 39 F7"));
 
-//        setEventValue("Tempo", ParameterType.FREE, "Tempo", 5, null, null);
-//        handleEvent("Tempo", null, null);
-//        setEventValue("Tempo", ParameterType.FREE, "Tempo", 112, null, null);
-//        handleEvent("Tempo", null, null);
+//        setEventValue("Tempo", "BPM", 5, null, null);
+//        handleEvent("Tempo", List.of("F0 43 7E 01 05 5C 36 00 F7"));
+//        setEventValue("Tempo", "BPM", 112, null, null);
+//        handleEvent("Tempo", List.of("F0 43 7E 01 00 20 59 22 F7"));
 
 
-//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Channel", 16, null, null);
-//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune E", null, 0x0E, null);
-//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
-//        handleEvent("Scale/Octave Tuning", null, null);
+        setEventValue("Scale/Octave Tuning", "Channel", 16, null, null);
+        setEventValue("Scale/Octave Tuning", "E", null, null, 0x0E);
+        setEventValue("Scale/Octave Tuning", "B", null, null, 0x12);
+        handleEvent("Scale/Octave Tuning", List.of(
+                "F0 7E 7E 08 08 7F 7F 7F 40 40 40 40 0E 40 40 40 40 40 40 12 F7"
+        ));
 
         final int ROOM_S=0;
         final int GM_PLATE=8;

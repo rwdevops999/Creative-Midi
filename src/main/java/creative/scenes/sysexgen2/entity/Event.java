@@ -63,19 +63,23 @@ public class Event implements IEvent {
 
     private void postProcess(List<EventParameter> parameters) {
         for (EventParameter parameter : parameters) {
-            int parameterId = parameter.getParameterId();
-
-            if (hasEventTypes()) {
-                EventType eventType = findEventTypeFromDefaultValue();
-
-                ParameterTable pt = eventType.getParameterTable();
-                for (ParametersTableEntry entry : pt.getEntries()) {
-                    if (entry.getParameterId() == parameterId) {
-                        parameter.setValue(new DataBlock(entry.getDefaultValue()));
-                    }
-                }
-            } else {
+            if (ParameterType.TYPE.equals(parameter.getParameterType())) {
                 parameter.setValue(defaultValue);
+            } else {
+                int parameterId = parameter.getParameterId();
+
+                if (hasEventTypes()) {
+                    EventType eventType = findEventTypeFromDefaultValue();
+
+                    ParameterTable pt = eventType.getParameterTable();
+                    for (ParametersTableEntry entry : pt.getEntries()) {
+                        if (entry.getParameterId() == parameterId) {
+                            parameter.setValue(new DataBlock(entry.getDefaultValue()));
+                        }
+                    }
+                } else {
+                    parameter.setValue(defaultValue);
+                }
             }
         }
     }

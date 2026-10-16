@@ -29,28 +29,6 @@ public class Test1Pane extends GridPane {
     private void runTest() {
         logger.debug("[CM_TEST1_PANE] Executing {}", getId());
 
-        System.out.println("TEST 1");
-        DataBlock tdb = new DataBlock(0x12, 0X55);
-        System.out.println(tdb.toHex(2));
-
-        System.out.println("TEST 2");
-        tdb = new DataBlock(0x12, 0X55, true);
-        System.out.println(tdb.toHex(2));
-
-        System.out.println("TEST 3");
-        tdb = new DataBlock(0x12, 0X55, false);
-        System.out.println(tdb.toHex(2));
-
-        System.out.println("TEST 4 (LITTLE)");
-        tdb = new DataBlock(false);
-        tdb.setValue(12345);
-        System.out.println(tdb.toHex(2));
-
-        System.out.println("TEST 5 (BIG)");
-        tdb = new DataBlock(true);
-        tdb.setValue(12345);
-        System.out.println(tdb.toHex(2));
-
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
 }

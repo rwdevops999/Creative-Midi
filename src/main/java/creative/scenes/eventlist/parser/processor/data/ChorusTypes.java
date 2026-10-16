@@ -131,7 +131,7 @@ public class ChorusTypes {
         byte bMSB = (byte)(msb & 0xFF);
         byte bLSB = (byte)(lsb & 0xFF);
 
-        DataBlock dataBlock = CHORUS_REGISTRY.keySet().stream().filter(b -> (b.getFirst() == bMSB) && (b.getSecond() == bLSB)).findFirst().orElse(null);
+        DataBlock dataBlock = CHORUS_REGISTRY.keySet().stream().filter(b -> (b.getMsb() == bMSB) && (b.getLsb() == bLSB)).findFirst().orElse(null);
         if (dataBlock != null) {
             return CHORUS_REGISTRY.get(dataBlock);
         }

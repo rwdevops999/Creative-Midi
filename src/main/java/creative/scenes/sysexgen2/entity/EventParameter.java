@@ -14,6 +14,7 @@ public class EventParameter {
     @Getter
     private String name;
 
+    @Getter
     private int endian = BIG_ENDIAN;
 
     @Getter
@@ -124,17 +125,19 @@ public class EventParameter {
     }
 
     public void setValue(DataBlock dataBlock) {
-        this.value = dataBlock;
-        handleLinkedValue(controllerId, this.value);
+        if (dataBlock != null) {
+            this.value = dataBlock;
+            handleLinkedValue(controllerId, this.value);
+        }
     }
 
     public void setValue(Integer value) {
-        this.value = new DataBlock(value, endian == BIG_ENDIAN);
+        this.value = new DataBlock(value);
         handleLinkedValue(controllerId, this.value);
     }
 
     public void setValue(Integer i1, Integer i2) {
-        this.value = new DataBlock(i1,i2,endian == BIG_ENDIAN);
+        this.value = new DataBlock(i1,i2);
         handleLinkedValue(controllerId, this.value);
     }
 
@@ -151,7 +154,7 @@ public class EventParameter {
                 sb
                         .append(String.format("%02X", entry.getKey()))
                         .append(" ")
-                        .append(entry.getValue().toHex(numBytes))
+                        .append(entry.getValue().toHex(numBytes, this.endian))
                         .append(" ");
             }
 
@@ -163,7 +166,7 @@ public class EventParameter {
         }
 
         if (value != null) {
-            return (address != null ? address + " " : "") + value.toHex(numBytes, useLowerOnly);
+            return (address != null ? address + " " : "") + value.toHex(numBytes, useLowerOnly, this.endian);
         }
 
         return ""; // CHECK Normally we should never come here

@@ -9,6 +9,9 @@ import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static util.Constants.BIG_ENDIAN;
+import static util.Constants.LITTLE_ENDIAN;
+
 public class SysexGen2Definitions {
     private static final Event.EventBuilder eventBuilder;
 
@@ -1572,15 +1575,15 @@ public class SysexGen2Definitions {
                         .clear()
                         .withName("Scale/Octave Tuning")
                         .withSysex("7E 08 08")
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE)
+                        .withEventParameter(eventParameterBuilder.clear().withName("Channel").withParameterType(ParameterType.FREE)
                                 .withCallback((channel) -> {
                                     int jj = 0;
                                     int gg = 0;
                                     int mm = 0;
 
                                     if (channel == 16) {
-                                        jj = 0xFF; // Bit 14 and 15 (binair: 00000011)
-                                        gg = 0xFF; // Bit From 7 to 13  (binair: 01111111)
+                                        jj = 0x7F; // Bit 14 and 15 (binair: 00000011)
+                                        gg = 0x7F; // Bit From 7 to 13  (binair: 01111111)
                                         mm = 0x7F; // Bit From 0  to 6   (binair: 01111111)
                                     } else {
                                         // Set Specific channel (from 0 to 15)
@@ -1608,41 +1611,41 @@ public class SysexGen2Definitions {
                                                 .build()
                                 )
                                 .build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("C").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("C#").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("D").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D#/E♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("D#").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D#/E♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune E").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("E").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune E").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("F").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("F#").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("G").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G#/A♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("G#").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G#/A♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("A").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A#/B♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("A#").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A#/B♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune B").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValue(0x40).build()
+                        .withEventParameter(eventParameterBuilder.clear().withName("B").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune B").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .build();
 
@@ -2034,18 +2037,18 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScoreTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("00").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("01").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Left Part Indication").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("00").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Right Part Indication").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("01").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Lyrics Indication").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Chord Indication").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Note Name Indication").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Size").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Left Channel").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Right Channel").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Quantize Triplet").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Quantize").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Note Name").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Color Note").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("0B").build())
                     .build();
 
 // Starting wit XG Change Parameter
@@ -2059,22 +2062,22 @@ public class SysexGen2Definitions {
                         .isNotInline()
 
                         // Type Parameter
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.TYPE).withNumBytes(2).withAddress("00").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withParameterType(ParameterType.TYPE).withNumBytes(2).withAddress("00").withEndian(LITTLE_ENDIAN).build())
 
                         // Add Parameters
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("0B").build())
 
                         // For Free Parameters we need additional information (that is normally handled by Parameter Table
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C")
+                        .withEventParameter(eventParameterBuilder.clear().withName("Reverb Return").withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C")
                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2085,7 +2088,7 @@ public class SysexGen2Definitions {
                                                 .build()
                                 )
                                 .build()) // REVERB RETURN
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D")
+                        .withEventParameter(eventParameterBuilder.clear().withName("Reverb Pan").withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D")
                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2097,12 +2100,12 @@ public class SysexGen2Definitions {
                                 )
                                 .build()) // REVERB PAN
 
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("10").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("11").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).withAddress("12").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).withAddress("13").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(15).withNumBytes(1).withAddress("14").build())
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.PARAMETER).withParameterId(16).withNumBytes(1).withAddress("15").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("10").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("11").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).withAddress("12").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).withAddress("13").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 15").withParameterType(ParameterType.PARAMETER).withParameterId(15).withNumBytes(1).withAddress("14").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 16").withParameterType(ParameterType.PARAMETER).withParameterId(16).withNumBytes(1).withAddress("15").build())
 
                         // Add Types
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("ReadLrgHall").withEventValues(1,32).withParameterTable(findParameterTable("RealReverb")).build())
@@ -2177,7 +2180,7 @@ public class SysexGen2Definitions {
                         .withName("Split Point")
                         .withSysex("73 01 51 00 00 00 03 10 00")
                         // Here we don't use a EventType but just free parameters
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(1)
+                        .withEventParameter(eventParameterBuilder.clear().withName("Note Number").withParameterType(ParameterType.FREE).withNumBytes(1)
                                  .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2196,7 +2199,7 @@ public class SysexGen2Definitions {
                         .withName("Select Style")
                         .withSysex("73 01 51 05 00 03 04 00 00")
                         // Here we don't use a EventType but just free parameters
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE).withNumBytes(2)
+                        .withEventParameter(eventParameterBuilder.clear().withName("Style Number").withParameterType(ParameterType.FREE).withEndian(LITTLE_ENDIAN).withNumBytes(2)
                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2215,7 +2218,7 @@ public class SysexGen2Definitions {
                         .withName("Tempo")
                         .withSysex("7E 01")
                         // Here we are going to define an event callback
-                        .withEventParameter(eventParameterBuilder.clear().withParameterType(ParameterType.FREE)
+                        .withEventParameter(eventParameterBuilder.clear().withName("BPM").withParameterType(ParameterType.FREE)
                                 .withCallback((tempo) -> {
                                     int microsecondValue = Math.round(60_000_000F / tempo);
 

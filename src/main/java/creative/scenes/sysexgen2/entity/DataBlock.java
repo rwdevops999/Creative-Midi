@@ -7,97 +7,53 @@ import java.util.HexFormat;
 import static util.Constants.BIG_ENDIAN;
 
 public class DataBlock {
-    private boolean encodingIsBigEndian;
     @Getter
-    private byte first;
+    private byte msb;
     @Getter
-    private byte second;
+    private byte lsb;
 
     public DataBlock() {
-        this.encodingIsBigEndian = true;
-        this.first = 0;
-        this.second = 0;
+        this.msb = 0;
+        this.lsb = 0;
     }
 
-    public DataBlock(boolean encodingIsBigEndian) {
+    public DataBlock(byte msb, byte lsb) {
+        this.msb = msb;
+        this.lsb = lsb;
+    }
+
+    public DataBlock(Integer msb, Integer lsb) {
         this();
-        this.encodingIsBigEndian = encodingIsBigEndian;
-    }
-
-    public DataBlock(byte first, byte second) {
-        this();
-        this.first = first;
-        this.second = second;
-    }
-
-    public DataBlock(byte first, byte second, boolean encodingIsBigEndian) {
-        this(encodingIsBigEndian);
-        this.first = first;
-        this.second = second;
-    }
-
-    public DataBlock(Integer ib1, Integer ib2) {
-        this();
-        this.first = (byte)(ib1 & 0XFF);
-        this.second = (byte)(ib2 & 0xFF);
-    }
-
-    public DataBlock(Integer b1, Integer b2, boolean encodingIsBigEndian) {
-        this(encodingIsBigEndian);
-        this.first = (byte)(b1 & 0xFF);
-        this.second = (byte)(b2 & 0XFF);
+        if (msb != null) {
+            this.msb = (byte)(msb & 0xFF);
+        }
+        if (lsb != null) {
+            this.lsb = (byte) (lsb & 0xFF);
+        }
     }
 
     public DataBlock(Integer ival) {
-        this();
-        if (this.encodingIsBigEndian) {
-            this.first = (byte)((ival >> 8) & 0xFF);
-            this.second = (byte)(ival & 0xFF);
-        } else {
-            this.first = (byte)(ival & 0xFF);
-            this.second = (byte)((ival >> 8) & 0xFF);
-        }
-    }
-
-    public DataBlock(Integer ival, boolean encodingIsBigEndian) {
-        this(encodingIsBigEndian);
-
-        if (this.encodingIsBigEndian) {
-            this.first = (byte)((ival >> 8) & 0xFF);
-            this.second = (byte)(ival & 0xFF);
-        } else {
-            this.first = (byte)(ival & 0xFF);
-            this.second = (byte)((ival >> 8) & 0xFF);
-        }
-    }
-
-    public void setValue(Integer ival) {
-        if (this.encodingIsBigEndian) {
-            this.first = (byte)((ival >> 8) & 0xFF);
-            this.second = (byte)(ival & 0xFF);
-        } else {
-            this.first = (byte)(ival & 0xFF);
-            this.second = (byte)((ival >> 8) & 0xFF);
-        }
+        this.msb = (byte) ((ival >> 8) & 0xFF);
+        this.lsb = (byte) (ival & 0xFF);;
     }
 
     public Integer getValue() {
-        if (this.encodingIsBigEndian) {
-            return (this.second << 8) | this.first;
-        } else {
-            return (this.first << 8) | this.second;
-        }
+        return ((this.msb & 0xFF) << 8) | (this.lsb & 0xFF);
     }
 
     // msb = 13
     // lsb = 0A
     // Returns "lsb msb" (e.g. "0A 13" for BIG_ENDIAN)
     // Returns "msb lsb" (e.g. "13 0A" for LITTLE_ENDIAN)
-    public String toHex(int numBytes, boolean useLowerOnly) {
+    public String toHex(int numBytes, boolean useLowerOnly, int encoding) {
         // Put bytes into an array for easy slicing/indexing
         byte[] bytes;
 
-        bytes = new byte[]{ useLowerOnly ? (byte)(second & 0x0F): second, useLowerOnly ? (byte)(first & 0x0F): first };
+        if (encoding == BIG_ENDIAN) {
+            bytes = new byte[]{ useLowerOnly ? (byte)(msb & 0x0F): msb, useLowerOnly ? (byte)(lsb & 0x0F): lsb };
+        } else {
+            bytes = new byte[]{ useLowerOnly ? (byte)(lsb & 0x0F): lsb, useLowerOnly ? (byte)(msb & 0x0F): msb };
+        }
 
         // Ensure numBytes stays within valid bounds (0 to 2)
         int targetLength = Math.max(0, Math.min(numBytes, bytes.length));
@@ -106,7 +62,7 @@ public class DataBlock {
         return HexFormat.of().withUpperCase().withDelimiter(" ").formatHex(bytes, 0, targetLength);
     }
 
-    public String toHex(int numBytes) {
-        return toHex(numBytes, false);
+    public String toHex(int numBytes, int encoding) {
+        return toHex(numBytes, false, encoding);
     }
 }
