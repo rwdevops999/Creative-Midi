@@ -1396,16 +1396,20 @@ public class SysexGen2Definitions {
                 .withEventParameter(
                         new EventParameter.EventParameterBuilder()
                                 .clear()
+                                .withName("Reverb Type")
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withControllerId(0X00)
                                 .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
                                 // TODO Linked Parameters also need DisplayBlock
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
+                                                .withName("Reverb Time")
                                                 .withControllerId(0X01)
                                                 .withNumBytes(1)
+                                                .withEndian(LITTLE_ENDIAN)
                                                 .build()
                                 )
                                 .build()

@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen2.entity;
 
 import creative.scenes.sysexgen2.data.ParameterType;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Event implements IEvent {
@@ -183,9 +185,9 @@ public class Event implements IEvent {
                             EventParameter parameter = findEventParameterById(parameterId);
                             if (parameter != null) {
                                 if (!parameter.isIgnore()) {
-                                    if (parameter.getValue() != null) {
+//                                    if (parameter.getValue() != null) {
                                         parameterSysexList.add(parameter.toSysex());
-                                    }
+//                                    }
                                 } else {
                                     parameterSysexList.add("00");
                                 }

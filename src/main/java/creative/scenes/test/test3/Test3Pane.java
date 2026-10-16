@@ -370,19 +370,26 @@ public class Test3Pane extends VBox {
 //        handleEvent("Tempo", List.of("F0 43 7E 01 00 20 59 22 F7"));
 
 
-        setEventValue("Scale/Octave Tuning", "Channel", 16, null, null);
-        setEventValue("Scale/Octave Tuning", "E", null, null, 0x0E);
-        setEventValue("Scale/Octave Tuning", "B", null, null, 0x12);
-        handleEvent("Scale/Octave Tuning", List.of(
-                "F0 7E 7E 08 08 7F 7F 7F 40 40 40 40 0E 40 40 40 40 40 40 12 F7"
-        ));
+//        setEventValue("Scale/Octave Tuning", "Channel", 16, null, null);
+//        setEventValue("Scale/Octave Tuning", "E", null, null, 0x0E);
+//        setEventValue("Scale/Octave Tuning", "B", null, null, 0x12);
+//        handleEvent("Scale/Octave Tuning", List.of(
+//                "F0 7E 7E 08 08 7F 7F 7F 40 40 40 40 0E 40 40 40 40 40 40 12 F7"
+//        ));
 
-        final int ROOM_S=0;
+        final int ROOM_L=2;
         final int GM_PLATE=8;
 
-//        EventParameter ep = setEventValue("Reverb Parameter", ParameterType.PARAMETER, 1, ROOM_S, null, null);
-//        setLinkedEventValue("Reverb Parameter", 1, 2, 123, null, null);
-//        handleEvent("Reverb Parameter", null, null);
+//        EventParameter ep = setEventValue("Reverb Parameter", "Reverb Type", ROOM_L, null, null);
+//        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 123, null, null);
+//        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B F7"));
+
+        setEventValue("Reverb Parameter", "Reverb Type", ROOM_L, null, null);
+        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 123, null, null);
+        setEventValue("Reverb Parameter", "Reverb Type", GM_PLATE, null, null);
+        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 92, null, null);
+//        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B F7"));
+        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B 00 08 01 5C F7"));
 
         final int FB_CHORUS=4;
 

@@ -39,16 +39,16 @@ public class EventParameter {
     @Getter
     @Setter
     private EventParameter linkedEventParameter;
-    private Map<Integer, DataBlock> linkedValuesMap;
 
     private List<EventParameter> linkedEventParameterList;
+
+    private Map<String, List<String>> linkedResultList;
 
     @Getter
     private Integer controllerId = null;
 
     public EventParameter() {
         this.value = null;
-        this.linkedValuesMap = new HashMap<>();
         this.linkedEventParameter = null;
         linkedEventParameterList = null;
     }
@@ -79,18 +79,19 @@ public class EventParameter {
         this.controllerId = builder.controllerId;
 
         if (builder.linkedEventParameterList != null) {
-            if (linkedEventParameterList == null) {
-                linkedValuesMap = new HashMap<>();
-            }
-
             linkedEventParameterList = builder.linkedEventParameterList;
             linkedEventParameterList.forEach(ep -> ep.setLinkedEventParameter(this));
+            linkedResultList = new HashMap<>();
         };
     }
 
+    public boolean hasLinkedParameters() {
+        return linkedEventParameterList != null && !linkedEventParameterList.isEmpty();
+    }
+
     public void setLinkedValue(Integer id, DataBlock value) {
-        linkedValuesMap.remove(id);
-        linkedValuesMap.put(id, value);
+//        linkedValuesMap.remove(id);
+//        linkedValuesMap.put(id, value);
     }
 
     public EventParameter findLinkedEventParameterByName(String name) {
@@ -101,75 +102,114 @@ public class EventParameter {
         return null;
     }
 
-/*    public EventParameter findLinkedEventParameterByControllerId(Integer controllerId) {
-        if (! linkedEventParameterList.isEmpty()) {
-            return linkedEventParameterList.stream().filter(e -> e.getControllerId() == controllerId).findFirst().orElse(null);
-        }
-
-        return null;
+    public void setValueInternal(Integer value) {
+        this.value = new DataBlock(value);
     }
-*/
 
-    private void handleLinkedValue(Integer controllerId, DataBlock value) {
-        if (controllerId == null) {
-            return;
+    public void clearValue() {
+        this.value = null;
+    }
+
+    public void addLinkedValue(String strvalue) {
+        String key = String.format("%02X %s", controllerId, value.toHex(numBytes, endian));
+
+        if (linkedResultList!= null && linkedResultList.containsKey(key)) {
+            List<String> entries = linkedResultList.get(key);
+            if (! entries.contains(strvalue)) {
+                entries.add(strvalue);  // is this by reference ???
+            }
+        }
+    }
+
+    private void handleLinkedValues() {
+        String key = String.format("%02X %s", controllerId, value.toHex(numBytes, endian));
+        if (linkedEventParameterList != null) {
+            if (! linkedResultList.containsKey(key)) {
+                linkedResultList.put(key, new ArrayList<>());
+                for (EventParameter ep : linkedEventParameterList) {
+                    ep.clearValue();
+                }
+            } else {
+                List<String> linkedValues = linkedResultList.get(key);
+                for (String keyValueCombination : linkedValues) {
+                    String[] splitted = keyValueCombination.split(" ");
+                    int cid = Integer.parseInt(splitted[0]);
+                    int value = Integer.parseInt(splitted[1]);
+
+                    for (EventParameter ep : linkedEventParameterList) {
+                        if (ep.getControllerId() == cid) {
+                            ep.setValueInternal(value);
+                        } else {
+                            ep.clearValue();
+                        }
+                    }
+                }
+            }
         }
 
-        if (value != null) {
-            if (linkedEventParameter != null) {
-                linkedEventParameter.setLinkedValue(controllerId, value);
-            } else {
-                setLinkedValue(controllerId, value);
-            }
+        if (linkedEventParameter != null) {
+            linkedEventParameter.addLinkedValue(key);
         }
     }
 
     public void setValue(DataBlock dataBlock) {
         if (dataBlock != null) {
             this.value = dataBlock;
-            handleLinkedValue(controllerId, this.value);
+            handleLinkedValues();
         }
     }
 
     public void setValue(Integer value) {
         this.value = new DataBlock(value);
-        handleLinkedValue(controllerId, this.value);
+        handleLinkedValues();
     }
 
     public void setValue(Integer i1, Integer i2) {
         this.value = new DataBlock(i1,i2);
-        handleLinkedValue(controllerId, this.value);
-    }
-
-    public void clearValue() {
-        this.value = null;
-        handleLinkedValue(parameterId, this.value);
+        handleLinkedValues();
     }
 
     public String toSysex() {
-        if (linkedValuesMap != null && ! linkedValuesMap.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-
-            for (Map.Entry<Integer, DataBlock> entry : linkedValuesMap.entrySet()) {
-                sb
-                        .append(String.format("%02X", entry.getKey()))
-                        .append(" ")
-                        .append(entry.getValue().toHex(numBytes, this.endian))
-                        .append(" ");
-            }
-
-            return sb.toString().trim();
-        }
-
-        if (callback != null && value != null) {
-            return callback.apply(value.getValue());
-        }
+        StringBuilder sb = new StringBuilder();
 
         if (value != null) {
-            return (address != null ? address + " " : "") + value.toHex(numBytes, useLowerOnly, this.endian);
+            if (linkedEventParameterList != null) {
+                List<String> keylist = linkedResultList.keySet().stream().sorted().toList();
+                for (String key : keylist) {
+                    List<String> values = linkedResultList.get(key).stream().sorted().toList();
+
+                    if (! values.isEmpty() ) {
+                        sb.append(key).append(" ");
+                        for (String value : values) {
+                            sb.append(value).append(" ");
+                        }
+                    }
+                }
+
+                System.out.println("CHECK");
+
+/*                String key = String.format("%02X %s", controllerId, value.toHex(numBytes, endian));
+
+                List<String> possibleSysexs = linkedResultList.get(key);
+                if (! possibleSysexs.isEmpty()) {
+                    sb.append(key).append(" ");
+                }
+
+                for (String possibleSysex : possibleSysexs) {
+                    sb.append(possibleSysex).append(" ");
+                }
+*/
+                return sb.toString().trim();
+            }
+
+            if (callback != null) {
+                sb.append(callback.apply(value.getValue()));
+            } else {
+                sb.append(address != null ? address + " " : "").append(value.toHex(numBytes, useLowerOnly, this.endian));
+            }
         }
 
-        return ""; // CHECK Normally we should never come here
+        return sb.toString();
     }
 
     public static class EventParameterBuilder {
@@ -185,7 +225,7 @@ public class EventParameter {
         private DisplayBlock displayBlock;
 
         private Function<Integer, String> callback;
-        private List<EventParameter> linkedEventParameterList = new ArrayList<>();
+        private List<EventParameter> linkedEventParameterList = null;
 
         private Integer controllerId;
 
@@ -198,7 +238,7 @@ public class EventParameter {
             this.parameterType = ParameterType.PARAMETER;
             this.displayBlock = null;
             this.callback = null;
-            this.linkedEventParameterList = new ArrayList<>();
+            this.linkedEventParameterList = null;
             this.name = "";
             this.endian = BIG_ENDIAN;
             this.controllerId = null;
@@ -227,6 +267,10 @@ public class EventParameter {
         }
 
         public EventParameterBuilder withLinkedEventParameter(EventParameter linkedParameter) {
+            if (linkedEventParameterList == null) {
+                linkedEventParameterList = new ArrayList<>();
+            }
+
             this.linkedEventParameterList.add(linkedParameter);
             return this;
         }

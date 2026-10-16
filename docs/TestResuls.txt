@@ -183,3 +183,12 @@ F0 43 7E 01 00 20 59 22 F7
 TEST: Scale/Octave Tuning
 ---=== Scale/Octave Tuning ===---
 F0 7E 7E 08 08 7F 7F 7F 40 40 40 40 0E 40 40 40 40 40 40 12 F7
+
+TEST: REVERB PARAMETER
+Set Reverb Type to ROOML (02H)
+For this set Reverb Time to 123 (7BH)
+The set Reverb Type to GMPlate (08H)
+For this set the Reverb Time to 92 (5C)
+---=== Reverb Parameter ===---
+F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B 00 08 01 5C F7
+
