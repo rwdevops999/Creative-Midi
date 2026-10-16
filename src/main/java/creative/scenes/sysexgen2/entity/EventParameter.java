@@ -186,19 +186,6 @@ public class EventParameter {
                     }
                 }
 
-                System.out.println("CHECK");
-
-/*                String key = String.format("%02X %s", controllerId, value.toHex(numBytes, endian));
-
-                List<String> possibleSysexs = linkedResultList.get(key);
-                if (! possibleSysexs.isEmpty()) {
-                    sb.append(key).append(" ");
-                }
-
-                for (String possibleSysex : possibleSysexs) {
-                    sb.append(possibleSysex).append(" ");
-                }
-*/
                 return sb.toString().trim();
             }
 

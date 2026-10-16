@@ -192,3 +192,14 @@ For this set the Reverb Time to 92 (5C)
 ---=== Reverb Parameter ===---
 F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B 00 08 01 5C F7
 
+TEST: CHORUS PARAMETER
+Set Chorus Type to GMChorus2 (= 01H)
+Set ModRate to 125
+Set ModDepth to 63
+Set Feedback to 21
+Set Chorus Type to FBChorus (= 04H)
+Set ModDepth to 12
+Set Feedback to 75
+Set SendToReverb to 22
+---=== Chorus Parameter ===---
+F0 7F 7F 04 05 01 01 01 01 02 00 01 01 7D 02 3F 03 15 00 04 02 0C 03 4B 04 16 F7

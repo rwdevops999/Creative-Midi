@@ -384,25 +384,27 @@ public class Test3Pane extends VBox {
 //        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 123, null, null);
 //        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B F7"));
 
-        setEventValue("Reverb Parameter", "Reverb Type", ROOM_L, null, null);
-        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 123, null, null);
-        setEventValue("Reverb Parameter", "Reverb Type", GM_PLATE, null, null);
-        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 92, null, null);
-//        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B F7"));
-        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B 00 08 01 5C F7"));
+//        setEventValue("Reverb Parameter", "Reverb Type", ROOM_L, null, null);
+//        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 123, null, null);
+//        setEventValue("Reverb Parameter", "Reverb Type", GM_PLATE, null, null);
+//        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 92, null, null);
+//        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B 00 08 01 5C F7"));
 
+        // TODO Continue from here
+        final int GM_CHORUS_2=1;
         final int FB_CHORUS=4;
 
-//        EventParameter ep = setEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, FB_CHORUS, null, null);
-//        setLinkedEventValue("Chorus Parameter", 1, 0x01, 123, null, null);
-//        setLinkedEventValue("Chorus Parameter", 1, 0X02, 125, null, null);
-//        setLinkedEventValue("Chorus Parameter", 1, 0x04, 126, null, null);
-//        setEventValue("Scale/Octave Tuning", ParameterType.FREE, "Tune B", null, 0x0E, null);
-//        ep.setValue(GM_PLATE, true);
-//        setEventValue(ep, 101, 123, null, null);
-//        setLinkedEventValue("Chorus Parameter", ParameterType.PARAMETER, 1, 1, 111, null, null);
-//        handleEvent("Chorus Parameter", null, null);
+//        setEventValue("Chorus Parameter", "Chorus Type", GM_CHORUS_2, null, null);
+//        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Mod Rate", 125, null, null);
+//        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Mod Depth", 63, null, null);
+//        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Feedback", 21, null, null);
+//        setEventValue("Chorus Parameter", "Chorus Type", FB_CHORUS, null, null);
+//        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Mod Depth", 12, null, null);
+//        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Feedback", 75, null, null);
+//        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Send To Reverb", 22, null, null);
+//        handleEvent("Chorus Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 02 00 01 01 7D 02 3F 03 15 00 04 02 0C 03 4B 04 16 F7"));
 
+        // TODO Continue from here
         // THIS IS THE LATEST ONE
 //        setEventValue("Aftertouch", "ChannelSelect", CHANNEL_5, null, null);
 //        setEventValue("Aftertouch", "PitchControl", 0x31, null, null);
