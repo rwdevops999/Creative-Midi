@@ -74,6 +74,11 @@ public class EventParameter {
         if (this.displayBlock != null) {
             this.value = this.displayBlock.getDefaultValue();
         }
+
+        if (this.ignore) {
+            this.value = new DataBlock(0XFF,0XFF);
+        }
+
         this.callback = builder.callback;
 
         this.controllerId = builder.controllerId;
@@ -113,9 +118,13 @@ public class EventParameter {
     public void addLinkedValue(String strvalue) {
         String key = String.format("%02X %s", controllerId, value.toHex(numBytes, endian));
 
-        if (linkedResultList!= null && linkedResultList.containsKey(key)) {
+        if (linkedResultList != null) {
+            if (! linkedResultList.containsKey(key)) {
+                linkedResultList.put(key, new ArrayList<>());
+            }
+
             List<String> entries = linkedResultList.get(key);
-            if (! entries.contains(strvalue)) {
+            if (!entries.contains(strvalue)) {
                 entries.add(strvalue);  // is this by reference ???
             }
         }
@@ -179,7 +188,10 @@ public class EventParameter {
                     List<String> values = linkedResultList.get(key).stream().sorted().toList();
 
                     if (! values.isEmpty() ) {
-                        sb.append(key).append(" ");
+                        // TO DO must change to ignore of that parameter
+                        if (! key.equals("FF FF")) {
+                            sb.append(key).append(" ");
+                        }
                         for (String value : values) {
                             sb.append(value).append(" ");
                         }

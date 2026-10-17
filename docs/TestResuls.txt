@@ -203,3 +203,25 @@ Set Feedback to 75
 Set SendToReverb to 22
 ---=== Chorus Parameter ===---
 F0 7F 7F 04 05 01 01 01 01 02 00 01 01 7D 02 3F 03 15 00 04 02 0C 03 4B 04 16 F7
+
+TEST: Aftertouch
+On Channel 5
+Set Pitch Control to 49
+and Amplitude Control to 123
+and LFO Amplitude Depth to 33
+
+---=== Aftertouch ===---
+F0 7F 7F 09 01 04 00 31 02 7B 05 21 F7
+
+TEST: Controller
+For Channel 7
+Set Pitch Control to 83
+and Filter Cutoff Control to 61
+and LFO Filter Depth to 99
+---=== Controller ===---
+F0 7F 7F 09 03 06 00 53 01 3D 04 63 F7
+
+
+
+
+

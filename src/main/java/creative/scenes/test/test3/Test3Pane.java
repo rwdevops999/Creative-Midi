@@ -297,6 +297,9 @@ public class Test3Pane extends VBox {
         final int CHANNEL_3 = CHANNEL_2 + 1;
         final int CHANNEL_4 = CHANNEL_3 + 1;
         final int CHANNEL_5 = CHANNEL_4 + 1;
+        final int CHANNEL_6 = CHANNEL_5 + 1;
+        final int CHANNEL_7 = CHANNEL_6 + 1;
+
         final int CHANNEL_AUTO=127;
 
         final int QUARTER=0;
@@ -390,7 +393,6 @@ public class Test3Pane extends VBox {
 //        setLinkedEventValue("Reverb Parameter", "Reverb Type", "Reverb Time", 92, null, null);
 //        handleEvent("Reverb Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 01 00 02 01 7B 00 08 01 5C F7"));
 
-        // TODO Continue from here
         final int GM_CHORUS_2=1;
         final int FB_CHORUS=4;
 
@@ -404,13 +406,25 @@ public class Test3Pane extends VBox {
 //        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Send To Reverb", 22, null, null);
 //        handleEvent("Chorus Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 02 00 01 01 7D 02 3F 03 15 00 04 02 0C 03 4B 04 16 F7"));
 
-        // THIS IS THE LATEST ONE
 //        setEventValue("Aftertouch", "Channel", CHANNEL_5, null, null);
 //        setEventValue("Aftertouch", "Pitch Control", 49, null, null);
 //        setLinkedEventValue("Aftertouch", "Pitch Control", "Amplitude Control", 123, null, null);
 //        setLinkedEventValue("Aftertouch", "Pitch Control", "LFO Amplitude Depth", 33, null, null);
 //        handleEvent("Aftertouch", List.of("F0 7F 7F 09 01 04 00 31 02 7B 05 21 F7"));
 
+//        setEventValue("Controller", "Channel", CHANNEL_7, null, null);
+//        setEventValue("Controller", "Pitch Control", 83, null, null);
+//        setLinkedEventValue("Controller", "Pitch Control", "Filter Cutoff Control", 61, null, null);
+//        setLinkedEventValue("Controller", "Pitch Control", "LFO Filter Depth", 99, null, null);
+//        handleEvent("Controller", List.of("F0 7F 7F 09 03 06 00 53 01 3D 04 63 F7"));
+
+        setEventValue("Key Based Instrument Control", "Channel", CHANNEL_6, null, null);
+        setEventValue("Key Based Instrument Control", "Key Number", 60, null, null);
+        setLinkedEventValue("Key Based Instrument Control", "Controller", "Volume", 118, null, null);
+        setLinkedEventValue("Key Based Instrument Control", "Controller", "Pan", 31, null, null);
+        setLinkedEventValue("Key Based Instrument Control", "Controller", "Chorus Send Level", 82, null, null);
+        handleEvent("Key Instrument Control", List.of("F0 7F 7F 0A 01 05 3C 07 76 0A 1F 5D 52 F7"));
+        
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
 }

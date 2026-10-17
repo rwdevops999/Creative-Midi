@@ -1474,7 +1474,6 @@ public class SysexGen2Definitions {
                 )
                 .build();
 
-        // TODO Check Other EventParameters (and adapt the tests)
         Event eventChannelPressure = eventBuilder
                 .clear()
                 .withName("Aftertouch")
@@ -1559,6 +1558,250 @@ public class SysexGen2Definitions {
                 )
                 .build();
 
+        Event eventController = eventBuilder
+                .clear()
+                .withName("Controller")
+                .withSysex("7F 09 03")
+                .withDefaultValues(0, 0)
+                .withEventType(
+                        eventTypeBuilder
+                                .clear()
+                                .withName("Channel EventType")
+                                .withEventValues(0, 0)
+                                .withParameterTable(findParameterTable("ChannelsTable"))
+                                .build()
+                )
+                .withEventParameter(
+                        eventParameterBuilder
+                                .clear()
+                                .withName("Channel")
+                                .withParameterType(ParameterType.PARAMETER)
+                                .withParameterId(1)
+                                .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
+                                .withUseLowerOnly(true)
+                                .build()
+                )
+                .withEventParameter(
+                        // Pitch Control
+                        new EventParameter.EventParameterBuilder()
+                                .clear()
+                                .withName("Pitch Control")
+                                .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
+                                .withControllerId(0X00)
+                                .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
+                                .withLinkedEventParameter(
+                                        // Filter Cutoff Control
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Filter Cutoff Control")
+                                                .withControllerId(0X01)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // Amplitude Control
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Amplitude Control")
+                                                .withControllerId(0X02)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Pitch Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("LFO Pitch Depth")
+                                                .withControllerId(0X03)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Filter Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("LFO Filter Depth")
+                                                .withControllerId(0X04)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Amplitude Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("LFO Amplitude Depth")
+                                                .withControllerId(0X05)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
+/*
+        Event eventController = eventBuilder
+                .clear()
+                .withName("Controller")
+                .withSysex("7F 09 03")
+                .withDefaultValues(0, 0)
+                .withEventType(
+                        eventTypeBuilder
+                                .clear()
+                                .withName("Channel EventType")
+                                .withEventValues(0, 0)
+                                .withParameterTable(findParameterTable("ChannelsTable"))
+                                .build()
+                )
+                .withEventParameter(
+                        eventParameterBuilder
+                                .clear()
+                                .withName("Channel")
+                                .withParameterType(ParameterType.PARAMETER)
+                                .withParameterId(1)
+                                .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
+                                .withUseLowerOnly(true)
+                                .build()
+                )
+                .withEventParameter(
+                        // Pitch Control
+                        new EventParameter.EventParameterBuilder()
+                                .clear()
+                                .withName("Pitch Control")
+                                .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
+                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
+                                .withControllerId(0X00)
+                                .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
+                                .withLinkedEventParameter(
+                                        // Filter Cutoff Control
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Filter Cutoff Control")
+                                                .withControllerId(0X01)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // Amplitude Control
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Amplitude Control")
+                                                .withControllerId(0X02)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Pitch Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("LFO Pitch Depth")
+                                                .withControllerId(0X03)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Filter Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("LFO Filter Depth")
+                                                .withControllerId(0X04)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        // LFO Amplitude Depth
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("LFO Amplitude Depth")
+                                                .withControllerId(0X05)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
+ */
+        Event eventKeyBasedInstrumentContol = eventBuilder
+                .clear()
+                .withName("Key Based Instrument Control")
+                .withSysex("7F 0A 01")
+                .withDefaultValues(0, 0)
+                .withEventType(
+                        eventTypeBuilder
+                                .clear()
+                                .withName("Channel EventType")
+                                .withEventValues(0, 0)
+                                .withParameterTable(findParameterTable("ChannelsTable"))
+                                .build()
+                )
+                .withEventParameter(
+                        eventParameterBuilder
+                                .clear()
+                                .withName("Channel")
+                                .withParameterType(ParameterType.PARAMETER)
+                                .withParameterId(1)
+                                .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
+                                .withUseLowerOnly(true)
+                                .build()
+                )
+                .withEventParameter(
+                        eventParameterBuilder
+                                .clear()
+                                .withName("Key Number")
+                                .withParameterType(ParameterType.FREE)
+                                .withParameterId(1)
+                                .withEndian(LITTLE_ENDIAN)
+                                .withNumBytes(1)
+                                .build()
+                )
+                .withEventParameter(
+                        new EventParameter.EventParameterBuilder()
+                                .clear()
+                                .withName("Controller")
+                                .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
+                                .withControllerId(0XFF) // It needs this but will get ignored
+                                .withNumBytes(1)
+                                .isIgnore(true)
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Volume")
+                                                .withControllerId(0X07)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Pan")
+                                                .withControllerId(0X0A)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Reverb Send Level")
+                                                .withControllerId(0X5B)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .withLinkedEventParameter(
+                                        new EventParameter.EventParameterBuilder()
+                                                .clear()
+                                                .withName("Chorus Send Level")
+                                                .withControllerId(0X5D)
+                                                .withEndian(LITTLE_ENDIAN)
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
+
         Event eventUniversalRealTime = eventBuilder
                 .clear()
                 .withName("Universal Real Time")
@@ -1569,6 +1812,8 @@ public class SysexGen2Definitions {
                 .withChild(eventReverbParameter)
                 .withChild(eventChorusParameter)
                 .withChild(eventChannelPressure)
+                .withChild(eventController)
+                .withChild(eventKeyBasedInstrumentContol)
                 .build();
         rootEvent.addChild(eventUniversalRealTime);
 
