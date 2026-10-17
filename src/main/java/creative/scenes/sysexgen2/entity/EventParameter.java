@@ -15,7 +15,7 @@ public class EventParameter {
     private String name;
 
     @Getter
-    private int endian = BIG_ENDIAN;
+    private int endian = LITTLE_ENDIAN;
 
     @Getter
     @Setter
@@ -218,7 +218,7 @@ public class EventParameter {
         private boolean ignore = false;
         private boolean useLowerOnly = false;
         private String address;
-        private int endian = BIG_ENDIAN;
+        private int endian = LITTLE_ENDIAN;
 
         private ParameterType parameterType;
         private DisplayBlock displayBlock;
@@ -239,7 +239,7 @@ public class EventParameter {
             this.callback = null;
             this.linkedEventParameterList = null;
             this.name = "";
-            this.endian = BIG_ENDIAN;
+            this.endian = LITTLE_ENDIAN;
             this.controllerId = null;
 
             return this;
@@ -255,7 +255,7 @@ public class EventParameter {
             return this;
         }
 
-        public EventParameterBuilder withEndian(int endian) {
+        public EventParameterBuilder useEndian(int endian) {
             this.endian = endian;
             return this;
         }
