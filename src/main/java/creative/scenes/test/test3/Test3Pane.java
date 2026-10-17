@@ -404,13 +404,12 @@ public class Test3Pane extends VBox {
 //        setLinkedEventValue("Chorus Parameter", "Chorus Type", "Send To Reverb", 22, null, null);
 //        handleEvent("Chorus Parameter", List.of("F0 7F 7F 04 05 01 01 01 01 02 00 01 01 7D 02 3F 03 15 00 04 02 0C 03 4B 04 16 F7"));
 
-        // TODO Continue from here
         // THIS IS THE LATEST ONE
-//        setEventValue("Aftertouch", "ChannelSelect", CHANNEL_5, null, null);
-//        setEventValue("Aftertouch", "PitchControl", 0x31, null, null);
-//        setLinkedEventValue("Aftertouch", "PitchControl", "AmplitudeControl", 123, null, null);
-//        setLinkedEventValue("Aftertouch", "PitchControl", "LFOAmplitudeDepth", 33, null, null);
-//        handleEvent("Aftertouch", null, null);
+//        setEventValue("Aftertouch", "Channel", CHANNEL_5, null, null);
+//        setEventValue("Aftertouch", "Pitch Control", 49, null, null);
+//        setLinkedEventValue("Aftertouch", "Pitch Control", "Amplitude Control", 123, null, null);
+//        setLinkedEventValue("Aftertouch", "Pitch Control", "LFO Amplitude Depth", 33, null, null);
+//        handleEvent("Aftertouch", List.of("F0 7F 7F 09 01 04 00 31 02 7B 05 21 F7"));
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
