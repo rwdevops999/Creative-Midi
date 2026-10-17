@@ -142,8 +142,8 @@ public class EventParameter {
                 List<String> linkedValues = linkedResultList.get(key);
                 for (String keyValueCombination : linkedValues) {
                     String[] splitted = keyValueCombination.split(" ");
-                    int cid = Integer.parseInt(splitted[0]);
-                    int value = Integer.parseInt(splitted[1]);
+                    int cid = Integer.parseInt(splitted[0], 16);
+                    int value = Integer.parseInt(splitted[1], 16);
 
                     for (EventParameter ep : linkedEventParameterList) {
                         if (ep.getControllerId() == cid) {

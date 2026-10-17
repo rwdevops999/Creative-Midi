@@ -221,7 +221,31 @@ and LFO Filter Depth to 99
 ---=== Controller ===---
 F0 7F 7F 09 03 06 00 53 01 3D 04 63 F7
 
+TEST: Key Instrument Control
+For Key Instrument Control" set Channe to CHANNEL 6
+and Key Number" to 60
+and Volume to 118
+and Pan to 31
+and Chorus Send Level to 82
+---=== Key Instrument Control ===---
+F0 7F 7F 0A 01 05 3C 07 76 0A 1F 5D 52 F7
 
 
+NO LITTLE
+Expecting ArrayList:
+  ["F0 43 73 01 52 2F 02 00 00 00 F7"]
+to contain:
+  ["F0 43 73 01 52 2F 02 00 4F 7F F7"]
+but could not find the following element(s):
+  ["F0 43 73 01 52 2F 02 00 4F 7F F7"]
 
+Parameter ID = LITTLE
+Expecting ArrayList:
+  ["F0 43 73 01 52 2F 02 00 4F 00 F7"]
+to contain:
+  ["F0 43 73 01 52 2F 02 00 4F 7F F7"]
+but could not find the following element(s):
+  ["F0 43 73 01 52 2F 02 00 4F 7F F7"]
+
+Both L.E.
 

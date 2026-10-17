@@ -1328,6 +1328,7 @@ public class SysexGen2Definitions {
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(2)
+                                .withEndian(LITTLE_ENDIAN)
                                 .build()
                 )
                 .build();
@@ -1352,6 +1353,7 @@ public class SysexGen2Definitions {
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(2)
+                                .withEndian(LITTLE_ENDIAN)
                                 .build()
                 )
                 .build();
@@ -1376,6 +1378,7 @@ public class SysexGen2Definitions {
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
                                 .build()
                 )
                 .build();
@@ -1961,6 +1964,7 @@ public class SysexGen2Definitions {
                                 .withParameterType(ParameterType.PARAMETER)
                                 .withParameterId(1)
                                 .withNumBytes(1)
+                                .withEndian(LITTLE_ENDIAN)
                                 .build()
                 )
                 .build();
@@ -1986,6 +1990,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .withEventParameter(
@@ -1995,6 +2000,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .build();
@@ -2020,6 +2026,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .withEventParameter(
@@ -2029,6 +2036,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .withEventParameter(
@@ -2038,6 +2046,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(3)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .build();
@@ -2063,6 +2072,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .build();
@@ -2088,6 +2098,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
 
@@ -2114,6 +2125,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
 
@@ -2140,6 +2152,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
 
@@ -2166,6 +2179,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .build();
@@ -2191,6 +2205,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(1)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .withEventParameter(
@@ -2200,6 +2215,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.PARAMETER)
                                         .withParameterId(2)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .build();
@@ -2217,6 +2233,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.FREE)
                                         .withParameterId(1)
                                         .withNumBytes(1, true)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .withEventParameter(
@@ -2226,6 +2243,7 @@ public class SysexGen2Definitions {
                                         .withParameterType(ParameterType.FREE)
                                         .withParameterId(2)
                                         .withNumBytes(1,true)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .withEventParameter(
@@ -2236,6 +2254,7 @@ public class SysexGen2Definitions {
                                         .withParameterId(3)
                                         .isIgnore(true)
                                         .withNumBytes(1)
+                                        .withEndian(LITTLE_ENDIAN)
                                         .build()
                         )
                         .build();
@@ -2254,20 +2273,20 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScaleTuningTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Fixed").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("C").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("C#").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("D").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("D#").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("E").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("F").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("F#").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("G").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("G#").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("A").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("A#").withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("B").withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Fixed").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("C").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("C#").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("D").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("D#").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("E").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("F").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("F#").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("G").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("G#").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("A").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("A#").withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("B").withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
                         .build();
 
         Event eventScaleTuningBaseNote  =
@@ -2284,8 +2303,8 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScaleTuningBaseNoteTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withName("Base note").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Mode").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Base note").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Mode").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withEndian(LITTLE_ENDIAN).build())
                         .build();
 
         Event eventScore =
@@ -2303,18 +2322,18 @@ public class SysexGen2Definitions {
                                         .withParameterTable(findParameterTable("ScoreTable"))
                                         .build()
                         )
-                        .withEventParameter(eventParameterBuilder.clear().withName("Left Part Indication").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("00").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Right Part Indication").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("01").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Lyrics Indication").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Chord Indication").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Note Name Indication").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Size").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Left Channel").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Right Channel").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Quantize Triplet").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Quantize").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Note Name").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Color Note").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Left Part Indication").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("00").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Right Part Indication").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("01").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Lyrics Indication").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("02").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Chord Indication").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("03").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Note Name Indication").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("04").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Size").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("05").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Left Channel").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("06").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Right Channel").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("07").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Quantize Triplet").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("08").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Quantize").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("09").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Note Name").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("0A").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Color Note").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("0B").build())
                     .build();
 
 // Starting wit XG Change Parameter
@@ -2328,22 +2347,22 @@ public class SysexGen2Definitions {
                         .isNotInline()
 
                         // Type Parameter
-                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withParameterType(ParameterType.TYPE).withNumBytes(2).withAddress("00").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Type").withParameterType(ParameterType.TYPE).withNumBytes(2).withAddress("00").build())
 
                         // Add Parameters
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("02").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("03").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("04").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("05").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("06").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("07").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("08").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("09").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("0A").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("0B").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 1").withParameterType(ParameterType.PARAMETER).withParameterId(1).withNumBytes(1).withAddress("02").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 2").withParameterType(ParameterType.PARAMETER).withParameterId(2).withNumBytes(1).withAddress("03").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 3").withParameterType(ParameterType.PARAMETER).withParameterId(3).withNumBytes(1).withAddress("04").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 4").withParameterType(ParameterType.PARAMETER).withParameterId(4).withNumBytes(1).withAddress("05").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 5").withParameterType(ParameterType.PARAMETER).withParameterId(5).withNumBytes(1).withAddress("06").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 6").withParameterType(ParameterType.PARAMETER).withParameterId(6).withNumBytes(1).withAddress("07").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 7").withParameterType(ParameterType.PARAMETER).withParameterId(7).withNumBytes(1).withAddress("08").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 8").withParameterType(ParameterType.PARAMETER).withParameterId(8).withNumBytes(1).withAddress("09").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 9").withParameterType(ParameterType.PARAMETER).withParameterId(9).withNumBytes(1).withAddress("0A").withEndian(LITTLE_ENDIAN).build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 10").withParameterType(ParameterType.PARAMETER).withParameterId(10).withNumBytes(1).withAddress("0B").withEndian(LITTLE_ENDIAN).build())
 
                         // For Free Parameters we need additional information (that is normally handled by Parameter Table
-                        .withEventParameter(eventParameterBuilder.clear().withName("Reverb Return").withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C")
+                        .withEventParameter(eventParameterBuilder.clear().withName("Reverb Return").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("0C")
                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2354,7 +2373,7 @@ public class SysexGen2Definitions {
                                                 .build()
                                 )
                                 .build()) // REVERB RETURN
-                        .withEventParameter(eventParameterBuilder.clear().withName("Reverb Pan").withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D")
+                        .withEventParameter(eventParameterBuilder.clear().withName("Reverb Pan").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN).withAddress("0D")
                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2366,12 +2385,12 @@ public class SysexGen2Definitions {
                                 )
                                 .build()) // REVERB PAN
 
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterType(ParameterType.PARAMETER).withParameterId(11).withNumBytes(1).withAddress("10").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("11").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterType(ParameterType.PARAMETER).withParameterId(13).withNumBytes(1).withAddress("12").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterType(ParameterType.PARAMETER).withParameterId(14).withNumBytes(1).withAddress("13").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 15").withParameterType(ParameterType.PARAMETER).withParameterId(15).withNumBytes(1).withAddress("14").build())
-                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 16").withParameterType(ParameterType.PARAMETER).withParameterId(16).withNumBytes(1).withAddress("15").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 11").withParameterType(ParameterType.PARAMETER).withParameterId(11).withEndian(LITTLE_ENDIAN).withNumBytes(1).withAddress("10").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 12").withParameterType(ParameterType.PARAMETER).withParameterId(12).withEndian(LITTLE_ENDIAN).withNumBytes(1).withAddress("11").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 13").withParameterType(ParameterType.PARAMETER).withParameterId(13).withEndian(LITTLE_ENDIAN).withNumBytes(1).withAddress("12").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 14").withParameterType(ParameterType.PARAMETER).withParameterId(14).withEndian(LITTLE_ENDIAN).withNumBytes(1).withAddress("13").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 15").withParameterType(ParameterType.PARAMETER).withParameterId(15).withEndian(LITTLE_ENDIAN).withNumBytes(1).withAddress("14").build())
+                        .withEventParameter(eventParameterBuilder.clear().withName("Parameter 16").withParameterType(ParameterType.PARAMETER).withParameterId(16).withEndian(LITTLE_ENDIAN).withNumBytes(1).withAddress("15").build())
 
                         // Add Types
                         .withEventType(eventTypeBuilder.clear().withCategory("Reverb").withName("ReadLrgHall").withEventValues(1,32).withParameterTable(findParameterTable("RealReverb")).build())
@@ -2446,7 +2465,7 @@ public class SysexGen2Definitions {
                         .withName("Split Point")
                         .withSysex("73 01 51 00 00 00 03 10 00")
                         // Here we don't use a EventType but just free parameters
-                        .withEventParameter(eventParameterBuilder.clear().withName("Note Number").withParameterType(ParameterType.FREE).withNumBytes(1)
+                        .withEventParameter(eventParameterBuilder.clear().withName("Note Number").withParameterType(ParameterType.FREE).withNumBytes(1).withEndian(LITTLE_ENDIAN)
                                  .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
@@ -2465,7 +2484,7 @@ public class SysexGen2Definitions {
                         .withName("Select Style")
                         .withSysex("73 01 51 05 00 03 04 00 00")
                         // Here we don't use a EventType but just free parameters
-                        .withEventParameter(eventParameterBuilder.clear().withName("Style Number").withParameterType(ParameterType.FREE).withEndian(LITTLE_ENDIAN).withNumBytes(2)
+                        .withEventParameter(eventParameterBuilder.clear().withName("Style Number").withParameterType(ParameterType.FREE).withNumBytes(2)
                                 .withDisplayblock(
                                         displayBlockBuilder
                                                 .clear()
