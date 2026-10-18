@@ -121,14 +121,10 @@ public class SysexGenSelectionPane extends GridPane {
     }
 
     private int populateLabelAndComboBox(int row, int column, List<Event> children, Event event) {
-        // 1. Maak het Label aan en bereken zijn eigen pure colspan
+        // 1. Maak het Label aan en bereken de colspan
         Label label = new Label(event.getName());
         label.setMinWidth(Control.USE_PREF_SIZE);
-
-        // Meet de exacte pixels van de LABEL-tekst
-        javafx.scene.text.Text labelHelper = new javafx.scene.text.Text(event.getName());
-        double labelWidth = labelHelper.getLayoutBounds().getWidth() + 10.0; // 10px ademruimte voor het label
-        int labelColspan = (int) Math.ceil(labelWidth / this.singleColumnPixelWidth);
+        int labelColspan = calculateColSpan(label, event.getName());
 
         if (!getChildren().contains(label)) {
             add(label, column, row, labelColspan, 1);
@@ -142,7 +138,7 @@ public class SysexGenSelectionPane extends GridPane {
                 .max((s1, s2) -> Integer.compare(s1.length(), s2.length()))
                 .orElse("EMPTY");
 
-        // 3. Maak de ComboBox aan (Puur Java, rechtstreeks in de Grid)
+        // 3. Maak de ComboBox aan
         ComboBox<Event> comboBox = new ComboBox<>();
         comboBox.setItems(FXCollections.observableArrayList(event.getChildren()));
         comboBox.setConverter(eventToStringConvertor);
@@ -159,16 +155,9 @@ public class SysexGenSelectionPane extends GridPane {
             }
         });
 
-        // 4. Meet de exacte pixels van de COMBOBOX-tekst
-        javafx.scene.text.Text comboHelper = new javafx.scene.text.Text(longestName);
+        // 4. Bereken de colspan voor de ComboBox op basis van de exacte pixelwiskunde
+        int comboboxColspan = calculateColSpan(comboBox, longestName);
 
-        // Bereken de exacte pixelbreedte (breedte van de tekst + 38px voor de pijlknop + 12px visuele marge naar rechts)
-        double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 50.0;
-
-        // Bereken exact hoeveel kolommen deze ComboBox NU nodig heeft
-        int comboboxColspan = (int) Math.ceil(exactComboWidth / this.singleColumnPixelWidth);
-
-        // 5. Voeg de ComboBox toe (kolom-positie schuift op met de breedte van het label)
         if (!getChildren().contains(comboBox)) {
             add(comboBox, column + labelColspan, row, comboboxColspan, 1);
         } else {
@@ -177,19 +166,30 @@ public class SysexGenSelectionPane extends GridPane {
             GridPane.setColumnSpan(comboBox, comboboxColspan);
         }
 
-        // 6. ⚡ DE PURE GRIDPANE REGLER: Dwing de ComboBox in het berekende vak
+        // 5. ⚡ DE PIXEL-PERFECTE INSNOERING ⚡
+        // We laten JavaFX zelf de minimale breedte berekenen zodat '...' nooit voorkomt
         comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
         comboBox.setPrefWidth(Control.USE_COMPUTED_SIZE);
-        comboBox.setMaxWidth(Double.MAX_VALUE); // Vul de colspan perfect op
+        comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE); // ❌ GEEN Double.MAX_VALUE meer!
 
+        // We dwingen de GridPane om de ComboBox compact links te houden
         GridPane.setHalignment(comboBox, HPos.LEFT);
-        GridPane.setFillWidth(comboBox, true);
-        GridPane.setHgrow(comboBox, Priority.ALWAYS);
+        GridPane.setFillWidth(comboBox, false); // ⚡ Dit voorkomt het overbodig uitrekken!
+        GridPane.setHgrow(comboBox, Priority.NEVER);
+
+        // 6. Voeg een kleine visuele tussenruimte (marge) toe aan de rechterkant
+        GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 10, 0, 0));
 
         // 7. Geef de perfect aansluitende volgende kolomindex terug
-        return column + labelColspan + comboboxColspan;
-    }
-    
+        int nextColumn = column + labelColspan + comboboxColspan - 1;
+
+        // Veiligheidscheck: zorg ervoor dat de volgende component minimaal
+        // ná het label start, zodat er nooit een overlapping kan optreden.
+        int minimumSafeColumn = column + labelColspan + 1;
+        nextColumn = Math.max(nextColumn, minimumSafeColumn);
+
+        return nextColumn;    }
+
     /**
      * Estimate visual pixel width required by the text
      *
@@ -227,17 +227,17 @@ public class SysexGenSelectionPane extends GridPane {
 
         boolean isComboBox = control instanceof ComboBox;
 
-        // 1. Meet de pure pixelbreedte van de letters op het scherm
+        // Meet de exacte pixelbreedte van de letters op het scherm
         javafx.scene.text.Text helper = new javafx.scene.text.Text(longestText);
         double rawTextWidth = helper.getLayoutBounds().getWidth();
 
-        // 2. STRETCH CORRECTIE: We gebruiken exact 34px voor de ComboBox pijl/marge en 4px voor het label
-        // Dit is de absolute minimumruimte om '...' te voorkomen zonder een extra kolom te triggeren
-        double totalRequiredWidth = rawTextWidth + (isComboBox ? 34.0 : 4.0);
+        // Voeg de minimale themamarges toe (34px voor de ComboBox pijl, 6px voor een Label)
+        double totalRequiredWidth = rawTextWidth + (isComboBox ? 34.0 : 6.0);
 
-        // 3. Bereken de colspan op basis van je zuivere kolombreedte
+        // Bereken de colspan op basis van de exacte pixelbreedte uit jouw constructor
         int colspan = (int) Math.ceil(totalRequiredWidth / this.singleColumnPixelWidth);
 
+        // Blijf binnen de 24 kolommen
         return Math.max(1, Math.min(colspan, NUM_COLS));
     }
 
