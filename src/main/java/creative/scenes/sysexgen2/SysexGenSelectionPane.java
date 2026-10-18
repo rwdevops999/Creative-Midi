@@ -10,10 +10,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -49,7 +49,7 @@ public class SysexGenSelectionPane extends GridPane {
         this.parent = owner;
         this.rootEvent = event;
 
-        // Bereken de exacte pixelgrootte per kolom
+        // calculate the exact pixel size per column
         this.singleColumnPixelWidth = (fixedWindowWidth - gridPadding) / NUM_COLS;
 
         for (int i = 0; i < NUM_COLS; i++) {
@@ -65,7 +65,7 @@ public class SysexGenSelectionPane extends GridPane {
         rowConstraints.setValignment(VPos.CENTER);
         getRowConstraints().add(rowConstraints);
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
 
         setPaneBackground(this);
 
@@ -76,6 +76,8 @@ public class SysexGenSelectionPane extends GridPane {
     private int nextRow = 0;
 
     private void buildPane() {
+        logger.debug("[CM_SYSEX_GEN_SELECTION_PANE] Building {}", getId());
+
         getChildren().clear();
 
         nextColumn = 0;
@@ -102,19 +104,21 @@ public class SysexGenSelectionPane extends GridPane {
             nextColumn = populateLabelAndComboBoxGeneric(
                     nextRow,
                     nextColumn,
-                    currentEvent.getName(),            // 1. LabelText
-                    currentEvent.getChildren(),        // 2. Items lijst
-                    Event::getName,                    // 3. NameExtractor
-                    currentEvent.getSelectedEvent(),   // 4. Geselecteerde item
-                    newVal -> {                        // 5. SelectionHandler callback
+                    currentEvent.getName(),                     // 1. Label Text
+                    currentEvent.getChildren(),                 // 2. Items list
+                    Event::getName,                             // 3. Name Extractor
+                    currentEvent.getSelectedEvent(),            // 4. Selected item
+                    newVal -> {                           // 5. callback
                         currentEvent.setSelectedEvent(newVal);
-                        buildPane();           // Trigger de schone heropbouw
+                        buildPane();                            // rebuild the pane
                     }
             );
 
             // continue with next selected event
             event = currentEvent.getSelectedEvent();
         }
+
+        logger.debug("[CM_SYSEX_GEN_SELECTION_PANE] Built {}", getId());
     }
 
     private <T> int populateLabelAndComboBoxGeneric(
@@ -138,22 +142,22 @@ public class SysexGenSelectionPane extends GridPane {
             GridPane.setColumnSpan(label, labelColspan);
         }
 
-        // Lookup then longeststring from the list
+        // Lookup then longest string from the list
         String longestName = items.stream()
                 .map(nameExtractor)
-                .max((s1, s2) -> Integer.compare(s1.length(), s2.length()))
+                .max(Comparator.comparingInt(String::length))
                 .orElse("EMPTY");
 
         // Create the ComboBox
         ComboBox<T> comboBox = new ComboBox<>();
         comboBox.setItems(FXCollections.observableArrayList(items));
 
-        comboBox.setConverter(new javafx.util.StringConverter<T>() {
+        comboBox.setConverter(new javafx.util.StringConverter<>() {
             @Override public String toString(T object) { return object == null ? "" : nameExtractor.apply(object); }
             @Override public T fromString(String string) { return null; }
         });
 
-        comboBox.setButtonCell(new ListCell<T>() {
+        comboBox.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
@@ -253,7 +257,7 @@ public class SysexGenSelectionPane extends GridPane {
     }
 
     private void startProcessingLeafEvent(Event event) {
-        System.out.println("PROCESSING: " + event.getName());
+        getSysexGen2Pane().getSysexGenParametersPane().setEvent(event);
     }
 
     // ACCESSORS
