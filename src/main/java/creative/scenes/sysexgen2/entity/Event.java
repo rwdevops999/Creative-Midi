@@ -123,21 +123,21 @@ public class Event implements IEvent {
         children.add(child);
     }
 
-    private boolean hasParameters() {
+    public boolean hasParameters() {
         return !parameters.isEmpty();
     }
 
-        public EventParameter findEventParameterByName(String name) {
-            EventParameter parameter = null;
+    public EventParameter findEventParameterByName(String name) {
+        EventParameter parameter = null;
 
-            if (hasParameters()) {
-                if (name != null && !name.isEmpty()) {
-                    parameter = this.parameters.stream().filter(ep -> name.equals(ep.getName())).findFirst().orElse(null);
-                }
+        if (hasParameters()) {
+            if (name != null && !name.isEmpty()) {
+                parameter = this.parameters.stream().filter(ep -> name.equals(ep.getName())).findFirst().orElse(null);
             }
-
-            return parameter;
         }
+
+        return parameter;
+    }
 
     public EventParameter findEventParameterById(int id) {
         EventParameter parameter = null;

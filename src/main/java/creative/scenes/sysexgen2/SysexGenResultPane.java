@@ -1,5 +1,6 @@
 package creative.scenes.sysexgen2;
 
+import creative.scenes.sysexgen2.entity.Event;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -14,6 +15,8 @@ import util.Util;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.util.ArrayList;
+import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -71,5 +74,15 @@ public class SysexGenResultPane extends VBox {
         getChildren().add(actionsPane);
   */
         logger.debug("[CM_SYSEX_GEN_RESULT_PANE] built {}", getId());
+    }
+
+    public void showSysex(Event event) {
+        List<String> sysexList = event.complete(new ArrayList<>(event.createSysexStrings()));
+
+        for (String sysexString : sysexList) {
+            listView.getItems().add(sysexString);
+        }
+
+        System.out.println("RENDER THIS");
     }
 }

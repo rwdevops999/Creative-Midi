@@ -65,11 +65,11 @@ public class SysexGenSelectionPane extends GridPane {
         rowConstraints.setValignment(VPos.CENTER);
         getRowConstraints().add(rowConstraints);
 
-//        showPaneBorder(this, getColor("border", "red"));
-
+        showPaneBorder(this, getColor("border", "green"));
+/*
         setPaneBackground(this);
 
-        buildPane();
+        buildPane(); */
     }
 
     private int nextColumn = 0;
