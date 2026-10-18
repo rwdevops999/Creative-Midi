@@ -3,6 +3,7 @@ package creative.scenes.sysexgen2;
 import creative.scenes.sysexgen2.entity.Event;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -78,6 +79,8 @@ public class SysexGenSelectionPane extends GridPane {
         buildPane();
     }
 
+    private boolean debugAddCombo = true;
+
     private StringProperty dsSelectedSysexText = new SimpleStringProperty("");
     private BooleanProperty dsSelectedSysexVisibility = new SimpleBooleanProperty(false);
 
@@ -105,24 +108,37 @@ public class SysexGenSelectionPane extends GridPane {
         // first we show the children op the root event
         int row = 0;
 
-        nextpos = populateLabelAndComboBox(row, 0, rootEvent.getChildren(), rootEvent);
+        Event event = rootEvent;
+        nextpos = populateLabelAndComboBox(row, 0, event);
+        while(event.getSelectedEvent() != null) {
+            nextpos = populateLabelAndComboBox(row, nextpos, event.getSelectedEvent());
+            event = event.getSelectedEvent();
+        }
 
         setupDataSourceListener();
-
-        Button testButton = new Button("Test");
-        add(testButton, nextpos, row);
-
     }
+
+    private boolean mute = false;
 
     private void setupDataSourceListener() {
         dsSelectedEvent.addListener((observable, oldValue, newValue) -> {
             System.out.println("Selected new event: " + newValue.getName());
+            System.out.println("USE NEXTPOS = " + nextpos);
+            nextpos = populateLabelAndComboBox(0, nextpos, newValue);
         });
     }
 
-    private int populateLabelAndComboBox(int row, int column, List<Event> children, Event event) {
+    private int populateLabelAndComboBox(int row, int column, Event event) {
+        if (event == null) {
+            return 0;
+        }
+
+        String id = String.format("r%d_c%d", row, column);
+
+        getChildren().remove(lookup("#label_" + id));
         // 1. Maak het Label aan en bereken de colspan
         Label label = new Label(event.getName());
+        label.setId("label_" + id);
         label.setMinWidth(Control.USE_PREF_SIZE);
         int labelColspan = calculateColSpan(label, event.getName());
 
@@ -138,10 +154,33 @@ public class SysexGenSelectionPane extends GridPane {
                 .max((s1, s2) -> Integer.compare(s1.length(), s2.length()))
                 .orElse("EMPTY");
 
+        if (! debugAddCombo) {
+            return column + labelColspan;
+        }
+
         // 3. Maak de ComboBox aan
+        getChildren().remove(lookup("#combo_" + id));
         ComboBox<Event> comboBox = new ComboBox<>();
+        comboBox.setId("combo_" + id);
         comboBox.setItems(FXCollections.observableArrayList(event.getChildren()));
         comboBox.setConverter(eventToStringConvertor);
+
+        if (event.getSelectedEvent() != null) {
+            comboBox.setValue(event.getSelectedEvent());
+/*            comboBox.getSelectionModel().select(event.getSelectedEvent());
+            comboBox.fireEvent(new ActionEvent()); */
+        }
+
+        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("CALLED LISTENER WITH EVENT: " + newValue.getName());
+            event.setSelectedEvent(newValue);
+            for (Event child : event.getChildren()) {
+                child.setSelectedEvent(null);
+            }
+
+            buildPane();
+//            dsSelectedEvent.setValue(newValue);
+        });
 
         comboBox.setButtonCell(new ListCell<Event>() {
             @Override
@@ -162,7 +201,7 @@ public class SysexGenSelectionPane extends GridPane {
             add(comboBox, column + labelColspan, row, comboboxColspan, 1);
         } else {
             GridPane.setColumnIndex(comboBox, column + labelColspan);
-            GridPane.setRowIndex(comboBox, row);
+//            GridPane.setRowIndex(comboBox, row);
             GridPane.setColumnSpan(comboBox, comboboxColspan);
         }
 
@@ -181,14 +220,15 @@ public class SysexGenSelectionPane extends GridPane {
         GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 10, 0, 0));
 
         // 7. Geef de perfect aansluitende volgende kolomindex terug
-        int nextColumn = column + labelColspan + comboboxColspan - 1;
+        int nextColumn = column + labelColspan + comboboxColspan;
 
         // Veiligheidscheck: zorg ervoor dat de volgende component minimaal
         // ná het label start, zodat er nooit een overlapping kan optreden.
         int minimumSafeColumn = column + labelColspan + 1;
         nextColumn = Math.max(nextColumn, minimumSafeColumn);
 
-        return nextColumn;    }
+        return nextColumn;
+    }
 
     /**
      * Estimate visual pixel width required by the text

@@ -33,11 +33,17 @@ public class Event implements IEvent {
 
     private boolean inline = true;
 
+    @Getter
+    @Setter
+    private Event selectedEvent;
+
     public Event() {
         this.eventTypes = new ArrayList<>();
         this.children = new ArrayList<>();
         this.parameters = new ArrayList<>();
         this.sysex = "";
+
+        this.selectedEvent = null;
     }
 
     public Event(String name) {
