@@ -23,7 +23,7 @@ public class SysexGen2Definitions {
     private static final DisplayBlock.DisplayBlockBuilder displayBlockBuilder;
 
     @Getter
-    private static final Event rootEvent = new Event("Root");
+    private static final Event rootEvent = new Event("Sysex");
 
     private static final List<ParameterTable> parameterTables;
     private static final List<DataTable> dataTables;
@@ -1293,7 +1293,7 @@ public class SysexGen2Definitions {
     }
 
 
-    public static void setup() {
+    public static Event setup() {
         createDataTables();
         createGeneralParameterTables();
         createCustomParameterTables();
@@ -2503,5 +2503,7 @@ public class SysexGen2Definitions {
                 .withChild(eventTempo)
                 .build();
         eventVendor.addChild(eventYamaha);  // this adds also into the rootEvent list vendor
+
+        return rootEvent;
     }
 }

@@ -24,6 +24,7 @@ public class Event implements IEvent {
 
     private String sysex;
 
+    @Getter
     private List<Event> children = new ArrayList<>();
     private DataBlock defaultValue;
 
@@ -98,7 +99,7 @@ public class Event implements IEvent {
         this.defaultValue = new DataBlock(i1, i2);
     }
 
-    private boolean hasChildren() {
+    public boolean hasChildren() {
         return !children.isEmpty();
     }
 
