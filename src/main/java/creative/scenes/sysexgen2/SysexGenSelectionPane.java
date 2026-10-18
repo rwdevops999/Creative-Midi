@@ -1,22 +1,20 @@
 package creative.scenes.sysexgen2;
 
 import creative.scenes.sysexgen2.entity.Event;
+import creative.scenes.sysexgen2.listener.SelectionHandler;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static util.ColorScheme.getColor;
 import static util.Constants.APP_WIDTH;
@@ -97,62 +95,66 @@ public class SysexGenSelectionPane extends GridPane {
         }
     };
 
-    private ObjectProperty<Event> dsSelectedEvent = new SimpleObjectProperty<>();
-
     private int nextpos = 0;
 
     private void buildPane() {
         getChildren().clear();
 
-        // first we show the children op the root event
+        nextpos = 0;
         int row = 0;
 
         Event event = rootEvent;
-        nextpos = populateLabelAndComboBox(row, 0, event);
-        while(event.getSelectedEvent() != null) {
-            nextpos = populateLabelAndComboBox(row, nextpos, event.getSelectedEvent());
-            event = event.getSelectedEvent();
-        }
 
-        setupDataSourceListener();
+        while (event != null) {
+            final Event currentEvent = event;
+
+            System.out.println("WHILE: " + currentEvent.getName());
+
+            // 1. OUDE LOGICA HERSTELD: Check op "XG Change Parameter" voor de Separator line
+            if ("XG Change Parameter".equals(currentEvent.getName())) {
+                row += 1;
+                add(new javafx.scene.control.Separator(), 0, row, 24, 1);
+                row += 1;
+                nextpos = 0; // Reset kolom naar het begin op de nieuwe rij
+            }
+
+            // 2. OUDE LOGICA HERSTELD: Check of dit het eindstation (leaf) is
+            if (!currentEvent.hasChildren()) {
+                handleLeafEvent(currentEvent); // Voer je leaf-logica uit na de clear()
+                break; // Stop de loop direct, een leaf heeft geen sub-events meer
+            }
+
+            // 3. Als het event kinderen heeft, roepen we de methode aan met exact 7 parameters
+            nextpos = populateLabelAndComboBoxGeneric(
+                    row,
+                    nextpos,
+                    currentEvent.getName(),            // 1. LabelText
+                    currentEvent.getChildren(),        // 2. Items lijst
+                    Event::getName,                    // 3. NameExtractor
+                    currentEvent.getSelectedEvent(),   // 4. Geselecteerde item
+                    newVal -> {                        // 5. SelectionHandler callback
+                        currentEvent.setSelectedEvent(newVal);
+                        buildPane();           // Trigger de schone heropbouw
+                    }
+            );
+
+            // 4. Verschuif de pointer naar het geselecteerde sub-event voor de volgende stap
+            event = currentEvent.getSelectedEvent();
+        }
     }
 
-    private boolean mute = false;
+    private <T> int populateLabelAndComboBoxGeneric(
+            int row, int column, String labelText, List<T> items,
+            Function<T, String> nameExtractor, T selectedItem,
+            SelectionHandler<T> selectionHandler) {
 
-    private void setupDataSourceListener() {
-        dsSelectedEvent.addListener((observable, oldValue, newValue) -> {
-            System.out.println("Selected new event: " + newValue.getName());
-            System.out.println("USE NEXTPOS = " + nextpos);
-            nextpos = populateLabelAndComboBox(0, nextpos, newValue);
-        });
-    }
-
-    private int populateLabelAndComboBox(int row, int column, Event event) {
-        if (event == null) {
-            return 0;
-        }
-
-        if (! event.hasChildren()) {
-            handleLeafEvent(event);
-            return 0;
-        }
-
-        if ("XG Change Parameter".equals(event.getName())) {
-            row += 1;
-            add(new Separator(), 0, row, 24, 1);
-            row += 1;
-            column = 0;
-        }
-        System.out.println("HANDLING EVENT: " + event.getName());
-
-        String id = String.format("r%d_c%d", row, column);
-
-        getChildren().remove(lookup("#label_" + id));
-        // 1. Maak het Label aan en bereken de colspan
-        Label label = new Label(event.getName());
-        label.setId("label_" + id);
+        // 1. Maak het Label aan en bereken zijn colspan
+        Label label = new Label(labelText);
         label.setMinWidth(Control.USE_PREF_SIZE);
-        int labelColspan = calculateColSpan(label, event.getName());
+
+        javafx.scene.text.Text labelHelper = new javafx.scene.text.Text(labelText);
+        double labelWidth = labelHelper.getLayoutBounds().getWidth() + 8.0;
+        int labelColspan = (int) Math.ceil(labelWidth / this.singleColumnPixelWidth);
 
         if (!getChildren().contains(label)) {
             add(label, column, row, labelColspan, 1);
@@ -160,124 +162,69 @@ public class SysexGenSelectionPane extends GridPane {
             GridPane.setColumnSpan(label, labelColspan);
         }
 
-        // 2. Zoek de langste naam voor de ComboBox
-        String longestName = event.getChildren().stream()
-                .map(Event::getName)
+        // 2. Zoek de langste tekst in de lijst via de nameExtractor
+        String longestName = items.stream()
+                .map(nameExtractor)
                 .max((s1, s2) -> Integer.compare(s1.length(), s2.length()))
                 .orElse("EMPTY");
 
-        if (! debugAddCombo) {
-            return column + labelColspan;
-        }
-
         // 3. Maak de ComboBox aan
-        getChildren().remove(lookup("#combo_" + id));
-        ComboBox<Event> comboBox = new ComboBox<>();
-        comboBox.setId("combo_" + id);
-        comboBox.setItems(FXCollections.observableArrayList(event.getChildren()));
-        comboBox.setConverter(eventToStringConvertor);
+        ComboBox<T> comboBox = new ComboBox<>();
+        comboBox.setItems(FXCollections.observableArrayList(items));
 
-        if (event.getSelectedEvent() != null) {
-            comboBox.setValue(event.getSelectedEvent());
-/*            comboBox.getSelectionModel().select(event.getSelectedEvent());
-            comboBox.fireEvent(new ActionEvent()); */
-        }
-
-        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("CALLED LISTENER WITH EVENT: " + newValue.getName());
-            event.setSelectedEvent(newValue);
-            for (Event child : event.getChildren()) {
-                child.setSelectedEvent(null);
-            }
-
-            buildPane();
-//            dsSelectedEvent.setValue(newValue);
+        comboBox.setConverter(new javafx.util.StringConverter<T>() {
+            @Override public String toString(T object) { return object == null ? "" : nameExtractor.apply(object); }
+            @Override public T fromString(String string) { return null; }
         });
 
-        comboBox.setButtonCell(new ListCell<Event>() {
+        comboBox.setButtonCell(new ListCell<T>() {
             @Override
-            protected void updateItem(Event item, boolean empty) {
+            protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getName());
+                    setText(nameExtractor.apply(item));
                 }
             }
         });
 
-        // 4. Bereken de colspan voor de ComboBox op basis van de exacte pixelwiskunde
-        int comboboxColspan = calculateColSpan(comboBox, longestName);
+        if (selectedItem != null) {
+            comboBox.setValue(selectedItem);
+        }
+
+        // 4. De Listener activeert de callback en bewaart de data
+        comboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                selectionHandler.handleSelection(newVal);
+            }
+        });
+
+        // 5. Bereken de colspan voor de ComboBox
+        javafx.scene.text.Text comboHelper = new javafx.scene.text.Text(longestName);
+        double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 38.0;
+        int comboboxColspan = (int) Math.ceil((exactComboWidth + 12.0) / this.singleColumnPixelWidth);
 
         if (!getChildren().contains(comboBox)) {
             add(comboBox, column + labelColspan, row, comboboxColspan, 1);
         } else {
             GridPane.setColumnIndex(comboBox, column + labelColspan);
-//            GridPane.setRowIndex(comboBox, row);
+            GridPane.setRowIndex(comboBox, row);
             GridPane.setColumnSpan(comboBox, comboboxColspan);
         }
 
-        // 5. ⚡ DE PIXEL-PERFECTE INSNOERING ⚡
-        // We laten JavaFX zelf de minimale breedte berekenen zodat '...' nooit voorkomt
+        // 6. Grid-constraints om de ComboBox compact te houden
         comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
         comboBox.setPrefWidth(Control.USE_COMPUTED_SIZE);
-        comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE); // ❌ GEEN Double.MAX_VALUE meer!
-
-        // We dwingen de GridPane om de ComboBox compact links te houden
+        comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE);
         GridPane.setHalignment(comboBox, HPos.LEFT);
-        GridPane.setFillWidth(comboBox, false); // ⚡ Dit voorkomt het overbodig uitrekken!
+        GridPane.setFillWidth(comboBox, false);
         GridPane.setHgrow(comboBox, Priority.NEVER);
 
-        // 6. Voeg een kleine visuele tussenruimte (marge) toe aan de rechterkant
-        GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 10, 0, 0));
+        GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 12, 0, 0));
 
-        // 7. Geef de perfect aansluitende volgende kolomindex terug
-        int nextColumn = column + labelColspan + comboboxColspan;
-
-        // Veiligheidscheck: zorg ervoor dat de volgende component minimaal
-        // ná het label start, zodat er nooit een overlapping kan optreden.
-        int minimumSafeColumn = column + labelColspan + 1;
-        nextColumn = Math.max(nextColumn, minimumSafeColumn);
-
-        return nextColumn;
-    }
-
-    private void handleLeafEvent(Event event) {
-        System.out.println("Handling Leaf event: " + event.getName());
-
-        List<String> categories = event.getEventTypeCategories();
-
-
-    }
-
-    /**
-     * Estimate visual pixel width required by the text
-     *
-     * @param str the string of which to calculate the width
-     * @return the estimated width in pixels
-     */
-    private int calculateTextWidthInPixels(String str, Font font, boolean isComboBox) {
-        if (str == null || str.isEmpty()) {
-            return isComboBox ? 45 : 10; // Minimum default fallbacks
-        }
-
-        // 1. Create a graphic text element to accurately measure font metrics
-        Text helper = new Text(str);
-        if (font != null) {
-            helper.setFont(font);
-        }
-
-        // 2. Extract the true visual width
-        double textWidth = helper.getLayoutBounds().getWidth();
-
-        // 3. Add structural UI padding buffers
-        if (isComboBox) {
-            // Text width + left/right padding + width of the drop-down arrow graphic
-            return (int) Math.ceil(textWidth + 35);
-        } else {
-            // Text width + subtle padding buffer for regular labels
-            return (int) Math.ceil(textWidth + 8);
-        }
+        // 7. Geeft de exacte, pure eindkolom terug (vlijmscherpe aansluiting, geen overlap)
+        return column + labelColspan + comboboxColspan;
     }
 
     public int calculateColSpan(Control control, String longestText) {
@@ -301,47 +248,8 @@ public class SysexGenSelectionPane extends GridPane {
         return Math.max(1, Math.min(colspan, NUM_COLS));
     }
 
-    private void setRootChildren(ComboBox<Event> comboBox, int row, int column, int relativePosition, int colspan, String label, boolean visible, Event event) {
-        this.getChildren().remove(comboBox);
-        Node child = this.lookup("#selectedSysexLabel");
-        if (child != null) {
-            this.getChildren().remove(child);
-        }
-
-        Label selectedSysexLabel = new Label();
-        selectedSysexLabel.setId("selectedSysexLabel");
-        selectedSysexLabel.textProperty().bind(dsSelectedSysexText);
-        selectedSysexLabel.visibleProperty().bind(dsSelectedSysexVisibility);
-        add(selectedSysexLabel, column, row, 6, 1);
-
-        if (event.hasChildren()) {
-            List<Event> children = event.getChildren();
-            comboBox.setItems(FXCollections.observableArrayList(children));
-
-            add(comboBox, column + relativePosition, row);
-
-            int maxLength = comboBox.getItems().stream()
-                    .map(Event::getName)
-                    .mapToInt(String::length)
-                    .max()
-                    .orElse(10);
-
-            double estimatedTextWidth = (maxLength * 8.5) + 35;
-            comboBox.setMaxWidth(estimatedTextWidth);
-            comboBox.setPrefWidth(estimatedTextWidth);
-
-            double gridWidth = getWidth() > 0 ? getWidth() : 800;
-            double singleColumnWidth = gridWidth / 24.0;
-            int estcolspan = (int) Math.ceil(estimatedTextWidth / singleColumnWidth);
-            estcolspan = Math.max(1, Math.min(estcolspan, 24));
-
-
-            GridPane.setColumnSpan(comboBox, estcolspan);
-        }
-
-        dsSelectedSysexText.set(label);
-        dsSelectedSysexVisibility.set(visible);
-
+    private void handleLeafEvent(Event event) {
+        System.out.println("Handling Leaf Event: " + event.getName());
     }
 
     // ACCESSORS
