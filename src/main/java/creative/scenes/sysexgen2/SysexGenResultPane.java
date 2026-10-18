@@ -1,20 +1,14 @@
 package creative.scenes.sysexgen2;
 
 import creative.scenes.sysexgen2.entity.Event;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ColorScheme;
-import util.Util;
-
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,28 +35,32 @@ public class SysexGenResultPane extends VBox {
 
         showPaneBorder(this, getColor("border", "red"));
 
-//        buildPane();
+        buildPane();
     }
+
+    private BooleanProperty disabled = new SimpleBooleanProperty(true);
 
     private void buildPane() {
         logger.debug("[CM_SYSEX_GEN_RESULT_PANE] building {}", getId());
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem copy = new MenuItem("Copy To Clipboard");
-        copy.setDisable(true);
+        copy.disableProperty().bind(disabled);
+
 /*        copy.setOnAction(event -> {
             StringSelection stringSelection = new StringSelection(listView.getSelectionModel().getSelectedItem());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
         }); */
         MenuItem clear = new MenuItem("Clear All");
+        clear.disableProperty().bind(disabled);
 //        clear.setOnAction(event -> listView.getItems().clear());
         contextMenu.getItems().addAll(copy, clear);
 
         listView = new ListView<>();
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                copy.setDisable(false);
+                disabled.set(false);
             }
         });
         listView.setContextMenu(contextMenu);
@@ -81,6 +79,8 @@ public class SysexGenResultPane extends VBox {
         for (String sysexString : sysexList) {
             listView.getItems().add(sysexString);
         }
+
+        disabled.set(! sysexList.isEmpty());
 
         System.out.println("RENDER THIS");
     }

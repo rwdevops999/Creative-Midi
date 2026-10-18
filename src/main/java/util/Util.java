@@ -71,7 +71,9 @@ public class Util {
     }
 
     public static void setPaneMinHeightAsPercentage(Pane originator, Pane parent, int size) {
-        originator.minHeightProperty().bind(parent.heightProperty().multiply(size / 100.0));
+        var percentageMultiplier = size / 100.0;
+        originator.minHeightProperty().bind(parent.heightProperty().multiply(percentageMultiplier));
+        originator.prefHeightProperty().bind(parent.heightProperty().multiply(percentageMultiplier));
     }
 
     public static void setPaneMaxHeightAsPercentage(Pane originator, Pane parent, int size) {
