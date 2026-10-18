@@ -9,6 +9,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +42,7 @@ public class SysexGenResultPane extends VBox {
         buildPane();
     }
 
-    private BooleanProperty disabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty disabled = new SimpleBooleanProperty(true);
 
     private void buildPane() {
         logger.debug("[CM_SYSEX_GEN_RESULT_PANE] building {}", getId());
@@ -47,14 +51,18 @@ public class SysexGenResultPane extends VBox {
         MenuItem copy = new MenuItem("Copy To Clipboard");
         copy.disableProperty().bind(disabled);
 
-/*        copy.setOnAction(event -> {
+        copy.setOnAction(event -> {
             StringSelection stringSelection = new StringSelection(listView.getSelectionModel().getSelectedItem());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
-        }); */
+        });
+
         MenuItem clear = new MenuItem("Clear All");
         clear.disableProperty().bind(disabled);
-//        clear.setOnAction(event -> listView.getItems().clear());
+        clear.setOnAction(event -> {
+            listView.getItems().clear();
+            disabled.set(true);
+        });
         contextMenu.getItems().addAll(copy, clear);
 
         listView = new ListView<>();
