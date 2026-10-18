@@ -70,6 +70,10 @@ public class Event implements IEvent {
         this.inline = builder.inline;
     }
 
+    public EventType getFirstEventTypeOfCategory(String category) {
+        return eventTypes.stream().filter(et -> category.equals(et.getCategory())).findFirst().orElse(null);
+    }
+
     private void postProcess(List<EventParameter> parameters) {
         for (EventParameter parameter : parameters) {
             if (ParameterType.TYPE.equals(parameter.getParameterType())) {
@@ -109,7 +113,7 @@ public class Event implements IEvent {
         return !children.isEmpty();
     }
 
-    private boolean hasEventTypes() {
+    public boolean hasEventTypes() {
         return ((eventTypes != null) && (!eventTypes.isEmpty()));
     }
 

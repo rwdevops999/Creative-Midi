@@ -1,6 +1,8 @@
 package creative.scenes.sysexgen2;
 
+import creative.scenes.sysexgen2.SysexGen2Pane;
 import creative.scenes.sysexgen2.entity.Event;
+import creative.scenes.sysexgen2.entity.EventType;
 import creative.scenes.sysexgen2.listener.SelectionHandler;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -95,39 +97,38 @@ public class SysexGenSelectionPane extends GridPane {
         }
     };
 
-    private int nextpos = 0;
+    private int nextColumn = 0;
+    private int nextRow = 0;
 
     private void buildPane() {
         getChildren().clear();
 
-        nextpos = 0;
-        int row = 0;
+        nextColumn = 0;
+        nextRow = 0;
 
         Event event = rootEvent;
 
         while (event != null) {
             final Event currentEvent = event;
 
-            System.out.println("WHILE: " + currentEvent.getName());
-
             // 1. OUDE LOGICA HERSTELD: Check op "XG Change Parameter" voor de Separator line
             if ("XG Change Parameter".equals(currentEvent.getName())) {
-                row += 1;
-                add(new javafx.scene.control.Separator(), 0, row, 24, 1);
-                row += 1;
-                nextpos = 0; // Reset kolom naar het begin op de nieuwe rij
+                nextRow += 1;
+                nextColumn = 0;
+                add(new javafx.scene.control.Separator(), nextColumn, nextRow, 24, 1);
+                nextRow += 1;
             }
 
             // 2. OUDE LOGICA HERSTELD: Check of dit het eindstation (leaf) is
             if (!currentEvent.hasChildren()) {
-                handleLeafEvent(currentEvent); // Voer je leaf-logica uit na de clear()
+                handleLeafEvent(currentEvent, false); // Voer je leaf-logica uit na de clear()
                 break; // Stop de loop direct, een leaf heeft geen sub-events meer
             }
 
             // 3. Als het event kinderen heeft, roepen we de methode aan met exact 7 parameters
-            nextpos = populateLabelAndComboBoxGeneric(
-                    row,
-                    nextpos,
+            nextColumn = populateLabelAndComboBoxGeneric(
+                    nextRow,
+                    nextColumn,
                     currentEvent.getName(),            // 1. LabelText
                     currentEvent.getChildren(),        // 2. Items lijst
                     Event::getName,                    // 3. NameExtractor
@@ -248,8 +249,58 @@ public class SysexGenSelectionPane extends GridPane {
         return Math.max(1, Math.min(colspan, NUM_COLS));
     }
 
-    private void handleLeafEvent(Event event) {
-        System.out.println("Handling Leaf Event: " + event.getName());
+    private void handleLeafEvent(Event event, boolean skipTypes) {
+        if (! skipTypes) {
+            if (event.hasEventTypes()) {
+                List<String> categories = event.getEventTypeCategories();
+                EventType eventType = event.findEventTypeFromDefaultValue();
+
+                nextColumn = populateLabelAndComboBoxGeneric(
+                        nextRow,
+                        nextColumn,
+                        "Categories",            // 1. LabelText
+                        categories,        // 2. Items lijst
+                        String::toString,                    // 3. NameExtractor
+                        eventType.getCategory(),   // 4. Geselecteerde item
+                        newVal -> {                        // 5. SelectionHandler callback
+                            handleNewCategory(event, newVal);
+//                        currentEvent.setSelectedEvent(newVal);
+//                        buildPane();           // Trigger de schone heropbouw
+                        }
+                );
+
+                List<EventType> eventTypesOfCategory = event.getEventTypesOfCategory(eventType.getCategory());
+
+                nextColumn = populateLabelAndComboBoxGeneric(
+                        nextRow,
+                        nextColumn,
+                        "Type",            // 1. LabelText
+                        eventTypesOfCategory,        // 2. Items lijst
+                        EventType::getName,                    // 3. NameExtractor
+                        eventType,   // 4. Geselecteerde item
+                        newVal -> {                        // 5. SelectionHandler callback
+                            System.out.println(("NEW EVENTTYPE: " + newVal.getName()));
+                            event.setDefaultValue(newVal.getEventValue());
+                            handleLeafEvent(event, true);
+//                        currentEvent.setSelectedEvent(newVal);
+//                        buildPane();           // Trigger de schone heropbouw
+                        }
+                );
+
+                return;
+            }
+        }
+
+        System.out.println("HANDLING LEAF " + event.getName());
+
+    }
+
+    private void handleNewCategory(Event event, String category) {
+        System.out.println(("HANDLE NEW CATEGORY " + category + " FOR EVENT: " + event.getName()));
+        EventType firstEventType = event.getFirstEventTypeOfCategory(category);
+        event.setDefaultValue(firstEventType.getEventValue());
+
+        buildPane();
     }
 
     // ACCESSORS

@@ -11,6 +11,8 @@ public class EventType {
 
     @Getter
     private String category;
+
+    @Getter
     private String name;            // USEFULL FOR TESTING...
 
     public EventType() {
