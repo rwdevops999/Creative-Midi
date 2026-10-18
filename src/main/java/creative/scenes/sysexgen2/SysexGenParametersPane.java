@@ -1,6 +1,7 @@
 package creative.scenes.sysexgen2;
 
 import creative.scenes.sysexgen2.entity.Event;
+import creative.scenes.sysexgen2.entity.EventParameter;
 import creative.scenes.sysexgen2.entity.InputBlock;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
@@ -29,16 +30,9 @@ public class SysexGenParametersPane extends TabPane {
 
         parent = owner;
 
-
         setPadding(new Insets(5));
 
         buildTabs(parameterBlocks);
-
-/*
-        this.setPrefWidth(100);
-        this.setPrefHeight(100);
-        this.setMinHeight(100);
-*/
     }
 
     private void buildTabs(List<InputBlock> list) {
@@ -92,7 +86,9 @@ public class SysexGenParametersPane extends TabPane {
 
             // - Parameters (do not include type parameters)
             if (event.hasParameters()) {
-
+                // TODO Pass here the parameter
+                InputBlock inputBlock = createInputBlockFrom(null);
+                inputBlocks.add(inputBlock);
             }
 
             this.parameterBlocks = inputBlocks;
@@ -103,6 +99,11 @@ public class SysexGenParametersPane extends TabPane {
                 showSysexResult(event);
             }
         }
+    }
+
+    private InputBlock createInputBlockFrom(EventParameter parameter) {
+        // TODO create this function
+        return null;
     }
 
     public void showSysexResult(Event event) {
