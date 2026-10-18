@@ -20,8 +20,7 @@ import java.util.List;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
-import static util.Util.setPaneBackground;
-import static util.Util.setPaneMinWidthAsPercentage;
+import static util.Util.*;
 
 public class SysexGenResultPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(SysexGenResultPane.class);
@@ -37,12 +36,12 @@ public class SysexGenResultPane extends VBox {
     public SysexGenResultPane(SysexGen2Pane owner) {
         this();
 
-        setPaneMinWidthAsPercentage(this, owner, 21);
+        setPaneMinHeightAsPercentage(this, owner, 21);
         setPaneBackground(this);
 
         showPaneBorder(this, getColor("border", "red"));
 
-        buildPane();
+//        buildPane();
     }
 
     private void buildPane() {

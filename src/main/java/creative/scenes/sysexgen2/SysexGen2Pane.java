@@ -40,8 +40,8 @@ public class SysexGen2Pane extends BorderPane {
         CommunicationModel.setStatus("Starting up the Sysex Generator");
 
         this.setTop(new SysexGenSelectionPane(this, rootEvent));
-/*        this.setCenter(new SysexGenParametersPane(this));
-        this.setBottom(new SysexGenResultPane(this)); */
+        this.setCenter(new SysexGenParametersPane(this));
+        this.setBottom(new SysexGenResultPane(this));
 
         logger.debug("[CM_SYSEX_GEN2_PANE] Built {}", getId());
     }

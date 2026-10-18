@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static util.Util.setPaneHeightAsPercentage;
 
 public class SysexGenParametersPane extends TabPane {
     public SysexGenParametersPane() {
@@ -28,12 +29,16 @@ public class SysexGenParametersPane extends TabPane {
 
         parent = owner;
 
+
         setPadding(new Insets(5));
 
+        buildTabs(parameterBlocks);
+
+/*
         this.setPrefWidth(100);
         this.setPrefHeight(100);
-
-        buildTabs(parameterBlocks);
+        this.setMinHeight(100);
+*/
     }
 
     private void buildTabs(List<InputBlock> list) {
