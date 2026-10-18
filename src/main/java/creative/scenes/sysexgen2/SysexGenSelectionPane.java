@@ -33,9 +33,8 @@ public class SysexGenSelectionPane extends GridPane {
 
         setId("SysExGenSelectionPane");
         setHgap(hgap);
-
-//        setVgap(3);
-//        setPadding(new Insets(5));
+        setVgap(3);
+        setPadding(new Insets(5));
     }
 
     private SysexGen2Pane parent;
@@ -133,6 +132,19 @@ public class SysexGenSelectionPane extends GridPane {
             return 0;
         }
 
+        if (! event.hasChildren()) {
+            handleLeafEvent(event);
+            return 0;
+        }
+
+        if ("XG Change Parameter".equals(event.getName())) {
+            row += 1;
+            add(new Separator(), 0, row, 24, 1);
+            row += 1;
+            column = 0;
+        }
+        System.out.println("HANDLING EVENT: " + event.getName());
+
         String id = String.format("r%d_c%d", row, column);
 
         getChildren().remove(lookup("#label_" + id));
@@ -228,6 +240,14 @@ public class SysexGenSelectionPane extends GridPane {
         nextColumn = Math.max(nextColumn, minimumSafeColumn);
 
         return nextColumn;
+    }
+
+    private void handleLeafEvent(Event event) {
+        System.out.println("Handling Leaf event: " + event.getName());
+
+        List<String> categories = event.getEventTypeCategories();
+
+
     }
 
     /**

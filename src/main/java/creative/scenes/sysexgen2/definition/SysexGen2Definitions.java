@@ -2288,8 +2288,6 @@ public class SysexGen2Definitions {
                         .withEventParameter(eventParameterBuilder.clear().withName("Color Note").withParameterType(ParameterType.PARAMETER).withParameterId(12).withNumBytes(1).withAddress("0B").build())
                     .build();
 
-// Starting wit XG Change Parameter
-
         Event eventReverb =
                 eventBuilder
                         .clear()
