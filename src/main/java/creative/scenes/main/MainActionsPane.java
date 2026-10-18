@@ -7,7 +7,6 @@ import creative.scenes.merge.MergeScene;
 import creative.scenes.midi.MidiScene;
 import creative.scenes.playlist.PlaylistScene;
 import creative.scenes.sysex.SysexScene;
-import creative.scenes.sysexgen.SysexGenScene;
 import creative.scenes.sysexgen2.SysexGen2Scene;
 import creative.scenes.upload.UploadScene;
 import creative.scenes.voice.VoiceScene;

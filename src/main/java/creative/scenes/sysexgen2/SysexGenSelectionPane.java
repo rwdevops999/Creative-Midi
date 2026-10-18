@@ -8,8 +8,10 @@ import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,8 @@ public class SysexGenSelectionPane extends GridPane {
         setHgap(6);
         setVgap(3);
         setPadding(new Insets(5));
+
+        setMaxWidth(Double.MAX_VALUE);
     }
 
     private SysexGen2Pane parent;
@@ -39,8 +43,6 @@ public class SysexGenSelectionPane extends GridPane {
     private double singleColumnPixelWidth;
 
     private static final int NUM_COLS=24;
-    double fixedWindowWidth = APP_WIDTH; // Put your exact fixed application width here
-    double gridPadding = 20.0;          // Total left + right padding of the grid
 
     private Event rootEvent;
     public SysexGenSelectionPane(SysexGen2Pane owner, Event event) {
@@ -49,27 +51,34 @@ public class SysexGenSelectionPane extends GridPane {
         this.parent = owner;
         this.rootEvent = event;
 
-        // calculate the exact pixel size per column
-        this.singleColumnPixelWidth = (fixedWindowWidth - gridPadding) / NUM_COLS;
+        this.singleColumnPixelWidth = (double)APP_WIDTH / NUM_COLS;
+
+        // Put the grid width within the enclosing BorderPane
+        this.setPrefWidth(APP_WIDTH);
+        this.setMaxWidth(APP_WIDTH);
+
+        // Create thee column-constraints based on percentages
+        this.getColumnConstraints().clear();
+        double percentagePerColumn = 100.0 / NUM_COLS;
 
         for (int i = 0; i < NUM_COLS; i++) {
             ColumnConstraints col = new ColumnConstraints();
-            col.setMinWidth(singleColumnPixelWidth);
-            col.setPrefWidth(singleColumnPixelWidth);
-            col.setMaxWidth(singleColumnPixelWidth);
+            col.setPercentWidth(percentagePerColumn);
             col.setHalignment(HPos.LEFT);
-            getColumnConstraints().add(col);
+            this.getColumnConstraints().add(col);
         }
 
+        // 5. Add a basic row-constraint for each vertical row
+        this.getRowConstraints().clear();
         RowConstraints rowConstraints = new RowConstraints();
         rowConstraints.setValignment(VPos.CENTER);
-        getRowConstraints().add(rowConstraints);
+        this.getRowConstraints().add(rowConstraints);
 
         showPaneBorder(this, getColor("border", "green"));
-/*
+
         setPaneBackground(this);
 
-        buildPane(); */
+        buildPane();
     }
 
     private int nextColumn = 0;
@@ -91,7 +100,8 @@ public class SysexGenSelectionPane extends GridPane {
             if ("XG Change Parameter".equals(currentEvent.getName())) {
                 nextRow += 1;
                 nextColumn = 0;
-                add(new javafx.scene.control.Separator(), nextColumn, nextRow, 24, 1);
+                    add(new javafx.scene.control.Separator(), nextColumn, nextRow, (24 - nextColumn), 1);
+
                 nextRow += 1;
             }
 
@@ -130,9 +140,10 @@ public class SysexGenSelectionPane extends GridPane {
         Label label = new Label(labelText);
         label.setMinWidth(Control.USE_PREF_SIZE);
 
-        // Calculate its colspan a Label
-        javafx.scene.text.Text labelHelper = new javafx.scene.text.Text(labelText);
+        Text labelHelper = new javafx.scene.text.Text(labelText);
         double labelWidth = labelHelper.getLayoutBounds().getWidth() + 8.0;
+
+        // Calculate its colspan a Label
         int labelColspan = (int) Math.ceil(labelWidth / this.singleColumnPixelWidth);
 
         // Add, or replace position of, the label
@@ -180,9 +191,10 @@ public class SysexGenSelectionPane extends GridPane {
             }
         });
 
-        // Calculate the colspan of the ComboBox
         javafx.scene.text.Text comboHelper = new javafx.scene.text.Text(longestName);
         double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 38.0;
+
+        // Calculate the colspan of the ComboBox
         int comboboxColspan = (int) Math.ceil((exactComboWidth + 12.0) / this.singleColumnPixelWidth);
 
         // add the combo or replace it
