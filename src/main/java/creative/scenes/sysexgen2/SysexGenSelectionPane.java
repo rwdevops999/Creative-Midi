@@ -1,6 +1,5 @@
 package creative.scenes.sysexgen2;
 
-import creative.scenes.sysexgen2.SysexGen2Pane;
 import creative.scenes.sysexgen2.entity.Event;
 import creative.scenes.sysexgen2.entity.EventType;
 import creative.scenes.sysexgen2.listener.SelectionHandler;
@@ -26,13 +25,11 @@ import static util.Util.setPaneBackground;
 public class SysexGenSelectionPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(SysexGenSelectionPane.class);
 
-    double hgap = 6.0;                  // Horizontal gap between columns
-
     public SysexGenSelectionPane() {
         super();
 
         setId("SysExGenSelectionPane");
-        setHgap(hgap);
+        setHgap(6);
         setVgap(3);
         setPadding(new Insets(5));
     }
@@ -51,9 +48,6 @@ public class SysexGenSelectionPane extends GridPane {
 
         this.parent = owner;
         this.rootEvent = event;
-
-        // ⚡ BELANGRIJK: Als je een hgap gebruikt, zet die dan HIER (vóór de berekening)
-        setHgap(6.0);
 
         // Bereken de exacte pixelgrootte per kolom
         this.singleColumnPixelWidth = (fixedWindowWidth - gridPadding) / NUM_COLS;
@@ -78,25 +72,6 @@ public class SysexGenSelectionPane extends GridPane {
         buildPane();
     }
 
-    private boolean debugAddCombo = true;
-
-    private StringProperty dsSelectedSysexText = new SimpleStringProperty("");
-    private BooleanProperty dsSelectedSysexVisibility = new SimpleBooleanProperty(false);
-
-    private StringConverter<Event> eventToStringConvertor = new StringConverter<Event>() {
-        @Override
-        public String toString(Event event) {
-            // Return the field to display
-            return (event != null) ? event.getName() : "";
-        }
-
-        @Override
-        public Event fromString(String string) {
-            // Not needed because the ComboBox is not editable
-            return null;
-        }
-    };
-
     private int nextColumn = 0;
     private int nextRow = 0;
 
@@ -111,7 +86,6 @@ public class SysexGenSelectionPane extends GridPane {
         while (event != null) {
             final Event currentEvent = event;
 
-            // 1. OUDE LOGICA HERSTELD: Check op "XG Change Parameter" voor de Separator line
             if ("XG Change Parameter".equals(currentEvent.getName())) {
                 nextRow += 1;
                 nextColumn = 0;
@@ -119,13 +93,12 @@ public class SysexGenSelectionPane extends GridPane {
                 nextRow += 1;
             }
 
-            // 2. OUDE LOGICA HERSTELD: Check of dit het eindstation (leaf) is
             if (!currentEvent.hasChildren()) {
-                handleLeafEvent(currentEvent, false); // Voer je leaf-logica uit na de clear()
-                break; // Stop de loop direct, een leaf heeft geen sub-events meer
+                handleLeafEvent(currentEvent, false);
+                break;
             }
 
-            // 3. Als het event kinderen heeft, roepen we de methode aan met exact 7 parameters
+            // Handle if the event has children
             nextColumn = populateLabelAndComboBoxGeneric(
                     nextRow,
                     nextColumn,
@@ -139,7 +112,7 @@ public class SysexGenSelectionPane extends GridPane {
                     }
             );
 
-            // 4. Verschuif de pointer naar het geselecteerde sub-event voor de volgende stap
+            // continue with next selected event
             event = currentEvent.getSelectedEvent();
         }
     }
@@ -149,27 +122,29 @@ public class SysexGenSelectionPane extends GridPane {
             Function<T, String> nameExtractor, T selectedItem,
             SelectionHandler<T> selectionHandler) {
 
-        // 1. Maak het Label aan en bereken zijn colspan
+        // Create a Label
         Label label = new Label(labelText);
         label.setMinWidth(Control.USE_PREF_SIZE);
 
+        // Calculate its colspan a Label
         javafx.scene.text.Text labelHelper = new javafx.scene.text.Text(labelText);
         double labelWidth = labelHelper.getLayoutBounds().getWidth() + 8.0;
         int labelColspan = (int) Math.ceil(labelWidth / this.singleColumnPixelWidth);
 
+        // Add, or replace position of, the label
         if (!getChildren().contains(label)) {
             add(label, column, row, labelColspan, 1);
         } else {
             GridPane.setColumnSpan(label, labelColspan);
         }
 
-        // 2. Zoek de langste tekst in de lijst via de nameExtractor
+        // Lookup then longeststring from the list
         String longestName = items.stream()
                 .map(nameExtractor)
                 .max((s1, s2) -> Integer.compare(s1.length(), s2.length()))
                 .orElse("EMPTY");
 
-        // 3. Maak de ComboBox aan
+        // Create the ComboBox
         ComboBox<T> comboBox = new ComboBox<>();
         comboBox.setItems(FXCollections.observableArrayList(items));
 
@@ -194,18 +169,19 @@ public class SysexGenSelectionPane extends GridPane {
             comboBox.setValue(selectedItem);
         }
 
-        // 4. De Listener activeert de callback en bewaart de data
+        // The Listener calls the callback
         comboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 selectionHandler.handleSelection(newVal);
             }
         });
 
-        // 5. Bereken de colspan voor de ComboBox
+        // Calculate the colspan of the ComboBox
         javafx.scene.text.Text comboHelper = new javafx.scene.text.Text(longestName);
         double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 38.0;
         int comboboxColspan = (int) Math.ceil((exactComboWidth + 12.0) / this.singleColumnPixelWidth);
 
+        // add the combo or replace it
         if (!getChildren().contains(comboBox)) {
             add(comboBox, column + labelColspan, row, comboboxColspan, 1);
         } else {
@@ -214,7 +190,7 @@ public class SysexGenSelectionPane extends GridPane {
             GridPane.setColumnSpan(comboBox, comboboxColspan);
         }
 
-        // 6. Grid-constraints om de ComboBox compact te houden
+        // 6. Grid-constraints to keep the ComboBox compact
         comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
         comboBox.setPrefWidth(Control.USE_COMPUTED_SIZE);
         comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE);
@@ -224,29 +200,8 @@ public class SysexGenSelectionPane extends GridPane {
 
         GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 12, 0, 0));
 
-        // 7. Geeft de exacte, pure eindkolom terug (vlijmscherpe aansluiting, geen overlap)
+        // Return the exact the column (include spans)
         return column + labelColspan + comboboxColspan;
-    }
-
-    public int calculateColSpan(Control control, String longestText) {
-        if (longestText == null || longestText.isEmpty()) {
-            return 1;
-        }
-
-        boolean isComboBox = control instanceof ComboBox;
-
-        // Meet de exacte pixelbreedte van de letters op het scherm
-        javafx.scene.text.Text helper = new javafx.scene.text.Text(longestText);
-        double rawTextWidth = helper.getLayoutBounds().getWidth();
-
-        // Voeg de minimale themamarges toe (34px voor de ComboBox pijl, 6px voor een Label)
-        double totalRequiredWidth = rawTextWidth + (isComboBox ? 34.0 : 6.0);
-
-        // Bereken de colspan op basis van de exacte pixelbreedte uit jouw constructor
-        int colspan = (int) Math.ceil(totalRequiredWidth / this.singleColumnPixelWidth);
-
-        // Blijf binnen de 24 kolommen
-        return Math.max(1, Math.min(colspan, NUM_COLS));
     }
 
     private void handleLeafEvent(Event event, boolean skipTypes) {
@@ -258,14 +213,12 @@ public class SysexGenSelectionPane extends GridPane {
                 nextColumn = populateLabelAndComboBoxGeneric(
                         nextRow,
                         nextColumn,
-                        "Categories",            // 1. LabelText
-                        categories,        // 2. Items lijst
-                        String::toString,                    // 3. NameExtractor
-                        eventType.getCategory(),   // 4. Geselecteerde item
-                        newVal -> {                        // 5. SelectionHandler callback
+                        "Categories",                  // 1. Text for the label
+                        categories,                             // 2. List of items
+                        String::toString,                       // 3. Name Extractor
+                        eventType.getCategory(),                // 4. the selected item
+                        newVal -> {                       // 5. callback
                             handleNewCategory(event, newVal);
-//                        currentEvent.setSelectedEvent(newVal);
-//                        buildPane();           // Trigger de schone heropbouw
                         }
                 );
 
@@ -274,16 +227,13 @@ public class SysexGenSelectionPane extends GridPane {
                 nextColumn = populateLabelAndComboBoxGeneric(
                         nextRow,
                         nextColumn,
-                        "Type",            // 1. LabelText
-                        eventTypesOfCategory,        // 2. Items lijst
-                        EventType::getName,                    // 3. NameExtractor
-                        eventType,   // 4. Geselecteerde item
-                        newVal -> {                        // 5. SelectionHandler callback
-                            System.out.println(("NEW EVENTTYPE: " + newVal.getName()));
+                        "Type",                                        // 1. Text for the label
+                        eventTypesOfCategory,                                   // 2. List of items
+                        EventType::getName,                                     // 3. Name Extractor
+                        eventType,                                              // 4. the selected item
+                        newVal -> {                                   // 5. callback
                             event.setDefaultValue(newVal.getEventValue());
                             handleLeafEvent(event, true);
-//                        currentEvent.setSelectedEvent(newVal);
-//                        buildPane();           // Trigger de schone heropbouw
                         }
                 );
 
@@ -291,16 +241,19 @@ public class SysexGenSelectionPane extends GridPane {
             }
         }
 
-        System.out.println("HANDLING LEAF " + event.getName());
+        startProcessingLeafEvent(event);
 
     }
 
     private void handleNewCategory(Event event, String category) {
-        System.out.println(("HANDLE NEW CATEGORY " + category + " FOR EVENT: " + event.getName()));
         EventType firstEventType = event.getFirstEventTypeOfCategory(category);
         event.setDefaultValue(firstEventType.getEventValue());
 
         buildPane();
+    }
+
+    private void startProcessingLeafEvent(Event event) {
+        System.out.println("PROCESSING: " + event.getName());
     }
 
     // ACCESSORS
