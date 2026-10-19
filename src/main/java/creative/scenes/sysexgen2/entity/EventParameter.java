@@ -20,6 +20,7 @@ public class EventParameter {
     @Getter
     @Setter
     private int parameterId;
+    @Getter
     private int numBytes;
 
     @Getter
@@ -34,6 +35,7 @@ public class EventParameter {
     private String address;
 
     @Getter
+    @Setter
     private ParameterType parameterType;
 
     @Getter
@@ -270,6 +272,7 @@ public class EventParameter {
                 linkedEventParameterList = new ArrayList<>();
             }
 
+            linkedParameter.setParameterType(ParameterType.LINKED);
             this.linkedEventParameterList.add(linkedParameter);
             return this;
         }

@@ -111,6 +111,10 @@ public class SysexGenSelectionPane extends GridPane {
             }
 
             // Handle if the event has children
+            if ("Vendor".equals(currentEvent.getName())) {
+                System.out.println("BREAK");
+            }
+
             nextColumn = populateLabelAndComboBoxGeneric(
                     nextRow,
                     nextColumn,
@@ -191,11 +195,19 @@ public class SysexGenSelectionPane extends GridPane {
             }
         });
 
+// Calculate the colspan of the ComboBox
         javafx.scene.text.Text comboHelper = new javafx.scene.text.Text(longestName);
-        double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 38.0;
 
-        // Calculate the colspan of the ComboBox
-        int comboboxColspan = (int) Math.ceil((exactComboWidth + 12.0) / this.singleColumnPixelWidth);
+// FIX: Verhoog de basis-buffer van 38.0 naar 50.0 pixels voor de pijl en interne styling
+        double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 50.0;
+
+// FIX: Verhoog de extra layout-marge van 12.0 naar 20.0 pixels om de afronding van singleColumnPixelWidth op te vangen
+        int comboboxColspan = (int) Math.ceil((exactComboWidth + 20.0) / this.singleColumnPixelWidth);
+
+// Zorg er daarnaast voor dat de ComboBox minimaal de berekende breedte aanneemt
+        comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
+        comboBox.setPrefWidth(exactComboWidth + 20.0); // Dwing de ComboBox in deze breedte
+        comboBox.setMaxWidth(Double.MAX_VALUE);
 
         // add the combo or replace it
         if (!getChildren().contains(comboBox)) {
@@ -206,13 +218,16 @@ public class SysexGenSelectionPane extends GridPane {
             GridPane.setColumnSpan(comboBox, comboboxColspan);
         }
 
-        // 6. Grid-constraints to keep the ComboBox compact
-        comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
-        comboBox.setPrefWidth(Control.USE_COMPUTED_SIZE);
-        comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE);
-        GridPane.setHalignment(comboBox, HPos.LEFT);
-        GridPane.setFillWidth(comboBox, false);
-        GridPane.setHgrow(comboBox, Priority.NEVER);
+// Zorg dat hij de beschikbare breedte in de kolommen ook echt mag vullen
+        GridPane.setFillWidth(comboBox, true);
+        GridPane.setHgrow(comboBox, Priority.ALWAYS);
+
+//        comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
+//        comboBox.setPrefWidth(Control.USE_COMPUTED_SIZE);
+//        comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE);
+//        GridPane.setHalignment(comboBox, HPos.LEFT);
+//        GridPane.setFillWidth(comboBox, false);
+//        GridPane.setHgrow(comboBox, Priority.NEVER);
 
         GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 12, 0, 0));
 
@@ -253,6 +268,7 @@ public class SysexGenSelectionPane extends GridPane {
                         }
                 );
 
+                startProcessingLeafEvent(event);
                 return;
             }
         }
@@ -266,6 +282,7 @@ public class SysexGenSelectionPane extends GridPane {
         event.setDefaultValue(firstEventType.getEventValue());
 
         buildPane();
+        startProcessingLeafEvent(event);
     }
 
     private void startProcessingLeafEvent(Event event) {

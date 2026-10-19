@@ -84,6 +84,7 @@ public class SysexGenResultPane extends VBox {
     public void showSysex(Event event) {
         List<String> sysexList = event.complete(new ArrayList<>(event.createSysexStrings()));
 
+        listView.getItems().clear();
         for (String sysexString : sysexList) {
             listView.getItems().add(sysexString);
         }

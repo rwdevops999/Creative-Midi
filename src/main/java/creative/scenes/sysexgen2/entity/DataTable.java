@@ -2,10 +2,9 @@ package creative.scenes.sysexgen2.entity;
 
 import lombok.Getter;
 
+@Getter
 public class DataTable {
-    @Getter
     String tableId;                 // USEFULL FOR TESTING...
-
     String tableDescription;
     String[] entries;
 

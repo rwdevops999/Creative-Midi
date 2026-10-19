@@ -2,12 +2,10 @@ package creative.scenes.sysexgen2.entity;
 
 import lombok.Getter;
 
+@Getter
 public class DisplayBlock {
-    @Getter
     private String label;
     private String description;
-
-    @Getter
     private DataBlock defaultValue;
     private Range range;
 

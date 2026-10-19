@@ -1399,11 +1399,18 @@ public class SysexGen2Definitions {
                                 .withParameterId(1)
                                 .withControllerId(0X00)
                                 .withNumBytes(1)
-                                // TODO Linked Parameters also need DisplayBlock
                                 .withLinkedEventParameter(
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Reverb Time")
+                                                .withDisplayblock(
+                                                        displayBlockBuilder
+                                                                .clear()
+                                                                .withLabel("Reverb Time")
+                                                                .withDescription("0..11.0s")
+                                                                .withRange(0,127)
+                                                                .build()
+                                                )
                                                 .withControllerId(0X01)
                                                 .withNumBytes(1)
                                                 .build()
@@ -1437,6 +1444,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Mod Rate")
+                                                .withDisplayblock(
+                                                        displayBlockBuilder
+                                                                .clear()
+                                                                .withLabel("Mod Rate")
+                                                                .withRange(0,127)
+                                                                .build()
+                                                )
                                                 .withControllerId(0x01)
                                                 .build()
                                 )
@@ -1444,6 +1458,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Mod Depth")
+                                                .withDisplayblock(
+                                                        displayBlockBuilder
+                                                                .clear()
+                                                                .withLabel("Mod Dpth")
+                                                                .withRange(0,127)
+                                                                .build()
+                                                )
                                                 .withControllerId(0x02)
                                                 .build()
                                 )
@@ -1451,6 +1472,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Feedback")
+                                                .withDisplayblock(
+                                                        displayBlockBuilder
+                                                                .clear()
+                                                                .withLabel("Feedback")
+                                                                .withRange(0,127)
+                                                                .build()
+                                                )
                                                 .withControllerId(0x03)
                                                 .build()
                                 )
@@ -1458,6 +1486,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Send To Reverb")
+                                                .withDisplayblock(
+                                                        displayBlockBuilder
+                                                                .clear()
+                                                                .withLabel("Send To Reverb")
+                                                                .withRange(0,127)
+                                                                .build()
+                                                )
                                                 .withControllerId(0x04)
                                                 .build()
                                 )
@@ -1728,6 +1763,13 @@ public class SysexGen2Definitions {
                         eventParameterBuilder
                                 .clear()
                                 .withName("Key Number")
+                                .withDisplayblock(displayBlockBuilder
+                                        .clear()
+                                        .withLabel("Key Number")
+                                        .withDefaultValue(60)
+                                        .withRange(0, 127)
+                                        .build()
+                                )
                                 .withParameterType(ParameterType.FREE)
                                 .withParameterId(1)
                                 .withNumBytes(1)
@@ -1745,6 +1787,14 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Volume")
+                                                .withDisplayblock(displayBlockBuilder
+                                                        .clear()
+                                                        .withLabel("Volume")
+                                                        .withDescription("-100..+100%")
+                                                        .withDefaultValue(0x40)
+                                                        .withRange(0, 127)
+                                                        .build()
+                                                )
                                                 .withControllerId(0X07)
                                                 .build()
                                 )
@@ -1752,6 +1802,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Pan")
+                                                .withDisplayblock(displayBlockBuilder
+                                                        .clear()
+                                                        .withLabel("Pan")
+                                                        .withDescription("L63..C..R63")
+                                                        .withRange(0, 127)
+                                                        .build()
+                                                )
                                                 .withControllerId(0X0A)
                                                 .build()
                                 )
@@ -1759,6 +1816,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Reverb Send Level")
+                                                .withDisplayblock(displayBlockBuilder
+                                                        .clear()
+                                                        .withLabel("Reverb Send Level")
+                                                        .withDescription("0..Max")
+                                                        .withRange(0, 127)
+                                                        .build()
+                                                )
                                                 .withControllerId(0X5B)
                                                 .build()
                                 )
@@ -1766,6 +1830,13 @@ public class SysexGen2Definitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Chorus Send Level")
+                                                .withDisplayblock(displayBlockBuilder
+                                                        .clear()
+                                                        .withLabel("Chorus Send Level")
+                                                        .withDescription("0..Max")
+                                                        .withRange(0, 127)
+                                                        .build()
+                                                )
                                                 .withControllerId(0X5D)
                                                 .build()
                                 )
@@ -2186,6 +2257,14 @@ public class SysexGen2Definitions {
                                         .clear()
                                         .withName("MSB")
                                         .withParameterType(ParameterType.FREE)
+                                        .withDisplayblock(
+                                                displayBlockBuilder
+                                                        .clear()
+                                                        .withLabel("Master Tune MSB")
+                                                        .withDefaultValue(0)
+                                                        .withRange(0, 127)
+                                                        .build()
+                                        )
                                         .withParameterId(1)
                                         .withNumBytes(1, true)
                                         .build()
@@ -2194,6 +2273,14 @@ public class SysexGen2Definitions {
                                 eventParameterBuilder
                                         .clear()
                                         .withName("LSB")
+                                        .withDisplayblock(
+                                                displayBlockBuilder
+                                                        .clear()
+                                                        .withLabel("Master Tune LSB")
+                                                        .withDefaultValue(0)
+                                                        .withRange(0, 127)
+                                                        .build()
+                                        )
                                         .withParameterType(ParameterType.FREE)
                                         .withParameterId(2)
                                         .withNumBytes(1,true)

@@ -28,6 +28,7 @@ public class Event implements IEvent {
     private List<Event> children = new ArrayList<>();
     private DataBlock defaultValue;
 
+    @Getter
     private List<EventParameter> parameters;
     private List<EventType> eventTypes;
 

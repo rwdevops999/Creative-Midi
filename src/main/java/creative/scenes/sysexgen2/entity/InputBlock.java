@@ -3,9 +3,12 @@ package creative.scenes.sysexgen2.entity;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class InputBlock {
-    @Getter
+    private Event event;
     private EventParameter parameter;
 
     private String label;
@@ -14,11 +17,12 @@ public class InputBlock {
     private Range range;
 
     private DataTable dataTable;
-    private Integer value;
+    private DataBlock value;
 
     private IntegerProperty valuePoperty = new SimpleIntegerProperty();
 
     public InputBlock() {
+        this.event = null;
         this.parameter = null;
         this.label = "";
         this.description = "";

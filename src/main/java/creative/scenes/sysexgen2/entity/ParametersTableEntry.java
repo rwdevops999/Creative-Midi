@@ -24,6 +24,7 @@ public class ParametersTableEntry {
     @Setter
     private Range range;
 
+    @Getter
     private DataTable dataTable;
 
     public ParametersTableEntry() {

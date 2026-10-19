@@ -49,6 +49,16 @@ public class ParameterTable {
         return !entries.isEmpty();
     }
 
+    public ParametersTableEntry getEntryOfParameterId(int parameterId) {
+        for (ParametersTableEntry entry : entries) {
+            if (entry.getParameterId() == parameterId) {
+                return entry;
+            }
+        }
+
+        return null;
+    }
+
     public static class ParameterTableBuilder {
         private String identifier;
         private String name;
