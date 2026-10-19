@@ -34,14 +34,11 @@ public class Test4Pane extends HBox {
         logger.debug("[CM_TEST4_PANE] Executing {}", getId());
 
         Volume = 15221;
-        System.out.println("Volume = " + Volume);
 
         int nMsb = 0;
         int nLsb = 0;
         nMsb = Volume >> 7;
         nLsb = Volume & 0x7F;
-        System.out.println("n MSB = " + nMsb);
-        System.out.println("n LSB = " + nLsb);
 
         logger.debug("[CM_TEST4_PANE] Executed {}", getId());
     }

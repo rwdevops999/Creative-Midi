@@ -234,8 +234,6 @@ public class Event implements IEvent {
 
 
         if (! parameterSysexList.isEmpty() ) {
-//            System.out.println("ADD TO SYSEX");
-
             if (! inline ) {
                 if (!sysexStrings.isEmpty()) {
                     String baseSysex = sysexStrings.get(0);

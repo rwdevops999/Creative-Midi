@@ -51,7 +51,6 @@ public class DeviceInfo {
             if (device.getMaxReceivers() != 0) {
                 if (! device.isOpen()) {
                     device.open();
-                    System.out.println("SET AI_MidiOutputDevice -> " + device.getDeviceInfo().getName());
                     ApplicationInfo.getInstance().setMidiOutputDevice(device);
                 }
             }

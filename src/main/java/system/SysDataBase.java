@@ -13,10 +13,6 @@ public abstract class SysDataBase {
     public abstract void save() throws Exception;
     public abstract void load() throws Exception;
 
-    protected void display() {
-        System.out.println("DISPLAY");
-    }
-
     protected static BinaryFileWriter writer;
     protected static BinaryFileReader reader;
 }

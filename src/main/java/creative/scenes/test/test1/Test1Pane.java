@@ -57,14 +57,6 @@ public class Test1Pane extends GridPane {
         ChannelSelectionDialog channelDialog = new ChannelSelectionDialog(input);
         Optional<Character> resultingChannel = channelDialog.showAndWait();
 
-        if (resultingChannel.isPresent()) {
-            for (int i = 0; i < 16; i++) {
-                if ((resultingChannel.get() & (1<<i)) != 0 ) {
-                    System.out.println("Channel " + (i+1) + " is selected");
-                }
-            }
-        }
-
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }
 

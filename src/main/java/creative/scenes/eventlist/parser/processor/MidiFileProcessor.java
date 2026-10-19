@@ -76,11 +76,6 @@ public class MidiFileProcessor {
                 }
             }
         }
-
-
-        System.out.println("MIDI EVENTS  = " + midiEvents);
-        System.out.println("META EVENTS  = " + metaEvents);
-        System.out.println("SYSEX EVENTS = " + sysexEvents);
     }
 
     public static Queue<MidiEventInfo> getEvents() {

@@ -94,7 +94,6 @@ public class Test2Pane extends HBox {
 
         colorsBox.setOnAction(event -> {
             NamedColor selectedColor = colorsBox.getValue();
-            System.out.println("Selected color: " + selectedColor.name);
             textFill.set(selectedColor.color);
 //            textFill.setValue(selectedColor.color);
         });

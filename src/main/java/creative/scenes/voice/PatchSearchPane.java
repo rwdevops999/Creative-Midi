@@ -166,8 +166,6 @@ public class PatchSearchPane extends VBox {
         bankPane.addLinkedProperty(bankChangedProperty, "0");
 
         bankChangedProperty.addListener((obs, oldValue, newValue) -> {
-            System.out.println("BANK VALUE CHANGED: " + newValue + " (mute) = " + mute);
-
             if (! mute) {
                 mute = true;
                 int bank;
@@ -190,8 +188,6 @@ public class PatchSearchPane extends VBox {
         ValuePane msbPane = valuePanes.get(MSB_PANE);
         msbPane.addLinkedProperty(msbChangedProperty, "0");
         msbChangedProperty.addListener((obs, oldValue, newValue) -> {
-            System.out.println("MSB VALUE CHANGED: " + newValue + " (mute) = " + mute);
-
             if (! mute) {
                 mute = true;
                 int msb;
@@ -218,7 +214,6 @@ public class PatchSearchPane extends VBox {
         ValuePane lsbPane = valuePanes.get(LSB_PANE);
         lsbPane.addLinkedProperty(lsbChangedProperty, "0");
         lsbChangedProperty.addListener((obs, oldValue, newValue) -> {
-            System.out.println("LSB VALUE CHANGED: " + newValue + " (mute) = " + mute);
             if (! mute) {
                 mute = true;
                 int msb;
@@ -245,7 +240,6 @@ public class PatchSearchPane extends VBox {
         ValuePane pcPane = valuePanes.get(PC_PANE);
         pcPane.addLinkedProperty(pcChangedProperty, null);
         pcChangedProperty.addListener((obs, oldValue, newValue) -> {
-            System.out.println("PC VALUE CHANGED: " + newValue + " (mute) = " + mute);
             if (! mute) {
                 mute = true;
                 int pc;
@@ -347,8 +341,6 @@ public class PatchSearchPane extends VBox {
             VoiceSearchResultsPane resultsPane = getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane();
             resultsPane.showResults(result);
         } else if (selectedTIndex == TAB_BANK) {
-            System.out.println("Searching on values");
-
             int bank = Integer.parseInt(bankChangedProperty.get());
             int msb = Integer.parseInt(msbChangedProperty.get());
             int lsb = Integer.parseInt(lsbChangedProperty.get());
@@ -356,11 +348,6 @@ public class PatchSearchPane extends VBox {
             if (pcChangedProperty.get() != null) {
                 pc = Integer.parseInt(pcChangedProperty.get());
             }
-
-            System.out.println("Searching on values: BANK =" + bank
-            + ", MSB = " + msb
-            + ", LSB = " + lsb
-            + ", PC = " + pc);
 
             Patch findPatch = new Patch();
             findPatch.setBank(bank);
@@ -370,7 +357,6 @@ public class PatchSearchPane extends VBox {
 
             List<Patch> result = new ArrayList<>();
             result = VoiceFinder.findVoice(findPatch);
-            System.out.println("SearchRESULT: " + result.size());
             VoiceSearchResultsPane resultsPane = getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane();
             resultsPane.showResults(result);
         }

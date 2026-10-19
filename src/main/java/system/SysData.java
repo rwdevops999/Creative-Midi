@@ -120,10 +120,9 @@ public class SysData extends SysDataBase {
                     }
                 }
             } else {
-                throw new IOException("Onverwachte chunk gevonden: " + chunkName);
+                throw new IOException("Found unexpected chunk: " + chunkName);
             }
         }
-        // De reader sluit hier automatisch, alles is netjes opgeruimd!
-        System.out.println("Bestand succesvol geladen! Aantal favorieten: " + favorites.size());
+        // The reader closes here automatically, everything is cleaned up!
     }
 }

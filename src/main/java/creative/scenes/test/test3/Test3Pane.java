@@ -71,8 +71,6 @@ public class Test3Pane extends VBox {
                         }
                     }
                 }
-            } else {
-                System.out.println("WE SHOULDN'T COME HERE");
             }
         }
     }
@@ -116,15 +114,15 @@ public class Test3Pane extends VBox {
         if (event != null) {
             List<String> sysexs = event.complete(new ArrayList<>(event.createSysexStrings()));
 
-            System.out.println("---=== " + name + " ===---");
-            sysexs.forEach(System.out::println);
+            logger.debug("---=== " + name + " ===---");
+            sysexs.forEach(logger::debug);
 
             for (String result: results) {
                 assertThat(sysexs).contains(result);
             }
             testssuccess++;
         } else {
-            System.out.println("EVENT:" + name + " NOT FOUND");
+            logger.error("EVENT {} NOT FOUND", name);
         }
     }
 
@@ -430,7 +428,7 @@ public class Test3Pane extends VBox {
         setLinkedEventValue("Key Based Instrument Control", "Controller", "Chorus Send Level", 82, null, null);
         handleEvent("Key Based Instrument Control", List.of("F0 7F 7F 0A 01 05 3C 07 76 0A 1F 5D 52 F7"));
 
-        System.out.println("TEST DONE: " + testsrun + " => TEST SUCCESS: " + testssuccess);
+        logger.debug("TEST DONE: {} => TEST SUCCESS: {}", testsrun, testssuccess);
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
     }

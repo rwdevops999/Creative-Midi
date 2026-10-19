@@ -20,8 +20,6 @@ public class SysexProcessor {
     private static final Map<ColorScheme.ColorKey, Color> colors = new HashMap<>();
     private static final Map<String, String> REGISTRY = new HashMap<>();
 
-    static String stopSysEx = "F0 43 10 4C 0A 00";
-
     static {
         colors.put(new ColorScheme.ColorKey("sysex"), Color.IVORY);
 
@@ -41,10 +39,6 @@ public class SysexProcessor {
         boolean result = true;
 
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
-
-        if (sysex.toString().startsWith(stopSysEx)) {
-            System.out.println("STOP HERE");
-        }
 
         midiEventInfo.setMessage(sysex.toString());
 
