@@ -13,7 +13,7 @@ public class YamahaStyleTransfer {
     private YamahaStyleTransfer() {
     }
 
-    public static void sendStyleFile(
+/*    public static void sendStyleFile(
             Path styleFile,
             MidiDevice device,
             String targetFileName) throws Exception {
@@ -35,10 +35,6 @@ public class YamahaStyleTransfer {
 
         YamahaTransfer transfer = new YamahaTransfer(receiver);
 
-        System.out.println("Sending: " + styleFile);
-        System.out.println("Size: " + data.length + " bytes");
-        System.out.println("Target: " + targetFileName);
-
         transfer.start();
 
         transfer.selectUserStorage();
@@ -51,16 +47,16 @@ public class YamahaStyleTransfer {
 
         System.out.println("Transfer finished.");
     }
-
+*/
     private static final class YamahaTransfer {
 
-        private final Receiver receiver;
+//        private final Receiver receiver;
 
-        YamahaTransfer(Receiver receiver) {
+/*        YamahaTransfer(Receiver receiver) {
             this.receiver = receiver;
         }
-
-        private void send(byte[] message) throws InvalidMidiDataException {
+*/
+/*        private void send(byte[] message) throws InvalidMidiDataException {
             SysexMessage sysex = new SysexMessage();
 
             sysex.setMessage(
@@ -75,13 +71,13 @@ public class YamahaStyleTransfer {
                     "TX: " + hex(message)
             );
         }
-
+*/
         /**
          * Initial Yamaha file-system handshake.
          *
          * Observed in the user's MIDI-OX capture.
          */
-        void start() throws InvalidMidiDataException {
+/*        void start() throws InvalidMidiDataException {
 
             send(new byte[] {
                     (byte) 0xF0,
@@ -99,7 +95,7 @@ public class YamahaStyleTransfer {
                     (byte) 0xF7
             });
         }
-
+*/
         /**
          * Select USER storage.
          *
@@ -110,7 +106,7 @@ public class YamahaStyleTransfer {
          * "USER"
          * F7
          */
-        void selectUserStorage()
+/*        void selectUserStorage()
                 throws InvalidMidiDataException {
 
             send(new byte[] {
@@ -124,14 +120,14 @@ public class YamahaStyleTransfer {
                     (byte) 0xF7
             });
         }
-
+*/
         /**
          * Create/select the destination filename.
          *
          * This is based on the directory-entry structure observed
          * in the user's MIDI-OX capture.
          */
-        void createFile(String filename)
+/*        void createFile(String filename)
                 throws InvalidMidiDataException {
 
             byte[] name = filename.getBytes(
@@ -179,12 +175,6 @@ public class YamahaStyleTransfer {
 
             p += date.length;
 
-            /*
-             * The following fields are provisional.
-             * They are deliberately isolated here because their
-             * exact meaning still needs confirmation from the SX600
-             * transfer capture.
-             */
             msg[p++] = 0x02;
             msg[p++] = 0x24;
             msg[p++] = 0x0B;
@@ -208,7 +198,7 @@ public class YamahaStyleTransfer {
 
             send(msg);
         }
-
+*/
         /**
          * Send the actual file.
          *
@@ -218,7 +208,7 @@ public class YamahaStyleTransfer {
          *
          * for data packets.
          */
-        void sendFile(byte[] file)
+/*        void sendFile(byte[] file)
                 throws InvalidMidiDataException {
 
             final int CHUNK_SIZE = 64;
@@ -249,7 +239,7 @@ public class YamahaStyleTransfer {
                 );
             }
         }
-
+*/
         /**
          * Construct a Yamaha 43 50 01 data packet.
          *
@@ -257,7 +247,7 @@ public class YamahaStyleTransfer {
          * Header fields here are based on the reverse-engineered
          * protocol and must be matched against the SX600 capture.
          */
-        private void sendDataPacket(byte[] data)
+  /*      private void sendDataPacket(byte[] data)
                 throws InvalidMidiDataException {
 
             byte[] packet = new byte[
@@ -276,11 +266,6 @@ public class YamahaStyleTransfer {
             packet[p++] = 0x50;
             packet[p++] = 0x01;
 
-            /*
-             * Transfer header.
-             *
-             * These values are provisional.
-             */
             packet[p++] = 0x00;
             packet[p++] = 0x23;
             packet[p++] = 0x02;
@@ -300,26 +285,20 @@ public class YamahaStyleTransfer {
 
             p += data.length;
 
-            /*
-             * Placeholder checksum.
-             *
-             * The exact checksum for the SX600 transfer still
-             * needs to be derived from the captured packets.
-             */
             packet[p++] = 0x00;
 
             packet[p] = (byte) 0xF7;
 
             send(packet);
         }
-
+*/
         /**
          * Complete the transfer.
          *
          * The 03 00 / 03 02 / 03 03 sequence has been observed
          * in Yamaha style-transfer implementations.
          */
-        void finish() throws InvalidMidiDataException {
+/*        void finish() throws InvalidMidiDataException {
 
             send(new byte[] {
                     (byte) 0xF0,
@@ -350,8 +329,8 @@ public class YamahaStyleTransfer {
                     (byte) 0xF7
             });
         }
-
-        private static String hex(byte[] data) {
+*/
+/*        private static String hex(byte[] data) {
 
             StringBuilder sb =
                     new StringBuilder();
@@ -366,6 +345,6 @@ public class YamahaStyleTransfer {
             }
 
             return sb.toString().trim();
-        }
+        } */
     }
 }

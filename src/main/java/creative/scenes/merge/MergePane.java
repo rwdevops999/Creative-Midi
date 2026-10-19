@@ -120,7 +120,6 @@ public class MergePane extends GridPane {
                 if (! dsDeviceFiles.get().isEmpty()) {
                     if (dsDeviceFiles.get().contains(songName.get())) {
                         if (! DialogFactory.renderConfirmationDialog("Style file exists!", "Overwrite?")) {
-                            System.out.println("Do Nothing");
                             return;
                         }
                     }
@@ -129,8 +128,6 @@ public class MergePane extends GridPane {
                 doUpload(songName.get());
                 return;
             }
-
-            System.out.println("Do Nothing");
         }
     };
 
@@ -140,7 +137,6 @@ public class MergePane extends GridPane {
                 ApplicationInfo.getInstance().getMidiInputDevice() == null) {
                 DialogFactory.renderErrorDialog("No device selected");
             } else {
-                System.out.println("EXECUTE REAL UPLOAD: " + songName);
                 if (yamaha != null) {
                     String newSongname = songName + ".sty";
                     File f = new File(dsNewStyleFilename.get());
