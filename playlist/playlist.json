@@ -16,7 +16,7 @@
     },
     "tempo" : 136
   },
-  "songName" : "Weisse Rosen Aus Athen"
+  "songName" : "001. Weisse Rosen Aus Athen"
 }, {
   "mappings" : [ {
     "receive" : "Intro 1 End",
@@ -35,7 +35,7 @@
     },
     "tempo" : 85
   },
-  "songName" : "Vaya Con Dios"
+  "songName" : "002. Vaya Con Dios"
 }, {
   "mappings" : [ {
     "receive" : "Intro 1 End",
