@@ -2,10 +2,12 @@ package creative.scenes.eventlist;
 
 import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.data.EventKeyValue;
+import creative.scenes.eventlist.dialog.ChannelSelectionDialog;
 import creative.scenes.eventlist.dialog.FilterDialog;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -51,6 +53,8 @@ public class FilterPane extends HBox {
     }
 
     private boolean[] selectedEvents;
+    private List<Integer> selectedChannels = new ArrayList<>();
+
     private EventsDisplayPane parent;
     public FilterPane(EventsDisplayPane owner, boolean[] selected) {
         this();
@@ -64,6 +68,8 @@ public class FilterPane extends HBox {
 
         updateFiltering();
     }
+
+    private SimpleStringProperty dsSelectedChannels = new SimpleStringProperty("Without Channel");
 
     public void buildPane() {
         // Global
@@ -123,27 +129,67 @@ public class FilterPane extends HBox {
         Label channelLabel = new Label("Channel");
         getChildren().add(channelLabel);
 
+
+        // HANDLE CHANNELS
         CheckBox channelCheckBox = new CheckBox();
         channelCheckBox.setSelected(selectedEvents[CHANNEL]);
         channelCheckBox.setOnAction(event -> {
             selectedEvents[CHANNEL] = ! selectedEvents[CHANNEL];
             updateFiltering();
         });
+        getChildren().add(channelCheckBox);
 
+        Label selectedChannelLabel = new Label();
+        selectedChannelLabel.textProperty().bind(dsSelectedChannels);
+        getChildren().add(selectedChannelLabel);
+/*
         Spinner<Integer> channelSpinner = new Spinner<>(0, 16, 0);
         channelSpinner.getValueFactory().valueProperty().bindBidirectional(selectedChannel);
         channelSpinner.valueProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(this::updateFiltering));
         getChildren().addAll(channelCheckBox, channelSpinner);
+*/
 
         Button channelButton = new Button("Details");
         channelButton.setOnAction(event -> {
+            handleChannelSelect();
             // TODO Was never implemented
         });
         getChildren().add(channelButton);
     }
 
+    /**
+     * This is a bit pattern (16 bits) which idicate which channel is selected
+     */
+    private Character channelsSelected = 0;
+
+    private void handleChannelSelect() {
+        ChannelSelectionDialog channelDialog = new ChannelSelectionDialog(channelsSelected);
+        Optional<Character> resultingChannel = channelDialog.showAndWait();
+
+        selectedChannels = new ArrayList<>();
+
+        if (resultingChannel.isPresent()) {
+            channelsSelected = resultingChannel.get();
+
+            for (int i = 0; i < 16; i++) {
+                if ((channelsSelected & (1<<i)) != 0 ) {
+                    selectedChannels.add(i+1);
+                }
+            }
+
+            if (selectedChannels.size() == 1) {
+                dsSelectedChannels.set("Channel " + selectedChannels.get(0));
+            } else if (selectedChannels.size() > 1) {
+                dsSelectedChannels.set("Multi channel");
+            } else {
+                dsSelectedChannels.set("Without channel");
+            }
+            updateFiltering();
+        }
+    }
+
     private void updateFiltering() {
-        getEventDisplayPane().handleFiltering(selectedEvents, selectedChannel.get(), hiddenEvents);
+        getEventDisplayPane().handleFiltering(selectedEvents, selectedChannels, hiddenEvents);
     }
 
     private void handleFilterDialog(EventKeyValue selectedGroup) {

@@ -111,11 +111,6 @@ public class SysexGenSelectionPane extends GridPane {
                 break;
             }
 
-            // Handle if the event has children
-            if ("Vendor".equals(currentEvent.getName())) {
-                System.out.println("BREAK");
-            }
-
             nextColumn = populateLabelAndComboBoxGeneric(
                     nextRow,
                     nextColumn,

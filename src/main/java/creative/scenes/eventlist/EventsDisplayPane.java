@@ -52,7 +52,7 @@ public class EventsDisplayPane extends VBox {
 
     private TableView<MidiEventInfo> table;
     private boolean[] selectedEvents = {true, true, true, false};
-    private int selectedChannel = 0;
+    private List<Integer> selectedChannels = new ArrayList<>();
 
     private void buildPane() {
         logger.debug("[CM_EVENTS_DISPLAY_PANE] Building {}", getId());
@@ -267,8 +267,12 @@ public class EventsDisplayPane extends VBox {
             }
 
             if (selectedEvents[FilterPane.CHANNEL]) {
-                if  (selectedChannel > 0) {
-                    filteredEvents = filteredEvents.stream().filter(e -> ((e.getChannel() != null) && e.getChannel() == selectedChannel)).toList();
+                if  (!selectedChannels.isEmpty()) {
+                    List<MidiEventInfo> selectedEvents = new ArrayList<>();
+                    for (Integer selectedChannel : selectedChannels) {
+                        selectedEvents.addAll(filteredEvents.stream().filter(e -> ((e.getChannel() != null) && e.getChannel().equals(selectedChannel))).toList());
+                    }
+                    filteredEvents = selectedEvents;
                 } else {
                     filteredEvents = filteredEvents.stream().filter(e -> e.getChannel() == null).toList();
                 }
@@ -298,9 +302,9 @@ public class EventsDisplayPane extends VBox {
     }
 
     private static List<EventKeyValue> hiddenEvents = new ArrayList<>();
-    public void handleFiltering(boolean[] selected, int channel, List<EventKeyValue> hiddenEvents) {
+    public void handleFiltering(boolean[] selected, List<Integer> channels, List<EventKeyValue> hiddenEvents) {
         selectedEvents = selected;
-        selectedChannel = channel;
+        selectedChannels = channels;
         EventsDisplayPane.hiddenEvents = hiddenEvents;
 
         executeFiltering();
