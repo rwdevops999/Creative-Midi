@@ -1,5 +1,7 @@
 package creative.scenes.merge;
 
+import creative.scenes.merge.util.StyleMerger;
+import creative.scenes.merge.util.StyleMergerFactory;
 import creative.scenes.merge.util.YamahaStyleMerger;
 import custom.components.ActionButton;
 import custom.dialog.DialogFactory;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 import util.Registry;
+import util.enums.Manufacturer;
 import util.properties.PropertyContainer;
 import util.properties.PropertyType;
 import vendor.yamaha.YamahaStyleUploader;
@@ -231,11 +234,9 @@ public class MergePane extends GridPane {
             Button mergeButton = new Button("Merge");
             mergeButton.disableProperty().bind(dsDisabled);
             mergeButton.setOnAction(event -> {
-                YamahaStyleMerger styleMerger = new YamahaStyleMerger();
-                try {
+                StyleMerger styleMerger = StyleMergerFactory.getMerger(Manufacturer.YAMAHA.getManufacturerCode());
+                if (styleMerger != null) {
                     styleMerger.mergeStyleAndMidi(new File(dsStyleFilename.get()), new File(dsMidiFilename.get()), new File(dsNewStyleFilename.get()));
-                } catch (Exception e) {
-                    System.out.println("MERGE EXCEPTION");
                 }
                 dsDisabledUpload.set(false);
             });
