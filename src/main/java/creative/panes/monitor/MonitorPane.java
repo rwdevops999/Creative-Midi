@@ -119,6 +119,7 @@ public class MonitorPane extends VBox {
                         executeAction(Constants.MONITOR_ACTION_CLEAR);
                         messages.add(new ColoredItem("Song: ... STARTED", ColorScheme.getColor("Monitor", "Message", "Incoming")));
                     } else if ("STOP".equals(arText.get())) {
+                        System.out.println("STOP RECEIVED IN MP");
                         messages.add(new ColoredItem("Song: ... STOPPED", ColorScheme.getColor("Monitor", "Message", "Incoming")));
                     }
                 });
@@ -136,6 +137,7 @@ public class MonitorPane extends VBox {
                 executeAction(text);
                 break;
             case SONG_SELECT:
+                System.out.println("SONG RECEIVED IN MP: " + text);
 //                new MidiReset().reset();
                 stopClockStream();
 
@@ -147,7 +149,8 @@ public class MonitorPane extends VBox {
                     sendMidiStopByte();
 
                     startClockStream(song.getSongInfo().getTempo());
-                    messages.add(new ColoredItem("Song set at BPM: " + song.getSongInfo().getTempo(), ColorScheme.getColor("Monitor", "Message", "Song")));
+//                    messages.add(new ColoredItem("Song set at BPM: " + song.getSongInfo().getTempo(), ColorScheme.getColor("Monitor", "Message", "Song")));
+                    messages.add(new ColoredItem("Song " + song.getSongName() + " set at BPM: " + song.getSongInfo().getTempo(), ColorScheme.getColor("Monitor", "Message", "Song")));
                 }
 
                 messagesView.scrollTo(messages.size() - 1);

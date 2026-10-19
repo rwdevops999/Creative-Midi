@@ -43,8 +43,8 @@ public class MidiWriter {
                 message.setMessage(status, data1, data2);
 
                 String monitorMessage = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
-                CommunicationModel.setStatus(monitorMessage);
-                CommunicationModel.monitorOutbound("[MIDI] " + message);
+//                CommunicationModel.setStatus(monitorMessage);
+//                CommunicationModel.monitorOutbound("[MIDI] " + message);
 
                 // 4. Send message
                 receiver.send(midiMessage, -1);
@@ -72,8 +72,8 @@ public class MidiWriter {
 
                 String message;
                 message = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
-                CommunicationModel.setStatus(message);
-                CommunicationModel.monitorOutbound("[MIDI] " + message);
+//                CommunicationModel.setStatus(message);
+//                CommunicationModel.monitorOutbound("[MIDI] " + message);
 
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
@@ -112,10 +112,10 @@ public class MidiWriter {
                 ShortMessage shortMessage = new ShortMessage();
                 shortMessage.setMessage(status, data1, data2);
 
-                Platform.runLater(() -> {
+/*                Platform.runLater(() -> {
                     CommunicationModel.setStatus(message);
                     CommunicationModel.monitorOutbound("[MIDI] " + message);
-                });
+                }); */
 
                 // 4. Send message
                 receiver.send(shortMessage, -1);

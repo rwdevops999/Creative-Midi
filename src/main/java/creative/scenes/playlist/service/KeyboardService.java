@@ -47,8 +47,10 @@ public class KeyboardService extends Service<SharedEntity> {
             sharedEntity = new SharedEntity(CommunicationType.INCOMING, "START");
             songPlaying = true;
         } else if (status == ShortMessage.STOP) {
+            System.out.println("STOP Received");
             sharedEntity = new SharedEntity(CommunicationType.INCOMING, "STOP");
             currentSong = null;
+            songPlaying = false;
         }
 
         return sharedEntity;
@@ -92,12 +94,12 @@ public class KeyboardService extends Service<SharedEntity> {
         SharedEntity sharedEntity = null;
 
         if (message.startsWith("F0 43 73 01 52 26")) {
-            logger.error("[CM_KEYBOARD_SERVICE] Received a song name");
+            logger.info("[CM_KEYBOARD_SERVICE] Received a song name");
             LoadSongConsumer consumer = new LoadSongConsumer();
             String songName = consumer.apply(message);
 
             if (! songName.equals(currentSong)) {
-                logger.error("[CM_KEYBOARD_SERVICE] It's a new song => SongPlaying = false");
+                logger.info("[CM_KEYBOARD_SERVICE] It's a new song => SongPlaying = false");
                 currentSong = songName;
                 prepareSong(songName);
 
@@ -116,6 +118,7 @@ public class KeyboardService extends Service<SharedEntity> {
             private final MidiDevice midiInputDevice = ApplicationInfo.getInstance().getMidiInputDevice();
 
             private void handleSysex(SysexMessage msg) {
+                System.out.println("SYSEX MESSAGE: " + msg.toString());
                 ByteBuffer input = ByteBuffer.wrap(msg.getMessage());
                 CommunicationInfo ci = communicationInfoMap.get(input);
                 if (ci != null) {

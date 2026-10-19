@@ -14,6 +14,8 @@ import util.ApplicationInfo;
 
 import java.util.function.BiConsumer;
 
+import static util.Constants.MONITOR_ACTION_CLEAR;
+
 public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiConsumer<T, P> {
     private static final Logger logger = LoggerFactory.getLogger(ExecuteConsumer.class);
     @Override
@@ -27,7 +29,7 @@ public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiCon
         } else {
             Service<SharedEntity> service = ApplicationInfo.getInstance().getKeyboardService();
             if (service != null) {
-                CommunicationModel.setStatus("Playing the playlist");
+                CommunicationModel.setStatus("Stopped playing the playlist");
 
                 service.cancel();
 
@@ -35,7 +37,8 @@ public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiCon
 
                 ApplicationInfo.getInstance().setKeyboardService(null);
             } else {
-                CommunicationModel.setStatus("Stopped playing the playlist");
+                CommunicationModel.setStatus("Playing the playlist");
+                CommunicationModel.monitorAction(MONITOR_ACTION_CLEAR);
                 actionsPane.renameActionButtonName("Stop");
 
                 service = new KeyboardService();

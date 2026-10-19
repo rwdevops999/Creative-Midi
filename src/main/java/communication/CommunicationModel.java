@@ -1,6 +1,7 @@
 package communication;
 
 import creative.panes.monitor.data.CommunicationType;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,32 +31,52 @@ public class CommunicationModel {
     private static StringProperty messageProperty = new SimpleStringProperty("");
 
     public static void monitorInfo (String message) {
-        typeProperty.setValue(CommunicationType.INFO);
-        messageProperty.set(message);
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.INFO);
+            messageProperty.set(message);
+        });
     }
 
     public static void monitorWarning (String message) {
-        typeProperty.setValue(CommunicationType.WARNING);
-        messageProperty.set(message);
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.WARNING);
+            messageProperty.set(message);
+        });
     }
 
     public static void monitorError (String message) {
-        typeProperty.setValue(CommunicationType.ERROR);
-        messageProperty.set(message);
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.ERROR);
+            messageProperty.set(message);
+        });
     }
 
     public static void monitorOutbound (String message) {
-        typeProperty.setValue(CommunicationType.OUTGOING);
-        messageProperty.set(message);
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.OUTGOING);
+            messageProperty.set(message);
+        });
     }
 
     public static void monitorInbound (String message) {
-        typeProperty.setValue(CommunicationType.INCOMING);
-        messageProperty.set(message);
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.INCOMING);
+            messageProperty.set(message);
+        });
     }
 
     public static void monitorSongSelect (String message) {
-        typeProperty.setValue(CommunicationType.SONG_SELECT);
-        messageProperty.set(message);
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.SONG_SELECT);
+            messageProperty.set(message);
+        });
     }
+
+    public static void monitorAction (String message) {
+        Platform.runLater(() -> {
+            typeProperty.setValue(CommunicationType.ACTION);
+            messageProperty.set(message);
+        });
+    }
+
 }
