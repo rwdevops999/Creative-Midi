@@ -5,8 +5,13 @@ import creative.scenes.sysexgen2.data.ParameterType;
 import creative.scenes.sysexgen2.definition.SysexGen2Definitions;
 import creative.scenes.sysexgen2.entity.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -14,6 +19,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static util.ColorScheme.getColor;
+import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneHeightAsPercentage;
 
 public class SysexGenParametersPane extends TabPane {
@@ -31,7 +38,7 @@ public class SysexGenParametersPane extends TabPane {
 
         parent = owner;
 
-        setPadding(new Insets(5));
+        setPadding(new Insets(10));
 
         buildTabs(parameterBlocks);
     }
@@ -63,6 +70,7 @@ public class SysexGenParametersPane extends TabPane {
 
     private VBox createContent(List<InputBlock> list) {
         VBox pane = new VBox();
+        pane.setPadding(new Insets(10));
 
         if (! list.isEmpty()) {
             for (InputBlock inputBlock : list) {
@@ -75,22 +83,7 @@ public class SysexGenParametersPane extends TabPane {
         return pane;
     }
 
-    private int checkedParameters = 0;
-    private int errorParameters = 0;
-    private int unhandledParameters = 0;
-
     public void setEvent(Event event) {
-/*
-        checkedParameters = 0;
-        errorParameters = 0;
-        unhandledParameters = 0;
-
-        System.out.println("CHECKING INPUT");
-        checkAllParameters(SysexGen2Definitions.getRootEvent());
-
-        System.out.println("CHECKED [" + checkedParameters + "] Parameters => [" + errorParameters + "] errors, [" + unhandledParameters + "] unhandled");
-*/
-
         if (event != null) {
             List<InputBlock> inputBlocks = new ArrayList<>();
 
@@ -103,8 +96,6 @@ public class SysexGenParametersPane extends TabPane {
                 }
             }
 
-            System.out.println("CHECK");
-
             this.parameterBlocks = inputBlocks;
 
             if (!this.parameterBlocks.isEmpty()) {
@@ -112,64 +103,27 @@ public class SysexGenParametersPane extends TabPane {
             }
 
             showSysexResult(event);
+        } else {
+            getTabs().clear();
+            getSysexGen2Pane().getSysexGenResultPane().showSysex(new ArrayList<>());
         }
-    }
-
-    private InputBlock createInputBlockFrom(EventParameter parameter) {
-        // TODO create this function
-        return null;
     }
 
     public void showSysexResult(Event event) {
         getSysexGen2Pane().getSysexGenResultPane().showSysex(event);
     }
 
-    private List<InputBlock> checkAllParameters(Event event) {
-        System.out.println("CHECKING: " + event.getName());
-
-        List<InputBlock> result = new ArrayList<>();
-
-        if (event.hasChildren()) {
-            for (Event child :  event.getChildren()) {
-                result.addAll(checkAllParameters(child));
-            }
-        }
-
-        if (event.hasParameters()) {
-            for (EventParameter parameter : event.getParameters()) {
-                result.addAll(handleParameter(parameter, event));
-            }
-        }
-
-        return result;
-    }
-
     private List<InputBlock> handleParameter(EventParameter parameter, Event event) {
         List<InputBlock> result = new ArrayList<>();
 
-        checkedParameters++;
-        System.out.println("CHECK PARAMETER [" + parameter.getParameterType().name() + "]: " + parameter.getName());
         if (ParameterType.PARAMETER.equals(parameter.getParameterType())) {
-            System.out.println("PARAMETER is a NORMAL PARAMETER");
-
             int parameterID = parameter.getParameterId();
-            if (parameterID == 2) {
-                System.out.println("Check");
-            }
             EventType eventType = event.findEventTypeFromDefaultValue();
-            if (eventType == null) {
-                errorParameters++;
-                System.out.println("ERROR Event of parameter has no Event Type");
-            } else {
+            if (eventType != null) {
                 ParameterTable pTable = eventType.getParameterTable();
-                if (pTable == null) {
-                    errorParameters++;
-                    System.out.println("ERROR EventType has no parameter Table");
-                } else {
+                if (pTable != null) {
                     ParametersTableEntry entry = pTable.getEntryOfParameterId(parameterID);
-                    if (entry == null) {
-                        System.out.println("(Is Possible) There is no entry in ParameterTable " + pTable.getIdentifier()  + " for parameter with ID = " + parameterID);
-                    } else {
+                    if (entry != null) {
                         InputBlock ib = new InputBlock();
 
                         ib.setEvent(event);
@@ -180,18 +134,12 @@ public class SysexGenParametersPane extends TabPane {
                         ib.setLabel(entry.getLabel());
                         ib.setRange(entry.getRange());
                         result.add(ib);
-                        System.out.println("VALID: Parameter is OK");
                     }
                 }
             }
         } else if (ParameterType.FREE.equals(parameter.getParameterType())) {
-            System.out.println("PARAMETER is a FREE PARAMETER");
-
             if (! parameter.isIgnore()) {
-                if (parameter.getDisplayBlock() == null) {
-                    errorParameters++;
-                    System.out.println("ERROR: Parameter has no display block");
-                } else {
+                if (parameter.getDisplayBlock() != null) {
                     InputBlock ib = new InputBlock();
 
                     ib.setEvent(event);
@@ -203,18 +151,10 @@ public class SysexGenParametersPane extends TabPane {
                     ib.setLabel(parameter.getDisplayBlock().getLabel());
                     ib.setRange(parameter.getDisplayBlock().getRange());
                     result.add(ib);
-                    System.out.println("VALID: Parameter is OK");
                 }
-            } else {
-                unhandledParameters++;
             }
         } else if (ParameterType.LINKED.equals(parameter.getParameterType())) {
-            System.out.println("PARAMETER is a LINKED PARAMETER");
-
-            if (parameter.getDisplayBlock() == null) {
-                errorParameters++;
-                System.out.println("ERROR: Parameter has no display block");
-            } else {
+            if (parameter.getDisplayBlock() != null) {
                 InputBlock ib = new InputBlock();
 
                 ib.setEvent(event);
@@ -226,11 +166,7 @@ public class SysexGenParametersPane extends TabPane {
                 ib.setLabel(parameter.getDisplayBlock().getLabel());
                 ib.setRange(parameter.getDisplayBlock().getRange());
                 result.add(ib);
-                System.out.println("VALID: Parameter is OK");
             }
-        } else {
-            unhandledParameters++;
-            System.out.println("PARAMETER is a TYPE PARAMETER => not handled");
         }
 
         return result;

@@ -1,5 +1,6 @@
 package creative.scenes.sysexgen2;
 
+import creative.scenes.sysexgen2.components.SysexActionsPane;
 import creative.scenes.sysexgen2.entity.Event;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -15,6 +16,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -42,14 +44,15 @@ public class SysexGenResultPane extends VBox {
         buildPane();
     }
 
-    private final BooleanProperty disabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty disabledContextMenu = new SimpleBooleanProperty(true);
+    private SysexActionsPane actionsPane;
 
     private void buildPane() {
         logger.debug("[CM_SYSEX_GEN_RESULT_PANE] building {}", getId());
 
         ContextMenu contextMenu = new ContextMenu();
         MenuItem copy = new MenuItem("Copy To Clipboard");
-        copy.disableProperty().bind(disabled);
+        copy.disableProperty().bind(disabledContextMenu);
 
         copy.setOnAction(event -> {
             StringSelection stringSelection = new StringSelection(listView.getSelectionModel().getSelectedItem());
@@ -58,39 +61,54 @@ public class SysexGenResultPane extends VBox {
         });
 
         MenuItem clear = new MenuItem("Clear All");
-        clear.disableProperty().bind(disabled);
+        clear.disableProperty().bind(disabledContextMenu);
         clear.setOnAction(event -> {
             listView.getItems().clear();
-            disabled.set(true);
+            disabledContextMenu.set(true);
         });
         contextMenu.getItems().addAll(copy, clear);
 
         listView = new ListView<>();
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                disabled.set(false);
+                disabledContextMenu.set(false);
             }
         });
         listView.setContextMenu(contextMenu);
 
         getChildren().add(listView);
 
-  /*      ActionsPane actionsPane = new ActionsPane(sysexSupplier);
+      actionsPane = new SysexActionsPane(sysexSupplier);
         getChildren().add(actionsPane);
-  */
+
         logger.debug("[CM_SYSEX_GEN_RESULT_PANE] built {}", getId());
     }
 
+    private List<String> currentSysexList = new ArrayList<>();
     public void showSysex(Event event) {
-        List<String> sysexList = event.complete(new ArrayList<>(event.createSysexStrings()));
+        showSysex(event.complete(new ArrayList<>(event.createSysexStrings())));
+    }
+
+    public void showSysex(List<String> sysexList) {
+        currentSysexList = sysexList;
 
         listView.getItems().clear();
         for (String sysexString : sysexList) {
             listView.getItems().add(sysexString);
         }
 
-        disabled.set(! sysexList.isEmpty());
+        handleDisabling(sysexList);
+    }
 
-        System.out.println("RENDER THIS");
+    private void handleDisabling(List<String> sysexList) {
+        disabledContextMenu.set(sysexList.isEmpty());
+        getSysexActionsPane().setButtonsDisabled(sysexList.isEmpty());
+
+    }
+    public Supplier<List<String>> sysexSupplier = () -> currentSysexList;
+
+    // ACCESSORS
+    public SysexActionsPane getSysexActionsPane() {
+        return actionsPane;
     }
 }

@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -124,7 +125,8 @@ public class SysexGenSelectionPane extends GridPane {
                     currentEvent.getSelectedEvent(),            // 4. Selected item
                     newVal -> {                           // 5. callback
                         currentEvent.setSelectedEvent(newVal);
-                        buildPane();                            // rebuild the pane
+                        getSysexGen2Pane().getSysexGenParametersPane().setEvent(null);
+                        buildPane();
                     }
             );
 
@@ -195,18 +197,14 @@ public class SysexGenSelectionPane extends GridPane {
             }
         });
 
-// Calculate the colspan of the ComboBox
+        // Calculate the colspan of the ComboBox
         javafx.scene.text.Text comboHelper = new javafx.scene.text.Text(longestName);
-
-// FIX: Verhoog de basis-buffer van 38.0 naar 50.0 pixels voor de pijl en interne styling
         double exactComboWidth = comboHelper.getLayoutBounds().getWidth() + 50.0;
 
-// FIX: Verhoog de extra layout-marge van 12.0 naar 20.0 pixels om de afronding van singleColumnPixelWidth op te vangen
         int comboboxColspan = (int) Math.ceil((exactComboWidth + 20.0) / this.singleColumnPixelWidth);
 
-// Zorg er daarnaast voor dat de ComboBox minimaal de berekende breedte aanneemt
         comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
-        comboBox.setPrefWidth(exactComboWidth + 20.0); // Dwing de ComboBox in deze breedte
+        comboBox.setPrefWidth(exactComboWidth + 20.0); // Force thee ComboBox in this width
         comboBox.setMaxWidth(Double.MAX_VALUE);
 
         // add the combo or replace it
@@ -218,16 +216,8 @@ public class SysexGenSelectionPane extends GridPane {
             GridPane.setColumnSpan(comboBox, comboboxColspan);
         }
 
-// Zorg dat hij de beschikbare breedte in de kolommen ook echt mag vullen
         GridPane.setFillWidth(comboBox, true);
         GridPane.setHgrow(comboBox, Priority.ALWAYS);
-
-//        comboBox.setMinWidth(Control.USE_COMPUTED_SIZE);
-//        comboBox.setPrefWidth(Control.USE_COMPUTED_SIZE);
-//        comboBox.setMaxWidth(Control.USE_COMPUTED_SIZE);
-//        GridPane.setHalignment(comboBox, HPos.LEFT);
-//        GridPane.setFillWidth(comboBox, false);
-//        GridPane.setHgrow(comboBox, Priority.NEVER);
 
         GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 12, 0, 0));
 

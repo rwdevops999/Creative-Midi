@@ -3,7 +3,6 @@ package creative.scenes.sysex;
 import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.sysex.data.SysexState;
-import entity.sysex.Sysex;
 
 import java.util.Stack;
 import java.util.function.BooleanSupplier;
@@ -63,6 +62,7 @@ public class SysexStateMachine {
     private void updateUI(BooleanSupplier supplier) {
 
         sceneActionsPane.disableAll();
+        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
         switch (currentState) {
             case EMPTY -> {
                 CommunicationModel.setStatus("SYSEX STATE = EMPTY");
@@ -91,7 +91,6 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
                 CommunicationModel.setStatus("SYSEX STATE = ADDED");
             }
             case LOADED -> {
@@ -106,14 +105,9 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false );
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
                 CommunicationModel.setStatus("SYSEX STATE = UPDATED");
             }
         }
-    }
-
-    public SysexState getCurrentState() {
-        return currentState;
     }
 
     public static void setActionsPane(SceneActionsPane sceneActionsPane) {

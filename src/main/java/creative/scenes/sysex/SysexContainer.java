@@ -79,6 +79,21 @@ public class SysexContainer {
         sysexList.add(sysex);
     }
 
+    public static void replaceSysex(Sysex sysex) {
+        Sysex found = sysexList.stream().filter(s -> s.getName().equals(sysex.getName())).findFirst().orElse(null);
+
+        int index = -1;
+        if (found != null) {
+            index = sysexList.indexOf(found);
+        }
+
+        if (index == -1) {
+            sysexList.add(sysex);
+        } else {
+            sysexList.set(index, sysex);
+        }
+    }
+
     public static void updateSysex(Sysex sysex) {
         for (SysexContent sysExContent : sysex.getList()) {
             sysExContent.setContent(completeSysex(sysExContent.getContent()));
