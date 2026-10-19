@@ -1,9 +1,6 @@
 package creative.scenes.eventlist.dialog;
 
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Dialog;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 import java.util.function.BiConsumer;
@@ -37,6 +34,7 @@ public class ChannelSelectionDialog extends Dialog<Character> {
 
         for (int i = 1; i <= 16; i++) {
             CheckBox checkBox = new CheckBox("Channel " + i);
+            checkBox.setId("Channel" + i);
 
             // Leg de huidige bitmasker vast voor deze specifieke checkbox
             final Character currentBitMask = start;
@@ -55,7 +53,27 @@ public class ChannelSelectionDialog extends Dialog<Character> {
 
             // Shift naar de volgende bit
             start = (char) (start << 1);
+
+            Button allButton = new Button("All ");
+            allButton.setOnAction(event -> {
+                for (int i1 = 1; i1 <= 16; i1++) {
+                    CheckBox cb = (CheckBox)grid.lookup("#Channel"+i1);
+                    cb.setSelected(true);
+                }
+            });
+            grid.add(allButton, 4, 0);
+
+            Button noneButton = new Button("None");
+            noneButton.setOnAction(event -> {
+                for (int i1 = 1; i1 <= 16; i1++) {
+                    CheckBox cb = (CheckBox)grid.lookup("#Channel"+i1);
+                    cb.setSelected(false);
+                }
+            });
+            grid.add(noneButton, 4, 3);
         }
+
+
 
         getDialogPane().setContent(grid);
 
