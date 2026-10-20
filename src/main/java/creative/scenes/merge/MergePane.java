@@ -2,11 +2,9 @@ package creative.scenes.merge;
 
 import creative.scenes.merge.util.StyleMerger;
 import creative.scenes.merge.util.StyleMergerFactory;
-import creative.scenes.merge.util.YamahaStyleMerger;
 import custom.components.ActionButton;
 import custom.dialog.DialogFactory;
 import custom.dialog.NameDialog;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +22,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
@@ -35,14 +32,10 @@ import util.properties.PropertyType;
 import vendor.yamaha.YamahaStyleUploader;
 
 import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 
 public class MergePane extends GridPane {
@@ -58,7 +51,7 @@ public class MergePane extends GridPane {
              List<String> styles = yamaha.getStyleFiles().stream().map(FilenameUtils::removeExtension).sorted(String.CASE_INSENSITIVE_ORDER).toList();
              dsDeviceFiles.set(FXCollections.observableArrayList(styles));
          } catch (Exception e) {
-             logger.error("[CM_MERGE_PANE]: Exception. CAUSE: " + e.getMessage());
+             logger.error("[CM_MERGE_PANE]: Exception(1). CAUSE: {}", e.getMessage());
          }
     }
 
@@ -99,9 +92,9 @@ public class MergePane extends GridPane {
     private final BooleanProperty dsVisible = new SimpleBooleanProperty(false);
     private final BooleanProperty dsDisabledUpload = new SimpleBooleanProperty(false);
 
-    private boolean isMerge = true;
+    private final boolean isMerge;
 
-    private final EventHandler<ActionEvent> uploadHandler = new EventHandler<ActionEvent>() {
+    private final EventHandler<ActionEvent> uploadHandler = new EventHandler<>() {
 
         @Override
         public void handle(ActionEvent event) {
@@ -117,16 +110,15 @@ public class MergePane extends GridPane {
             Optional<String> songName = nameDialog.showAndWait();
 
             if (songName.isPresent()) {
-                if (! dsDeviceFiles.get().isEmpty()) {
+                if (!dsDeviceFiles.get().isEmpty()) {
                     if (dsDeviceFiles.get().contains(songName.get())) {
-                        if (! DialogFactory.renderConfirmationDialog("Style file exists!", "Overwrite?")) {
+                        if (!DialogFactory.renderConfirmationDialog("Style file exists!", "Overwrite?")) {
                             return;
                         }
                     }
                 }
 
                 doUpload(songName.get());
-                return;
             }
         }
     };
@@ -138,9 +130,9 @@ public class MergePane extends GridPane {
                 DialogFactory.renderErrorDialog("No device selected");
             } else {
                 if (yamaha != null) {
-                    String newSongname = songName + ".sty";
+                    String newSongName = songName + ".sty";
                     File f = new File(dsNewStyleFilename.get());
-                    yamaha.upload(f.toPath(), newSongname);
+                    yamaha.upload(f.toPath(), newSongName);
                 }
             }
         } catch (Exception e) {
@@ -162,7 +154,7 @@ public class MergePane extends GridPane {
                         }
 
                     } catch (Exception e) {
-                        logger.error("[CM_MIDI_SCENE] Exception. CAUSE: " + e.getMessage());
+                        logger.error("[CM_MIDI_SCENE] Exception(2). CAUSE: {}", e.getMessage());
                     }
                 } else {
                     dsDeviceFiles.set(FXCollections.observableArrayList(new ArrayList<>()));
@@ -177,9 +169,9 @@ public class MergePane extends GridPane {
         Label stylefileLabel = new Label("Style file");
         add (stylefileLabel, 0, row);
 
-        Label stylefileValue = new Label();
-        stylefileValue.textProperty().bind(dsStyleFilename);
-        add (stylefileValue, 1, row, 5, 1);
+        Label styleFileValue = new Label();
+        styleFileValue.textProperty().bind(dsStyleFilename);
+        add (styleFileValue, 1, row, 5, 1);
 
         Button uploadStyleFileButton = new Button("Upload Style File");
         uploadStyleFileButton.setOnAction(event -> {
@@ -203,9 +195,9 @@ public class MergePane extends GridPane {
             Label midifileLabel = new Label("Midi file");
             add(midifileLabel, 0, row);
 
-            Label midifileValue = new Label();
-            midifileValue.textProperty().bind(dsMidiFilename);
-            add(midifileValue, 1, row, 5, 1);
+            Label midiFileValue = new Label();
+            midiFileValue.textProperty().bind(dsMidiFilename);
+            add(midiFileValue, 1, row, 5, 1);
 
             Button uploadMidiFileButton = new Button("Upload Midi File");
             uploadMidiFileButton.setOnAction(event -> {
@@ -282,12 +274,8 @@ public class MergePane extends GridPane {
         add (deviceFiles, 0, row, 10, 1);
 
         // listeners
-        dsStyleFilename.addListener((observable, oldValue, newValue) -> {
-            checkFiles();
-        });
-        dsMidiFilename.addListener((observable, oldValue, newValue) -> {
-            checkFiles();
-        });
+        dsStyleFilename.addListener((observable, oldValue, newValue) -> checkFiles());
+        dsMidiFilename.addListener((observable, oldValue, newValue) -> checkFiles());
 
         logger.debug("[CM_MERGE_PANE] Built {}", getId());
     }
