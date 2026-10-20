@@ -1,6 +1,5 @@
 package creative.scenes.eventlist.panes;
 
-import util.Util;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -8,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
 import static util.Util.setPaneMinWidthAsPercentage;
-import static util.Util.setPaneWidthAsPercentage;
 
 public class MidiInfoFilenamePane extends HBox {
     private final StringProperty value = new SimpleStringProperty("<no song selected>");

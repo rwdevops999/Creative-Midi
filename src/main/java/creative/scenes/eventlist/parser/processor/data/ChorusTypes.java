@@ -41,9 +41,9 @@ public class ChorusTypes {
         CHORUS_REGISTRY.put(new DataBlock(99,16), "DualRotBrt");
         CHORUS_REGISTRY.put(new DataBlock(99,17), "DualRotWarm");
         CHORUS_REGISTRY.put(new DataBlock(69,16), "RotarySp1");
-        CHORUS_REGISTRY.put(new DataBlock(70,16), "Tremelo1");
-        CHORUS_REGISTRY.put(new DataBlock(70,18), "EPTremelo");
-        CHORUS_REGISTRY.put(new DataBlock(120,0), "TempoTremelo");
+        CHORUS_REGISTRY.put(new DataBlock(70,16), "Tremolo1");
+        CHORUS_REGISTRY.put(new DataBlock(70,18), "EPTremolo");
+        CHORUS_REGISTRY.put(new DataBlock(120,0), "TempoTremolo");
         CHORUS_REGISTRY.put(new DataBlock(71,16), "AutoPan1");
         CHORUS_REGISTRY.put(new DataBlock(121,0), "TempoAtPan1");
 

@@ -5,10 +5,10 @@ import lombok.Getter;
 import java.util.*;
 
 public class EventKey {
-    private static List<EventKeyValue> keys = new ArrayList<>();
+    private static final List<EventKeyValue> keys = new ArrayList<>();
 
     @Getter
-    private List<EventKeyValue> values = new ArrayList<>();
+    private final List<EventKeyValue> values = new ArrayList<>();
 
     static {
         keys.addAll(Arrays.asList(EventKeyValue.values()));
@@ -18,8 +18,8 @@ public class EventKey {
         this.values.addAll(Arrays.asList(values));
     }
 
-    public boolean hasValue(EventKeyValue target) {
-        return this.values.contains(target);
+    public boolean hasNotValue(EventKeyValue target) {
+        return ! this.values.contains(target);
     }
 
     public boolean is(EventKeyValue target) {
@@ -27,7 +27,7 @@ public class EventKey {
     }
 
     public void addValue(EventKeyValue value) {
-        if (! hasValue(value)) {
+        if (hasNotValue(value)) {
             this.values.add(value);
         }
     }

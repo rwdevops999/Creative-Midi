@@ -1,6 +1,6 @@
 package creative.scenes.eventlist.parser;
 
-import creative.scenes.eventlist.parser.entity.MidifileEventInfo;
+import creative.scenes.eventlist.parser.entity.MidiFileEventInfo;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,8 +143,8 @@ public class MidifileParser {
      *
      * @throws IOException
      */
-    private List<MidifileEventInfo> parseTrack(byte[] trackData, int trackIndex) throws IOException {
-        List<MidifileEventInfo> events = new ArrayList<>();
+    private List<MidiFileEventInfo> parseTrack(byte[] trackData, int trackIndex) throws IOException {
+        List<MidiFileEventInfo> events = new ArrayList<>();
 
         ByteArrayInputStream stream = new ByteArrayInputStream(trackData);
 
@@ -181,7 +181,7 @@ public class MidifileParser {
                     stream.read(data);
                 }
 
-                MidifileEventInfo info = new MidifileEventInfo(currentTick, status, data, metaType);
+                MidiFileEventInfo info = new MidiFileEventInfo(currentTick, status, data, metaType);
                 info.setTrack(trackIndex); // Of geef mee in constructor als dat kan
                 events.add(info);
             } else if (status == 0xF0 || status == 0xF7) {
@@ -192,7 +192,7 @@ public class MidifileParser {
                 byte[] data = new byte[length];
                 stream.read(data);
 
-                MidifileEventInfo info = new MidifileEventInfo(currentTick, status, data);
+                MidiFileEventInfo info = new MidiFileEventInfo(currentTick, status, data);
                 info.setTrack(trackIndex); // store track id
                 events.add(info);
             } else {
@@ -217,7 +217,7 @@ public class MidifileParser {
                     stream.read(data);
                 }
 
-                MidifileEventInfo info = new MidifileEventInfo(currentTick, status, data);
+                MidiFileEventInfo info = new MidiFileEventInfo(currentTick, status, data);
                 info.setTrack(trackIndex);
                 events.add(info);
             }

@@ -55,13 +55,13 @@ public class EventsPane extends BorderPane {
 
             // now we have out official midi sequence use it
             MBTCalculator.setPPQ(sequence.getResolution());
-            MidifileHelper.setPPQ(sequence.getResolution());
+            MidiFileHelper.setPPQ(sequence.getResolution());
 
-            MidifileHelper.retrieveBpmAndTimeSignature(sequence);
-            getMidiInfoPane().setBPM(MidifileHelper.getBPM());
-            getMidiInfoPane().setTimeSignature(MidifileHelper.getTimeSignature().toString());
-            MBTCalculator.setTimeSignature(MidifileHelper.getTimeSignature());
-            getMidiInfoPane().setDuration(MidifileHelper.getDuration());
+            MidiFileHelper.retrieveBpmAndTimeSignature(sequence);
+            getMidiInfoPane().setBPM(MidiFileHelper.getBPM());
+            getMidiInfoPane().setTimeSignature(MidiFileHelper.getTimeSignature().toString());
+            MBTCalculator.setTimeSignature(MidiFileHelper.getTimeSignature());
+            getMidiInfoPane().setDuration(MidiFileHelper.getDuration());
 
             MidiFileProcessor.processMidi(sequence);
             getEventsDisplayPane().setEventInfo(sequence, MidiFileProcessor.getEvents());

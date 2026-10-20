@@ -107,8 +107,7 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
 
         setResultConverter(dialogButton -> {
             if (dialogButton == useButtonType) {
-                List<EventKeyValue> hidden = hiddenEventsProperty.get();
-                return hidden;
+                return hiddenEventsProperty.get();
             }
 
             return null; // return null when we cancel
@@ -167,7 +166,7 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
         listView.setId("listview");
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         listView.itemsProperty().bind(listProperty);
-        listView.setCellFactory(lv -> new ListCell<EventKeyValue>() {
+        listView.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(EventKeyValue item, boolean empty) {
                 super.updateItem(item, empty);
@@ -187,9 +186,7 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
             checkbox.selectedProperty().bindBidirectional(dsParentFiltering);
             vBox.getChildren().add(checkbox);
 
-            dsParentFiltering.addListener((observable, oldValue, newValue) -> {
-                updateEvents();
-            });
+            dsParentFiltering.addListener((observable, oldValue, newValue) -> updateEvents());
         }
 
         return vBox;
@@ -250,15 +247,6 @@ public class FilterDialog extends Dialog<List<EventKeyValue>> {
     private void moveSelected (ListProperty<EventKeyValue> from, ListProperty<EventKeyValue> to, List<EventKeyValue> selected) {
         to.get().addAll(selected);
         from.get().removeAll(selected);
-
-        sortList(to);
-
-        updateDisables();
-    }
-
-    private void moveSingle (EventKeyValue which, ListProperty<EventKeyValue> from, ListProperty<EventKeyValue> to) {
-        to.get().add(which);
-        from.get().remove(which);
 
         sortList(to);
 

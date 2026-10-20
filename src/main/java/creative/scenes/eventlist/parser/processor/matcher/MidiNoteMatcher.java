@@ -1,7 +1,6 @@
 package creative.scenes.eventlist.parser.processor.matcher;
 
 import creative.scenes.eventlist.parser.MBTCalculator;
-import creative.scenes.eventlist.parser.data.MidiKind;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,24 +50,21 @@ public class MidiNoteMatcher {
 
     private void triggerNotePairFound(MidiEventInfo noteOn, MidiEventInfo noteOff) {
         long durationTicks = noteOff.getOriginalEvent().getTick() - noteOn.getOriginalEvent().getTick();
-//        noteOn.setDuration(durationTicks);
-//        long durationTicks = MBTCalculator.convertTick(noteOff.getMidiEvent().getTick() - noteOn.getMidiEvent().getTick());
         double seconds = MBTCalculator.convertToSeconds(durationTicks);
-//        noteOn.setInternalDuration(durationTicks);
         noteOn.setDuration(formatDuration(seconds));
     }
 
     private static String formatDuration(double seconds) {
         Duration duration = Duration.ofNanos((long) (seconds * 1_000_000_000));
 
-        long lhours = duration.toHours();
-        long lminutes = duration.toMinutesPart();
-        long lseconds = duration.toSecondsPart();
+        long lHours = duration.toHours();
+        long lMinutes = duration.toMinutesPart();
+        long lSeconds = duration.toSecondsPart();
 
         // Extract milliseconds and scale down to 2 digits (.mm)
         long millis2Digits = duration.toMillisPart() / 10;
 
-        return String.format("%02d:%02d:%02d.%02d", lhours, lminutes, lseconds, millis2Digits);
+        return String.format("%02d:%02d:%02d.%02d", lHours, lMinutes, lSeconds, millis2Digits);
     }
 
     private void copyEvents(MidiEventInfo src, MidiEventInfo dst) {

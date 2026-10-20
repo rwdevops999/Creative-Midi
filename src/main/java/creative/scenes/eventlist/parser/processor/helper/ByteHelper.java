@@ -2,7 +2,7 @@ package creative.scenes.eventlist.parser.processor.helper;
 
 public class ByteHelper {
     public static String getAndStrip(StringBuilder src, int numBytes) {
-        int size = 0;
+        int size;
         if (numBytes > 1) {
             size = (numBytes * 3) - 1;
         } else {

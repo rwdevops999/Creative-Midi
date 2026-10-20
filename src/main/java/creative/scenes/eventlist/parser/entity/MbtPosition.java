@@ -1,7 +1,5 @@
 package creative.scenes.eventlist.parser.entity;
 
-import org.jetbrains.annotations.NotNull;
-
 public class MbtPosition {
     public final long measure;
     public final long beat;

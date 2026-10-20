@@ -1,8 +1,6 @@
 package creative.scenes.eventlist.dialog;
 
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
-import creative.scenes.voice.dialog.VoiceDetailPane;
-import entity.voice.Patch;
 import javafx.geometry.Insets;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;

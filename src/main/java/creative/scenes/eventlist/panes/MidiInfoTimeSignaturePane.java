@@ -1,6 +1,5 @@
 package creative.scenes.eventlist.panes;
 
-import util.Util;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -10,16 +9,16 @@ import javafx.scene.layout.Pane;
 
 import static util.Util.setPaneMinWidthAsPercentage;
 
-public class MidiInfoTimeSignaturPane extends HBox {
+public class MidiInfoTimeSignaturePane extends HBox {
     private final StringProperty value = new SimpleStringProperty("4/4");
-    public MidiInfoTimeSignaturPane() {
+    public MidiInfoTimeSignaturePane() {
         super();
 
         setSpacing(5);
         setPadding(new Insets(0, 0, 0, 5));
     }
 
-    public MidiInfoTimeSignaturPane(Pane owner) {
+    public MidiInfoTimeSignaturePane(Pane owner) {
         this();
 
         setPaneMinWidthAsPercentage(this, owner, 13);

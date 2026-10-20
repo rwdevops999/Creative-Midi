@@ -2,19 +2,14 @@ package creative.scenes.eventlist.dialog;
 
 import creative.scenes.eventlist.data.EventKeyValue;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
-import entity.voice.Patch;
 import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import util.Util;
-
 import static util.Util.toPascalCase;
 
 public class EventDetailPane extends GridPane {
@@ -123,7 +118,7 @@ public class EventDetailPane extends GridPane {
     }
 
     private String makeReadable(String value1, String value2) {
-        String result = null;
+        String result;
 
         if (value2 == null) {
             result = toPascalCase(value1);

@@ -255,15 +255,15 @@ public class EventsDisplayPane extends VBox {
 
         if (! filteredEvents.isEmpty()) {
             if (! selectedEvents[FilterPane.MIDI_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(MIDI)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> e.getEventKey().hasNotValue(MIDI)).toList();
             }
 
             if (! selectedEvents[FilterPane.SYSEX_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(SYSEX)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> e.getEventKey().hasNotValue(SYSEX)).toList();
             }
 
             if (! selectedEvents[FilterPane.META_EVENT]) {
-                filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(META)).toList();
+                filteredEvents = filteredEvents.stream().filter(e -> e.getEventKey().hasNotValue(META)).toList();
             }
 
             if (selectedEvents[FilterPane.CHANNEL]) {
@@ -280,7 +280,7 @@ public class EventsDisplayPane extends VBox {
 
             if (! hiddenEvents.isEmpty()) {
                 for (EventKeyValue hiddenEvent : hiddenEvents) {
-                    filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().hasValue(hiddenEvent)).toList();
+                    filteredEvents = filteredEvents.stream().filter(e -> e.getEventKey().hasNotValue(hiddenEvent)).toList();
 //                    filteredEvents = filteredEvents.stream().filter(e -> ! e.getEventKey().is(hiddenEvent)).toList();
                 }
             }

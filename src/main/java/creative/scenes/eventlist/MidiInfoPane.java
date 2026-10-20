@@ -3,14 +3,13 @@ package creative.scenes.eventlist;
 import creative.scenes.eventlist.panes.MidiInfoDurationPane;
 import creative.scenes.eventlist.panes.MidiInfoFilenamePane;
 import creative.scenes.eventlist.panes.MidiInfoTempoPane;
-import creative.scenes.eventlist.panes.MidiInfoTimeSignaturPane;
+import creative.scenes.eventlist.panes.MidiInfoTimeSignaturePane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
 
 import static util.ColorScheme.getColor;
 import static util.DummyUtil.showPaneBorder;
@@ -53,7 +52,7 @@ public class MidiInfoPane extends HBox {
         MidiInfoDurationPane durationPane = new MidiInfoDurationPane(this);
         getChildren().add(durationPane);
 
-        MidiInfoTimeSignaturPane signaturePane = new MidiInfoTimeSignaturPane(this);
+        MidiInfoTimeSignaturePane signaturePane = new MidiInfoTimeSignaturePane(this);
         getChildren().add(signaturePane);
 
         logger.debug("[CM_MIDI_INFO_PANE] Built {}", getId());
@@ -81,7 +80,7 @@ public class MidiInfoPane extends HBox {
     }
 
     public void setTimeSignature(String timeSignature) {
-        MidiInfoTimeSignaturPane signaturePane = (MidiInfoTimeSignaturPane) getChildren().filtered(n -> n instanceof MidiInfoTimeSignaturPane).stream().findFirst().orElse(null);
+        MidiInfoTimeSignaturePane signaturePane = (MidiInfoTimeSignaturePane) getChildren().filtered(n -> n instanceof MidiInfoTimeSignaturePane).stream().findFirst().orElse(null);
         if (signaturePane != null) {
             signaturePane.setValue(timeSignature);
         }

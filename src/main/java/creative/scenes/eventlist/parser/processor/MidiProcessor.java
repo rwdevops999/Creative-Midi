@@ -143,9 +143,9 @@ public class MidiProcessor {
 
         midiEventInfo.getEventKey().addValue(MIDI_CONTROL_MODE_CHANGE_MESSAGE);
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int byte1 = rawbytes[1] & 0xFF;
+        int byte1 = rawBytes[1] & 0xFF;
 
         result = switch (byte1) {
             case
@@ -205,9 +205,9 @@ public class MidiProcessor {
 
         midiEventInfo.getEventKey().addValue(MIDI_CONTROL_CHANGE_MESSAGE);
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int byte1 = rawbytes[1] & 0xFF;
+        int byte1 = rawBytes[1] & 0xFF;
 
         result = switch (byte1) {
             case 0x00 -> handleBankSelectMSB(message, midiEventInfo);
@@ -216,7 +216,7 @@ public class MidiProcessor {
             case 0x05 -> handlePortamentoTime(message, midiEventInfo);
             case 0x06 -> handleDataEntryMSB(message, midiEventInfo);
             case 0x07 -> handleMainVolume(message, midiEventInfo);
-            case 0x0A -> handlePanpot(message, midiEventInfo);
+            case 0x0A -> handlePanPot(message, midiEventInfo);
             case 0x0B -> handleExpression(message, midiEventInfo);
             case 0x10 -> handleGeneralPurposeController(message, midiEventInfo);
             case 0x20 -> handleBankSelectLSB(message, midiEventInfo);
@@ -261,9 +261,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Bank select MSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         currentMSB[message.getChannel()] = data2;
@@ -280,9 +280,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Modulation");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -297,9 +297,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Breath");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -314,9 +314,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Portamento time");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -331,9 +331,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Data entry MSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -348,26 +348,26 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Main Volume");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
     }
 
-    private static boolean handlePanpot(ShortMessage message, MidiEventInfo midiEventInfo) {
+    private static boolean handlePanPot(ShortMessage message, MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.getEventKey().addValue(MIDI_PANPOT);
 
         midiEventInfo.setColor(getColor("midi", "panpot"));
         midiEventInfo.setChannel(message.getChannel()+1);
-        midiEventInfo.setDescription("Panpot");
+        midiEventInfo.setDescription("PanPot");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = (rawbytes[2] & 0xFF) - 63;
+        int data2 = (rawBytes[2] & 0xFF) - 63;
 
         String display;
         if (data2 == 0) {
@@ -391,9 +391,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Expression");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -408,9 +408,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("General purpose controller");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -425,9 +425,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Bank Select LSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         currentLSB[message.getChannel()] = data2;
@@ -444,9 +444,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Data entry LSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -461,9 +461,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Sustain damper");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -478,9 +478,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Portamento");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setComment(data2 < 64 ? "OFF" : "ON");
 
         return result;
@@ -495,9 +495,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Vibrato rate");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -512,8 +512,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Articulation 1");
 
-        byte[] rawbytes = message.getMessage();
-        int data2 = rawbytes[2];
+        byte[] rawBytes = message.getMessage();
+        int data2 = rawBytes[2];
 
         midiEventInfo.setComment(data2 == 0 ? "OFF" : data2 == 127 ? "ON" : "UNKNOWN");
 
@@ -529,8 +529,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Articulation 2");
 
-        byte[] rawbytes = message.getMessage();
-        int data2 = rawbytes[2];
+        byte[] rawBytes = message.getMessage();
+        int data2 = rawBytes[2];
 
         midiEventInfo.setComment(data2 == 0 ? "OFF" : data2 == 127 ? "ON" : "UNKNOWN");
 
@@ -546,8 +546,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Sostenuto");
 
-        byte[] rawbytes = message.getMessage();
-        int byte1 = rawbytes[2];
+        byte[] rawBytes = message.getMessage();
+        int byte1 = rawBytes[2];
 
         midiEventInfo.setComment(byte1 < 64 ? "OFF" : "ON");
 
@@ -563,8 +563,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Soft pedal");
 
-        byte[] rawbytes = message.getMessage();
-        int byte1 = rawbytes[2];
+        byte[] rawBytes = message.getMessage();
+        int byte1 = rawBytes[2];
 
         midiEventInfo.setComment(byte1 < 64 ? "OFF" : "ON");
 
@@ -580,9 +580,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Resonance");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -597,9 +597,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Release time");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -614,9 +614,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Attack time");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -631,9 +631,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Cutoff");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -648,8 +648,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Decay time");
 
-        byte[] rawbytes = message.getMessage();
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        byte[] rawBytes = message.getMessage();
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -664,8 +664,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("vibrato depth");
 
-        byte[] rawbytes = message.getMessage();
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        byte[] rawBytes = message.getMessage();
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -680,8 +680,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Vibrato delay");
 
-        byte[] rawbytes = message.getMessage();
-        int data2 = (rawbytes[2] & 0xFF) - 64;
+        byte[] rawBytes = message.getMessage();
+        int data2 = (rawBytes[2] & 0xFF) - 64;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -696,9 +696,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Chorus send level");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -725,8 +725,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Articulation 3");
 
-        byte[] rawbytes = message.getMessage();
-        int data2 = rawbytes[2];
+        byte[] rawBytes = message.getMessage();
+        int data2 = rawBytes[2];
         midiEventInfo.setComment(data2 == 0 ? "OFF" : data2 == 127 ? "ON" : "UNKNOWN");
 
         return result;
@@ -741,9 +741,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Portamento control");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
 
         int baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, 0);
         midiEventInfo.setComment(calcNote(data2, baseOctave).getName());
@@ -760,9 +760,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Reverb send level");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -777,9 +777,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("Variation send level");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -806,9 +806,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("NRPN LSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -823,9 +823,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("NRPN MSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -840,9 +840,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("RPN LSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -857,9 +857,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel()+1);
         midiEventInfo.setDescription("RPN MSB");
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int data2 = rawbytes[2] & 0xFF;
+        int data2 = rawBytes[2] & 0xFF;
         midiEventInfo.setData2(data2);
 
         return result;
@@ -880,9 +880,9 @@ public class MidiProcessor {
 
         midiEventInfo.getEventKey().addValue(MIDI_MODE_CHANGE_MESSAGE);
 
-        byte[] rawbytes = message.getMessage();
+        byte[] rawBytes = message.getMessage();
 
-        int byte1 = rawbytes[1] & 0xFF;
+        int byte1 = rawBytes[1] & 0xFF;
 
         result = switch (byte1) {
             case 0x78 -> handleAllSoundOff(message, midiEventInfo);
@@ -1024,8 +1024,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Program change");
 
-        byte[] rawbytes = message.getMessage();
-        int byte1 = rawbytes[1] & 0xFF;
+        byte[] rawBytes = message.getMessage();
+        int byte1 = rawBytes[1] & 0xFF;
 
         midiEventInfo.setData2(byte1);
 
@@ -1047,8 +1047,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Channel aftertouch");
 
-        byte[] rawbytes = message.getMessage();
-        int byte1 = rawbytes[1] & 0xFF;
+        byte[] rawBytes = message.getMessage();
+        int byte1 = rawBytes[1] & 0xFF;
         midiEventInfo.setData2(byte1);
 
         return result;
@@ -1063,8 +1063,8 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Key aftertouch");
 
-        byte[] rawbytes = message.getMessage();
-        int byte1 = rawbytes[1] & 0xFF;
+        byte[] rawBytes = message.getMessage();
+        int byte1 = rawBytes[1] & 0xFF;
 
         int baseOctave = PropertyContainer.getPropertyAsInteger(PropertyType.Keyboard, PropertyContainer.BASE_OCTAVE, 0);
         midiEventInfo.setComment(calcNote(byte1, baseOctave).getName());
@@ -1081,9 +1081,9 @@ public class MidiProcessor {
         midiEventInfo.setChannel(message.getChannel() + 1);
         midiEventInfo.setDescription("Pitch bend");
 
-        byte[] rawbytes = message.getMessage();
-        int lsb = rawbytes[1] & 0xFF;
-        int msb = rawbytes[2] & 0xFF;
+        byte[] rawBytes = message.getMessage();
+        int lsb = rawBytes[1] & 0xFF;
+        int msb = rawBytes[2] & 0xFF;
 
         midiEventInfo.setData2((msb << 7) | lsb);
 

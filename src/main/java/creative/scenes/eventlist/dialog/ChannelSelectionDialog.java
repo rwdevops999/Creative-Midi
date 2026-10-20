@@ -7,14 +7,14 @@ import java.util.function.BiConsumer;
 
 public class ChannelSelectionDialog extends Dialog<Character> {
 
-    // Gebruik Character (wrapper) in plaats van de primitive char
+    // Use Character (wrapper) instead of the primitive char
     private Character result = 0;
 
     private final BiConsumer<Character, Boolean> consumer = (b, set) -> {
         if (set) {
-            result = (char) (result | b);   // Bitwise OR om de bit te zetten
+            result = (char) (result | b);   // Bitwise OR to set the bit
         } else {
-            result = (char) (result & ~b);  // Bitwise AND met NOT om de bit te wissen
+            result = (char) (result & ~b);  // Bitwise AND met NOT to clear the bit
         }
     };
 
@@ -25,7 +25,7 @@ public class ChannelSelectionDialog extends Dialog<Character> {
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
 
-        // Layout voor de 16 checkboxes (4x4 grid)
+        // Layout for 16 checkboxes (4x4 grid)
         GridPane grid = new GridPane();
         grid.setHgap(15);
         grid.setVgap(10);
@@ -36,22 +36,20 @@ public class ChannelSelectionDialog extends Dialog<Character> {
             CheckBox checkBox = new CheckBox("Channel " + i);
             checkBox.setId("Channel" + i);
 
-            // Leg de huidige bitmasker vast voor deze specifieke checkbox
+            // Finalize the bitmask for this checkbox
             final Character currentBitMask = start;
 
-            checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                consumer.accept(currentBitMask, newValue);
-            });
+            checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> consumer.accept(currentBitMask, newValue));
 
-            // Zet de initiële vinkjes op basis van de input
+            // Check the checkboxes based on the input
             checkBox.setSelected((initialConfig & start) != 0);
 
-            // Voeg toe aan grid (kolom, rij) -> creëert een nette 4x4 matrix
+            // Add to the grid (column, row) -> creates a mice 4x4 matrix
             int col = (i - 1) % 4;
             int row = (i - 1) / 4;
             grid.add(checkBox, col, row);
 
-            // Shift naar de volgende bit
+            // Shift to next bit
             start = (char) (start << 1);
 
             Button allButton = new Button("All ");
@@ -77,12 +75,12 @@ public class ChannelSelectionDialog extends Dialog<Character> {
 
         getDialogPane().setContent(grid);
 
-        // Bepaal wat de dialoog teruggeeft als er op OK wordt geklikt
+        // Determine what the dialog return when clicking on OK
         setResultConverter(dialogButton -> {
             if (dialogButton == okButtonType) {
                 return result;
             }
-            return null; // Geeft null terug bij Annuleren of sluiten
+            return null; // returns null when canceled
         });
     }
 }

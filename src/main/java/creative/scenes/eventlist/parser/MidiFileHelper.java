@@ -10,8 +10,8 @@ import java.time.Duration;
 import static creative.scenes.eventlist.parser.data.MidiConstants.TEMPO_EVENT;
 import static creative.scenes.eventlist.parser.data.MidiConstants.TIME_SIGNATURE_EVENT;
 
-public class MidifileHelper {
-    private static final Logger logger = LoggerFactory.getLogger(MidifileHelper.class);
+public class MidiFileHelper {
+    private static final Logger logger = LoggerFactory.getLogger(MidiFileHelper.class);
 
     private static int ppq = 480;
     private static int bpm = 120;
@@ -19,23 +19,23 @@ public class MidifileHelper {
     private static String duration;
 
     public static void setPPQ(int value) {
-        MidifileHelper.ppq = value;
+        MidiFileHelper.ppq = value;
     }
 
     public static int getPPQ() {
-        return MidifileHelper.ppq;
+        return MidiFileHelper.ppq;
     }
 
     public static int getBPM() {
-        return MidifileHelper.bpm;
+        return MidiFileHelper.bpm;
     }
 
     public static TimeSignature getTimeSignature() {
-        return MidifileHelper.timeSignature;
+        return MidiFileHelper.timeSignature;
     }
 
     public static String getDuration() {
-        return MidifileHelper.duration;
+        return MidiFileHelper.duration;
     }
 
     public static void retrieveBpmAndTimeSignature(Sequence sequence) {
@@ -44,7 +44,7 @@ public class MidifileHelper {
         double seconds = (double) (sequence.getTickLength() * 60) / (bpm * MBTCalculator.getTargetPPQ());
         Duration durationFromSecs = Duration.ofMillis((long) (seconds * 1000));
 
-        MidifileHelper.duration = formatDuration(durationFromSecs);
+        MidiFileHelper.duration = formatDuration(durationFromSecs);
 
         for (Track track : sequence.getTracks()) {
             for (int i = 0; i < track.size(); i++) {
@@ -54,12 +54,12 @@ public class MidifileHelper {
 
                 if (message instanceof MetaMessage metaMessage) {
                     if (metaMessage.getType() == TEMPO_EVENT) {
-                        MidifileHelper.bpm = processTempo(metaMessage);
+                        MidiFileHelper.bpm = processTempo(metaMessage);
 
-                        seconds = (double) (sequence.getTickLength() * 60) / (bpm * MidifileHelper.getPPQ());
+                        seconds = (double) (sequence.getTickLength() * 60) / (bpm * MidiFileHelper.getPPQ());
                         durationFromSecs = Duration.ofMillis((long) (seconds * 1000));
 
-                        MidifileHelper.duration = formatDuration(durationFromSecs);
+                        MidiFileHelper.duration = formatDuration(durationFromSecs);
                         foundValue++;
                         if (foundValue == 2) {
                             break;
@@ -76,7 +76,7 @@ public class MidifileHelper {
                             int denominatorPower = data[1] & 0xFF;
                             int denominator = (int) Math.pow(2, denominatorPower);
 
-                            MidifileHelper.timeSignature = new TimeSignature(numerator, denominator);
+                            MidiFileHelper.timeSignature = new TimeSignature(numerator, denominator);
 
                             foundValue++;
                             if (foundValue == 2) {

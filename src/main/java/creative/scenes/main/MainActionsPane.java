@@ -60,14 +60,9 @@ public class MainActionsPane extends GridPane {
         add(new ActionButton(ownerScene, SIZE, "voiceButton", "handle voice", "voice_search", new VoiceScene()), 2, 0);
         add(new ActionButton(ownerScene, SIZE, "playlistButton", "handle playlist", "playlist", new PlaylistScene()), 3, 0);
         add(new ActionButton(ownerScene, SIZE, "sysexGenButton", "Generate SysEx 2", "sysex-generator", new SysexGenScene()), 4, 0);
-        add(new ActionButton(ownerScene, SIZE, "eventlistButton", "midi event list", "event-list", new EventlistScene()), 5, 0);
+        add(new ActionButton(ownerScene, SIZE, "eventListButton", "midi event list", "event-list", new EventlistScene()), 5, 0);
         add(new ActionButton(ownerScene, SIZE, "mergeButton", "merge style", "merge", new MergeScene()), 6, 0);
         add(new ActionButton(ownerScene, SIZE, "uploadStyleButton", "upload style", "upload-style", new UploadScene()), 7, 0);
-
-/*
-        add(new ActionButton(ownerScene, "convertButton", "handle convert", "convert", new ConvertScene()), 5, 0);
-        add(new ActionButton(ownerScene, "setupButton", "handle setup", "setup", new SetupScene()), 6, 0);
-*/
 
         if (ApplicationInfo.getInstance().isTestMode()) {
             add(new ActionButton(ownerScene, SIZE, "test1Button", "test 1", "test1", "Test1"), 3, 1);

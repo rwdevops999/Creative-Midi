@@ -56,17 +56,6 @@ public class MidiEventInfo {
     @Getter
     private String comment;  // this can contain integers or strings
 
-    private void stringifyData(int data1) {
-        comment = ""+data1;
-    }
-
-    @Getter
-    private int data1;
-    public void setData1(int data1) {
-        this.data1 = data1;
-        stringifyData(data1);
-    }
-
     @Setter
     @Getter
     private Integer data2 = null;

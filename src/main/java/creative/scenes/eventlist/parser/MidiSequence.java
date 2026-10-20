@@ -1,6 +1,6 @@
 package creative.scenes.eventlist.parser;
 
-import creative.scenes.eventlist.parser.entity.MidifileEventInfo;
+import creative.scenes.eventlist.parser.entity.MidiFileEventInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +25,7 @@ public class MidiSequence {
     private int trackCount;
 
     @Getter
-    private final Map<Integer, List<MidifileEventInfo>> tracks;
+    private final Map<Integer, List<MidiFileEventInfo>> tracks;
 
     public MidiSequence() {
         this.fileType = -1;
@@ -35,8 +35,8 @@ public class MidiSequence {
     }
 
     public double getMidiBpm(MidiSequence sequence) {
-        for (List<MidifileEventInfo> trackEvents : sequence.getTracks().values()) {
-            for (MidifileEventInfo event : trackEvents) {
+        for (List<MidiFileEventInfo> trackEvents : sequence.getTracks().values()) {
+            for (MidiFileEventInfo event : trackEvents) {
                 // Check on a 3-byte data of the tempo event (0x51)
                 if (event.status == 0xFF && event.data != null && event.data.length == 3) {
                     long mpqn = ((event.data[0] & 0xFF) << 16)
@@ -59,9 +59,9 @@ public class MidiSequence {
         long maxTicks = 0;
 
         // Run through all tracks
-        for (List<MidifileEventInfo> trackEvents : tracks.values()) {
+        for (List<MidiFileEventInfo> trackEvents : tracks.values()) {
             if (!trackEvents.isEmpty()) {
-                MidifileEventInfo lastEvent = trackEvents.get(trackEvents.size() - 1);
+                MidiFileEventInfo lastEvent = trackEvents.get(trackEvents.size() - 1);
 
                 if (lastEvent.tick > maxTicks) {
                     maxTicks = lastEvent.tick;

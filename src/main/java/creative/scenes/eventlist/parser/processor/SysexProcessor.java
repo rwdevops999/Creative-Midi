@@ -36,7 +36,7 @@ public class SysexProcessor {
 
     //
     public static boolean processMessage(SysexMessage message, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         StringBuilder sysex = SysexToHexStringConvertor.convertToHexStringbuilder(message.getMessage());
 
@@ -54,7 +54,7 @@ public class SysexProcessor {
 
     // FO ...
     private static boolean handleSysexMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.setColor(getColor("sysex"));
         midiEventInfo.setDescription("Sysex");
@@ -74,7 +74,7 @@ public class SysexProcessor {
 
     // F0 7E ...
     private static boolean handleUniversalNonRealTimeMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_UNIVERSAL_NON_REAL_TIME_MESSAGE);
 
@@ -93,7 +93,7 @@ public class SysexProcessor {
 
     // F0 nn ...
     private static boolean handleVendorMessage(String vendorId, StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_VENDOR_MESSAGE);
         midiEventInfo.setDescription("Vendor message");
@@ -109,7 +109,7 @@ public class SysexProcessor {
 
     //F0 43 ...
     private static boolean handleYamahaMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.setDescription("Yamaha message");
         midiEventInfo.setComment(null);
@@ -127,7 +127,7 @@ public class SysexProcessor {
 
     // FO 43 10 ...
     private static boolean handleXGParameterChange(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_PARAMETER_CHANGE_MESSAGE);
         midiEventInfo.setDescription("XG Parameter change");
@@ -142,7 +142,7 @@ public class SysexProcessor {
             case
                     "03 00",
                     "03 02" -> handleEffect2(sysex, midiEventInfo);
-            case "04 00" -> handleVocalHamony(sysex, midiEventInfo);
+            case "04 00" -> handleVocalHarmony(sysex, midiEventInfo);
             case
                     "08 00",
                     "08 02",
@@ -158,7 +158,7 @@ public class SysexProcessor {
             case "30 23",
                  "30 2A",
                  "30 2C",
-                 "30 2E" -> handleDrumSetup(sysex, midiEventInfo);
+                 "30 2E" -> handleDrumSetup(midiEventInfo);
             default -> handleUnknownXGParameterChange("F0 43 10 -- " + selector, midiEventInfo);
         };
 
@@ -166,7 +166,7 @@ public class SysexProcessor {
     }
 
     // F0 43 10 -- 30 23 ...
-    private static boolean handleDrumSetup(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+    private static boolean handleDrumSetup(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.getEventKey().addValue(SYSEX_DRUM_SETUP);
@@ -177,7 +177,7 @@ public class SysexProcessor {
 
     // F0 43 7E ...
     private static boolean handleStyleMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_STYLE_MESSAGE);
         midiEventInfo.setDescription("XG Style message");
@@ -235,7 +235,7 @@ public class SysexProcessor {
 
     // F0 43 10 -- 00 00
     private static boolean handleSetupMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_SETUP_MESSAGE);
         midiEventInfo.setDescription("XG setup");
@@ -252,7 +252,7 @@ public class SysexProcessor {
 
     // F0 43 10 -- 02 01
     private static boolean handleEffect1(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_EFFECT1_MESSAGE);
         midiEventInfo.setDescription("XG effect 1");
@@ -261,11 +261,11 @@ public class SysexProcessor {
         result = switch(selector) {
             case "00" -> handleReverb(sysex, midiEventInfo);
             case
-                    "02" ->handleReverbParameter(sysex, midiEventInfo);
+                    "02" ->handleReverbParameter(midiEventInfo);
             case "20" -> handleChorus(sysex, midiEventInfo);
             case "40" -> handleVariation(sysex, midiEventInfo);
             case
-                    "5A" -> handleVariationParameterConnection(sysex, midiEventInfo);
+                    "5A" -> handleVariationParameterConnection(midiEventInfo);
             default -> handleUnknownEffect1("FO 43 10 --02 01 " + selector, midiEventInfo);
         };
 
@@ -274,7 +274,7 @@ public class SysexProcessor {
 
     // F0 43 10 -- 03 00
     private static boolean handleEffect2(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_EFFECT2_MESSAGE);
         midiEventInfo.setDescription("XG effect 2");
@@ -294,8 +294,8 @@ public class SysexProcessor {
     }
 
     // F0 43 10 -- 04 00
-    private static boolean handleVocalHamony(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+    private static boolean handleVocalHarmony(StringBuilder sysex, MidiEventInfo midiEventInfo) {
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_VOCAL_HARMONY_MESSAGE);
         midiEventInfo.setDescription("Vocal harmony");
@@ -388,7 +388,7 @@ public class SysexProcessor {
     }
 
     // F0 43 10 -- 02 01 {02}  ...
-    private static boolean handleReverbParameter(StringBuilder selector, MidiEventInfo midiEventInfo) {
+    private static boolean handleReverbParameter(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_REVERB_PARAMETER);
@@ -400,7 +400,7 @@ public class SysexProcessor {
 
     // F0 43 10 -- 03 00 {02,03,0B,0C}  ...
     private static boolean handleInsertionParameter(String parameterId, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_INSERTION_PARAMETER);
         midiEventInfo.setDescription("XG insertion parameter");
@@ -426,13 +426,12 @@ public class SysexProcessor {
     }
 
     // F0 43 10 -- 02 01 {5A}  ...
-    private static boolean handleVariationParameterConnection(StringBuilder selector, MidiEventInfo midiEventInfo) {
+    private static boolean handleVariationParameterConnection(MidiEventInfo midiEventInfo) {
         boolean result = true;
 
         midiEventInfo.getEventKey().addValue(SYSEX_XG_VARIATION_PARAMETER_CONNECTION);
         midiEventInfo.setDescription("XG variation connection");
 
-        String address = ByteHelper.getAndStrip(selector, 1);
         midiEventInfo.setComment("Insertion system");
 
         return result;
@@ -471,7 +470,7 @@ public class SysexProcessor {
 
     // F0 7E XN 09 ...
     private static boolean handleGMMessage(StringBuilder sysex, MidiEventInfo midiEventInfo) {
-        boolean result = true;
+        boolean result;
 
         midiEventInfo.getEventKey().addValue(SYSEX_GM_MESSAGE);
 

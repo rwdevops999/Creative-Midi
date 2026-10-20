@@ -1,6 +1,6 @@
 package creative.scenes.eventlist.parser;
 
-import creative.scenes.eventlist.parser.entity.MidifileEventInfo;
+import creative.scenes.eventlist.parser.entity.MidiFileEventInfo;
 
 import javax.sound.midi.*;
 import java.util.List;
@@ -12,15 +12,15 @@ public class MidiSequenceConverter {
         Sequence standardSequence = new Sequence(Sequence.PPQ, customSeq.getPpq());
 
         // Loop through the tracks
-        for (Map.Entry<Integer, List<MidifileEventInfo>> entry : customSeq.getTracks().entrySet()) {
+        for (Map.Entry<Integer, List<MidiFileEventInfo>> entry : customSeq.getTracks().entrySet()) {
             // get all events on this track
-            List<MidifileEventInfo> customEvents = entry.getValue();
+            List<MidiFileEventInfo> customEvents = entry.getValue();
 
             // create a empty standard track (!!! strandardTrack is a reference to this new track
             Track standardTrack = standardSequence.createTrack();
 
             // add all events to this track
-            for (MidifileEventInfo customEvent : customEvents) {
+            for (MidiFileEventInfo customEvent : customEvents) {
                 // create a midi message
                 MidiMessage message = createMidiMessage(customEvent);
 
@@ -37,7 +37,7 @@ public class MidiSequenceConverter {
     }
 
     // Helper for converting event (raw status and byte-arrays) to javax.sound.midi objects
-    private static MidiMessage createMidiMessage(MidifileEventInfo customEvent) {
+    private static MidiMessage createMidiMessage(MidiFileEventInfo customEvent) {
         try {
             int status = customEvent.status;
             byte[] data = customEvent.data != null ? customEvent.data : new byte[0];

@@ -3,6 +3,7 @@ package creative.scenes.eventlist.parser.processor;
 import creative.scenes.eventlist.data.EventKey;
 import creative.scenes.eventlist.parser.MBTCalculator;
 import creative.scenes.eventlist.parser.entity.MidiEventInfo;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,16 +16,13 @@ import static creative.scenes.eventlist.data.EventKeyValue.*;
 public class MidiFileProcessor {
     private static final Logger logger = LoggerFactory.getLogger(MidiFileProcessor.class);
 
+    @Getter
     private static Queue<MidiEventInfo> events = new LinkedList<>();
 
     public static void processMidi(Sequence sequence) {
-        int midiEvents = 0;
-        int metaEvents = 0;
-        int sysexEvents = 0;
-
         events = new LinkedList<>();
 
-        // Track doesn't keep the tracknumber, so we do it ourselves
+        // Track doesn't keep the track number, so we do it ourselves
         int trackNumber = 0;
 
         // we run through each track
@@ -46,29 +44,18 @@ public class MidiFileProcessor {
                     midiEventInfo.setEventKey(new EventKey(MIDI));
 
                     isProcessed = MidiProcessor.processMessage(midiMessage, midiEventInfo);
-                    if (isProcessed) {
-                        midiEvents++;
-                    }
-
                 } else if (message instanceof MetaMessage metaMessage) {
                     // The message is a META
                     midiEventInfo.setEventKey(new EventKey(META));
 
                     isProcessed = MetaProcessor.processMessage(metaMessage, midiEventInfo);
-                    if (isProcessed) {
-                        metaEvents++;
-                    }
                 } else if (message instanceof SysexMessage sysexMessage) {
                     // The message is a SYSEX
                     midiEventInfo.setEventKey(new EventKey(SYSEX));
 
                     isProcessed = SysexProcessor.processMessage(sysexMessage, midiEventInfo);
-                    if (isProcessed) {
-                        sysexEvents++;
-                    }
-
                 } else {
-                    logger.error("[CM_MIDI_FILE_PROCESSOR] ERROR: Unknown message type: " + message.getClass().getName());
+                    logger.error("[CM_MIDI_FILE_PROCESSOR] ERROR: Unknown message type: {}",message.getClass().getName());
                 }
 
                 if (isProcessed) {
@@ -76,9 +63,5 @@ public class MidiFileProcessor {
                 }
             }
         }
-    }
-
-    public static Queue<MidiEventInfo> getEvents() {
-        return events;
     }
 }

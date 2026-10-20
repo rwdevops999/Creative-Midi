@@ -2,7 +2,6 @@ package creative.scenes.eventlist.parser;
 
 import creative.scenes.eventlist.parser.entity.MbtPosition;
 import creative.scenes.eventlist.parser.entity.TimeSignature;
-import creative.scenes.eventlist.parser.processor.MidiFileProcessor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import lombok.Setter;
  * The MBT calculator is used to calculate MBT from ticks
  */
 public class MBTCalculator {
-    private final static int BEAT_UNIT = 4;
     @Setter
     private static int ppq = 480;
     private static int beatsPerMeasure = 4;     // Upper position of Time Signature
@@ -28,8 +26,6 @@ public class MBTCalculator {
 
     /**
      * Set PPQ and calculate scaling factor or targetPPQ / ppq
-     *
-     * @param ppq
      */
     public static void setPPQ(int ppq) {
         MBTCalculator.ppq = ppq;
@@ -47,12 +43,12 @@ public class MBTCalculator {
 
         // 2. Calculate how many ticks there go in one (beat)
         // By /4 measure = targetPPQ. By /8 measure = targetPPQ / 2
-        long ticksPerBeat = (targetPPQ * 4) / beatValue;
+        long ticksPerBeat = (targetPPQ * 4L) / beatValue;
 
         // 3. How many ticks go in one complete measure?
         long ticksPerMeasure = ticksPerBeat * beatsPerMeasure;
 
-        // 4. Calulate the measure (based on calculation done in 1)
+        // 4. Calculate the measure (based on calculation done in 1)
         long measure = (correctedTick / ticksPerMeasure) + 1;
         long remainder = correctedTick % ticksPerMeasure;
 
@@ -68,7 +64,7 @@ public class MBTCalculator {
 
     public static double convertToSeconds(long ticks) {
 //        double secondsPerTick = 60.0 / (MidiFileProcessor.getBPM() * ppq);
-        double secondsPerTick1 = 60.0 / (MidifileHelper.getBPM() * targetPPQ);
+        double secondsPerTick1 = 60.0 / (MidiFileHelper.getBPM() * targetPPQ);
 
         return ticks * secondsPerTick1;
     }
