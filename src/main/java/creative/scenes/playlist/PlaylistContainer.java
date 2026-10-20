@@ -40,10 +40,10 @@ public class PlaylistContainer {
         String playlistPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.PLAYLIST_PATH, "./playlist");
         String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.PLAYLIST_FILE, "playlist.json");
 
-        String playlistfile = playlistPath + "/" + filename;
+        String playlistFile = playlistPath + "/" + filename;
 
-        logger.debug("[CM_PLAYLIST_CONTAINER] Loading the playlist from file {}", playlistfile);
-        try (InputStream in = Files.newInputStream(Path.of(playlistfile))) {
+        logger.debug("[CM_PLAYLIST_CONTAINER] Loading the playlist from file {}", playlistFile);
+        try (InputStream in = Files.newInputStream(Path.of(playlistFile))) {
             playlist = mapper.readValue(in, new TypeReference<>() {});
             fileLoaded = true;
         } catch (IOException ioe) {
@@ -100,9 +100,9 @@ public class PlaylistContainer {
         String playlistPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.PLAYLIST_PATH, "./playlist");
         String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.PLAYLIST_FILE, "playlist.json");
 
-        String playlistfile = playlistPath + "/" + filename;
+        String playlistFile = playlistPath + "/" + filename;
 
-        logger.debug("[CM_PLAYLIST_CONTAINER] Exporting playlist to file {}", playlistfile);
+        logger.debug("[CM_PLAYLIST_CONTAINER] Exporting playlist to file {}", playlistFile);
 
         boolean result = true;
         ObjectMapper mapperExport = JsonMapper.builder()
@@ -110,10 +110,10 @@ public class PlaylistContainer {
                 .build();
 
         try {
-            File file = new File(playlistfile);
+            File file = new File(playlistFile);
             mapperExport.writeValue(file, playlist);
         } catch (Exception e) {
-            logger.error("[CM_PLAYLIST_CONTAINER] EXCEPTION: Error exporting playlist to {}; CAUSE: {}", playlistfile,  e.getMessage());
+            logger.error("[CM_PLAYLIST_CONTAINER] EXCEPTION: Error exporting playlist to {}; CAUSE: {}", playlistFile,  e.getMessage());
             result = false;
         }
 

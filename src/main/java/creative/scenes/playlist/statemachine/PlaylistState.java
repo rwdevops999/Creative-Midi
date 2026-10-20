@@ -6,5 +6,5 @@ public enum PlaylistState {
     ADDABLE,
     UPDATABLE,
     LOADED,
-    FINISHED;
+    FINISHED
 }

@@ -3,7 +3,6 @@ package creative.scenes.playlist.consumer;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.playlist.PlaylistContainer;
 import creative.scenes.playlist.statemachine.PlaylistState;
-import custom.dialog.DialogFactory;
 import entity.AEntity;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;

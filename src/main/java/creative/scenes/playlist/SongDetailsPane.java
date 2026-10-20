@@ -68,9 +68,7 @@ public class SongDetailsPane extends GridPane {
     private final StringProperty songNameProperty = new SimpleStringProperty();
 
     @Getter
-    private final BooleanSupplier supplier = () -> {
-        return ! PlaylistContainer.isEmpty();
-    };
+    private final BooleanSupplier supplier = () -> ! PlaylistContainer.isEmpty();
 
     @Getter
     private final PlaylistStateMachine stateMachine = new PlaylistStateMachine(PlaylistState.EMPTY, supplier);
@@ -96,40 +94,32 @@ public class SongDetailsPane extends GridPane {
             return;
         }
 
-        int row = -1;
-
         // ROW 1 (Song id)
-        row++;
-        setSongId(row);
+        setSongId();
 
         // ROW 2 (Song name)
-        row++;
-        setSongName(row);
+        setSongName();
 
         // ROW 3 (Performer)
-        row++;
-        setPerformer(row);
+        setPerformer();
 
         // ROW 4 (Tempo)
-        row++;
-        setTempo(row);
+        setTempo();
 
         // ROW 5 (Scale)
-        row++;
-        setScale(row);
+        setScale();
 
         // ROW 6 (Time signature)
-        row++;
-        setTimeSignature(row);
+        setTimeSignature();
 
         logger.debug("[CM_SONG_DETAILS_PANE] Built {}", getId());
     }
 
     private final ObjectProperty<Integer> songIdProperty = new SimpleObjectProperty<>(PlaylistContainer.getNextSongId());
-    private final Label songIdLabel  = new Label("Id");;
+    private final Label songIdLabel  = new Label("Id");
     private final Spinner<Integer> songIdSpinner = new Spinner<>(1, 999, 1);
 
-    private void setSongId(int row) {
+    private void setSongId() {
         songIdSpinner.setEditable(true);
         songIdSpinner.setPromptText("id ...");
         songIdSpinner.getValueFactory().valueProperty().bindBidirectional(songIdProperty);
@@ -139,10 +129,10 @@ public class SongDetailsPane extends GridPane {
         });
     }
 
-    private final Label songNameLabel = new Label("Name");;
-    private final TextField songNameTextField = new TextField();;
+    private final Label songNameLabel = new Label("Name");
+    private final TextField songNameTextField = new TextField();
 
-    private void setSongName(int row) {
+    private void setSongName() {
         songNameTextField.setPromptText("enter song name ...");
         songNameTextField.textProperty().bindBidirectional(songNameProperty);
         songNameProperty.addListener((observable, oldValue, newValue) -> {
@@ -156,7 +146,7 @@ public class SongDetailsPane extends GridPane {
     private final Label performerLabel = new Label("Performer");
     private final TextField performerTextField = new TextField();
 
-    private void setPerformer(int row) {
+    private void setPerformer() {
         performerTextField.setPromptText("enter performer name ...");
         performerTextField.textProperty().bindBidirectional(performerProperty);
         performerProperty.addListener((observable, oldValue, newValue) -> {
@@ -168,7 +158,7 @@ public class SongDetailsPane extends GridPane {
     private final ObjectProperty<Integer> tempoProperty = new SimpleObjectProperty<>(0);
     private final Label tempoLabel = new Label("Tempo");
     private final Spinner<Integer> tempoSpinner = new Spinner<>(1, 999, 1);
-    private void setTempo(int row) {
+    private void setTempo() {
         tempoSpinner.setEditable(true);
         tempoSpinner.setPromptText("tempo ...");
         tempoSpinner.getValueFactory().valueProperty().bindBidirectional(tempoProperty);
@@ -183,7 +173,7 @@ public class SongDetailsPane extends GridPane {
     private final Label scaleLabel = new Label("Scale");
     private final ScaleSelector scaleSelector = new ScaleSelector(false);
 
-    private void setScale(int row) {
+    private void setScale() {
         scaleSelector.scaleProperty.bindBidirectional(scaleProperty);
         scaleProperty.addListener((observable, oldValue, newValue) -> {
             workingSong.getSongInfo().getScale().setScale(newValue);
@@ -200,8 +190,8 @@ public class SongDetailsPane extends GridPane {
     private final ObjectProperty<Integer> beatProperty = new SimpleObjectProperty<>(4);
 
     private final Label meterLabel = new Label("Meter");
-    private final SignatureSelector signatureSelector = new SignatureSelector();;
-    private void setTimeSignature(int row) {
+    private final SignatureSelector signatureSelector = new SignatureSelector();
+    private void setTimeSignature() {
         signatureSelector.setId("SignatureSelector");
         signatureSelector.bpmProperty.bindBidirectional(beatsProperty);
         beatsProperty.addListener((observable, oldValue, newValue) -> {
@@ -284,7 +274,6 @@ public class SongDetailsPane extends GridPane {
     }
 
     public void updateSongMapping(List<Mapping> mapping) {
-        Song original = ApplicationInfo.getInstance().getCurrentSong();
         this.workingSong.setMappings(mapping);
         songHasChangedHandler.handle();
     }

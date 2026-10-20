@@ -8,14 +8,14 @@ public class LoadSongConsumer implements Function<String, String> {
     private static final String SongPrefix = "User:/";
     private static final String SongSuffix = ".S917.RGT";
 
-    private static final int prefixlength = SongPrefix.length() * 2;
-    private static final int suffixlength = SongSuffix.length() *2;
+    private static final int prefixLength = SongPrefix.length() * 2;
+    private static final int suffixLength = SongSuffix.length() *2;
 
     @Override
     public String apply(String sysexMessage) {
-        String strippedstr=sysexMessage.replaceAll("\\s", "");
+        String strippedString = sysexMessage.replaceAll("\\s", "");
 
-        String input = strippedstr.substring(20 + prefixlength, strippedstr.length() - 4 - suffixlength);
+        String input = strippedString.substring(20 + prefixLength, strippedString.length() - 4 - suffixLength);
 
         String songName =new String(HexFormat.of().parseHex(input), StandardCharsets.UTF_8);
 

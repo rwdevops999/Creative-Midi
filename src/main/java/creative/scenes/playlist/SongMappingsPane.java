@@ -3,11 +3,9 @@ package creative.scenes.playlist;
 import custom.dialog.MappingDialog;
 import entity.playlist.Mapping;
 import entity.playlist.Song;
-import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,15 +13,8 @@ import javafx.scene.layout.StackPane;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ApplicationInfo;
-import util.Util;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneHeightAsPercentage;
 
 public class SongMappingsPane extends StackPane {
@@ -75,14 +66,14 @@ public class SongMappingsPane extends StackPane {
         MenuItem addMenuItem = new MenuItem("Add mapping");
         addMenuItem.setOnAction(e -> {
             showAddMappingDialog(table, false, null);
-            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
+            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<>(table.getItems()));
         });
 
         MenuItem deleteMenuItem = new MenuItem("Delete mapping");
         deleteMenuItem.setOnAction(e -> {
             Mapping mapping = table.getSelectionModel().getSelectedItem();
             table.getItems().remove(mapping);
-            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
+            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<>(table.getItems()));
         });
         deleteMenuItem.disableProperty().bind(
                 table.getSelectionModel().selectedItemProperty().isNull()
@@ -92,7 +83,7 @@ public class SongMappingsPane extends StackPane {
         editMenuItem.setOnAction(e -> {
             Mapping mapping = table.getSelectionModel().getSelectedItem();
             showAddMappingDialog(table, true, mapping);
-            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<Mapping>(table.getItems()));
+            getPlaylistDetailsPane().getSongDetailsPane().updateSongMapping(new ArrayList<>(table.getItems()));
         });
         editMenuItem.disableProperty().bind(
                 table.getSelectionModel().selectedItemProperty().isNull()
@@ -114,7 +105,8 @@ public class SongMappingsPane extends StackPane {
         TableColumn<Mapping, String> replyColumn = new TableColumn<>("Reply");
         replyColumn.setCellValueFactory(new PropertyValueFactory<>("reply"));
 
-        table.getColumns().addAll(receiveColumn, replyColumn);
+        table.getColumns().add(receiveColumn);
+        table.getColumns().add(replyColumn);
     }
 
     private void showAddMappingDialog(TableView<Mapping> table, boolean isUpdate, @Nullable Mapping currentMapping) {

@@ -4,7 +4,6 @@ import communication.CommunicationModel;
 import creative.scenes.SceneActionsPane;
 import lombok.Getter;
 
-import java.util.Locale;
 import java.util.Stack;
 import java.util.function.BooleanSupplier;
 
@@ -41,14 +40,6 @@ public class PlaylistStateMachine {
         updateUI(supplier);
     }
 
-    // Herstel de vorige state
-    public void undoState(BooleanSupplier supplier) {
-        if (!stateHistory.isEmpty()) {
-            this.currentState = stateHistory.pop();
-            updateUI(supplier);
-        }
-    }
-
     public void undoStateWithSkips(PlaylistState skipState, BooleanSupplier supplier) {
         if (!stateHistory.isEmpty()) {
             if (skipState.equals(PlaylistState.ADDABLE) || skipState.equals(PlaylistState.UPDATABLE)) {
@@ -62,20 +53,15 @@ public class PlaylistStateMachine {
         }
     }
 
-    // De centrale plek waar buttons worden en-/disabled op basis van de state
+    // The central place where buttons are enabled and disabled based on the state
     private void updateUI(BooleanSupplier supplier) {
 
         sceneActionsPane.disableAll();
-        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+        sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null && supplier.getAsBoolean());
 
         CommunicationModel.setStatus("Playlist entry is " + currentState.name().toLowerCase());
         switch (currentState) {
-            case EMPTY -> {
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-            }
-            case READY -> {
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
-            }
+            case EMPTY, READY -> sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
             case ADDABLE -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);

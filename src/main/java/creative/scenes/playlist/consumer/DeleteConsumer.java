@@ -2,10 +2,7 @@ package creative.scenes.playlist.consumer;
 
 import creative.scenes.SceneActionsPane;
 import creative.scenes.playlist.PlaylistContainer;
-import creative.scenes.playlist.PlaylistListPane;
-import creative.scenes.playlist.PlaylistPane;
 import creative.scenes.playlist.statemachine.PlaylistState;
-import custom.dialog.DialogFactory;
 import entity.AEntity;
 import entity.playlist.Song;
 import javafx.scene.layout.Pane;

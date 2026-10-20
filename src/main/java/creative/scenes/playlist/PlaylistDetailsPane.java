@@ -1,12 +1,8 @@
 package creative.scenes.playlist;
 
-import entity.playlist.Song;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 import static util.Util.setPaneWidthAsPercentage;
 

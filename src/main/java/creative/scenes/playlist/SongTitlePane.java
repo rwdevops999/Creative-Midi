@@ -9,14 +9,10 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
-
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneHeightAsPercentage;
 
 public class SongTitlePane extends VBox {
-    private static final Logger logger = LoggerFactory.getLogger(PlaylistDetailsPane.class);
+    private static final Logger logger = LoggerFactory.getLogger(SongTitlePane.class);
 
     public SongTitlePane() {
         super();

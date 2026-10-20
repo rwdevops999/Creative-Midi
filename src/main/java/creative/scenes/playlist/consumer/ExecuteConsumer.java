@@ -50,7 +50,6 @@ public class ExecuteConsumer<T extends AEntity, P extends Pane> implements BiCon
                     // newValue = Shared Entity
                     if (newValue != null) {
                         switch (newValue.getType()) {
-                            case INCOMING -> CommunicationModel.monitorInbound(newValue.getValue());
                             case OUTGOING -> CommunicationModel.monitorOutbound(newValue.getValue());
                             case SONG_SELECT -> CommunicationModel.monitorSongSelect(newValue.getValue());
                             default -> CommunicationModel.monitorInbound(newValue.getValue());
