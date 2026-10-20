@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -87,13 +86,13 @@ public class SceneActionsPane extends VBox {
 
     public void setEnable(int id, boolean enable) {
         disabledProperties[id].set(!enable);
-    };
+    }
 
     public void disableAll() {
         for (int i = 0; i < 6; i++) {
             disabledProperties[i].set(true);
         }
-    };
+    }
 
     public void renameActionButtonName(String name) {
         actionNameProperty.set(name);

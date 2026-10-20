@@ -216,7 +216,7 @@ public class SysexGenSelectionPane extends GridPane {
 
         GridPane.setMargin(comboBox, new javafx.geometry.Insets(0, 12, 0, 0));
 
-        // Return the exact the column (include spans)
+        // Return exact the column (include spans)
         return column + labelColspan + comboboxColspan;
     }
 

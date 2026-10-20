@@ -163,7 +163,7 @@ public class PatchSearchPane extends VBox {
 
     private void setupValuePanes() {
         ValuePane bankPane = valuePanes.get(BANK_PANE);
-        bankPane.addLinkedProperty(bankChangedProperty, "0");
+        bankPane.addLinkedProperty(bankChangedProperty);
 
         bankChangedProperty.addListener((obs, oldValue, newValue) -> {
             if (! mute) {
@@ -186,7 +186,7 @@ public class PatchSearchPane extends VBox {
         });
 
         ValuePane msbPane = valuePanes.get(MSB_PANE);
-        msbPane.addLinkedProperty(msbChangedProperty, "0");
+        msbPane.addLinkedProperty(msbChangedProperty);
         msbChangedProperty.addListener((obs, oldValue, newValue) -> {
             if (! mute) {
                 mute = true;
@@ -212,7 +212,7 @@ public class PatchSearchPane extends VBox {
         });
 
         ValuePane lsbPane = valuePanes.get(LSB_PANE);
-        lsbPane.addLinkedProperty(lsbChangedProperty, "0");
+        lsbPane.addLinkedProperty(lsbChangedProperty);
         lsbChangedProperty.addListener((obs, oldValue, newValue) -> {
             if (! mute) {
                 mute = true;
@@ -238,7 +238,7 @@ public class PatchSearchPane extends VBox {
         });
 
         ValuePane pcPane = valuePanes.get(PC_PANE);
-        pcPane.addLinkedProperty(pcChangedProperty, null);
+        pcPane.addLinkedProperty(pcChangedProperty);
         pcChangedProperty.addListener((obs, oldValue, newValue) -> {
             if (! mute) {
                 mute = true;

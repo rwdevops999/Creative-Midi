@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import system.SysData;
 import util.ApplicationInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultsPane extends AnchorPane {
@@ -28,8 +27,6 @@ public class SearchResultsPane extends AnchorPane {
 
         setId("SearchResultsPane");
     }
-
-    private List<Patch> tableResults = new ArrayList<>();
 
     private VoiceSearchResultsPane parent;
     public SearchResultsPane(VoiceSearchResultsPane owner) {
@@ -54,38 +51,36 @@ public class SearchResultsPane extends AnchorPane {
 
         patchColumn = new TableColumn<>("Patch");
         patchColumn.setCellValueFactory(new PropertyValueFactory<>("patch"));
-        patchColumn.setCellFactory(column -> {
-            return new TableCell<Patch, String>() {
-                // We make once the icon for a cel for beter performances
-                private final Label starIcon = new Label("★");
-                {
-                    starIcon.setTextFill(Color.GOLD); // Of Color.YELLOW, maar GOLD oogt vaak mooier
-                    starIcon.setStyle("-fx-font-size: 12px; -fx-text-fill: #FFD700; -fx-font-weight: bold;");
-                }
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
+        patchColumn.setCellFactory(column -> new TableCell<>() {
+            // We make once the icon for a cel for beter performances
+            private final Label starIcon = new Label("★");
+            {
+                starIcon.setTextFill(Color.GOLD); // GOLD looks better
+                starIcon.setStyle("-fx-font-size: 12px; -fx-text-fill: #FFD700; -fx-font-weight: bold;");
+            }
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
 
-                    if (empty || item == null) {
-                        setText(null);
-                        setGraphic(null);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+
+                    // Retrieve the Patch object from the current row
+                    Patch currentPatch = getTableView().getItems().get(getIndex());
+
+                    // is it a favortie?
+                    if (SysData.isFavorite(currentPatch)) {
+                        // Place the icon right of the text
+                        setContentDisplay(ContentDisplay.RIGHT);
+                        setGraphic(starIcon);
                     } else {
-                        setText(item);
-
-                        // Retrieve the Patch object from the current row
-                        Patch currentPatch = getTableView().getItems().get(getIndex());
-
-                        // is it a favortie?
-                        if (SysData.isFavorite(currentPatch)) { // Pas dit aan naar jouw eigen 'isFavorite' methode of check
-                            // Place the icon right of the tekst
-                            setContentDisplay(ContentDisplay.RIGHT);
-                            setGraphic(starIcon);
-                        } else {
-                            setGraphic(null); // Remove the star if it is no favorite
-                        }
+                        setGraphic(null); // Remove the star if it is no favorite
                     }
                 }
-            };
+            }
         });
 
         TableColumn<Patch, Integer> bankColumn  = new TableColumn<>("Bank");
@@ -111,7 +106,7 @@ public class SearchResultsPane extends AnchorPane {
             // Correct if necessary with 2 pixels for the outer edge of the table
             double availableWidth = tableWidth - 2.0;
 
-            // Bereken de exacte doelbreedtes
+            // calculate the exact widths
             double w60 = availableWidth * 0.60;
             double w10 = availableWidth * 0.10;
 
@@ -188,13 +183,13 @@ public class SearchResultsPane extends AnchorPane {
                     favorites.setText("Remove from Favorites");
                     favorites.setOnAction(e -> {
                         SysData.removeFromFavorites(selectedPatch);
-                        table.refresh(); // Update the star immediatly
+                        table.refresh(); // Update the star immediately
                     });
                 } else {
                     favorites.setText("Add to Favorites");
                     favorites.setOnAction(e -> {
                         SysData.getFavorites().add(selectedPatch);
-                        table.refresh(); // Update the star immediatly
+                        table.refresh(); // Update the star immediately
                     });
                 }
             }

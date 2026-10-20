@@ -14,7 +14,7 @@ public class CakewalkInsProvider implements InstrumentProvider {
     private final MS2SParser linkedParser;
 
     public CakewalkInsProvider(File insFile) {
-        this.parser = new InsParser(this, insFile);
+        this.parser = new InsParser(insFile);
 
         String linkedFilename = FilenameUtils.removeExtension(insFile.toString());
         this.linkedParser = new MS2SParser(this, linkedFilename + ".txt");
@@ -31,7 +31,6 @@ public class CakewalkInsProvider implements InstrumentProvider {
 
     @Override
     public List<Group> getGroups() {
-        // Dit sluit nu naadloos aan op de rootGroups van je nieuwe parser!
         return parser.getRootGroups();
     }
 

@@ -86,11 +86,6 @@ public class MS2SParser {
                     provider != null ? provider.getSourceType() : "Yamaha");
 
             // TO GET THE CATEGORIES
-            int index = patchName.indexOf(" ");
-            if (index != -1) {
-                String type = patchName.substring(0, index);
-            }
-
             if (currentGroup != null) {
                 currentGroup.getPatches().add(patch);
             }
@@ -146,7 +141,7 @@ public class MS2SParser {
         List<Patch> patches = findPatches(rootGroups);
 
 //        return patches.stream().filter(p -> (p.getMsb() == inPatch.getMsb() && p.getLsb() == inPatch.getLsb() && p.getPc() == inPatch.getPc())).findFirst().orElse(inPatch);
-        return patches.stream().filter(p -> (p.getMsb() == inPatch.getMsb() && p.getLsb() == inPatch.getLsb() && p.getPc() == inPatch.getPc())).findFirst().orElse(null);
+        return patches.stream().filter(p -> (p.getMsb().equals(inPatch.getMsb()) && p.getLsb().equals(inPatch.getLsb()) && p.getPc().equals(inPatch.getPc()))).findFirst().orElse(null);
     }
 
     public Patch findPatch(int msb, int lsb, int pc) {

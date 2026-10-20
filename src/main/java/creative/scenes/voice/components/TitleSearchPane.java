@@ -2,10 +2,7 @@ package creative.scenes.voice.components;
 
 import creative.scenes.voice.GroupSearchPane;
 import creative.scenes.voice.PatchSearchPane;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.geometry.HPos;
@@ -19,6 +16,7 @@ import javafx.scene.layout.RowConstraints;
 
 import static util.Util.setPaneWidthAsPercentage;
 
+@Getter
 public class TitleSearchPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(TitleSearchPane.class);
 
@@ -29,7 +27,7 @@ public class TitleSearchPane extends GridPane {
     }
 
     public TitleSearchPane(Pane owner, String title) {
-        super();
+        this();
 
         setPaneWidthAsPercentage(this, owner, 50);
 
@@ -72,7 +70,4 @@ public class TitleSearchPane extends GridPane {
         logger.debug("[CM_TITLE_SEARCH_PANE] Built {}", getId());
     }
 
-    public Button getSearchButton() {
-        return searchButton;
-    }
 }

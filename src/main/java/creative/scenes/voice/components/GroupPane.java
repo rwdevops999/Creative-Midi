@@ -2,15 +2,10 @@ package creative.scenes.voice.components;
 
 import creative.scenes.voice.GroupSearchPane;
 import creative.scenes.voice.util.VoiceFinder;
-import custom.components.SelectorPane;
-import entity.device.DeviceInfo;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.skin.ComboBoxListViewSkin;
 import lombok.Getter;
-import lombok.Setter;
 import util.ApplicationInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -93,15 +88,14 @@ public class GroupPane extends GridPane {
         add(groupsComboBox, 2, row, 3, 1);
     }
 
-    public void setShowingProperty(ComboBox comboBox) {
+    public void setShowingProperty(ComboBox<String> comboBox) {
         comboBox.setOnShowing(event -> {
-            if (comboBox.getSkin() instanceof ComboBoxListViewSkin) {
-                ComboBoxListViewSkin<?> skin = (ComboBoxListViewSkin<?>) comboBox.getSkin();
+            if (comboBox.getSkin() instanceof ComboBoxListViewSkin<?> skin) {
                 ListView<?> listView = (ListView<?>) skin.getPopupContent();
                 if (listView != null) {
                     listView.scrollTo(0);
 
-                    // Verwijder de handler zodat dit de volgende keer NIET meer gebeurt
+                    // Remove the handler so that this doesn't happen again the next time
                     comboBox.setOnShowing(null);
                 }
             }

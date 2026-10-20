@@ -2,18 +2,13 @@ package creative.scenes.voice;
 
 import creative.scenes.voice.util.SearchResultsPane;
 import entity.voice.Patch;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 import static util.Util.setPaneWidthAsPercentage;
 

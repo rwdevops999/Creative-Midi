@@ -6,8 +6,6 @@ import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneWidthAsPercentage;
 
 public class VoiceSearchPane extends BorderPane {
@@ -31,7 +29,7 @@ public class VoiceSearchPane extends BorderPane {
         buildPane();
     }
 
-    private BooleanProperty visible =  new SimpleBooleanProperty(this, "visible", true);
+    private final BooleanProperty visible =  new SimpleBooleanProperty(this, "visible", true);
 
     public void setSearchPanelsVisible(boolean visible) {
         this.visible.set(visible);

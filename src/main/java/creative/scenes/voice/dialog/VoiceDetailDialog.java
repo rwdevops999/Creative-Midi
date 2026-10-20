@@ -1,9 +1,7 @@
 package creative.scenes.voice.dialog;
 
 import entity.voice.Patch;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;

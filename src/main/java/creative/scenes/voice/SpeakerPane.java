@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import system.SysData;
 import util.ApplicationInfo;
-import util.Util;
 
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.ShortMessage;
@@ -36,9 +35,7 @@ import java.io.File;
 import java.util.*;
 
 import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
-import static util.Util.setPaneWidthAsPercentage;
 
 public class SpeakerPane extends HBox {
     private static final Logger logger = LoggerFactory.getLogger(SpeakerPane.class);

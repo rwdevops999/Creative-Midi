@@ -16,8 +16,6 @@ import util.ApplicationInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 import static util.Util.setPaneHeightAsPercentage;
 

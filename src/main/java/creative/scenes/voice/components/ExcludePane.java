@@ -1,8 +1,6 @@
 package creative.scenes.voice.components;
 
 import creative.scenes.voice.ExcludesPane;
-import creative.scenes.voice.VoiceSearchPane;
-import creative.scenes.voice.VoiceSearchResultsPane;
 import creative.scenes.voice.util.VoiceFinder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +13,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 
 import java.util.*;
@@ -65,11 +62,11 @@ public class ExcludePane extends GridPane {
 
     private void buildPanel() {
         String flatButtonStyle =
-                "-fx-background-color: #a9a9a9; " + // Grijze achtergrond (of 'transparent')
-                        "-fx-background-radius: 0; " +       // Rechte hoeken (gebruik bijv. 4px voor licht afgerond)
-                        "-fx-text-fill: #333333; " +         // Tekstkleur
-                        "-fx-font-size: 14px; " +            // Lettergrootte
-                        "-fx-font-weight: bold; " +          // Dikgedrukte tekst
+                "-fx-background-color: #a9a9a9; " +          // Gray background (or 'transparent')
+                        "-fx-background-radius: 0; " +       // Square corners
+                        "-fx-text-fill: #333333; " +         // Text color
+                        "-fx-font-size: 14px; " +            // Text size
+                        "-fx-font-weight: bold; " +          // Bold text
                         "-fx-cursor: hand;";
 
         int row = 0;
@@ -96,13 +93,13 @@ public class ExcludePane extends GridPane {
         add(excludedTypesListView, 2, row, 1, 4);
 
         // Buttons
-        Button addAll = new Button("\u00BB"); // >>
+        Button addAll = new Button("»"); // >>
         addAll.setDisable(availableVoiceTypes.isEmpty());
         addAll.setAlignment(Pos.CENTER);
         addAll.setStyle(flatButtonStyle);
         addAll.setOnAction(e -> {
             if (! availableVoiceTypes.isEmpty()) {
-                excludedVoiceTypes = move(availableVoiceTypes, excludedVoiceTypes);
+                move(availableVoiceTypes, excludedVoiceTypes);
                 updateListViews();
                 updateResults();
             }
@@ -111,7 +108,7 @@ public class ExcludePane extends GridPane {
 
         row++;
 
-        Button addSel = new Button("\u003E"); // >
+        Button addSel = new Button(">"); // >
         addSel.setDisable(availableVoiceTypes.isEmpty());
         addSel.setStyle(flatButtonStyle);
         addSel.setAlignment(Pos.CENTER);
@@ -125,7 +122,7 @@ public class ExcludePane extends GridPane {
         add(addSel, 1, row, 3, 1);
 
         row++;
-        Button delSel = new Button("\u003C"); // <
+        Button delSel = new Button("<"); // <
         delSel.setDisable(excludedVoiceTypes.isEmpty());
         delSel.setStyle(flatButtonStyle);
         delSel.setAlignment(Pos.CENTER);
@@ -140,13 +137,13 @@ public class ExcludePane extends GridPane {
 
         row++;
 
-        Button delAll = new Button("\u00AB"); // <<
+        Button delAll = new Button("«"); // <<
         delAll.setDisable(excludedVoiceTypes.isEmpty());
         delAll.setAlignment(Pos.CENTER);
         delAll.setStyle(flatButtonStyle);
         delAll.setOnAction(e -> {
             if (! excludedVoiceTypes.isEmpty()) {
-                availableVoiceTypes = move (excludedVoiceTypes, availableVoiceTypes);
+                move (excludedVoiceTypes, availableVoiceTypes);
                 updateListViews();
                 updateResults();
             }
@@ -154,11 +151,9 @@ public class ExcludePane extends GridPane {
         add(delAll, 1, row, 3, 1);
     }
 
-    private Set<String> move (Set<String> src, Set<String> dst) {
+    private void move (Set<String> src, Set<String> dst) {
         dst.addAll(src);
         src.clear();
-
-        return dst;
     }
 
     private Set<String> moveSelected (Set<String> src, Set<String> dst, Set<String> selected) {
@@ -174,17 +169,8 @@ public class ExcludePane extends GridPane {
     }
 
     private void updateResults() {
-        getExcludesPane().getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane().setExcludes(new ArrayList<String>(excludedVoiceTypes));
+        getExcludesPane().getVoiceSearchPane().getVoicePane().getVoiceSearchResultsPane().setExcludes(new ArrayList<>(excludedVoiceTypes));
     }
-
-/*
-    private void updateResults() {
-        ExcludesPane excludesPane = (ExcludesPane)getParent();
-        VoiceSearchPane voice2SearchPane = (VoiceSearchPane)excludesPane.getParent();
-
-        VoiceSearchResultsPane voice2SearchResultsPane = voice2SearchPane.getSearchResultsPane();
-        voice2SearchResultsPane.setExcludes(new ArrayList<String>(excludedData));
-    } */
 
     // ACCESSOR
     public ExcludesPane getExcludesPane() {

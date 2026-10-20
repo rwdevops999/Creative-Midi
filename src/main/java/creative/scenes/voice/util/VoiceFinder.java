@@ -62,7 +62,6 @@ public class VoiceFinder {
     }
 
     public static List<Patch> findPatchInGroup(Group group, Patch patchToFind) {
-        List<Patch> result = new ArrayList<>();
 
         List<Patch> patches;
         if (patchToFind.getPc() != null) {
@@ -73,7 +72,7 @@ public class VoiceFinder {
                     (p.getBank().equals(patchToFind.getBank()))).toList();
 
         }
-        result.addAll(patches);
+        List<Patch> result = new ArrayList<>(patches);
 
         if (! group.getGroups().isEmpty()) {
             for (Group g : group.getGroups()) {

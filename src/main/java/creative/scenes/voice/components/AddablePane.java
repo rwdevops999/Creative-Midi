@@ -19,9 +19,9 @@ import static util.Util.setPaneWidthAsPercentage;
 public class AddablePane extends GridPane {
     @Getter
     @Setter
-    private int buttonId = 0;
+    private int buttonId;
 
-    private StringProperty inputValue = new SimpleStringProperty();
+    private final StringProperty inputValue = new SimpleStringProperty();
 
     public AddablePane(Pane owner, int id) {
         super();
@@ -42,11 +42,11 @@ public class AddablePane extends GridPane {
         getRowConstraints().add(rowConstraints);
 
         String flatButtonStyle =
-                "-fx-background-color: #a9a9a9; " + // Grijze achtergrond (of 'transparent')
-                        "-fx-background-radius: 0; " +       // Rechte hoeken (gebruik bijv. 4px voor licht afgerond)
-                        "-fx-text-fill: #333333; " +         // Tekstkleur
-                        "-fx-font-size: 14px; " +            // Lettergrootte
-                        "-fx-font-weight: bold; " +          // Dikgedrukte tekst
+                "-fx-background-color: #a9a9a9; " +          // Gray background (or 'transparent')
+                        "-fx-background-radius: 0; " +       // Square corners
+                        "-fx-text-fill: #333333; " +         // text color
+                        "-fx-font-size: 14px; " +            // text size
+                        "-fx-font-weight: bold; " +          // bold text
                         "-fx-cursor: hand;";
 
         int row = 0;

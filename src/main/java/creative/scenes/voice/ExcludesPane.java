@@ -6,10 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
-
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 import static util.Util.setPaneHeightAsPercentage;
 

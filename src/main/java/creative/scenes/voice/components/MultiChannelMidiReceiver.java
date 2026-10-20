@@ -38,13 +38,6 @@ public class MultiChannelMidiReceiver implements Receiver {
                 }
 
                 indicators.get(0).setActive(turnOn);
-
-                // Directly trigger the setActive method on your custom components
-/*                switch (channel) {
-                    case 0 -> indicators.get(0).setActive(turnOn);
-                    case 1 -> indicators.get(1).ch2Indicator.setActive(turnOn);
-                    case 2 -> indicators.get(2).setActive(turnOn);
-                } */
             }
         }
     }
