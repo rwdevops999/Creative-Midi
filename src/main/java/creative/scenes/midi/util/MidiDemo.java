@@ -4,14 +4,16 @@ import creative.scenes.voice.components.MultiChannelMidiReceiver;
 import custom.components.voice.ChannelIndicator;
 import custom.dialog.DialogFactory;
 import eventhandlers.IThreadEventHandler;
+import lombok.Getter;
 import util.ApplicationInfo;
 import util.Worker;
 
-import java.util.List;
 import java.util.Map;
 
 public class MidiDemo {
     private static Worker worker;
+
+    @Getter
     private static boolean isPlaying = false;
     public static void playDemo(IThreadEventHandler successHandler, IThreadEventHandler interruptedHandler, MultiChannelMidiReceiver multiChannelMidiReceiver) {
         worker = new Worker(ApplicationInfo.getInstance().getMidiOutputDevice(), multiChannelMidiReceiver);
@@ -28,10 +30,6 @@ public class MidiDemo {
         }
     }
 
-    public static boolean isPlaying() {
-        return isPlaying;
-    }
-
     public static void stopDemo(Map<Integer, ChannelIndicator> channelIndicators) {
         if (worker != null && worker.isAlive()) {
             worker.interrupt();
@@ -41,9 +39,6 @@ public class MidiDemo {
                     channelIndicator.setActive(false);
                 }
             }
-/*            if (channelIndicator != null) {
-                channelIndicator.updateLight(false);
-            } */
         }
     }
 }

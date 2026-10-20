@@ -3,20 +3,15 @@ package creative.scenes.midi;
 import creative.scenes.SceneActionsPane;
 import creative.scenes.midi.provider.MidiProvider;
 import entity.midi.Midi;
-import entity.midi.NoteEntity;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
-import util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +39,9 @@ public class MidiListPane extends VBox {
     private void buildPane() {
         logger.debug("[CM_MIDI_LIST_PANE] Building {}", getId());
 
-        midiListView = new ListView<Midi>();
+        midiListView = new ListView<>();
         updateMidiList(null);
-        midiListView.setCellFactory(param -> new ListCell<Midi>() {
+        midiListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Midi midi, boolean empty) {
                 super.updateItem(midi, empty);
@@ -54,7 +49,7 @@ public class MidiListPane extends VBox {
                 if (empty || midi == null) {
                     setText(null);
                 } else {
-                    // Hier kies je welke variabele je wilt tonen
+                    // Here we choose which variable to show
                     setText(midi.getName());
                 }
             }
@@ -65,10 +60,6 @@ public class MidiListPane extends VBox {
                 ApplicationInfo.getInstance().setCurrentMidi(newValue);
                 MidiDetailPane midiDetailPane = new MidiDetailPane(parent);
                 parent.setCenter(midiDetailPane);
-                int enables = SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_NEW] |
-                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_DELETE] |
-                        SceneActionsPane.BUTTON[SceneActionsPane.BUTTON_ACTION];
-
                 parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_NEW, true);
                 parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_DELETE, true);
                 parent.getActionsPane().setEnable(SceneActionsPane.BUTTON_ACTION, true);

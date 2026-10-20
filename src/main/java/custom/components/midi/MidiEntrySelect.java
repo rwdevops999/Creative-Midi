@@ -334,7 +334,7 @@ public class MidiEntrySelect extends GridPane {
         if (subtype != null) {
             switch (subtype) {
                 case "panning" -> slider.setLabelFormatter(new PanningConvertor());
-                case "minplus" -> slider.setLabelFormatter(new MinPlusConvertor(min, max));
+                case "minplus" -> slider.setLabelFormatter(new MinPlusConvertor(max));
                 case "splitted" -> {
                     slider.setLabelFormatter(new SplitConvertor(min, max));
                     String css = Objects.requireNonNull(getClass().getResource("/styles/gradient.css")).toExternalForm();

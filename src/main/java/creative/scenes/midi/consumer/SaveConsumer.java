@@ -1,8 +1,6 @@
 package creative.scenes.midi.consumer;
 
 import creative.scenes.SceneActionsPane;
-import creative.scenes.midi.MidiDetailPane;
-import creative.scenes.midi.MidiPane;
 import creative.scenes.midi.provider.MidiProvider;
 import entity.AEntity;
 import javafx.scene.layout.Pane;

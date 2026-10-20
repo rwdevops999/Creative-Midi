@@ -3,7 +3,6 @@ package creative.scenes.midi.util;
 import communication.CommunicationModel;
 import custom.dialog.DialogFactory;
 import entity.midi.Midi;
-import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
@@ -49,36 +48,12 @@ public class MidiWriter {
                 // 4. Send message
                 receiver.send(midiMessage, -1);
             } catch (MidiUnavailableException mue) {
-                logger.error("[CM_MIDI_WRITER] EXCEPTION: Device not ready for sending midi. CAUSE {}", mue.getMessage());
+                logger.error("[CM_MIDI_WRITER] EXCEPTION(1): Device not ready for sending midi. CAUSE {}", mue.getMessage());
                 DialogFactory.renderErrorDialog("Device not ready");
-            } catch (InvalidMidiDataException imde) {
-                logger.error("[CM_MIDI_WRITER] EXCEPTION: Midi data incorrect. CAUSE {}", imde.getMessage());
+            } catch (InvalidMidiDataException e) {
+                logger.error("[CM_MIDI_WRITER] EXCEPTION(2): Midi data incorrect. CAUSE {}", e.getMessage());
                 String message = MessageFormatter.basicArrayFormat("MIDI Command is not constructed well for {}", new Object[]{midi.getStatus()});
                 DialogFactory.renderErrorDialog(message);
-            }
-        }
-    }
-
-    public void sendMidiMessage (ShortMessage midiMessage) {
-        logger.debug("[CM_MIDI_WRITER] Sending MIDI Message {}", midiMessage);
-
-        MidiDevice outputDevice = ApplicationInfo.getInstance().getMidiOutputDevice();
-        if (outputDevice == null) {
-            CommunicationModel.monitorError("No device selected");
-            DialogFactory.renderWarningDialog("No device selected");
-        } else {
-            try {
-                Receiver receiver = outputDevice.getReceiver();
-
-                String message;
-                message = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
-//                CommunicationModel.setStatus(message);
-//                CommunicationModel.monitorOutbound("[MIDI] " + message);
-
-                receiver.send(midiMessage, -1);
-            } catch (MidiUnavailableException mue) {
-                logger.error("[CM_MIDI_WRITER] EXCEPTION: Device not ready for sending midi. CAUSE {}", mue.getMessage());
-                DialogFactory.renderErrorDialog("Device not ready");
             }
         }
     }
@@ -112,19 +87,14 @@ public class MidiWriter {
                 ShortMessage shortMessage = new ShortMessage();
                 shortMessage.setMessage(status, data1, data2);
 
-/*                Platform.runLater(() -> {
-                    CommunicationModel.setStatus(message);
-                    CommunicationModel.monitorOutbound("[MIDI] " + message);
-                }); */
-
                 // 4. Send message
                 receiver.send(shortMessage, -1);
             } catch (MidiUnavailableException mue) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION: Device not ready for sending midi. CAUSE {}", mue.getMessage());
                 DialogFactory.renderErrorDialog("Device not ready");
                 return false;
-            } catch (InvalidMidiDataException imde) {
-                logger.error("[CM_MIDI_WRITER] EXCEPTION: Midi data incorrect. CAUSE {}", imde.getMessage());
+            } catch (InvalidMidiDataException e) {
+                logger.error("[CM_MIDI_WRITER] EXCEPTION: Midi data incorrect. CAUSE {}", e.getMessage());
                 String strMessage = MessageFormatter.basicArrayFormat("MIDI Command is not constructed well for {}", new Object[]{message});
                 DialogFactory.renderErrorDialog(strMessage);
                 return false;
@@ -132,11 +102,5 @@ public class MidiWriter {
         }
 
         return true;
-    }
-
-    public void sendMidiMessage (Receiver receiver, ShortMessage midiMessage) {
-        logger.debug("[CM_MIDI_WRITER] Sending MIDI Message {}", midiMessage);
-
-        receiver.send(midiMessage, -1);
     }
 }

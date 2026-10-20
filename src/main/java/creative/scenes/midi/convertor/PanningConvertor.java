@@ -6,9 +6,6 @@ public class PanningConvertor extends StringConverter<Double> {
     public PanningConvertor() {
     }
 
-    public PanningConvertor(int min, int max) {
-    }
-
     @Override
     public String toString(Double d) {
         if (Math.abs(d - 63.0) < 0.01) return "C";

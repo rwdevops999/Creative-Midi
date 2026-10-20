@@ -2,17 +2,15 @@ package creative.scenes.midi;
 
 import creative.scenes.midi.data.MessageType;
 import creative.scenes.midi.handler.ChangedHandler;
-import custom.components.HexTextField;
 import custom.components.SimpleHexTextField;
 import custom.components.midi.MidiEntrySelect;
 import entity.midi.Midi;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
@@ -24,9 +22,9 @@ import static util.Util.setPaneBackground;
 public class MidiDetailPane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(MidiDetailPane.class);
 
-    private ObjectProperty<Integer> channel = new SimpleObjectProperty<>(0);
+    private final ChangedHandler changedHandler = new ChangedHandler();
 
-    private ChangedHandler changedHandler = new ChangedHandler();
+    @Getter
     private Midi currentMidi;
 
     public MidiDetailPane() {
@@ -83,9 +81,7 @@ public class MidiDetailPane extends GridPane {
         TextField midiNameInputField = new TextField();
         midiNameInputField.textProperty().bindBidirectional(currentMidi.getNameProperty());
         midiNameInputField.setPromptText("name...");
-        midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> {
-           changedHandler.accept(currentMidi, this);
-        });
+        midiNameInputField.textProperty().addListener((observable, oldValue, newValue) -> changedHandler.accept(currentMidi, this));
         add(midiNameInputField, 1, row.get(), 5, 1);
 
         // ROW1
@@ -96,9 +92,7 @@ public class MidiDetailPane extends GridPane {
         SimpleHexTextField hexInput = new SimpleHexTextField();
         hexInput.setPromptText("status");
         hexInput.textProperty().bindBidirectional(currentMidi.getStatusProperty());
-        hexInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            changedHandler.accept(currentMidi, this);
-        });
+        hexInput.textProperty().addListener((observable, oldValue, newValue) -> changedHandler.accept(currentMidi, this));
         add(hexInput, 1, row.get(), 2, 1);
 
         ToggleGroup group = new ToggleGroup();
@@ -127,7 +121,7 @@ public class MidiDetailPane extends GridPane {
                 }
 
             } else {
-                removeDeletables();
+                removeDeletable();
             }
         });
         add(channelRadio, 1, row.get(), 3, 1);
@@ -146,12 +140,10 @@ public class MidiDetailPane extends GridPane {
             }
         });
 
-        currentMidi.getMessageTypeProperty().addListener((obs, oldMode, newMode) -> {
-            group.getToggles().stream()
-                    .filter(t -> t.getUserData() == newMode)
-                    .findFirst()
-                    .ifPresent(group::selectToggle);
-        });
+        currentMidi.getMessageTypeProperty().addListener((obs, oldMode, newMode) -> group.getToggles().stream()
+                .filter(t -> t.getUserData() == newMode)
+                .findFirst()
+                .ifPresent(group::selectToggle));
 
         logger.debug("[CM_MIDI_DETAIL_PANE] Built {}", getId());
     }
@@ -164,7 +156,7 @@ public class MidiDetailPane extends GridPane {
     }
 
     private void renderChannelSelection(int onRow) {
-        Label channelLabel = new Label("Chnl:");
+        Label channelLabel = new Label("Ch:");
         channelLabel.setId("Deletable");
         add(channelLabel, 0, onRow, 2, 1);
 
@@ -220,16 +212,12 @@ public class MidiDetailPane extends GridPane {
         add(byteSelect, 0, onRow, 12, onRow);
     }
 
-    private void removeDeletables() {
+    private void removeDeletable() {
         getChildren().removeIf(node -> "Deletable".equals(node.getId()));
     }
 
     private void removeAllChildren() {
         getChildren().clear();
-    }
-
-    public Midi getCurrentMidi() {
-        return currentMidi;
     }
 
     public MidiPane getMidiPane() {

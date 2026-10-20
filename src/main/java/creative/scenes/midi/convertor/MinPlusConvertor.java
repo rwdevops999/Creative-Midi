@@ -3,15 +3,15 @@ package creative.scenes.midi.convertor;
 import javafx.util.StringConverter;
 
 public class MinPlusConvertor extends StringConverter<Double> {
-    private Integer minValue = 0;
     private Integer maxValue = 127;
     private Integer middle = maxValue / 2;
 
     public MinPlusConvertor() {
     }
 
-    public MinPlusConvertor(int min, int max) {
-        minValue = min;
+    public MinPlusConvertor(int max) {
+        this();
+
         maxValue = max;
         middle = maxValue / 2;
     }
@@ -21,7 +21,7 @@ public class MinPlusConvertor extends StringConverter<Double> {
         if (d == -64) return "-64";
         if (d == -1) return "0";
         if (d == 63) return "+63";
-        return ""; // Leeg voor andere ticks
+        return ""; // Empty for the other ticks
     }
 
     @Override

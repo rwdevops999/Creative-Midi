@@ -3,14 +3,13 @@ package creative.scenes.midi.util;
 import creative.scenes.midi.data.ByteType;
 import creative.scenes.midi.data.MessageType;
 import entity.midi.Midi;
-import util.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MidiReset {
-    private List<String> midiMessages = new ArrayList<>();
-    private MidiWriter midiWriter = new MidiWriter();
+    private final List<String> midiMessages = new ArrayList<>();
+    private final MidiWriter midiWriter = new MidiWriter();
 
     public MidiReset() {
     }

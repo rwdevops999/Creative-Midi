@@ -30,7 +30,7 @@ public class MidiProvider {
             .build();
 
     @Getter
-    private String midiFileName = new String("");
+    private final String midiFileName;
 
     @Getter
     private List<Midi> midis = new ArrayList<>();
@@ -62,14 +62,14 @@ public class MidiProvider {
         String midiPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_PATH, "./midi" );
         String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.MIDI_EVENTS_FILE, "midievents.json" );
 
-        String midifile = midiPath + "/" + filename;
+        String midiFile = midiPath + "/" + filename;
 
         ObjectMapper mapperExport = JsonMapper.builder()
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .build();
 
         try {
-            File file = new File(midifile);
+            File file = new File(midiFile);
             mapperExport.writeValue(file, midis);
             result.set(true);
         } catch (Exception e) {
@@ -80,7 +80,7 @@ public class MidiProvider {
         return result.get();
     }
 
-    public boolean constainsMidi(String midiName) {
+    public boolean containsMidi(String midiName) {
         return midis.stream().anyMatch(obj -> midiName.equals(obj.getName()));
     }
 

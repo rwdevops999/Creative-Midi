@@ -15,15 +15,13 @@ public enum ByteType {
     DefaultValue(2),
     FreeValue(1);
 
-    private int value;
+    private final int value;
 
     ByteType(int byteValue) {
         this.value = byteValue;
     }
 
     public static ByteType[] fromValue(int value) {
-        ArrayList<ByteType> list = new ArrayList<>();
-
         return Arrays.stream(values()).filter(t -> (t.value & value) == value).toList().toArray(ByteType[]::new);
     }
 }

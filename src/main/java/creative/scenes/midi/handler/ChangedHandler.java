@@ -5,13 +5,10 @@ import creative.scenes.SceneActionsPane;
 import creative.scenes.midi.MidiDetailPane;
 import entity.AEntity;
 import entity.midi.Midi;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import util.ApplicationInfo;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class ChangedHandler<T extends AEntity, U extends Pane> implements BiConsumer<T,U> {
     @Override
@@ -28,7 +25,7 @@ public class ChangedHandler<T extends AEntity, U extends Pane> implements BiCons
         if (isDirty) {
             sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, true);
             ApplicationInfo.getInstance().setDirtyMidi(midi);
-            if (ApplicationInfo.getInstance().getMidiProvider().constainsMidi(midi.getName())) {
+            if (ApplicationInfo.getInstance().getMidiProvider().containsMidi(midi.getName())) {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
             } else {
