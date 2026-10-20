@@ -55,9 +55,9 @@
       "beat" : 4,
       "beats" : 4
     },
-    "tempo" : 120
+    "tempo" : 94
   },
-  "songName" : "Blue Bayou"
+  "songName" : "004. Blue Bayou"
 }, {
   "mappings" : [ {
     "receive" : "Intro 1 End",
@@ -232,7 +232,10 @@
   },
   "songName" : "Du"
 }, {
-  "mappings" : [ ],
+  "mappings" : [ {
+    "receive" : "Intro 3 End",
+    "reply" : "Select Registration 2"
+  } ],
   "songId" : 3,
   "songInfo" : {
     "performer" : "Fats Domino",
@@ -244,9 +247,9 @@
       "beat" : 4,
       "beats" : 6
     },
-    "tempo" : 80
+    "tempo" : 75
   },
-  "songName" : "Blueberry Hill"
+  "songName" : "003. Blueberry Hill"
 }, {
   "mappings" : [ {
     "receive" : "Intro 1 End",

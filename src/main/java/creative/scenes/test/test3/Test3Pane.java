@@ -1,9 +1,9 @@
 package creative.scenes.test.test3;
 
 import communication.CommunicationModel;
-import creative.scenes.sysexgen2.definition.SysexGen2Definitions;
-import creative.scenes.sysexgen2.entity.Event;
-import creative.scenes.sysexgen2.entity.EventParameter;
+import creative.scenes.sysexgen.definition.SysexGenDefinitions;
+import creative.scenes.sysexgen.entity.Event;
+import creative.scenes.sysexgen.entity.EventParameter;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class Test3Pane extends VBox {
 
     private EventParameter setEventValue(String eventName, String eventParameterName, Integer ival, Integer b1val, Integer b2val) {
         EventParameter eventParameter = null;
-        Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
+        Event event = SysexGenDefinitions.getRootEvent().findEvent(eventName);
         if (event != null) {
             eventParameter = event.findEventParameterByName(eventParameterName);
 
@@ -53,7 +53,7 @@ public class Test3Pane extends VBox {
     }
 
     private void setLinkedEventValue(String eventName, String eventParameterName, String linkedEventName, Integer ival, Integer b1val, Integer b2val) {
-        Event event = SysexGen2Definitions.getRootEvent().findEvent(eventName);
+        Event event = SysexGenDefinitions.getRootEvent().findEvent(eventName);
         if (event != null) {
             EventParameter eventParameter = event.findEventParameterByName(eventParameterName);
 
@@ -93,7 +93,7 @@ public class Test3Pane extends VBox {
 
         setPaneBackground(this);
 
-        SysexGen2Definitions.setup();
+        SysexGenDefinitions.setup();
 
         logger.debug("[CM_TEST1_PANE] Set up {}", getId());
     }
@@ -104,7 +104,7 @@ public class Test3Pane extends VBox {
 
     private void handleEvent (String name, Integer b1, Integer b2, List<String> results ) {
         testsrun++;
-        Event rootEvent = SysexGen2Definitions.getRootEvent();
+        Event rootEvent = SysexGenDefinitions.getRootEvent();
 
         Event event = rootEvent.findEvent(name);
         if (! (b1 == null && b2 == null)) {

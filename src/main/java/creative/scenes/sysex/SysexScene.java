@@ -2,7 +2,6 @@ package creative.scenes.sysex;
 
 import creative.scenes.IScene;
 import creative.scenes.base.Base;
-import creative.scenes.sysexgen.SysexGenPane;
 import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

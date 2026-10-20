@@ -1,6 +1,6 @@
 package creative.scenes.eventlist.parser.processor.data;
 
-import creative.scenes.sysexgen2.entity.DataBlock;
+import creative.scenes.sysexgen.entity.DataBlock;
 
 import java.util.HashMap;
 import java.util.Map;

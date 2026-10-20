@@ -2,19 +2,13 @@ package creative.scenes.test.test1;
 
 import communication.CommunicationModel;
 import creative.scenes.eventlist.dialog.ChannelSelectionDialog;
-import creative.scenes.sysexgen2.entity.DataBlock;
-import custom.dialog.NameDialog;
-import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 import static util.ColorScheme.getColor;
-import static util.Constants.BIG_ENDIAN;
-import static util.Constants.LITTLE_ENDIAN;
 
 public class Test1Pane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(Test1Pane.class);
