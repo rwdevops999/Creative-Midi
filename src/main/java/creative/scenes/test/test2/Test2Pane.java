@@ -1,15 +1,12 @@
 package creative.scenes.test.test2;
 
 import communication.CommunicationModel;
-import entity.midi.NoteEntity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -17,14 +14,12 @@ import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ColorScheme;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static util.Util.calcNote;
 import static util.Util.setPaneBackground;
 
 public class Test2Pane extends HBox {
@@ -32,7 +27,7 @@ public class Test2Pane extends HBox {
 
     private record NamedColor(String name, Color color) {}
 
-    private ObjectProperty<Paint> textFill = new SimpleObjectProperty<>(Color.RED);
+    private final ObjectProperty<Paint> textFill = new SimpleObjectProperty<>(Color.RED);
 
     private List<NamedColor> getAllColors() {
         List<NamedColor> colors = new ArrayList<>();
@@ -41,7 +36,7 @@ public class Test2Pane extends HBox {
                 try {
                     colors.add(new NamedColor(field.getName(), (Color) field.get(null)));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    logger.error("[CM_TEST2_PANE] Exception. CAUSE: {}", e.getMessage());
                 }
             }
         }
@@ -63,9 +58,9 @@ public class Test2Pane extends HBox {
     private void runTest() {
         logger.debug("[CM_TEST1_PANE] Executing {}", getId());
 
-        // The testpane
+        // The test pane
         VBox colorTestPane = new VBox();
-        Label testLabel = new Label("This is the testlabel");
+        Label testLabel = new Label("This is the test label");
         testLabel.textFillProperty().bind(textFill);
         colorTestPane.getChildren().add(testLabel);
 
@@ -75,7 +70,7 @@ public class Test2Pane extends HBox {
 
         ComboBox<NamedColor> colorsBox = new ComboBox<>();
         colorsBox.setItems(observableColors);
-        colorsBox.setConverter(new StringConverter<NamedColor>() {
+        colorsBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(NamedColor color) {
                 if (color == null) {

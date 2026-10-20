@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-import static util.ColorScheme.getColor;
-
 public class Test1Pane extends GridPane {
     private static final Logger logger = LoggerFactory.getLogger(Test1Pane.class);
     public Test1Pane() {
@@ -52,9 +50,5 @@ public class Test1Pane extends GridPane {
         Optional<Character> resultingChannel = channelDialog.showAndWait();
 
         logger.debug("[CM_TEST1_PANE] Executed {}", getId());
-    }
-
-    private void buildPane() {
-
     }
 }
