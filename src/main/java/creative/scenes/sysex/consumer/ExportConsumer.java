@@ -17,7 +17,6 @@ public class ExportConsumer<T extends AEntity, P extends Pane> implements BiCons
         logger.debug("[CM_EXPORT_CONSUMER<SysEx>] Handling Export SysEx");
 
         SceneActionsPane sceneActionsPane = (SceneActionsPane) pane;
-        SysexPane sysexPane = sceneActionsPane.getSysexPane();
 
         SysexContainer.exportSysEx();
     }

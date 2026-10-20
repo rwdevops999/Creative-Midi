@@ -1,6 +1,5 @@
 package creative.scenes.sysex;
 
-import entity.midi.Midi;
 import entity.sysex.Sysex;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListCell;
@@ -9,10 +8,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Util;
-
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneWidthAsPercentage;
 
 public class SysexListPane extends VBox {
@@ -50,7 +45,7 @@ public class SysexListPane extends VBox {
                 sysExDetailsPane.setSysex(newValue);
 //            }
         });
-        sysexListView.setCellFactory(param -> new ListCell<Sysex>() {
+        sysexListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Sysex sysex, boolean empty) {
                 super.updateItem(sysex, empty);

@@ -37,14 +37,6 @@ public class SysexStateMachine {
         updateUI(supplier);
     }
 
-    // Herstel de vorige state
-    public void undoState(BooleanSupplier supplier) {
-        if (!stateHistory.isEmpty()) {
-            this.currentState = stateHistory.pop();
-            updateUI(supplier);
-        }
-    }
-
     public void undoStateWithSkips(SysexState skipState, BooleanSupplier supplier) {
         if (!stateHistory.isEmpty()) {
             if (skipState.equals(SysexState.ADDABLE) || skipState.equals(SysexState.UPDATABLE)) {
@@ -58,7 +50,7 @@ public class SysexStateMachine {
         }
     }
 
-    // De centrale plek waar buttons worden en-/disabled op basis van de state
+    // The central place where buttons will be enabled or disabled based on the state
     private void updateUI(BooleanSupplier supplier) {
 
         sceneActionsPane.disableAll();
@@ -76,21 +68,21 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, false);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null && supplier.getAsBoolean());
                 CommunicationModel.setStatus("SYSEX STATE = ADDABLE");
             }
             case UPDATABLE -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, false);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_UPDATE, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null && supplier.getAsBoolean());
                 CommunicationModel.setStatus("SYSEX STATE = UPDATABLE");
             }
             case ADDED -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false);
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null && supplier.getAsBoolean());
                 CommunicationModel.setStatus("SYSEX STATE = ADDED");
             }
             case LOADED -> {
@@ -104,7 +96,7 @@ public class SysexStateMachine {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ADD, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null ? supplier.getAsBoolean(): false );
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_ACTION, supplier != null && supplier.getAsBoolean());
                 CommunicationModel.setStatus("SYSEX STATE = UPDATED");
             }
         }

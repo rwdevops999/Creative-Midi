@@ -49,7 +49,7 @@ public class SysexPane extends BorderPane {
 
     public AEntity getEntity() {
         return getSysexDetailsPane().getSysex();
-    };
+    }
 
     // ACCESSORS
     public SysexListPane getSysexListPane() {

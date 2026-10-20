@@ -16,12 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ApplicationInfo;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.setPaneBackground;
 import static util.Util.setPaneWidthAsPercentage;
 
@@ -40,8 +37,6 @@ public class SysexDetailsPane extends VBox {
         setSpacing(2);
     }
 
-    private final List<AddableSysexPane> addPanes = new ArrayList<>();
-
     private SysexPane parent;
     private final StringProperty dsSysexName = new SimpleStringProperty("Unknown");
     private final StringProperty[] dsSysexValue = new StringProperty[SYSEX_VALUES];
@@ -49,17 +44,14 @@ public class SysexDetailsPane extends VBox {
     private Sysex workingSysex = new Sysex();
 
     @Getter
-    private BooleanSupplier supplier = new BooleanSupplier() {
-        @Override
-        public boolean getAsBoolean() {
-            boolean result = false;
+    private final BooleanSupplier supplier = () -> {
+        boolean result = false;
 
-            for (StringProperty stringProperty : dsSysexValue) {
-                result = result || (stringProperty != null && stringProperty.get() != null && !stringProperty.get().isEmpty());
-            }
-
-            return result;
+        for (StringProperty stringProperty : dsSysexValue) {
+            result = result || (stringProperty != null && stringProperty.get() != null && !stringProperty.get().isEmpty());
         }
+
+        return result;
     };
 
     private final ChangeHandler changeHandler = () -> {
@@ -154,7 +146,6 @@ public class SysexDetailsPane extends VBox {
 
             pane.setId("Deletable");
 
-            addPanes.add(pane);
             getChildren().add(pane);
 
             bindProperty(index, pane);
@@ -211,7 +202,7 @@ public class SysexDetailsPane extends VBox {
 
     public void removePane(int id) {
         if (id > 0) {
-            if (workingSysex != null && workingSysex.getList().size() > 0) {
+            if (workingSysex != null && !workingSysex.getList().isEmpty()) {
                 workingSysex.getList().remove(id);
             }
 

@@ -1,7 +1,5 @@
 package creative.scenes.sysex.consumer;
 
-import creative.scenes.SceneActionsPane;
-import creative.scenes.sysex.SysexPane;
 import creative.scenes.sysex.util.SysexWriter;
 import custom.dialog.DialogFactory;
 import entity.AEntity;
@@ -18,9 +16,6 @@ public class SendConsumer<T extends AEntity, P extends Pane> implements BiConsum
     @Override
     public void accept(T entity, P pane) {
         logger.debug("[CM_SEND_CONSUMER<SysEx>] handling Send SysEx");
-
-        SceneActionsPane sceneActionsPane = (SceneActionsPane) pane;
-        SysexPane sysexPane = sceneActionsPane.getSysexPane();
 
         Sysex sysex = (Sysex)entity;
 

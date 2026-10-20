@@ -2,6 +2,7 @@ package creative.scenes.sysex;
 
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.jackson.core.type.TypeReference;
@@ -17,11 +18,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static util.Constants.SYSEX_START_BYTE;
 import static util.Constants.SYSEX_STOP_BYTE;
@@ -30,6 +27,8 @@ public class SysexContainer {
     private static final Logger logger = LoggerFactory.getLogger(SysexContainer.class);
 
     private final static ObjectMapper mapper;
+
+    @Getter
     private static List<Sysex> sysexList;
 
     static {
@@ -41,11 +40,11 @@ public class SysexContainer {
         String sysexPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_PATH, "./sysex");
         String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_EVENTS_FILE, "sysexevents.json");
 
-        String sysexfile = sysexPath + "/" + filename;
+        String sysexFile = sysexPath + "/" + filename;
 
-        logger.debug("[CM_SYSEX_CONTAINER] Loading SysEx events from {}", sysexfile);
-        try (InputStream in = Files.newInputStream(Path.of(sysexfile))) {
-            sysexList = mapper.readValue(in, new TypeReference<List<Sysex>>() {});
+        logger.debug("[CM_SYSEX_CONTAINER] Loading SysEx events from {}", sysexFile);
+        try (InputStream in = Files.newInputStream(Path.of(sysexFile))) {
+            sysexList = mapper.readValue(in, new TypeReference<>() {});
         } catch (IOException ioe) {
             logger.error("[CM_SYSEX_CONTAINER] Exception. CAUSE: {}", ioe.getMessage());
         }
@@ -126,26 +125,22 @@ public class SysexContainer {
         String sysexPath = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_PATH, "./sysex");
         String filename = PropertyContainer.getPropertyAsString(PropertyType.Path, PropertyContainer.SYSEX_EVENTS_FILE, "sysexevents.json");
 
-        String sysexfile = sysexPath + "/" + filename;
-        logger.debug("[CM_SYSEX_CONTAINER] Exporting SYSEX messages to {}", sysexfile);
+        String sysexFile = sysexPath + "/" + filename;
+        logger.debug("[CM_SYSEX_CONTAINER] Exporting SYSEX messages to {}", sysexFile);
 
         ObjectMapper mapperExport = JsonMapper.builder()
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .build();
 
         try {
-            File file = new File(sysexfile);
+            File file = new File(sysexFile);
             mapperExport.writeValue(file, sysexList);
         } catch (Exception e) {
-            logger.error("[CM_SYSEX_CONTAINER] Exeption: CAUSE: {}", e.getMessage());
+            logger.error("[CM_SYSEX_CONTAINER] Exception: CAUSE: {}", e.getMessage());
             result = false;
         }
 
         return result;
-    }
-
-    public static List<Sysex> getSysexList() {
-        return sysexList;
     }
 
     public static List<String> getSysexNames() {

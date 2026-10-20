@@ -13,8 +13,6 @@ import javafx.scene.layout.RowConstraints;
 import lombok.Getter;
 import lombok.Setter;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.resizePaneWidth;
 
 public class SysexNamePane extends GridPane {
@@ -50,9 +48,7 @@ public class SysexNamePane extends GridPane {
 
         TextField nameTextField = new TextField();
         nameTextField.textProperty().bindBidirectional(dsProperty);
-        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            handler.handle();
-        });
+        nameTextField.textProperty().addListener((observable, oldValue, newValue) -> handler.handle());
         add(nameTextField, 1, 0, 4, 1);
     }
 }

@@ -2,7 +2,6 @@ package creative.scenes.sysex.consumer;
 
 import creative.scenes.SceneActionsPane;
 import creative.scenes.sysex.SysexContainer;
-import creative.scenes.sysex.SysexDetailsPane;
 import creative.scenes.sysex.SysexListPane;
 import creative.scenes.sysex.SysexPane;
 import creative.scenes.sysex.data.SysexState;

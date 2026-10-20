@@ -1,10 +1,7 @@
 package creative.scenes.sysex.component;
 
 import creative.scenes.sysex.SysexDetailsPane;
-import creative.scenes.voice.PatchSearchPane;
 import custom.components.SimpleHexTextField;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
@@ -16,8 +13,6 @@ import javafx.scene.layout.RowConstraints;
 import lombok.Getter;
 import lombok.Setter;
 
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
 import static util.Util.resizePaneWidth;
 
 public class AddableSysexPane extends GridPane {
@@ -43,8 +38,6 @@ public class AddableSysexPane extends GridPane {
         getRowConstraints().add(rowConstraints);
     }
 
-    private StringProperty inputValue = new SimpleStringProperty();
-
     private SimpleHexTextField textField;
     public TextField getInputField() {
         return textField;
@@ -58,11 +51,11 @@ public class AddableSysexPane extends GridPane {
         resizePaneWidth(this, owner, 90);
 
         String flatButtonStyle =
-                "-fx-background-color: #a9a9a9; " + // Grijze achtergrond (of 'transparent')
-                        "-fx-background-radius: 0; " +       // Rechte hoeken (gebruik bijv. 4px voor licht afgerond)
-                        "-fx-text-fill: #333333; " +         // Tekstkleur
-                        "-fx-font-size: 14px; " +            // Lettergrootte
-                        "-fx-font-weight: bold; " +          // Dikgedrukte tekst
+                "-fx-background-color: #a9a9a9; " +          // Gray background
+                        "-fx-background-radius: 0; " +       // Square corners
+                        "-fx-text-fill: #333333; " +         // Text color
+                        "-fx-font-size: 14px; " +            // Text size
+                        "-fx-font-weight: bold; " +          // Bold text
                         "-fx-cursor: hand;";
 
         int row = 0;

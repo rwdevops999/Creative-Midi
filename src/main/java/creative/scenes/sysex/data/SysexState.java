@@ -7,5 +7,5 @@ public enum SysexState {
     ADDABLE,
     LOADED,
     ADDED,
-    UPDATED;
+    UPDATED
 }

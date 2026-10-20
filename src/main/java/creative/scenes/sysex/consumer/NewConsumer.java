@@ -1,13 +1,11 @@
 package creative.scenes.sysex.consumer;
 
 import creative.scenes.SceneActionsPane;
-import creative.scenes.midi.MidiDetailPane;
 import creative.scenes.sysex.SysexDetailsPane;
 import creative.scenes.sysex.SysexPane;
 import creative.scenes.sysex.SysexStateMachine;
 import creative.scenes.sysex.data.SysexState;
 import entity.AEntity;
-import entity.midi.Midi;
 import entity.sysex.Sysex;
 import entity.sysex.SysexContent;
 import javafx.scene.layout.Pane;
