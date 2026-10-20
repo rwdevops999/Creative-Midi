@@ -1402,7 +1402,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Reverb Time")
-                                                .withDisplayblock(
+                                                .withDisplayBlock(
                                                         displayBlockBuilder
                                                                 .clear()
                                                                 .withLabel("Reverb Time")
@@ -1443,7 +1443,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Mod Rate")
-                                                .withDisplayblock(
+                                                .withDisplayBlock(
                                                         displayBlockBuilder
                                                                 .clear()
                                                                 .withLabel("Mod Rate")
@@ -1457,10 +1457,10 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Mod Depth")
-                                                .withDisplayblock(
+                                                .withDisplayBlock(
                                                         displayBlockBuilder
                                                                 .clear()
-                                                                .withLabel("Mod Dpth")
+                                                                .withLabel("Mod Depth")
                                                                 .withRange(0,127)
                                                                 .build()
                                                 )
@@ -1471,7 +1471,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Feedback")
-                                                .withDisplayblock(
+                                                .withDisplayBlock(
                                                         displayBlockBuilder
                                                                 .clear()
                                                                 .withLabel("Feedback")
@@ -1485,7 +1485,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Send To Reverb")
-                                                .withDisplayblock(
+                                                .withDisplayBlock(
                                                         displayBlockBuilder
                                                                 .clear()
                                                                 .withLabel("Send To Reverb")
@@ -1529,7 +1529,7 @@ public class SysexGenDefinitions {
                                 .clear()
                                 .withName("Pitch Control")
                                 .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
                                 .withControllerId(0X00)
                                 .withNumBytes(1)
                                 .withLinkedEventParameter(
@@ -1605,7 +1605,7 @@ public class SysexGenDefinitions {
                                 .clear()
                                 .withName("Pitch Control")
                                 .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
                                 .withControllerId(0X00)
                                 .withNumBytes(1)
                                 .withLinkedEventParameter(
@@ -1651,91 +1651,8 @@ public class SysexGenDefinitions {
                                 .build()
                 )
                 .build();
-/*
-        Event eventController = eventBuilder
-                .clear()
-                .withName("Controller")
-                .withSysex("7F 09 03")
-                .withDefaultValues(0, 0)
-                .withEventType(
-                        eventTypeBuilder
-                                .clear()
-                                .withName("Channel EventType")
-                                .withEventValues(0, 0)
-                                .withParameterTable(findParameterTable("ChannelsTable"))
-                                .build()
-                )
-                .withEventParameter(
-                        eventParameterBuilder
-                                .clear()
-                                .withName("Channel")
-                                .withParameterType(ParameterType.PARAMETER)
-                                .withParameterId(1)
-                                .withNumBytes(1)
-                                .withEndian(LITTLE_ENDIAN)
-                                .withUseLowerOnly(true)
-                                .build()
-                )
-                .withEventParameter(
-                        // Pitch Control
-                        new EventParameter.EventParameterBuilder()
-                                .clear()
-                                .withName("Pitch Control")
-                                .withParameterType(ParameterType.FREE) // PAY ATTENTION WITh ENDIAN
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Pitch Control").withDescription("-24..0..24").withRange(0x28, 0x58).withDefaultValue(0x40).build())
-                                .withControllerId(0X00)
-                                .withNumBytes(1)
-                                .withEndian(LITTLE_ENDIAN)
-                                .withLinkedEventParameter(
-                                        // Filter Cutoff Control
-                                        new EventParameter.EventParameterBuilder()
-                                                .clear()
-                                                .withName("Filter Cutoff Control")
-                                                .withControllerId(0X01)
-                                                .withEndian(LITTLE_ENDIAN)
-                                                .build()
-                                )
-                                .withLinkedEventParameter(
-                                        // Amplitude Control
-                                        new EventParameter.EventParameterBuilder()
-                                                .clear()
-                                                .withName("Amplitude Control")
-                                                .withControllerId(0X02)
-                                                .withEndian(LITTLE_ENDIAN)
-                                                .build()
-                                )
-                                .withLinkedEventParameter(
-                                        // LFO Pitch Depth
-                                        new EventParameter.EventParameterBuilder()
-                                                .clear()
-                                                .withName("LFO Pitch Depth")
-                                                .withControllerId(0X03)
-                                                .withEndian(LITTLE_ENDIAN)
-                                                .build()
-                                )
-                                .withLinkedEventParameter(
-                                        // LFO Filter Depth
-                                        new EventParameter.EventParameterBuilder()
-                                                .clear()
-                                                .withName("LFO Filter Depth")
-                                                .withControllerId(0X04)
-                                                .withEndian(LITTLE_ENDIAN)
-                                                .build()
-                                )
-                                .withLinkedEventParameter(
-                                        // LFO Amplitude Depth
-                                        new EventParameter.EventParameterBuilder()
-                                                .clear()
-                                                .withName("LFO Amplitude Depth")
-                                                .withControllerId(0X05)
-                                                .withEndian(LITTLE_ENDIAN)
-                                                .build()
-                                )
-                                .build()
-                )
-                .build();
- */
-        Event eventKeyBasedInstrumentContol = eventBuilder
+
+        Event eventKeyBasedInstrumentControl = eventBuilder
                 .clear()
                 .withName("Key Based Instrument Control")
                 .withSysex("7F 0A 01")
@@ -1762,7 +1679,7 @@ public class SysexGenDefinitions {
                         eventParameterBuilder
                                 .clear()
                                 .withName("Key Number")
-                                .withDisplayblock(displayBlockBuilder
+                                .withDisplayBlock(displayBlockBuilder
                                         .clear()
                                         .withLabel("Key Number")
                                         .withDefaultValue(60)
@@ -1786,7 +1703,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Volume")
-                                                .withDisplayblock(displayBlockBuilder
+                                                .withDisplayBlock(displayBlockBuilder
                                                         .clear()
                                                         .withLabel("Volume")
                                                         .withDescription("-100..+100%")
@@ -1801,7 +1718,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Pan")
-                                                .withDisplayblock(displayBlockBuilder
+                                                .withDisplayBlock(displayBlockBuilder
                                                         .clear()
                                                         .withLabel("Pan")
                                                         .withDescription("L63..C..R63")
@@ -1815,7 +1732,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Reverb Send Level")
-                                                .withDisplayblock(displayBlockBuilder
+                                                .withDisplayBlock(displayBlockBuilder
                                                         .clear()
                                                         .withLabel("Reverb Send Level")
                                                         .withDescription("0..Max")
@@ -1829,7 +1746,7 @@ public class SysexGenDefinitions {
                                         new EventParameter.EventParameterBuilder()
                                                 .clear()
                                                 .withName("Chorus Send Level")
-                                                .withDisplayblock(displayBlockBuilder
+                                                .withDisplayBlock(displayBlockBuilder
                                                         .clear()
                                                         .withLabel("Chorus Send Level")
                                                         .withDescription("0..Max")
@@ -1854,7 +1771,7 @@ public class SysexGenDefinitions {
                 .withChild(eventChorusParameter)
                 .withChild(eventChannelPressure)
                 .withChild(eventController)
-                .withChild(eventKeyBasedInstrumentContol)
+                .withChild(eventKeyBasedInstrumentControl)
                 .build();
         rootEvent.addChild(eventUniversalRealTime);
 
@@ -1889,9 +1806,9 @@ public class SysexGenDefinitions {
                                     int mm = 0;
 
                                     if (channel == 16) {
-                                        jj = 0x7F; // Bit 14 and 15 (binair: 00000011)
-                                        gg = 0x7F; // Bit From 7 to 13  (binair: 01111111)
-                                        mm = 0x7F; // Bit From 0  to 6   (binair: 01111111)
+                                        jj = 0x7F; // Bits 14 and 15 (binary: 00000011)
+                                        gg = 0x7F; // Bits From 7 to 13  (binary: 01111111)
+                                        mm = 0x7F; // Bits From 0  to 6   (binary: 01111111)
                                     } else {
                                         // Set Specific channel (from 0 to 15)
                                         if (channel >= 14) {
@@ -1908,7 +1825,7 @@ public class SysexGenDefinitions {
 
                                     return String.format("%02X %02X %02X", (byte)jj, (byte)gg, (byte)mm);
                                 })
-                                .withDisplayblock(
+                                .withDisplayBlock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Channel")
@@ -1919,40 +1836,40 @@ public class SysexGenDefinitions {
                                 )
                                 .build())
                         .withEventParameter(eventParameterBuilder.clear().withName("C").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune C").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("C#").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune C#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune C#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("D").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune D").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("D#").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune D#/E♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune D#/E♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("E").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune E").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune E").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("F").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune F").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("F#").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune F#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune F#").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("G").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune G").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("G#").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune G#/A♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune G#/A♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("A").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune A").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("A#").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune A#/B♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune A#/B♭").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .withEventParameter(eventParameterBuilder.clear().withName("B").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                .withDisplayblock(displayBlockBuilder.clear().withLabel("Tune B").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
+                                .withDisplayBlock(displayBlockBuilder.clear().withLabel("Tune B").withDescription("-64cent..0cent..63cent").withRange(0, 0x7F).withDefaultValues(0x00, 0x40).build()
                                 ).build())
                         .build();
 
@@ -2256,7 +2173,7 @@ public class SysexGenDefinitions {
                                         .clear()
                                         .withName("MSB")
                                         .withParameterType(ParameterType.FREE)
-                                        .withDisplayblock(
+                                        .withDisplayBlock(
                                                 displayBlockBuilder
                                                         .clear()
                                                         .withLabel("Master Tune MSB")
@@ -2272,7 +2189,7 @@ public class SysexGenDefinitions {
                                 eventParameterBuilder
                                         .clear()
                                         .withName("LSB")
-                                        .withDisplayblock(
+                                        .withDisplayBlock(
                                                 displayBlockBuilder
                                                         .clear()
                                                         .withLabel("Master Tune LSB")
@@ -2399,7 +2316,7 @@ public class SysexGenDefinitions {
 
                         // For Free Parameters we need additional information (that is normally handled by Parameter Table
                         .withEventParameter(eventParameterBuilder.clear().withName("Reverb Return").withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0C")
-                                .withDisplayblock(
+                                .withDisplayBlock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Reverb Return")
@@ -2410,7 +2327,7 @@ public class SysexGenDefinitions {
                                 )
                                 .build()) // REVERB RETURN
                         .withEventParameter(eventParameterBuilder.clear().withName("Reverb Pan").withParameterType(ParameterType.FREE).withNumBytes(1).withAddress("0D")
-                                .withDisplayblock(
+                                .withDisplayBlock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Reverb Pan")
@@ -2502,7 +2419,7 @@ public class SysexGenDefinitions {
                         .withSysex("73 01 51 00 00 00 03 10 00")
                         // Here we don't use a EventType but just free parameters
                         .withEventParameter(eventParameterBuilder.clear().withName("Note Number").withParameterType(ParameterType.FREE).withNumBytes(1)
-                                 .withDisplayblock(
+                                 .withDisplayBlock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Split point")
@@ -2521,7 +2438,7 @@ public class SysexGenDefinitions {
                         .withSysex("73 01 51 05 00 03 04 00 00")
                         // Here we don't use a EventType but just free parameters
                         .withEventParameter(eventParameterBuilder.clear().withName("Style Number").withParameterType(ParameterType.FREE).withNumBytes(2).useEndian(BIG_ENDIAN)
-                                .withDisplayblock(
+                                .withDisplayBlock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Style")
@@ -2550,7 +2467,7 @@ public class SysexGenDefinitions {
 
                                     return String.format("%02X %02X %02X %02X", t4, t3, t2, t1);
                                 })
-                                .withDisplayblock(
+                                .withDisplayBlock(
                                         displayBlockBuilder
                                                 .clear()
                                                 .withLabel("Tempo")

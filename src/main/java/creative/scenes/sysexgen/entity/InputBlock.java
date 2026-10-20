@@ -19,7 +19,7 @@ public class InputBlock {
     private DataTable dataTable;
     private DataBlock value;
 
-    private IntegerProperty valuePoperty = new SimpleIntegerProperty();
+    private IntegerProperty valueProperty = new SimpleIntegerProperty();
 
     public InputBlock() {
         this.event = null;

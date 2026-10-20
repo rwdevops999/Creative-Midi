@@ -13,6 +13,8 @@ public class DisplayBlock {
     }
 
     public DisplayBlock(DisplayBlockBuilder builder) {
+        this();
+
         this.label = builder.label;
         this.description = builder.description;
         this.defaultValue = builder.defaultValue;

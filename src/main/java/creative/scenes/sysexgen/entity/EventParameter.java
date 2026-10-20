@@ -88,16 +88,7 @@ public class EventParameter {
             linkedEventParameterList = builder.linkedEventParameterList;
             linkedEventParameterList.forEach(ep -> ep.setLinkedEventParameter(this));
             linkedResultList = new HashMap<>();
-        };
-    }
-
-    public boolean hasLinkedParameters() {
-        return linkedEventParameterList != null && !linkedEventParameterList.isEmpty();
-    }
-
-    public void setLinkedValue(Integer id, DataBlock value) {
-//        linkedValuesMap.remove(id);
-//        linkedValuesMap.put(id, value);
+        }
     }
 
     public EventParameter findLinkedEventParameterByName(String name) {
@@ -116,7 +107,7 @@ public class EventParameter {
         this.value = null;
     }
 
-    public void addLinkedValue(String strvalue) {
+    public void addLinkedValue(String strValue) {
         String key = String.format("%02X %s", controllerId, value.toHex(numBytes, endian));
 
         if (linkedResultList != null) {
@@ -125,8 +116,8 @@ public class EventParameter {
             }
 
             List<String> entries = linkedResultList.get(key);
-            if (!entries.contains(strvalue)) {
-                entries.add(strvalue);  // is this by reference ???
+            if (!entries.contains(strValue)) {
+                entries.add(strValue);  // is this by reference ???
             }
         }
     }
@@ -142,9 +133,9 @@ public class EventParameter {
             } else {
                 List<String> linkedValues = linkedResultList.get(key);
                 for (String keyValueCombination : linkedValues) {
-                    String[] splitted = keyValueCombination.split(" ");
-                    int cid = Integer.parseInt(splitted[0], 16);
-                    int value = Integer.parseInt(splitted[1], 16);
+                    String[] split = keyValueCombination.split(" ");
+                    int cid = Integer.parseInt(split[0], 16);
+                    int value = Integer.parseInt(split[1], 16);
 
                     for (EventParameter ep : linkedEventParameterList) {
                         if (ep.getControllerId() == cid) {
@@ -281,10 +272,8 @@ public class EventParameter {
             return this;
         }
 
-        public EventParameterBuilder withDisplayblock(DisplayBlock block) {
+        public EventParameterBuilder withDisplayBlock(DisplayBlock block) {
             this.displayBlock = block;
-            if (block.getDefaultValue() != null) {
-            }
             return this;
         }
 

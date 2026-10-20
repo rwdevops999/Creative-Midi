@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Event implements IEvent {
     @Setter
@@ -20,12 +19,12 @@ public class Event implements IEvent {
     private String sysex;
 
     @Getter
-    private List<Event> children = new ArrayList<>();
+    private final List<Event> children;
     private DataBlock defaultValue;
 
     @Getter
-    private List<EventParameter> parameters;
-    private List<EventType> eventTypes;
+    private final List<EventParameter> parameters;
+    private final List<EventType> eventTypes;
 
     private boolean inline = true;
 
@@ -172,7 +171,7 @@ public class Event implements IEvent {
 
         if (this.hasParent()) {
             List<String> parentSysexStrings = new ArrayList<>(this.parent.createSysexStrings());
-            parentSysexStrings.replaceAll(s -> s.length() == 0 ? this.sysex : s + extend(this.sysex));
+            parentSysexStrings.replaceAll(s -> s.isEmpty() ? this.sysex : s + extend(this.sysex));
             sysexStrings.addAll(parentSysexStrings);
         } else {
             sysexStrings.add(this.sysex);
@@ -240,19 +239,12 @@ public class Event implements IEvent {
                 }
             } else {
                 for (String parameterSysex : parameterSysexList) {
-                    sysexStrings.replaceAll(s -> s.length() == 0 ? parameterSysex : s + extend(parameterSysex));
+                    sysexStrings.replaceAll(s -> s.isEmpty() ? parameterSysex : s + extend(parameterSysex));
                 }
             }
         }
 
         return sysexStrings.stream().sorted().toList();
-    }
-
-    private String sortStringInternally(String input) {
-        return input.chars()
-                .sorted()
-                .mapToObj(c -> String.valueOf((char) c))
-                .collect(Collectors.joining());
     }
 
     public List<String> complete(List<String> sysexStrings) {
@@ -279,7 +271,7 @@ public class Event implements IEvent {
     /**
      * Get a list of all categories
      *
-     * @return a list of categorynames or an empty list
+     * @return a list of category names or an empty list
      */
     public List<String> getEventTypeCategories() {
         List<String> result = new ArrayList<>();

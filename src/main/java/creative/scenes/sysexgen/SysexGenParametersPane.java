@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static util.ColorScheme.getColor;
-import static util.DummyUtil.showPaneBorder;
-
 public class SysexGenParametersPane extends TabPane {
     public SysexGenParametersPane() {
         super();
@@ -39,12 +35,12 @@ public class SysexGenParametersPane extends TabPane {
     private void buildTabs(List<InputBlock> list) {
         getTabs().clear();
 
-        int numtabs = list.size() / TAB_SIZE;
+        int numTabs = list.size() / TAB_SIZE;
         if (! list.isEmpty()) {
-            numtabs++;
+            numTabs++;
         }
 
-        for (int i = 0; i < numtabs; i++) {
+        for (int i = 0; i < numTabs; i++) {
             List<InputBlock> partiallyList = list.stream().filter(ib -> ib.getParameter() != null).skip((long) i * TAB_SIZE).limit(TAB_SIZE).toList();
 
             Tab tab = new Tab("Parameters " + (i + 1));
@@ -53,12 +49,9 @@ public class SysexGenParametersPane extends TabPane {
         }
     }
 
-    private Consumer<InputBlock> consumer = new  Consumer<InputBlock>() {
-        @Override
-        public void accept(InputBlock inputBlock) {
-            inputBlock.getParameter().setValue(inputBlock.getValue());
-            showSysexResult(inputBlock.getEvent());
-        }
+    private final Consumer<InputBlock> consumer = inputBlock -> {
+        inputBlock.getParameter().setValue(inputBlock.getValue());
+        showSysexResult(inputBlock.getEvent());
     };
 
     private VBox createContent(List<InputBlock> list) {
@@ -67,7 +60,7 @@ public class SysexGenParametersPane extends TabPane {
 
         if (! list.isEmpty()) {
             for (InputBlock inputBlock : list) {
-                if (inputBlock.getParameter() != null && !inputBlock.getParameter().equals("Type")) {
+                if (inputBlock.getParameter() != null && !inputBlock.getParameter().getParameterType().equals(ParameterType.TYPE)) {
                     pane.getChildren().add(new ParameterPane(inputBlock, consumer));
                 }
             }

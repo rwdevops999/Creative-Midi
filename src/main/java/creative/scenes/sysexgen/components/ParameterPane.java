@@ -43,18 +43,15 @@ public class ParameterPane extends GridPane {
         buildPane(inputBlock, consumer);
     }
 
-    private final BiFunction<Integer, Integer, DataBlock> inputCalculator = new BiFunction<Integer, Integer, DataBlock>() {
-        @Override
-        public DataBlock apply(Integer value, Integer numOfBytes) {
-            if (numOfBytes == 1) {
-                return new DataBlock(null, value);
-            }
-
-            int highByte = (value >>> 8) & 0xFF;
-            int lowByte = value & 0xFF;
-
-            return new DataBlock(highByte, lowByte);
+    private final BiFunction<Integer, Integer, DataBlock> inputCalculator = (value, numOfBytes) -> {
+        if (numOfBytes == 1) {
+            return new DataBlock(null, value);
         }
+
+        int highByte = (value >>> 8) & 0xFF;
+        int lowByte = value & 0xFF;
+
+        return new DataBlock(highByte, lowByte);
     };
 
     private void buildPane(InputBlock inputBlock, Consumer<InputBlock> consumer) {

@@ -32,9 +32,9 @@ public class DataBlock {
         }
     }
 
-    public DataBlock(Integer ival) {
-        this.msb = (byte) ((ival >> 8) & 0xFF);
-        this.lsb = (byte) (ival & 0xFF);;
+    public DataBlock(Integer iVal) {
+        this.msb = (byte) ((iVal >> 8) & 0xFF);
+        this.lsb = (byte) (iVal & 0xFF);
     }
 
     public Integer getValue() {

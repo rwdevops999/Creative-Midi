@@ -9,7 +9,7 @@ import java.util.List;
 public class ParameterTable {
     @Getter
     @Setter
-    protected String identifier;    // USEFULL FOR TESTING...
+    protected String identifier;    // Usefully for testing...
     protected String name;
     protected String description;
 
@@ -25,6 +25,7 @@ public class ParameterTable {
     }
 
     public ParameterTable(ParameterTableBuilder builder) {
+        this();
         this.identifier = builder.identifier;
         this.name = builder.name;
         this.description = builder.description;

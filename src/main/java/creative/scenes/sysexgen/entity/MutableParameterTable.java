@@ -72,7 +72,7 @@ public class MutableParameterTable {
 
             if (parameterTable != null && parameterTable.hasEntries()) {
                 parameterTable.setIdentifier(this.identifier);
-                parameterTable.entries.stream().forEach(entry -> {
+                parameterTable.entries.forEach(entry -> {
                     entry.setLabel(this.label != null ? this.label : entry.getLabel());
                     entry.setDescription(this.description != null ? this.description : entry.getDescription());
                     entry.setDefaultValue(this.defaultValue != null ? this.defaultValue : entry.getDefaultValue());

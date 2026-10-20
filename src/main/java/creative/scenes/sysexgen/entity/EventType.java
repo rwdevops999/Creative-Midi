@@ -13,7 +13,7 @@ public class EventType {
     private String category;
 
     @Getter
-    private String name;            // USEFULL FOR TESTING...
+    private String name;            // Usefully for testing...
 
     public EventType() {
     }
@@ -64,7 +64,6 @@ public class EventType {
         }
 
         public EventTypeBuilder withEventValue(Integer value) {
-            // Here the integer is split into MSB and LSB
             this.eventValue = new DataBlock(value);
             return this;
         }

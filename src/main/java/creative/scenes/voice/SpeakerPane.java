@@ -14,7 +14,6 @@ import entity.voice.Patch;
 import eventhandlers.IThreadEventHandler;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -67,12 +66,6 @@ public class SpeakerPane extends HBox {
     private static final int ICON_SIZE=24;
     private final StringProperty dsMidiName = new SimpleStringProperty(ApplicationInfo.getInstance().getMidiToTry().getName());
 
-    EventHandler stopMidiHandler = (EventHandler) event -> {
-        if (MidiDemo.isPlaying()) {
-            MidiDemo.stopDemo(null);
-        }
-    };
-
     private void buildPane() {
         logger.debug("[CM_SPEAKER_PANE] Building {}", getId());
 
@@ -108,7 +101,11 @@ public class SpeakerPane extends HBox {
                     if (sendAsMidi(0, selectedPatch)) {
                         speaker.setStyle("-fx-background-color: #0096C9;");
                         playDemoFile((ToggleButton) (e.getSource()), multiChannelMidiReceiver);
-                        closePane.setActionHandler(stopMidiHandler);
+                        closePane.setActionHandler(event -> {
+                            if (MidiDemo.isPlaying()) {
+                                MidiDemo.stopDemo(null);
+                            }
+                        });
                     } else {
                         speaker.setSelected(false);
                         closePane.setActionHandler(null);
