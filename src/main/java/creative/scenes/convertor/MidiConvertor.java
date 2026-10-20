@@ -1,35 +1,39 @@
 package creative.scenes.convertor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.sound.midi.*;
 import java.io.File;
 import java.io.IOException;
 
 public class MidiConvertor {
+    private static final Logger logger = LoggerFactory.getLogger(MidiConvertor.class);
 
     public MidiConvertor() {
     }
 
     public Sequence convertType1ToType0(File midiFile) {
         try {
-            Sequence sourceSequence = MidiSystem.getSequence(midiFile); ;
+            Sequence sourceSequence = MidiSystem.getSequence(midiFile);
 
             MidiFileFormat format = MidiSystem.getMidiFileFormat(midiFile);
             boolean isType1 = format.getType() == 1;
 
             if (isType1) {
-                // 1. Maak een nieuwe Sequence aan met dezelfde timing-resolutie (PPQ of SMPTE)
+                // 1. Create a new Sequence with the same timing resolution (PPQ or SMPTE)
                 Sequence targetSequence = new Sequence(sourceSequence.getDivisionType(), sourceSequence.getResolution());
 
-                // 2. Maak één enkel spoor aan voor de Type 0 Sequence
+                // 2. Create one single track for the Type 0 Sequence
                 Track mainTrack = targetSequence.createTrack();
 
-                // 3. Loop door alle sporen van het originele bestand
+                // 3. Walk through all the tracks of the original file
                 for (Track track : sourceSequence.getTracks()) {
                     for (int i = 0; i < track.size(); i++) {
                         MidiEvent event = track.get(i);
 
-                        // Voeg elk event toe aan het nieuwe hoofdspoor.
-                        // Java's Track klasse sorteert de events automatisch op basis van hun tick-waarde.
+                        // Add each event to the master track
+                        // Java's Track class sorts the events automatically based on their tick value.
                         mainTrack.add(event);
                     }
                 }
@@ -37,8 +41,7 @@ public class MidiConvertor {
                 return targetSequence;
             }
         } catch (Exception e) {
-            System.err.println("Fout tijdens de conversie: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Exception. CAUSE {}",e.getMessage());
         }
 
         return null;
@@ -101,9 +104,8 @@ public class MidiConvertor {
             MidiEvent event = sourceTrack.get(i);
             MidiMessage message = event.getMessage();
 
-            if (message instanceof ShortMessage) {
+            if (message instanceof ShortMessage sm) {
                 // Route voice/note events to their respective channel track layout
-                ShortMessage sm = (ShortMessage) message;
                 int channel = sm.getChannel();
 
                 if (channelTracks[channel] == null) {
@@ -127,27 +129,26 @@ public class MidiConvertor {
      */
     public Sequence convertType1ToType0(Sequence sourceSequence) {
         try {
-            // 1. Maak een nieuwe Sequence aan met dezelfde timing-resolutie (PPQ of SMPTE)
+            // 1. Create a new Sequence with the same timing resolution (PPQ or SMPTE)
             Sequence targetSequence = new Sequence(sourceSequence.getDivisionType(), sourceSequence.getResolution());
 
-            // 2. Maak één enkel spoor aan voor de Type 0 Sequence
+            // 2. Create one single track for Type 0 Sequence
             Track mainTrack = targetSequence.createTrack();
 
-            // 3. Loop door alle sporen van het originele bestand
+            // 3. Walk through all tracks of the original file
             for (Track track : sourceSequence.getTracks()) {
                 for (int i = 0; i < track.size(); i++) {
                     MidiEvent event = track.get(i);
 
-                    // Voeg elk event toe aan het nieuwe hoofdspoor.
-                    // Java's Track klasse sorteert de events automatisch op basis van hun tick-waarde.
+                    // Add each event to the new master track.
+                    // Java's Track class sorts the events automatically based on their tick value.
                     mainTrack.add(event);
                 }
             }
 
             return targetSequence;
         } catch (Exception e) {
-            System.err.println("Fout tijdens de conversie: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Exception. CAUSE: {}", e.getMessage());
         }
 
         return null;

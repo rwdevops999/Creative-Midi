@@ -13,6 +13,6 @@ public class SysexGenScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_SYSEX_GEN_SCENE] Starting Sysex Generator Scene");
 
-        return new Base("SysexGenScene", new SysexGenPane(), callingScene, true);
+        return new Base(new SysexGenPane(), callingScene, true);
     }
 }

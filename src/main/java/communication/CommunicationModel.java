@@ -24,11 +24,11 @@ public class CommunicationModel {
 
     // - Type of monitoring
     @Getter
-    private static ObjectProperty<CommunicationType> typeProperty = new SimpleObjectProperty<>(CommunicationType.INCOMING);
+    private static final ObjectProperty<CommunicationType> typeProperty = new SimpleObjectProperty<>(CommunicationType.INCOMING);
 
     // - monitoring message
     @Getter
-    private static StringProperty messageProperty = new SimpleStringProperty("");
+    private static final StringProperty messageProperty = new SimpleStringProperty("");
 
     public static void monitorInfo (String message) {
         Platform.runLater(() -> {

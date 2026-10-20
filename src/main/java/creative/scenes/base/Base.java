@@ -12,12 +12,12 @@ import static util.Constants.SPA;
 public class Base extends BorderPane {
     private static final Logger logger = LoggerFactory.getLogger(Base.class);
 
-    public Base(Pane caller) {
+    public Base() {
         super();
     }
 
-    public Base(String id, Pane content, IScene callingScene, boolean addClosePane) {
-        super();
+    public Base(Pane content, IScene callingScene, boolean addClosePane) {
+        this();
 
         setId(SPA);
         ApplicationInfo.getInstance().setSpa(this);

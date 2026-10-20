@@ -14,6 +14,6 @@ public class EventlistScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_EVENT_LIST_SCENE] Starting Event List");
 
-        return new Base("EventlistScene", new EventlistPane(), callingScene, true);
+        return new Base(new EventlistPane(), callingScene, true);
     }
 }

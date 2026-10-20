@@ -36,8 +36,6 @@ public class SelectorsPane extends VBox {
 
         SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", ApplicationInfo.getInstance().getVoiceFilenames(), new KeyboardHandler<>(), PropertyContainer.getPropertyAsString(PropertyType.GeneralKeyboard, PropertyContainer.DEFAULT_KEYBOARD, ""));
         SelectorPane deviceSelectorPane = new SelectorPane("Device", "Select a device", new ArrayList<>(), null, "");
-//        SelectorPane keyboardSelectorPane = new SelectorPane("Keyboard", "select a keyboard", VoiceContainer.getVoiceFilenames(), new KeyboardHandler<>(), voices);
-//        SelectorPane deviceSelectorPane = new SelectorPane("Device", "Select a device", new ArrayList<>(), null, Globals.getSelectedDevice());
         getChildren().addAll(keyboardSelectorPane, deviceSelectorPane);
 
         Registry.register("DeviceSelector", deviceSelectorPane, (node, data) -> {

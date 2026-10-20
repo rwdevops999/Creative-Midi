@@ -7,7 +7,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ColorScheme;
 
 public class ClockPane extends HBox {
     private static final Logger logger = LoggerFactory.getLogger(ClockPane.class);

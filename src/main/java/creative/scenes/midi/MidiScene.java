@@ -13,6 +13,6 @@ public class MidiScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_MIDI_SCENE] Starting Midi Scene");
 
-        return new Base("MidiScene", new MidiPane(), callingScene, true);
+        return new Base(new MidiPane(), callingScene, true);
     }
 }

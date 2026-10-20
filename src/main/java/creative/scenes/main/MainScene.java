@@ -15,7 +15,7 @@ public class MainScene implements IScene {
         logger.debug("[CM_MAIN_SCENE] Starting MainScene.");
 
         try {
-            return new Base("MainScene", new MainPane(this), callingScene, false);
+            return new Base(new MainPane(this), callingScene, false);
         } catch (IllegalStateException e) {
             logger.error("[CM_MAIN_SCENE] EXCEPTION: In MainScene. CAUSE: {}", e.getMessage());
         }

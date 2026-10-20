@@ -13,6 +13,6 @@ public class PlaylistScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_PLAYLIST_SCENE] Starting Playlist Scene");
 
-        return new Base("PlaylistScene", new PlaylistPane(), callingScene, true);
+        return new Base(new PlaylistPane(), callingScene, true);
     }
 }

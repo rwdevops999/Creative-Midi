@@ -14,13 +14,13 @@ public class TestScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_TEST_SCENE] Starting Test Scene");
 
-        return new Base("MidiScene", new MidiPane(), callingScene, true);
+        return new Base(new MidiPane(), callingScene, true);
     }
 
     @Override
     public Pane renderScene(IScene callingScene, Pane pane) {
         logger.debug("[CM_TEST_SCENE] Starting Test Scene with a pane");
 
-        return new Base("MidiScene", pane, callingScene, true);
+        return new Base(pane, callingScene, true);
     }
 }

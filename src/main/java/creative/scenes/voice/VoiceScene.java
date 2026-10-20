@@ -13,6 +13,6 @@ public class VoiceScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_MIDI_SCENE] Starting Voice Scene");
 
-        return new Base("VoiceScene", new VoicePane(), callingScene, true);
+        return new Base(new VoicePane(), callingScene, true);
     }
 }

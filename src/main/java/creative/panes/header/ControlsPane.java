@@ -40,9 +40,7 @@ public class ControlsPane extends HBox {
         logger.debug("[CM_CONTROLS_PANE] Building {}", getId());
 
         // Midi Off Button
-        getChildren().add(new IconButton("midireset", "reset MIDI", "icons/midi.png", e -> {
-            new MidiReset().reset();
-        }));
+        getChildren().add(new IconButton("midiReset", "reset MIDI", "icons/midi.png", e -> new MidiReset().reset()));
 
         // Light/dark Button
         ToggleButton toggleButton = new ToggleButton();

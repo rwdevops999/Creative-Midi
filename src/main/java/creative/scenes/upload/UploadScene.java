@@ -14,6 +14,6 @@ public class UploadScene implements IScene {
     public Pane render(IScene callingScene) {
         logger.debug("[CM_UPLOAD_SCENE] Starting Upload Scene");
 
-        return new Base("UploadScene", new MergePane(false), callingScene, true);
+        return new Base(new MergePane(false), callingScene, true);
     }
 }

@@ -3,11 +3,8 @@ package creative.panes.monitor;
 import communication.CommunicationModel;
 import creative.panes.monitor.data.CommunicationType;
 import creative.scenes.midi.data.MessageType;
-import creative.scenes.midi.util.MidiReset;
 import creative.scenes.midi.util.MidiWriter;
 import creative.scenes.playlist.PlaylistContainer;
-import creative.scenes.playlist.PlaylistListPane;
-import creative.scenes.playlist.PlaylistPane;
 import custom.components.ColoredItem;
 import custom.components.ColoredListCell;
 import entity.midi.Midi;
@@ -22,14 +19,12 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.Synchronized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ApplicationInfo;
 import util.ColorScheme;
 import util.Constants;
 import util.Registry;
@@ -48,8 +43,8 @@ import static util.Util.setPaneHeightAsPercentage;
 public class MonitorPane extends VBox {
     private static final Logger logger = LoggerFactory.getLogger(MonitorPane.class);
 
-    private MidiWriter midiWriter = new MidiWriter();
-    private Midi clockMidi = new Midi();
+    private final MidiWriter midiWriter = new MidiWriter();
+    private final Midi clockMidi = new Midi();
 
     public MonitorPane() {
         super();
