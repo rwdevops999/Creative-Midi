@@ -36,7 +36,7 @@ public class ColorScheme {
 
         // monitoring
         colors.put(new ColorKey("monitor", "message", "outbound"), Color.BLUE);
-        colors.put(new ColorKey("monitor", "message", "inbound"), Color.GREEN);
+        colors.put(new ColorKey("monitor", "message", "inbound"), Color.GRAY);
         colors.put(new ColorKey("monitor", "message", "info"), Color.GREEN);
         colors.put(new ColorKey("monitor", "message", "error"), Color.RED);
         colors.put(new ColorKey("monitor", "message", "warning"), Color.ORANGE);

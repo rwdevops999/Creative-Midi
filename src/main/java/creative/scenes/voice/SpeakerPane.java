@@ -7,6 +7,7 @@ import creative.scenes.midi.util.MidiDemo;
 import creative.scenes.midi.util.MidiWriter;
 import creative.scenes.voice.components.MultiChannelMidiReceiver;
 import custom.components.LedToggleButton;
+import custom.components.SpeakerToggle;
 import custom.components.voice.ChannelIndicator;
 import custom.dialog.DialogFactory;
 import entity.midi.Midi;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.util.*;
 
 import static util.ColorScheme.getColor;
+import static util.Constants.*;
 import static util.Util.setPaneBackground;
 
 public class SpeakerPane extends HBox {
@@ -70,12 +72,17 @@ public class SpeakerPane extends HBox {
         logger.debug("[CM_SPEAKER_PANE] Building {}", getId());
 
         Map<Integer, ChannelIndicator> ledMap = new HashMap<>();
+        Map<Integer, Boolean> listen = new HashMap<>();
 
-        ledMap.put(0, new ChannelIndicator("Ch 1:", getColor("voice", "ledRed", "on"), getColor("voice", "ledRed", "off")));
-        ledMap.put(1, new ChannelIndicator("Ch 2 (⇧):", getColor("voice", "ledGreen", "on"), getColor("voice", "ledGreen", "off")));
-        ledMap.put(2, new ChannelIndicator("Ch 3 (⌃):", getColor("voice", "ledBlue", "on"), getColor("voice", "ledBlue", "off")));
+        ledMap.put(CHANNEL_RIGHT1, new ChannelIndicator("Ch 1:", getColor("voice", "ledRed", "on"), getColor("voice", "ledRed", "off")));
+        ledMap.put(CHANNEL_LEFT, new ChannelIndicator("Ch 2 (⇧):", getColor("voice", "ledGreen", "on"), getColor("voice", "ledGreen", "off")));
+        ledMap.put(CHANNEL_RIGHT2, new ChannelIndicator("Ch 3 (⌃):", getColor("voice", "ledBlue", "on"), getColor("voice", "ledBlue", "off")));
 
-        try (MultiChannelMidiReceiver multiChannelMidiReceiver = new MultiChannelMidiReceiver(ledMap)) {
+        listen.put(CHANNEL_RIGHT1, true);
+        listen.put(CHANNEL_LEFT, true);
+        listen.put(CHANNEL_RIGHT2, true);
+
+        try (MultiChannelMidiReceiver multiChannelMidiReceiver = new MultiChannelMidiReceiver(ledMap, listen)) {
             speaker = new ToggleButton();
             speaker.setAlignment(Pos.CENTER);
             speaker.setStyle("-fx-background-color: darkgray;");
@@ -88,29 +95,26 @@ public class SpeakerPane extends HBox {
             speaker.setPadding(new Insets(1));
             speaker.setGraphic(imageView);
             speaker.setOnAction((e) -> {
+                Base base = (Base) ApplicationInfo.getInstance().getSpa();
+                BaseClosePane closePane = base.getClosePane();
                 if (speaker.isSelected()) {
-                    Base base = (Base) ApplicationInfo.getInstance().getSpa();
-                    BaseClosePane closePane = base.getClosePane();
-
-                    Patch selectedPatch = getVoiceSearchResultsPane().getSearchResultsPane().getSelectedPatch();
-                    if (selectedPatch == null) {
-                        selectedPatch = new Patch(null, "Live! Grand Piano", "0", "115", "0", "Yamaha");
+                    Map<Integer, Patch> patches = getVoiceSearchResultsPane().getSearchResultsPane().getChannelPatches();
+                    for (Integer channel : patches.keySet()) {
+                        Patch selectedPatch = patches.get(channel);
+                        ApplicationInfo.getInstance().setSelectedPatch(selectedPatch);
+                        sendAsMidi(channel, selectedPatch);
                     }
 
-                    ApplicationInfo.getInstance().setSelectedPatch(selectedPatch);
-                    if (sendAsMidi(0, selectedPatch)) {
-                        speaker.setStyle("-fx-background-color: #0096C9;");
-                        playDemoFile((ToggleButton) (e.getSource()), multiChannelMidiReceiver);
-                        closePane.setActionHandler(event -> {
-                            if (MidiDemo.isPlaying()) {
-                                MidiDemo.stopDemo(null);
-                            }
-                        });
-                    } else {
-                        speaker.setSelected(false);
-                        closePane.setActionHandler(null);
-                    }
+                    speaker.setStyle("-fx-background-color: #0096C9;");
+                    playDemoFile((ToggleButton) (e.getSource()), multiChannelMidiReceiver);
+                    closePane.setActionHandler(event -> {
+                        if (MidiDemo.isPlaying()) {
+                            MidiDemo.stopDemo(null);
+                        }
+                    });
                 } else {
+                    speaker.setSelected(false);
+                    closePane.setActionHandler(null);
                     stopDemoFile((ToggleButton) (e.getSource()), ledMap);
                     speaker.setStyle("-fx-background-color: darkgray;");
                 }
@@ -142,8 +146,13 @@ public class SpeakerPane extends HBox {
         getChildren().add(uploadButton);
 
         for (Integer channel : ledMap.keySet()) {
-            ChannelIndicator channelIndicator = ledMap.get(channel);
+            SpeakerToggle toggle = new SpeakerToggle(listen.get(channel));
+            toggle.setOnAction(event -> {
+                listen.put(channel, toggle.isSelected());
+            });
+            getChildren().add(toggle);
 
+            ChannelIndicator channelIndicator = ledMap.get(channel);
             getChildren().add(channelIndicator);
         }
 
@@ -168,7 +177,8 @@ public class SpeakerPane extends HBox {
     public boolean sendAsMidi(int channel, Patch patch) {
         boolean result = true;
 
-        MidiWriter midiWriter = new MidiWriter();
+        System.out.println("SEND AS MIDI to Channel " + channel + " Patch " + patch.getPatch());
+/*        MidiWriter midiWriter = new MidiWriter();
 
         Midi midi = new Midi();
         midi.setMessageType("channel");
@@ -193,7 +203,7 @@ public class SpeakerPane extends HBox {
         } else {
             result = false;
         }
-
+*/
         return result;
     }
 

@@ -28,4 +28,8 @@ public class Constants {
 
     public static int BIG_ENDIAN = 0;
     public static int LITTLE_ENDIAN = 1;
+
+    public static int CHANNEL_RIGHT1 = 0;
+    public static int CHANNEL_RIGHT2 = 2;
+    public static int CHANNEL_LEFT = 1;
 }

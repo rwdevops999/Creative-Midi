@@ -3,12 +3,15 @@ package creative.scenes.midi.util;
 import communication.CommunicationModel;
 import custom.dialog.DialogFactory;
 import entity.midi.Midi;
+import javafx.application.Platform;
+import org.apache.logging.log4j.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
 import util.ApplicationInfo;
 
 import javax.sound.midi.*;
+import java.util.Locale;
 
 public class MidiWriter {
     private static final Logger logger = LoggerFactory.getLogger(MidiWriter.class);
@@ -23,7 +26,6 @@ public class MidiWriter {
         } else {
             try {
                 Receiver receiver = outputDevice.getReceiver();
-                ShortMessage midiMessage = new ShortMessage();
 
                 String midiToSend = midi.toString();
 
@@ -41,12 +43,12 @@ public class MidiWriter {
                 ShortMessage message = new ShortMessage();
                 message.setMessage(status, data1, data2);
 
-                String monitorMessage = MessageFormatter.basicArrayFormat("[{} {} {} {}]", new Object[]{midiMessage.getStatus(), midiMessage.getChannel(), midiMessage.getData1(), midiMessage.getData2()});
-//                CommunicationModel.setStatus(monitorMessage);
-//                CommunicationModel.monitorOutbound("[MIDI] " + message);
+                String monitorMessage = MessageFormatter.basicArrayFormat("[{}]", new Object[]{midiToSend});
+                CommunicationModel.setStatus(monitorMessage);
+                CommunicationModel.monitorOutbound("[MIDI] " + monitorMessage);
 
                 // 4. Send message
-                receiver.send(midiMessage, -1);
+                receiver.send(message, -1);
             } catch (MidiUnavailableException mue) {
                 logger.error("[CM_MIDI_WRITER] EXCEPTION(1): Device not ready for sending midi. CAUSE {}", mue.getMessage());
                 DialogFactory.renderErrorDialog("Device not ready");

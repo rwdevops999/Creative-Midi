@@ -9,23 +9,38 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import system.SysData;
 import util.ApplicationInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static util.Constants.*;
 
 public class SearchResultsPane extends AnchorPane {
     private static final Logger logger = LoggerFactory.getLogger(SearchResultsPane.class);
+
+    @Getter
+    private final Map<Integer, Patch> channelPatches = new HashMap<>();
 
     public SearchResultsPane() {
         super();
 
         setId("SearchResultsPane");
+
+        channelPatches.clear();
+        channelPatches.put(CHANNEL_RIGHT1, new Patch(null, "Live! Grand Piano", "0", "115", "0", "Yamaha"));
+        channelPatches.put(CHANNEL_LEFT, new Patch(null, "Live! Grand Piano", "0", "115", "0", "Yamaha"));
+        channelPatches.put(CHANNEL_RIGHT2, new Patch(null, "Live! Grand Piano", "0", "115", "0", "Yamaha"));
     }
 
     private VoiceSearchResultsPane parent;
@@ -40,7 +55,6 @@ public class SearchResultsPane extends AnchorPane {
         setBottomAnchor(table, 0.0);
         setLeftAnchor(table, 0.0);
         setRightAnchor(table, 0.0);
-
     }
 
     private final TableView<Patch> table = new TableView<>();
@@ -117,6 +131,45 @@ public class SearchResultsPane extends AnchorPane {
             setAbsoluteColumnWidth(lsbColumn,   w10);
             setAbsoluteColumnWidth(pcColumn,    w10);
         });
+
+        table.setRowFactory(tv -> {
+            TableRow<Patch> row = new TableRow<>();
+
+            // Capture the key modifiers right as the click happens
+            row.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY) {
+
+                    // 1. Snapshot the modifiers
+                    boolean shift = event.isShiftDown();
+                    boolean ctrl = event.isControlDown();
+
+                    // 2. Wait a split second for JavaFX to process the selection list
+                    Platform.runLater(() -> {
+                        ObservableList<Patch> selectedItems = table.getSelectionModel().getSelectedItems();
+
+                        // 3. CRITICAL: Only proceed if exactly ONE item is currently selected
+                        if (selectedItems.size() == 1) {
+
+                            int targetChannel;
+                            if (shift) {
+                                targetChannel = CHANNEL_LEFT; // Channel 2 (Shift click)
+                            } else if (ctrl) {
+                                targetChannel = CHANNEL_RIGHT2; // Channel 3 (Ctrl click)
+                            } else {
+                                targetChannel = CHANNEL_RIGHT1; // Channel 1 (Normal click)
+                            }
+
+                            Patch singleItem = selectedItems.get(0);
+                            channelPatches.put(targetChannel,singleItem);
+
+                        }
+                    });
+                }
+            });
+
+            return row;
+        });
+
         createContextMenu(table);
 
         getChildren().add(table);
@@ -138,6 +191,7 @@ public class SearchResultsPane extends AnchorPane {
         MenuItem right1 = new MenuItem("Use as right1");
         right1.setOnAction(event -> {
             Patch patch = table.getSelectionModel().getSelectedItem();
+            channelPatches.put(CHANNEL_RIGHT1,patch);
 //            sendAsMidi(0, patch);
         });
 
@@ -145,6 +199,7 @@ public class SearchResultsPane extends AnchorPane {
         MenuItem right2 = new MenuItem("Use as right2");
         right2.setOnAction(event -> {
             Patch patch = table.getSelectionModel().getSelectedItem();
+            channelPatches.put(CHANNEL_RIGHT2,patch);
 //            sendAsMidi(1, patch);
         });
 
@@ -152,6 +207,7 @@ public class SearchResultsPane extends AnchorPane {
         MenuItem left = new MenuItem("Use as left");
         left.setOnAction(event -> {
             Patch patch = table.getSelectionModel().getSelectedItem();
+            channelPatches.put(CHANNEL_LEFT,patch);
 //            sendAsMidi(2, patch);
         });
 
