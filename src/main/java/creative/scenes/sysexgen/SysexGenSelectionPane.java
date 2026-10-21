@@ -73,7 +73,7 @@ public class SysexGenSelectionPane extends GridPane {
         rowConstraints.setValignment(VPos.CENTER);
         this.getRowConstraints().add(rowConstraints);
 
-        showPaneBorder(this, getColor("border", "green"));
+//        showPaneBorder(this, getColor("border", "green"));
 
         setPaneBackground(this);
 
@@ -271,7 +271,9 @@ public class SysexGenSelectionPane extends GridPane {
     }
 
     private void startProcessingLeafEvent(Event event) {
-        getSysexGenPane().getSysexGenParametersPane().setEvent(event);
+        if (getSysexGenPane().getSysexGenParametersPane() != null) {
+            getSysexGenPane().getSysexGenParametersPane().setEvent(event);
+        }
     }
 
     // ACCESSORS

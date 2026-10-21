@@ -73,9 +73,7 @@ public class PlaylistStateMachine {
             case LOADED, FINISHED -> {
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_NEW, true);
                 sceneActionsPane.setEnable(SceneActionsPane.BUTTON_DELETE, true);
-                if (currentState != PlaylistState.LOADED) {
-                    sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
-                }
+                sceneActionsPane.setEnable(SceneActionsPane.BUTTON_EXPORT, true);
             }
         }
     }

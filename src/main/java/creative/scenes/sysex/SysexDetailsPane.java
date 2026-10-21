@@ -33,7 +33,7 @@ public class SysexDetailsPane extends VBox {
 
         setId("SysexDetailsPane");
 
-        setPadding(new Insets(0, 0, 0, 0));
+        setPadding(new Insets(5));
         setSpacing(2);
     }
 

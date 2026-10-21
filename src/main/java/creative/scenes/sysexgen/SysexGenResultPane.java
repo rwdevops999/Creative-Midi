@@ -39,7 +39,7 @@ public class SysexGenResultPane extends VBox {
         setPaneMinHeightAsPercentage(this, owner, 21);
         setPaneBackground(this);
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
 
         buildPane();
     }

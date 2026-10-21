@@ -89,6 +89,10 @@ public class MidiWriter {
                 ShortMessage shortMessage = new ShortMessage();
                 shortMessage.setMessage(status, data1, data2);
 
+                String monitorMessage = MessageFormatter.basicArrayFormat("[{}]", new Object[]{message});
+                CommunicationModel.setStatus(monitorMessage);
+                CommunicationModel.monitorOutbound("[MIDI] " + monitorMessage);
+
                 // 4. Send message
                 receiver.send(shortMessage, -1);
             } catch (MidiUnavailableException mue) {

@@ -21,7 +21,7 @@ public class SysexGenPane extends BorderPane {
 
         setId("SysexGenPane");
 
-        showPaneBorder(this, getColor("border", "red"));
+//        showPaneBorder(this, getColor("border", "red"));
         setPaneBackground(this);
 
         rootEvent = SysexGenDefinitions.getRootEvent();
@@ -37,9 +37,9 @@ public class SysexGenPane extends BorderPane {
 
         CommunicationModel.setStatus("Starting up the Sysex Generator");
 
-        this.setTop(new SysexGenSelectionPane(this, rootEvent));
-        this.setCenter(new SysexGenParametersPane(this));
         this.setBottom(new SysexGenResultPane(this));
+        this.setCenter(new SysexGenParametersPane(this));
+        this.setTop(new SysexGenSelectionPane(this, rootEvent));
 
         logger.debug("[CM_SYSEX_GEN_PANE] Built {}", getId());
     }
