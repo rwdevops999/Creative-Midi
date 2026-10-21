@@ -2,6 +2,8 @@ package creative.scenes.sysexgen.components;
 
 import creative.scenes.sysexgen.entity.DataBlock;
 import creative.scenes.sysexgen.entity.InputBlock;
+import creative.scenes.sysexgen.entity.Range;
+import custom.components.DiscreteSpinner;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
@@ -67,7 +69,14 @@ public class ParameterPane extends GridPane {
 
         StringProperty sp = new SimpleStringProperty();
 
-        Spinner<Integer> spinner = new Spinner<>(inputBlock.getRange().getMin(), inputBlock.getRange().getMax(),inputBlock.getValue().getValue());
+        Range range = inputBlock.getRange();
+        Spinner<Integer> spinner;
+        if (range.isDiscrete()) {
+            spinner = new DiscreteSpinner(inputBlock.getRange().getMin(), inputBlock.getRange().getMax(),inputBlock.getValue().getValue());
+        } else {
+            spinner = new Spinner<>(inputBlock.getRange().getMin(), inputBlock.getRange().getMax(),inputBlock.getValue().getValue());
+            spinner.getValueFactory().setWrapAround(true);
+        }
         spinner.getValueFactory().valueProperty().addListener((observable, oldValue, newValue) -> {
             if (inputBlock.getDataTable() != null) {
                 String[] pt = inputBlock.getDataTable().getEntries();
@@ -82,7 +91,6 @@ public class ParameterPane extends GridPane {
                 }
             }
 
-//            inputBlock.setValue(spinner.getValueFactory().getValue());
             // Set The Value
             inputBlock.setValue(inputCalculator.apply(spinner.getValueFactory().getValue(), inputBlock.getParameter().getNumBytes()));
             consumer.accept(inputBlock);

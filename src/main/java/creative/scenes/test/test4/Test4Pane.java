@@ -1,6 +1,7 @@
 package creative.scenes.test.test4;
 
 import communication.CommunicationModel;
+import custom.components.DiscreteSpinner;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +18,8 @@ public class Test4Pane extends HBox {
         runTest();
     }
 
-    private int Volume;
-    private int Msb;
-    private int Lsb;
-
     private void setupTest() {
         logger.debug("[CM_TEST4_PANE] Setting up {}", getId());
-
-        Msb = 127;
-        Lsb = 127;
 
         logger.debug("[CM_TEST4_PANE] Set up {}", getId());
     }
@@ -33,12 +27,8 @@ public class Test4Pane extends HBox {
     private void runTest() {
         logger.debug("[CM_TEST4_PANE] Executing {}", getId());
 
-        Volume = 15221;
-
-        int nMsb = 0;
-        int nLsb = 0;
-        nMsb = Volume >> 7;
-        nLsb = Volume & 0x7F;
+        DiscreteSpinner spinner = new DiscreteSpinner(0, 127,0);
+        getChildren().add(spinner);
 
         logger.debug("[CM_TEST4_PANE] Executed {}", getId());
     }

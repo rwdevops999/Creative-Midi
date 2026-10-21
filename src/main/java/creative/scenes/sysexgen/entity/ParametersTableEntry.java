@@ -108,7 +108,12 @@ public class ParametersTableEntry {
         }
 
         public ParametersTableEntryBuilder withRange(int min, int max) {
-            this.range = new Range(min, max);
+            this.range = new Range(min, max, false);
+            return this;
+        }
+
+        public ParametersTableEntryBuilder withDiscreteRange(int min, int max) {
+            this.range = new Range(min, max, true);
             return this;
         }
 

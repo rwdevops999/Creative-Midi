@@ -137,7 +137,7 @@ public class SysexGenDefinitions {
                                 .withLabel("Switch Value")
                                 .withDescription("0 = 0ff, 7F = 0n")
                                 .withDefaultValue(0x7F)
-                                .withRange(0, 0x7F)
+                                .withDiscreteRange(0, 0x7F)
                                 .withDataTable(findDataTable("OnOffDataTable"))
                                 .build()
                 )
@@ -177,7 +177,7 @@ public class SysexGenDefinitions {
                                 .withLabel("Part Value")
                                 .withDescription("00 = 0ff, 7F = 0n")
                                 .withDefaultValue(0x7F)
-                                .withRange(0x00, 0x7F)
+                                .withDiscreteRange(0x00, 0x7F)
                                 .withDataTable(findDataTable("OnOffDataTable"))
                                 .build()
                 )
@@ -385,7 +385,7 @@ public class SysexGenDefinitions {
                         parameterTableEntryBuilder
                                 .clear()
                                 .withDefaultValue(0)
-                                .withRange(0, 127)
+                                .withDiscreteRange(0, 127)
                                 .withDataTable(findDataTable("OnOffDataTable"))
                                 .build(),
                         new String[]{
